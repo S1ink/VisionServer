@@ -1,6 +1,7 @@
 # 2022-VisionTesting
 __This repo contains code for the different iterations of testing of vision processing code during the 2021-2022 robotics season (FRC). Currently this project is designed for use
 on a raspberry pi coprocessor, located on the robot and connected to the robot network.__
+- Instructions on setting up the raspberry pi with WpiLibPi can be found [here](https://docs.wpilib.org/en/stable/docs/software/vision-processing/wpilibpi/what-you-need-to-get-the-pi-image-running.html). (Keep following the guide for info on the web interface)
 - Example projects that were used as a base for these are located in the wpilibpi repository - [source](https://github.com/wpilibsuite/WPILibPi/tree/main/deps/examples), 
 [downloads](https://github.com/wpilibsuite/WPILibPi/releases).
 ## Branches
@@ -31,8 +32,8 @@ code or the project with the most features/functionality. This will be utilized 
   On Windows (and MacOS), the cross-compiler (for raspberry pi) will need to be installed - this can be found on the 
   [wpilib rpi toolchain](https://github.com/wpilibsuite/raspbian-toolchain/releases) repository. 
   
-  For windows, once downloaded and extracted, either create a shortcut to the compiler (EXTRACTED_DIR/raspbian10/bin/arm-raspbian10-linux-gnueabihf-g++.exe) and place it in 
+  For windows, once downloaded and extracted, either create a shortcut to the compiler (*EXTRACTED_DIR/raspbian10/bin/arm-raspbian10-linux-gnueabihf-g++.exe*) and place it in 
   the project folder, or add the folder containing the compiler to your PATH. (Directions [here](https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10/) - 
-  the directory should be ...EXTRACTED_DIR/raspbian10/bin/ like mentioned above)
+  the directory should be *...EXTRACTED_DIR/raspbian10/bin/* like mentioned above)
   
   ***This guide is not finished - more info to come***
