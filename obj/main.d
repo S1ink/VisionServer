@@ -1,4 +1,4 @@
-temp/main.o: src/main.cpp include/networktables/NetworkTableInstance.h \
+obj/main.o: src/main.cpp include/networktables/NetworkTableInstance.h \
  include/wpi/ArrayRef.h include/wpi/Hashing.h include/wpi/Endian.h \
  include/wpi/AlignOf.h include/wpi/Compiler.h include/wpi/SwapByteOrder.h \
  include/wpi/type_traits.h include/wpi/SmallVector.h \

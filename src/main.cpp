@@ -17,6 +17,7 @@
 #include <array>
 #include <thread>
 #include <chrono>
+#include <type_traits>
 
 #include "cameraconfig.h"
 
@@ -63,6 +64,35 @@
 //
 //};
 
+template<typename num_t>
+void addNetTableVar(num_t& var, const wpi::Twine& name, std::shared_ptr<nt::NetworkTable> table) {
+	static_assert(std::is_arithmetic<num_t>::value, "num_t must be a number type");
+	if(!table->ContainsKey(name)) {
+		table->PutNumber(name.str(), var);
+	} else {}
+	table->GetEntry(name).AddListener(
+		[&var](const nt::EntryNotification& event){
+			if(event.value->IsDouble()) {
+				var = event.value->GetDouble();
+			}
+		}, 
+		NT_NOTIFY_IMMEDIATE | NT_NOTIFY_NEW | NT_NOTIFY_UPDATE
+	);
+}
+void addNetTableVar(bool& var, const wpi::Twine& name, std::shared_ptr<nt::NetworkTable> table) {
+	if(!table->ContainsKey(name)) {
+		table->PutBoolean(name.str(), var);
+	} else {}
+	table->GetEntry(name).AddListener(
+		[&var](const nt::EntryNotification& event){
+			if(event.value->IsBoolean()) {
+				var = event.value->GetBoolean();
+			}
+		},
+		NT_NOTIFY_IMMEDIATE | NT_NOTIFY_NEW | NT_NOTIFY_UPDATE
+	);
+}
+
 StopWatch runtime("Runtime", &std::cout, 0);
 
 void on_exit() {
@@ -81,75 +111,31 @@ int main(int argc, char* argv[]) {
 	else { return EXIT_FAILURE; }
 	vconfig.setup();							// start networktables and begin camera streaming
 
-	cs::UsbCamera* vcam;
+	cs::UsbCamera* vcam = nullptr;
 
 	if (vconfig.cameras.size() > 0) {
 		vcam = &vconfig.cameras[0].camera;
 	}
 	else {
-		*vcam = frc::CameraServer::GetInstance()->StartAutomaticCapture();
+		static cs::UsbCamera global = frc::CameraServer::GetInstance()->StartAutomaticCapture();
+		vcam = &global;
 	}
-
-	std::cout << "Preset brightness: " << vcam->GetBrightness() << newline;
 
 	cs::VideoMode v_info = vcam->GetVideoMode();
 
 	nt::NetworkTableInstance netinst = nt::NetworkTableInstance::GetDefault();
 	std::shared_ptr<nt::NetworkTable> dash = netinst.GetTable("SmartDashboard");
-	/*if (!dash->GetNumber("Brightness", 0)) {
-		dash->PutNumber("Brightness", 50);
-	}*/
-	dash->GetEntry("Brightness").AddListener(
-		[&vcam](const nt::EntryNotification& event) {
-			if (event.value->IsDouble()) {
-				int i = event.value->GetDouble();
-				vcam->SetBrightness(i < 0 ? 0 : (i > 100 ? 100 : i));
-			}
-		}, 
-		NT_NOTIFY_IMMEDIATE | NT_NOTIFY_NEW | NT_NOTIFY_UPDATE
-	);
-	/*if (!dash->GetNumber("WhiteBalance", 0)) {
-		dash->PutNumber("WhiteBalance", 50);
-	}*/
-	dash->GetEntry("WhiteBalance").AddListener(
-		[&vcam](const nt::EntryNotification& event) {
-			if (event.value->IsDouble()) {
-				int i = event.value->GetDouble();
-				vcam->SetBrightness(i < 0 ? 0 : (i > 100 ? 100 : i));
-			}
-		},
-		NT_NOTIFY_IMMEDIATE | NT_NOTIFY_NEW | NT_NOTIFY_UPDATE
-	);
-	/*if (!dash->GetNumber("Exposure", 0)) {
-		dash->PutNumber("Exposure", 20);
-	}*/
-	dash->GetEntry("Exposure").AddListener(
-		[&vcam](const nt::EntryNotification& event) {
-			if (event.value->IsDouble()) {
-				int i = event.value->GetDouble();
-				vcam->SetExposureManual(i < 0 ? 0 : (i > 100 ? 100 : i));
-			}
-			else if (event.value->IsBoolean()) {
-				event.value->GetBoolean() ? vcam->SetExposureAuto() : vcam->SetExposureHoldCurrent();
-			}
-		},
-		NT_NOTIFY_IMMEDIATE | NT_NOTIFY_NEW | NT_NOTIFY_UPDATE
-	);
 
-	std::array<uint8_t, 6> thresholds = { 30, 90, 20, 230, 20, 230 };
+	bool morph = false;
+	std::array<uint8_t, 6> thresh = {80, 150, 150, 120, 255, 255};
 
-	//dash->PutNumberArray("Thresholds", wpi::ArrayRef<double>());
-	dash->GetEntry("Thresholds").AddListener(
-		[&](const nt::EntryNotification& event) {
-			if (event.value->IsDoubleArray()) {
-				wpi::ArrayRef<double> array = event.value->GetDoubleArray();
-				for (size_t i = 0; i < 6 && array.size(); i++) {
-					thresholds[i] = event.value->GetDoubleArray()[i];
-				}
-			}
-		},
-		NT_NOTIFY_IMMEDIATE | NT_NOTIFY_NEW | NT_NOTIFY_UPDATE
-	);
+	addNetTableVar(morph, "Morph-ops", dash);
+	addNetTableVar(thresh[0], "low-hue", dash);
+	addNetTableVar(thresh[1], "low-sat", dash);
+	addNetTableVar(thresh[2], "low-val", dash);
+	addNetTableVar(thresh[3], "high-hue", dash);
+	addNetTableVar(thresh[4], "high-sat", dash);
+	addNetTableVar(thresh[5], "high-val", dash);
 
 	cs::CvSink input = frc::CameraServer::GetInstance()->GetVideo(vcam->GetName());
 	cs::CvSource processed = frc::CameraServer::GetInstance()->PutVideo("Processed Output", v_info.width, v_info.height);
@@ -158,12 +144,12 @@ int main(int argc, char* argv[]) {
 	cv::Mat frame(v_info.height, v_info.width, CV_8UC3);
 	cv::Mat buffer = frame;
 	cv::Mat binary(frame.size(), CV_8U);
-	cv::Mat lines = cv::Mat::zeros(frame.size(), CV_8UC3);
+	cv::Mat markup = cv::Mat::zeros(frame.size(), CV_8UC3);
 
-	cv::Moments moments;
-	double dM01, dM10, dArea;
-	int posX, posY, iLastX = 0, iLastY = 0;
-	std::vector<cv::Mat> vec_channels;
+	// cv::Moments moments;
+	// double dM01, dM10, dArea;
+	// int posX, posY, iLastX = 0, iLastY = 0;
+	// std::vector<cv::Mat> vec_channels;
 
 	uint64_t tframes = 0, fframes = 0;	// total frames and "final" frames
 	double ttime = 0, ftime = 0;		// total time and "final" time
@@ -172,36 +158,67 @@ int main(int argc, char* argv[]) {
 		input.GrabFrame(frame);
 
 		cv::cvtColor(frame, frame, cv::COLOR_BGR2HSV);									// convert to HSV colorspace
-		cv::inRange(frame, cv::Scalar(thresholds[0], thresholds[2], thresholds[4]), cv::Scalar(thresholds[1], thresholds[3], thresholds[5]), binary);	// threshold based on HSV colorspace
+		cv::inRange(frame, cv::Scalar(thresh[0], thresh[1], thresh[2]), cv::Scalar(thresh[3], thresh[4], thresh[5]), binary);	// threshold based on HSV colorspace
 
-		cv::erode(binary, binary, cv::getStructuringElement(cv::MORPH_ERODE, cv::Size(3, 3)));
-		cv::dilate(binary, binary, cv::getStructuringElement(cv::MORPH_DILATE, cv::Size(3, 3)));
+		if(morph) {
+			cv::erode(binary, binary, cv::getStructuringElement(cv::MORPH_ERODE, cv::Size(3, 3)));
+			cv::dilate(binary, binary, cv::getStructuringElement(cv::MORPH_DILATE, cv::Size(3, 3)));
+		}
 
 		thresholded.PutFrame(binary);													// display the thresholded image
 
-		//cv::cvtColor(buffer, frame, cv::COLOR_);
-		moments = cv::moments(binary, true);
+		std::vector<std::vector<cv::Point> > contours;
+		cv::findContours(binary, contours, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
 
-		dM01 = moments.m01;
-		dM10 = moments.m10;
-		dArea = moments.m00;
+		std::vector<std::vector<cv::Point> > contours_poly(contours.size());
+		std::vector<cv::Rect> bound_rect(contours.size());
 
-		if (dArea > 10000) {
-			posX = dM10 / dArea;
-			posY = dM01 / dArea;
+		double max_area = 0, comp = 0;
+		int max_id = -1;
 
-			if (iLastX >= 0 && iLastY >= 0 && posX >= 0 && posY >= 0) {
-				cv::line(lines, cv::Point(posX, posY), cv::Point(iLastX, iLastY), cv::Scalar(0, 255, 0), 2);
+		for(size_t i = 0; i < contours.size(); i++) {
+			cv::approxPolyDP(contours[i], contours_poly[i], 3, true);
+			bound_rect[i] = cv::boundingRect(contours_poly[i]);
+
+			comp = cv::contourArea(contours[i]);
+			if(comp > max_area) {
+				max_area = comp;
+				max_id = i;
 			}
 
-			iLastX = posX;
-			iLastY = posY;
+			//cv::drawContours(markup, contours_poly, (int)i, cv::Scalar(0, 0, 255));
 		}
+
+		if(max_id >= 0) {
+			cv::rectangle(markup, bound_rect[max_id].tl(), bound_rect[max_id].br(), cv::Scalar(0, 0, 255), 2);
+		}
+
+		//cv::cvtColor(buffer, frame, cv::COLOR_);
+		// moments = cv::moments(binary, true);
+
+		// dM01 = moments.m01;
+		// dM10 = moments.m10;
+		// dArea = moments.m00;
+
+		// if (dArea > 10000) {
+		// 	posX = dM10 / dArea;
+		// 	posY = dM01 / dArea;
+
+		// 	if (iLastX >= 0 && iLastY >= 0 && posX >= 0 && posY >= 0) {
+		// 		cv::line(lines, cv::Point(posX, posY), cv::Point(iLastX, iLastY), cv::Scalar(0, 255, 0), 2);
+		// 	}
+
+		// 	iLastX = posX;
+		// 	iLastY = posY;
+		// }
 
 		cv::cvtColor(frame, frame, cv::COLOR_HSV2BGR);
 
-		lines.resize(frame.rows);
-		frame = frame + lines;
+		markup.resize(frame.rows);
+		frame = frame + markup;
+
+		//markup.release();
+		markup = cv::Mat::zeros(frame.size(), CV_8UC3);
 
 		processed.PutFrame(frame);
 
@@ -217,5 +234,4 @@ int main(int argc, char* argv[]) {
 			fframes = tframes;
 		}
 	}
-
 }

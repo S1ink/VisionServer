@@ -67,68 +67,72 @@
     <NMakeOutput>
     </NMakeOutput>
     <NMakeCleanCommandLine>make clean</NMakeCleanCommandLine>
-    <NMakeReBuildCommandLine>make</NMakeReBuildCommandLine>
+    <NMakeReBuildCommandLine>make rebuild</NMakeReBuildCommandLine>
     <NMakePreprocessorDefinitions>
     </NMakePreprocessorDefinitions>
     <OutDir>$(ProjectDir)bin</OutDir>
-    <IntDir>$(ProjectDir)temp</IntDir>
+    <IntDir>$(ProjectDir)obj</IntDir>
     <ExecutablePath />
     <IncludePath>$(ProjectDir)include</IncludePath>
     <LibraryPath>$(ProjectDir)lib</LibraryPath>
     <SourcePath>$(ProjectDir)src</SourcePath>
     <ExcludePath />
     <LibraryWPath />
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);D:\Programs\Raspbian10-Windows64-Toolchain-8.3.0\raspbian10\sys-root\usr\include</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <NMakeBuildCommandLine>make</NMakeBuildCommandLine>
     <NMakeOutput>
     </NMakeOutput>
     <NMakeCleanCommandLine>make clean</NMakeCleanCommandLine>
-    <NMakeReBuildCommandLine>make</NMakeReBuildCommandLine>
+    <NMakeReBuildCommandLine>make rebuild</NMakeReBuildCommandLine>
     <NMakePreprocessorDefinitions>
     </NMakePreprocessorDefinitions>
     <OutDir>$(ProjectDir)bin</OutDir>
-    <IntDir>$(ProjectDir)temp</IntDir>
+    <IntDir>$(ProjectDir)obj</IntDir>
     <ExecutablePath />
     <IncludePath>$(ProjectDir)include</IncludePath>
     <LibraryPath>$(ProjectDir)lib</LibraryPath>
     <SourcePath>$(ProjectDir)src</SourcePath>
     <ExcludePath />
     <LibraryWPath />
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);D:\Programs\Raspbian10-Windows64-Toolchain-8.3.0\raspbian10\sys-root\usr\include</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <NMakeBuildCommandLine>make</NMakeBuildCommandLine>
     <NMakeOutput>
     </NMakeOutput>
     <NMakeCleanCommandLine>make clean</NMakeCleanCommandLine>
-    <NMakeReBuildCommandLine>make</NMakeReBuildCommandLine>
+    <NMakeReBuildCommandLine>make rebuild</NMakeReBuildCommandLine>
     <NMakePreprocessorDefinitions>
     </NMakePreprocessorDefinitions>
     <OutDir>$(ProjectDir)bin</OutDir>
-    <IntDir>$(ProjectDir)temp</IntDir>
+    <IntDir>$(ProjectDir)obj</IntDir>
     <ExecutablePath />
     <IncludePath>$(ProjectDir)include</IncludePath>
     <LibraryPath>$(ProjectDir)lib</LibraryPath>
     <SourcePath>$(ProjectDir)src</SourcePath>
     <ExcludePath />
     <LibraryWPath />
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);D:\Programs\Raspbian10-Windows64-Toolchain-8.3.0\raspbian10\sys-root\usr\include</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <NMakeBuildCommandLine>make</NMakeBuildCommandLine>
     <NMakeOutput>
     </NMakeOutput>
     <NMakeCleanCommandLine>make clean</NMakeCleanCommandLine>
-    <NMakeReBuildCommandLine>make</NMakeReBuildCommandLine>
+    <NMakeReBuildCommandLine>make rebuild</NMakeReBuildCommandLine>
     <NMakePreprocessorDefinitions>
     </NMakePreprocessorDefinitions>
     <OutDir>$(ProjectDir)bin</OutDir>
-    <IntDir>$(ProjectDir)temp</IntDir>
+    <IntDir>$(ProjectDir)obj</IntDir>
     <ExecutablePath />
     <IncludePath>$(ProjectDir)include</IncludePath>
     <LibraryPath>$(ProjectDir)lib</LibraryPath>
     <SourcePath>$(ProjectDir)src</SourcePath>
     <ExcludePath />
     <LibraryWPath />
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);D:\Programs\Raspbian10-Windows64-Toolchain-8.3.0\raspbian10\sys-root\usr\include</ExternalIncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <BuildLog>

@@ -1,6 +1,6 @@
-﻿  arm-raspbian10-linux-gnueabihf-g++ -pthread -g -Og -c -o temp/main.o -std=c++17 -Iinclude -Iinclude/opencv -MMD -MP -Wall src/main.cpp
-  process_begin: CreateProcess(NULL, arm-raspbian10-linux-gnueabihf-g++ -pthread -g -Og -c -o temp/main.o -std=c++17 -Iinclude -Iinclude/opencv -MMD -MP -Wall src/main.cpp, ...) failed.
+﻿  arm-raspbian10-linux-gnueabihf-g++ -O3 -c -o obj/output.o -std=c++17 -pthread -Iinclude -Iinclude/opencv -MMD -MP -Wall src/extras/output.cpp
+  process_begin: CreateProcess(NULL, arm-raspbian10-linux-gnueabihf-g++ -O3 -c -o obj/output.o -std=c++17 -pthread -Iinclude -Iinclude/opencv -MMD -MP -Wall src/extras/output.cpp, ...) failed.
   make (e=2): The system cannot find the file specified.
   
-  make: *** [temp/main.o] Error 2
+  make: *** [obj/extras/output.o] Error 2
 D:\Applications\VisualStudio\MSBuild\Microsoft\VC\v160\Microsoft.MakeFile.Targets(46,5): error MSB3073: The command "make" exited with code 2.

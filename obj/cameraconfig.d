@@ -1,4 +1,4 @@
-temp/cameraconfig.o: src/cameraconfig.cpp src/cameraconfig.h \
+obj/cameraconfig.o: src/cameraconfig.cpp src/cameraconfig.h \
  include/networktables/NetworkTableInstance.h include/wpi/ArrayRef.h \
  include/wpi/Hashing.h include/wpi/Endian.h include/wpi/AlignOf.h \
  include/wpi/Compiler.h include/wpi/SwapByteOrder.h \
