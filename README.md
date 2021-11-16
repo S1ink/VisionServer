@@ -7,14 +7,14 @@ on a raspberry pi coprocessor, located on the robot and connected to the robot n
 ## Branches
 Currently only a C++ branch exists, but in the future there may be others based on which additional languages are tried for vision. The 'release' branch is for production level 
 code or the project with the most features/functionality. This will be utilized when more than one language is active. 
-## C++ Project (Version) Info
+# C++ Project (Version) Info
 - Source files are located in [*src/*](src)
 - Additional includes are located in [*include/*](include)
 - Libraries are located in [*lib/*](lib)
 - Intermediate files (.o and .d) files are placed in [*obj/*](obj) and the output binary(s) are located in [*bin/*](bin)
 - General resources of sources from example projects are placed in [*resources/*](resources)
 
-  ### Setup/Workflow (and external dependencies)
+  ## Setup/Workflow (and external dependencies)
   - ***Note: Read the entire process before attempting to build (some dependencies may need to be installed from other sources)***
   
   The project is built with the included [__makefile__](makefile). An executable of Make is included for windows, (this was copied from an example project from wpilib) but the 
@@ -53,5 +53,10 @@ code or the project with the most features/functionality. This will be utilized 
     exec ./{program_name}
     ``` 
     The "Application" setting on the web dashboard may also need to be changed to "C++ Executable" for the correct program to be run. 
+  - See [this](https://docs.wpilib.org/en/stable/docs/software/vision-processing/wpilibpi/the-raspberry-pi-frc-console.html#application) for more info on vision applications and WpiLibPi. 
+    
+  ## Other Notes
+  - The headers within *include/* and libraries within *lib/* originate from the C++ example project that can be downloaded from the WpiLibPi web dashboard (in the "Application" tab, under "Example Programs" -> [image](https://docs.wpilib.org/en/stable/docs/software/vision-processing/wpilibpi/the-raspberry-pi-frc-console.html#vision-workflows)). Currently I am unaware of a separate source to get these, so downloading them from the dashboard remains the best option to get the most up-to-date libraries. 
+  - The [pigpio](https://abyz.me.uk/rpi/pigpio/) library is also included in the project. To install this manually, download and build pigpio, then copy *pigpio.h* into *include/* and *libpigpio.so* into *lib/*. There are a number of other libraries (.so files) that get made when pigpio is built, but none of these are needed. 
   
-  ***This guide is not finished - more info to come***
+***This guide is not finished - more info to come***
