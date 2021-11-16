@@ -36,4 +36,22 @@ code or the project with the most features/functionality. This will be utilized 
   the project folder, or add the folder containing the compiler to your PATH. (Directions [here](https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10/) - 
   the directory should be *...EXTRACTED_DIR/raspbian10/bin/* like mentioned above)
   
+  Additionally, project files for both VS Code and Visual Studio are included.
+
+  | IDE | Intellisense working? | Integrated "build command" working? | 
+  |:-:|:-:|:-:|
+  | VS Code | Yes - Intellisense seemed to work fine but it is notorious for being unreliable for C++. Make sure all the correct extentions are intalled and VS Code is not getting confused with a compiler elsewhere on your system. | Yes - [*tasks*](https://code.visualstudio.com/docs/editor/tasks#vscode) can be added to [./vscode/tasks.json](./vscode/tasks.json) | 
+  | Visual Studio | Yes - Make sure to set the correct include, library, and standard library paths within the project properties. The include and library paths should work as-is as they use relative paths, but the standard library directory will need to be added specific to each machine. (The options is under "VC++ Directories" and called "External Include Directories" - the path should be *...EXTRACTED_DIR/raspbian10/sys-root/usr/include/* from the downloaded cross-compiler) | No - For some reason VS always generates an error even though it seems to run the correct command. A simple, but more annoying solution is to open a terminal within the application and just enter the build command that way. |
+  
+  Once the build process is working correctly, it is now possible to test a vision program on the rpi.
+  - On Windows, build the project using the methods described above, then find the output binary in the *bin/* directory. Head over to the WpiLibPi dashboard (make sure your networking setup is correct and you can access the rpi) and go to the "Application" tab. Select "Uploaded C++ Executable" from the options and then navigate to the directory with your program. Select the program and then click "Save" (make sure the rpi is in writable mode). Now you can simply run the program from the "Vision Status" tab, and see its output in the designated space. 
+  - On the rpi, transfer your project directory so that it is accessable on the rpi filesystem, either by a removable storage device or a network share. Gain access to the cli either by connecting a moniter and keyboard to the pi or ssh'ing into it with the same hostname that is used for the web dashboard. Navigate to the project directory and run the `make` command (make sure to use `mode=native-{option}` to build natively) to build the project if it wasn't alread built. The program can either be run directly in the build folder or can be copied to the home directory for execution from the web dashboard. Enter `sudo ./{program_name}` to run the program directly, and enter `cp {program_name} /home/pi` to copy the program (make sure you have `cd`'ed to the *bin/* directory). If copying to the home directory, the "runCamera" shell file will also need to be modified to point to your program. Enter `sudo nano runCamera` from the home directory and then edit it like shown below: 
+    ```
+    #!/bin/sh
+    echo "Waiting 5 seconds..."
+    sleep 5
+    exec ./{program_name}
+    ``` 
+    The "Application" setting on the web dashboard may also need to be changed to "C++ Executable" for the correct program to be run. 
+  
   ***This guide is not finished - more info to come***
