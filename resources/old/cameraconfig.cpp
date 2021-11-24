@@ -23,7 +23,7 @@ bool CameraConfig::read(const wpi::json& source, const char* file) {
         this->stream_config = source.at("stream");
     }
     this->config = source;
-    this->camera = cs::UsbCamera(this->name, this->path);
+    this->camera = std::move(cs::UsbCamera(this->name, this->path));
 
     this->camera.SetConfigJson(this->config);
     this->camera.SetConnectionStrategy(cs::VideoSource::kConnectionKeepOpen);
@@ -136,7 +136,7 @@ bool StreamConfig::parse(const char* file) {
             else { parseError(file) << "could not understand ntmode value '" << str << "'\n"; }
         }
         catch (const wpi::json::exception& e) {
-            parseError(file) << "could not read ntmode: " << e.what() << '\n';
+            parseError(file) << "could not read ntmode: " << e.what() << newline;
         }
     }
 
@@ -155,7 +155,7 @@ bool StreamConfig::parse(const char* file) {
         }
     }
     catch (const wpi::json::exception& e) {
-        parseError(file) << "could not read cameras: " << e.what() << '\n';
+        parseError(file) << "could not read cameras: " << e.what() << newline;
         return false;
     }
     if (j.count("switched cameras") != 0) {
@@ -166,7 +166,7 @@ bool StreamConfig::parse(const char* file) {
             }
         }
         catch (const wpi::json::exception& e) {
-            parseError(file) << "could not read switched cameras: " << e.what() << '\n';
+            parseError(file) << "could not read switched cameras: " << e.what() << newline;
             return false;
         }
     }
@@ -182,7 +182,7 @@ nt::NetworkTableInstance StreamConfig::setup() {
         ntinst.StartServer();
     }
     else {
-        wpi::outs() << "Setting up NetworkTables client for team " << this->team << '\n';
+        wpi::outs() << "Setting up NetworkTables client for team " << this->team << newline;
         ntinst.StartClientTeam(this->team);
         ntinst.StartDSClient();
     }

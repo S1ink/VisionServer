@@ -12,8 +12,8 @@
 #include <string.h>
 #include <initializer_list>
 
-#include "../basic.h"
-#include "../resources.h"
+#include "basic.h"
+#include "resources.h"
 
 //namespace stats {
 //	CE_STR cpu = "/proc/stat";
@@ -43,8 +43,8 @@ public:
 		static const std::array<States, 8> s_active;
 
 		enum {
-			ISMAIN_m = 0b00000001,	// 1 << 0 (first bit represents wheather this core represents total cpu utilization)
-			CORENUM_m = 0b11111110,	// 0xFF & !(1 << 0) (all other bits represent the core num - this means the maximum amount with 8 bits is 128 cores)
+			ISMAIN_m = 0b1 << 0,	// 1 << 0 (first bit represents wheather this core represents total cpu utilization)
+			CORENUM_m = 0b1111111 << 1,	// 0xFF & !(1 << 0) (all other bits represent the core num - this means the maximum amount with 8 bits is 128 cores)
 		};	
 
 	protected:

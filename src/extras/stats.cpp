@@ -154,7 +154,7 @@ uint CPU::rawCount() {
 }
 
 void CPU::update(Svec& cores) {
-	std::fstream reader(source);
+	std::ifstream reader(source);
 	for (uint i = 0; i <= c_cores; i++) {
 		cores[i].parseLine(reader);
 	}
