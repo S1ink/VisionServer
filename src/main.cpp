@@ -33,9 +33,13 @@ extern "C" void memcpy_subtract_asm(uint8_t* base, uint8_t* sub, uint8_t* dest, 
 
 CE_STR _default = "/boot/frc.json";
 
+//typedef void(*vpipeline_f)(cs::CvSink, cs::CvSource);
+
+//#define SWITCHED_CAMERA_CONFIG // enable this to setup switched cameras from the config file, otherwise the program starts a single switched camera for vision
+
 //template<class video_t>
-bool readConfig(std::vector<cs::VideoSource>& cameras, const char* file = _default) {
-	//static_assert(std::is_base_of<cs::VideoSource, video_t>::value, "video_t must extend cs::VideoSource");
+bool readConfig(std::vector<VisionCamera>& cameras, const char* file = _default) {
+	//static_assert(std::is_base_of<cs::VideoSource, video_t>::value, "Template argument (video_t) must inherit from cs::VideoSource");
 
 	std::error_code ec;
     wpi::raw_fd_istream is(file, ec);
@@ -84,22 +88,23 @@ bool readConfig(std::vector<cs::VideoSource>& cameras, const char* file = _defau
         for(const wpi::json::value_type& camera : j.at("cameras")) {
             //wpi::outs() << "Reading camera: " << camera << newline;
             // check for duplicates
-			cs::UsbCamera cam;
-			try {cam = cs::UsbCamera(camera.at("name").get<std::string>(), camera.at("path").get<std::string>());}
-			catch (const wpi::json::exception& e) {
-				wpi::errs() << "Config error in " << file << ": could not read camera name and/or path: " << e.what() << newline;
-				return false;
-			}
-			cam.SetConfigJson(camera);
-			cam.SetConnectionStrategy(cs::VideoSource::kConnectionKeepOpen);
-            wpi::outs() << "Added camera '" << cam.GetName() << "' on " << cam.GetPath() << newline;
-			cameras.emplace_back(std::move(cam));
+			// cs::UsbCamera cam;
+			// try {cam = cs::UsbCamera(camera.at("name").get<std::string>(), camera.at("path").get<std::string>());}
+			// catch (const wpi::json::exception& e) {
+			// 	wpi::errs() << "Config error in " << file << ": could not read camera name and/or path: " << e.what() << newline;
+			// 	return false;
+			// }
+			// cam.SetConfigJson(camera);
+			// cam.SetConnectionStrategy(cs::VideoSource::kConnectionKeepOpen);
+            // wpi::outs() << "Added camera '" << cam.GetName() << "' on " << cam.GetPath() << newline;
+			cameras.emplace_back(camera);
         }
     }
     catch (const wpi::json::exception& e) {
         wpi::errs() << "config error in " << file << ": could not read cameras: " << e.what() << newline;
     }
     if(j.count("switched cameras") != 0) {
+#ifdef SWITCHED_CAMERAS_CONFIG
         try {
             for(const wpi::json::value_type& stream : j.at("switched cameras")) {
                 cs::MjpegServer server;
@@ -140,10 +145,42 @@ bool readConfig(std::vector<cs::VideoSource>& cameras, const char* file = _defau
             wpi::errs() << "Config error in " << file << ": could not read switched cameras: " << e.what() << newline;
             return false;
         }
+#else
+		std::cout << "Switched cameras are ignored from config in this build - all cameras are already added to the vision processing server\n";
+#endif
     }
 
     return true;
 }
+
+cs::CvSink switchedCameraVision(
+	const std::vector<VisionCamera>& cameras, 
+	std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("Vision")
+) {
+	if(!table->ContainsKey("Vision Camera Index")) {
+		table->PutNumber("Vision Camera Index", 0);
+	}
+	if(!table->ContainsKey("Vision Cameras Available")) {
+		table->PutNumber("Vision Cameras Available", cameras.size());
+	}
+	static cs::CvSink source;
+	if(cameras.size() > 0) {
+		source = cameras[0].getVideo();
+	}
+	table->GetEntry("Vision Camera Index").AddListener(
+		[&cameras](const nt::EntryNotification& event) {
+			if(event.value->IsDouble()) {
+				size_t idx = event.value->GetDouble();
+				if(idx >= 0 && idx < cameras.size()) {
+					source.SetSource(cameras[idx]);
+					source.SetConfigJson(cameras[idx].getStreamJson());
+				}
+			}
+		},
+		NT_NOTIFY_IMMEDIATE | NT_NOTIFY_NEW | NT_NOTIFY_UPDATE
+	);
+	return source;
+} 
 
 template<typename num_t>
 void addNetTableVar(num_t& var, const wpi::Twine& name, std::shared_ptr<nt::NetworkTable> table) {
@@ -187,17 +224,15 @@ int main(int argc, char* argv[]) {
 	SigHandle::get();
 	atexit(on_exit);
 
-	std::vector<cs::VideoSource> cameras;
+	std::vector<VisionCamera> cameras;
 
 	if(argc > 1 && readConfig(cameras, argv[1])) {}
 	else if(readConfig(cameras)) {}
 	else { return EXIT_FAILURE; }
 
-	VisionCamera vision(cameras[0]);
-
 	std::shared_ptr<nt::NetworkTable> dash = nt::NetworkTableInstance::GetDefault().GetTable("Vision");
 
-	std::array<bool, 3> options = {false, false, false};
+	std::array<bool, 4> options = {false, false, false, false};
 	double weight = 0.5;
 	uint8_t threshold = 100;
 	size_t scale = 4;
@@ -207,13 +242,22 @@ int main(int argc, char* argv[]) {
 	addNetTableVar(options[0], "ASM Subtraction (Not working)", dash);
 	addNetTableVar(options[1], "ASM Thresholding", dash);
 	addNetTableVar(options[2], "Morphological Operations", dash);
+	addNetTableVar(options[3], "Vision Multiview", dash);
 
-	cs::CvSink input = frc::CameraServer::GetInstance()->GetVideo(vision);
-	cs::CvSource processed = frc::CameraServer::GetInstance()->PutVideo("Processed Output", vision.getWidth(), vision.getHeight());
+	VisionCamera vision = cameras[0];
+
+	//std::cout << "VISION CAMERA: " << vision.getWidth() << 'x' << vision.getHeight() << newline;
+
+	cs::CvSink input = switchedCameraVision(cameras);
+	cs::CvSource processed = vision.getSeparateServer();
 
 	vision.setBrightnessAdjustable(dash);
 	vision.setWhiteBalanceAdjustable(dash);
 	vision.setExposureAdjustable(dash);
+
+	// vision.setBrightness(50);
+	// vision.setWhiteBalance(-1);
+	// vision.setExposure(-1);
 
 	cv::Mat frame(vision.getHeight(), vision.getWidth(), CV_8UC3);
 	cv::Mat buffer(frame.size().height/scale, frame.size().width/scale, CV_8UC3);
@@ -229,7 +273,7 @@ int main(int argc, char* argv[]) {
 
 	cv::putText(
 		no_targets, "NO TARGETS DETECTED", 
-		cv::Point(frame.size().width*0.2, frame.size().height*0.5), 
+		cv::Point(no_targets.size().width*0.2, no_targets.size().height*0.5), 
 		cv::FONT_HERSHEY_DUPLEX, 1, cv::Scalar(0, 0, 255), 2, cv::LINE_AA
 	);
 
@@ -281,47 +325,60 @@ int main(int argc, char* argv[]) {
 		if(target >= 0) {
 			boundingbox = cv::boundingRect(contours[target]);
 
-			cv::rectangle(buffer, boundingbox.tl(), boundingbox.br(), cv::Scalar(255, 0, 0), 1);
+			if(options[3]) {
+				cv::rectangle(buffer, boundingbox.tl(), boundingbox.br(), cv::Scalar(255, 0, 0), 1);
 
-			cv::cvtColor(binary, binary, cv::COLOR_GRAY2BGR, 3);
-			cv::vconcat(binary, buffer, vertical);
-			cv::vconcat(vertical, cv::Mat::zeros(frame.size().height - vertical.size().height, vertical.size().width, CV_8UC3), vertical);
-			cv::hconcat(frame, vertical, full);
-
+				cv::cvtColor(binary, binary, cv::COLOR_GRAY2BGR, 3);
+				cv::vconcat(binary, buffer, vertical);
+				cv::vconcat(vertical, cv::Mat::zeros(frame.size().height - vertical.size().height, vertical.size().width, CV_8UC3), vertical);
+				cv::hconcat(frame, vertical, full);
+			}
+			
 			cv::Point2i tl = boundingbox.tl(), br = boundingbox.br();
 			cv::rectangle(frame, cv::Point2i(tl.x*scale, tl.y*scale), cv::Point(br.x*scale, br.y*scale), cv::Scalar(255, 0, 0), 2);
-
-			cv::hconcat(full, frame, full);
 		} else {
-			cv::cvtColor(binary, binary, cv::COLOR_GRAY2BGR, 3);
-			cv::vconcat(binary, cv::Mat::zeros(frame.size().height - binary.size().height, binary.size().width, CV_8UC3), vertical);
-			cv::hconcat(frame, vertical, full);
+			if(options[3]) {
+				cv::cvtColor(binary, binary, cv::COLOR_GRAY2BGR, 3);
+				cv::vconcat(binary, cv::Mat::zeros(frame.size().height - binary.size().height, binary.size().width, CV_8UC3), vertical);
+				cv::hconcat(frame, vertical, full);
 
-			cv::hconcat(full, no_targets, full);
+				frame = no_targets;
+			}
+
+			cv::putText(
+				frame, "NO TARGETS DETECTED", 
+				cv::Point(frame.size().width*0.2, frame.size().height*0.5), 
+				cv::FONT_HERSHEY_DUPLEX, 1, cv::Scalar(0, 0, 255), 2, cv::LINE_AA
+			);
 		}
 
 		cv::putText(
-			full, "CPU: " + std::to_string(CPU::get().refPercent()*100.f) + "% | " + std::to_string(CPU::temp()) + "*C", 
-			cv::Point(frame.size().width*(1.0+1.0/scale), 15), 
+			frame, "CPU: " + std::to_string(CPU::get().refPercent()*100.f) + "% | " + std::to_string(CPU::temp()) + "*C", 
+			cv::Point(0, 15), 
 			cv::FONT_HERSHEY_DUPLEX, 0.45, cv::Scalar(0, 255, 0), 1, cv::LINE_AA
 		);
 		cv::putText(
-			full, "FPS (1F): " + std::to_string(fps), 
-			cv::Point(frame.size().width*(1.0+1.0/scale), 30), 
+			frame, "FPS (1F): " + std::to_string(fps), 
+			cv::Point(0, 30), 
 			cv::FONT_HERSHEY_DUPLEX, 0.45, cv::Scalar(0, 255, 0), 1, cv::LINE_AA
 		);
 		cv::putText(
-			full, "FPS (1S): " + std::to_string(fps_1s), 
-			cv::Point(frame.size().width*(1.0+1.0/scale), 45), 
+			frame, "FPS (1S): " + std::to_string(fps_1s), 
+			cv::Point(0, 45), 
 			cv::FONT_HERSHEY_DUPLEX, 0.45, cv::Scalar(0, 255, 0), 1, cv::LINE_AA
 		);
 		cv::putText(
-			full, "Total Frames: " + std::to_string(tframes), 
-			cv::Point(frame.size().width*(1.0+1.0/scale), 60), 
+			frame, "Total Frames: " + std::to_string(tframes), 
+			cv::Point(0, 60), 
 			cv::FONT_HERSHEY_DUPLEX, 0.45, cv::Scalar(0, 255, 0), 1, cv::LINE_AA
 		);
 
-		processed.PutFrame(full);
+		if(options[3]) {
+			cv::hconcat(full, frame, full);
+			processed.PutFrame(full);
+		} else {
+			processed.PutFrame(frame);
+		}
 
 		tframes++;
 		ttime = CHRONO::duration<double>(CHRONO::high_resolution_clock::now() - start).count();
