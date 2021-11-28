@@ -5,10 +5,23 @@
 #include <opencv2/core/types.hpp>
 #include <wpi/raw_ostream.h>
 #include <wpi/json.h>
+#include <wpi/raw_istream.h>
+#include <wpi/raw_ostream.h>
+
+#include <iostream>
 
 #include "cameraserver/CameraServer.h"
 #include "extras/resources.h"
 
+CE_STR _default = "/boot/frc.json";
+
+class VisionCamera;
+
+bool readConfig(std::vector<VisionCamera>& cameras, const char* file = _default);
+
+/*
+VisionCamera adds extra functionality and ease of use on top of cs::VideoCaemra (base of cs::HTTPCamera and cs::UsbCamera)
+*/
 class VisionCamera : public cs::VideoCamera {
 public:
 	VisionCamera() = default;
@@ -47,6 +60,8 @@ public:
 	void setWhiteBalanceAdjustable(std::shared_ptr<nt::NetworkTable> table);
 	void setExposureAdjustable();
 	void setExposureAdjustable(std::shared_ptr<nt::NetworkTable> table);
+
+	void setNetworkAdjustable();	// calls all of the above
 
 private:
 	cs::VideoSource::Kind type;

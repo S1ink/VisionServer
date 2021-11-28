@@ -1,25 +1,26 @@
 {
     "configurations": [
+        // {
+        //     "name": "Win32",
+        //     "includePath": [
+        //         "${workspaceFolder}/**"
+        //     ],
+        //     "defines": [
+        //         "_DEBUG",
+        //         "UNICODE",
+        //         "_UNICODE"
+        //     ],
+        //     "windowsSdkVersion": "10.0.19041.0",
+        //     "compilerPath": "D:\\Applications\\VisualStudio\\VC\\Tools\\MSVC\\14.29.30133\\bin\\Hostx64\\x64\\cl.exe",
+        //     "cStandard": "c17",
+        //     "cppStandard": "c++17",
+        //     "intelliSenseMode": "windows-msvc-x64"
+        // },
         {
-            "name": "Win32",
+            "name": "CC-ARM-DESKTOP-8GI6FFU",   // my desktop computer
             "includePath": [
-                "${workspaceFolder}/**"
-            ],
-            "defines": [
-                "_DEBUG",
-                "UNICODE",
-                "_UNICODE"
-            ],
-            "windowsSdkVersion": "10.0.19041.0",
-            "compilerPath": "D:\\Applications\\VisualStudio\\VC\\Tools\\MSVC\\14.29.30133\\bin\\Hostx64\\x64\\cl.exe",
-            "cStandard": "c17",
-            "cppStandard": "c++17",
-            "intelliSenseMode": "windows-msvc-x64"
-        },
-        {
-            "name": "ARM",
-            "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/include"
             ],
             "defines": [
                 "_DEBUG",
@@ -30,6 +31,25 @@
             ],
             "windowsSdkVersion": "10.0.19041.0",
             "compilerPath": "D:\\Programs\\Raspbian10-Windows64-Toolchain-8.3.0\\raspbian10\\bin\\arm-raspbian10-linux-gnueabihf-g++.exe",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "linux-gcc-arm"
+        },
+        {
+            "name": "CC-ARM-DESKTOP-R6IKQEI",   // my laptop
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/include"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE",
+                "__linux__",
+                "__unix__"
+            ],
+            "windowsSdkVersion": "10.0.19041.0",
+            "compilerPath": "C:\\Packages\\raspbian10\\bin\\arm-raspbian10-linux-gnueabihf-g++.exe",
             "cStandard": "c17",
             "cppStandard": "c++17",
             "intelliSenseMode": "linux-gcc-arm"

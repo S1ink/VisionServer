@@ -81,8 +81,7 @@ class VisionRunnerBase {
 template <typename T>
 class VisionRunner : public VisionRunnerBase {
  public:
-  VisionRunner(cs::VideoSource videoSource, T* pipeline,
-               std::function<void(T&)> listener);
+  VisionRunner(cs::VideoSource videoSource, T* pipeline, std::function<void(T&)> listener);
   virtual ~VisionRunner() = default;
 
  protected:

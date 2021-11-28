@@ -4,13 +4,23 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "BUILD",
+            "label": "RELEASE",
             "type": "shell",
-            "command": "./make",
+            "command": "./make mode=windows-release",
             "problemMatcher": [],
             "group": {
                 "kind": "build",
                 "isDefault": true
+            }
+        },
+        {
+            "label": "DEBUG",
+            "type": "shell",
+            "command": "./make mode=windows-debug",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": false
             }
         }
     ]
