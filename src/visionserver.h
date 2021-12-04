@@ -11,6 +11,7 @@
 #include <type_traits>
 #include <thread>
 #include <chrono>
+#include <atomic>
 
 #include "extras/resources.h"
 #include "visioncamera.h"
@@ -47,34 +48,51 @@ public:
     bool setCamera(size_t idx);
     cv::Size getCurrentResolution();
 
+    bool stopVision();
+
     template<class pipeline_t = PipelineBase>
     void runVision() {
-        static_assert(std::is_base_of<PipelineBase, pipeline_t>::value, "Template argument must inherit from PipelineBase");
+        static_assert(std::is_base_of<PipelineBase, pipeline_t>::value, "Template argument (pipeline_t) must inherit from PipelineBase");
         pipeline_t pipeline(this);
         cv::Mat frame(this->getCurrentResolution(), CV_8UC3);   // frame may need to be resized if a camera is switched, but this has not been tested
         this->start = CHRONO::high_resolution_clock::now();
-        for(;;) {   // add condition with external link
+        while(this->runloop) {   // add condition with external link
             this->source.GrabFrame(frame);
             pipeline.process(frame, this->stream);
         }
+        this->runloop = true;
     }
-    // template<class pipeline_t>
-    // void runMultiVision(std::vector<PipelineBase&> pipelines) {
-
-    // }
-    //static std::thread runVisionThread(VisionServer* server, PipelineBase& pipeline);
-    //static std::thread runMultiVisionThread(VisionServer* server, std::vector<PipelineBase&> pipelines);
+    template<class pipeline_t = PipelineBase>
+    bool runVisionThread() {
+        static_assert(std::is_base_of<PipelineBase, pipeline_t>::value, "Template argument (pipeline_t) must inherit from PipelineBase");
+        if(!this->launched.joinable()) {
+            this->launched = std::move(std::thread(VisionServer::visionWorker<pipeline_t>, this));
+            return true;
+        }
+        return false;
+    }
 
 protected:
-    //static void visionWorker(VisionServer* server, PipelineBase& pipeline);
-    //static void multiVisionWorker(VisionServer* server, std::vector<PipelineBase&> pipelines);
+    template<typename pipeline_t>
+    static void visionWorker(VisionServer* server) {
+        pipeline_t pipeline(server);
+        cv::Mat frame(server->getCurrentResolution(), CV_8UC3);
+        server->start = CHRONO::high_resolution_clock::now();
+        while(server->runloop) {
+            server->source.GrabFrame(frame);
+            pipeline.process(frame, server->stream);
+        }
+        server->runloop = true;
+    }
 
     std::vector<VisionCamera>* cameras;
-
     cs::CvSink source;
     cs::CvSource stream;
     
     CHRONO::high_resolution_clock::time_point start;
+
+    std::atomic_bool runloop{true};
+    std::thread launched;
 
     std::shared_ptr<nt::NetworkTable> table{nt::NetworkTableInstance::GetDefault().GetTable("Vision Server")};
 

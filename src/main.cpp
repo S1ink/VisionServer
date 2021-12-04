@@ -35,34 +35,34 @@ extern "C" void memcpy_subtract_asm(uint8_t* base, uint8_t* sub, uint8_t* dest, 
 
 //typedef void(*vpipeline_f)(cs::CvSink, cs::CvSource);
 
-cs::CvSink switchedCameraVision(
-	const std::vector<VisionCamera>& cameras, 
-	std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("Vision")
-) {
-	if(!table->ContainsKey("Vision Camera Index")) {
-		table->PutNumber("Vision Camera Index", 0);
-	}
-	if(!table->ContainsKey("Vision Cameras Available")) {
-		table->PutNumber("Vision Cameras Available", cameras.size());
-	}
-	static cs::CvSink source;
-	if(cameras.size() > 0) {
-		source = cameras[0].getVideo();
-	}
-	table->GetEntry("Vision Camera Index").AddListener(
-		[&cameras](const nt::EntryNotification& event) {
-			if(event.value->IsDouble()) {
-				size_t idx = event.value->GetDouble();
-				if(idx >= 0 && idx < cameras.size()) {
-					source.SetSource(cameras[idx]);
-					source.SetConfigJson(cameras[idx].getStreamJson());
-				}
-			}
-		},
-		NT_NOTIFY_IMMEDIATE | NT_NOTIFY_NEW | NT_NOTIFY_UPDATE
-	);
-	return source;
-} 
+// cs::CvSink switchedCameraVision(
+// 	const std::vector<VisionCamera>& cameras, 
+// 	std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("Vision")
+// ) {
+// 	if(!table->ContainsKey("Vision Camera Index")) {
+// 		table->PutNumber("Vision Camera Index", 0);
+// 	}
+// 	if(!table->ContainsKey("Vision Cameras Available")) {
+// 		table->PutNumber("Vision Cameras Available", cameras.size());
+// 	}
+// 	static cs::CvSink source;
+// 	if(cameras.size() > 0) {
+// 		source = cameras[0].getVideo();
+// 	}
+// 	table->GetEntry("Vision Camera Index").AddListener(
+// 		[&cameras](const nt::EntryNotification& event) {
+// 			if(event.value->IsDouble()) {
+// 				size_t idx = event.value->GetDouble();
+// 				if(idx >= 0 && idx < cameras.size()) {
+// 					source.SetSource(cameras[idx]);
+// 					source.SetConfigJson(cameras[idx].getStreamJson());
+// 				}
+// 			}
+// 		},
+// 		NT_NOTIFY_IMMEDIATE | NT_NOTIFY_NEW | NT_NOTIFY_UPDATE
+// 	);
+// 	return source;
+// } 
 
 template<typename num_t>
 void addNetTableVar(num_t& var, const wpi::Twine& name, std::shared_ptr<nt::NetworkTable> table) {
@@ -111,6 +111,7 @@ public:
 
 		this->resizeBuffers(this->env->getCurrentResolution());
 	}
+	TestPipeline(const TestPipeline& other) = delete;	// only remove this if absolutely necessary
 
 	inline bool cmpSize(const cv::Size& newsize) {
 		return this->resolution == newsize;
@@ -123,7 +124,7 @@ public:
 		}
 	}
 
-	void process(cv::Mat& frame, cs::CvSource& output) {
+	void process(cv::Mat& frame, cs::CvSource& output) override {
 		this->beg = CHRONO::high_resolution_clock::now();
 
 		if(cmpSize(frame.size())) {
@@ -247,7 +248,6 @@ private:
 };
 
 StopWatch runtime("Runtime", &std::cout, 0);
-
 void on_exit() {
 	runtime.end();
 }
@@ -264,171 +264,7 @@ int main(int argc, char* argv[]) {
 	else { return EXIT_FAILURE; }
 
 	VisionServer server(cameras);
-	//server.runVision();
 	server.runVision<TestPipeline>();
-
-
-
-	// std::shared_ptr<nt::NetworkTable> dash = nt::NetworkTableInstance::GetDefault().GetTable("Vision");
-
-	// std::array<bool, 4> options = {false, false, false, false};
-	// double weight = 0.5;
-	// uint8_t threshold = 100;
-	// size_t scale = 4;
-
-	// addNetTableVar(weight, "Weight (Red and Green)", dash);
-	// addNetTableVar(threshold, "Threshold (For weighted)", dash);
-	// addNetTableVar(options[0], "ASM Subtraction (Not working)", dash);
-	// addNetTableVar(options[1], "ASM Thresholding", dash);
-	// addNetTableVar(options[2], "Morphological Operations", dash);
-	// addNetTableVar(options[3], "Vision Multiview", dash);
-
-	// VisionCamera vision = cameras[0];
-
-	// //std::cout << "VISION CAMERA: " << vision.getWidth() << 'x' << vision.getHeight() << newline;
-
-	// cs::CvSink input = switchedCameraVision(cameras);
-	// cs::CvSource processed = vision.getSeparateServer();
-
-	// vision.setBrightnessAdjustable(dash);
-	// vision.setWhiteBalanceAdjustable(dash);
-	// vision.setExposureAdjustable(dash);
-
-	// // vision.setBrightness(50);
-	// // vision.setWhiteBalance(-1);
-	// // vision.setExposure(-1);
-
-	// cv::Mat frame(vision.getHeight(), vision.getWidth(), CV_8UC3);
-	// cv::Mat buffer(frame.size().height/scale, frame.size().width/scale, CV_8UC3);
-	// cv::Mat full(frame.size().height, (frame.size().width*(2.0+1.0/scale)), CV_8UC3);
-	// cv::Mat vertical = cv::Mat::zeros(frame.size().height, buffer.size().width, CV_8UC3);
-	// cv::Mat no_targets = cv::Mat::zeros(frame.size(), CV_8UC3);
-	// cv::Mat binary(buffer.size(), CV_8U);
-	// cv::Mat channels[3] = {
-	// 	cv::Mat(buffer.size(), CV_8U),
-	// 	cv::Mat(buffer.size(), CV_8U),
-	// 	cv::Mat(buffer.size(), CV_8U)
-	// };
-
-	// cv::putText(
-	// 	no_targets, "NO TARGETS DETECTED", 
-	// 	cv::Point(no_targets.size().width*0.2, no_targets.size().height*0.5), 
-	// 	cv::FONT_HERSHEY_DUPLEX, 1, cv::Scalar(0, 0, 255), 2, cv::LINE_AA
-	// );
-
-	// std::vector<std::vector<cv::Point> > contours;
-	// std::vector<cv::Point> poly_contour;
-	// cv::Rect boundingbox;
-
-	// double largest = 0.f;
-	// int16_t target = 0;
-
-	// uint64_t tframes = 0.f, fframes = 0.f;				// total frames and "final" frames
-	// double ttime = 0.f, ftime = 0.f, ltime = 0.f;		// total time and "final" time
-	// double fps_1s = 0.f, fps = 0.f;
-	// CHRONO::high_resolution_clock::time_point start = CHRONO::high_resolution_clock::now();
-	// for (;;) {
-	// 	input.GrabFrame(frame);
-
-	// 	cv::resize(frame, buffer, cv::Size(), 1.0/scale, 1.0/scale);
-
-	// 	cv::split(buffer, channels);
-	// 	cv::addWeighted(channels[1], weight, channels[2], weight, 0.0, binary);
-	// 	if(options[0]) { memcpy_subtract_asm(channels[0].data, binary.data, binary.data, binary.size().area()); }
-	// 	else { cv::subtract(channels[0], binary, binary); }
-
-	// 	if(options[1]) { memcpy_threshold_binary_asm(binary.data, binary.data, binary.size().area(), threshold); }
-	// 	else { cv::inRange(binary, cv::Scalar(threshold), cv::Scalar(255), binary); }
-
-	// 	if(options[3]) {
-	// 		cv::erode(binary, binary, cv::getStructuringElement(cv::MORPH_ERODE, cv::Size(3, 3)));
-	// 		cv::dilate(binary, binary, cv::getStructuringElement(cv::MORPH_DILATE, cv::Size(3, 3)));
-	// 	}
-
-	// 	contours.clear();
-	// 	poly_contour.clear();
-	// 	largest = 0.0;
-	// 	target = -1;
-
-	// 	cv::findContours(binary, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);	// RETR_TREE (original)
-
-	// 	double area;
-	// 	for(size_t i = 0; i < contours.size(); i++) {
-	// 		area = cv::contourArea(contours[i]);
-	// 		if(area > largest) {
-	// 			largest = area;
-	// 			target = i;
-	// 		}
-	// 	}
-
-	// 	if(target >= 0) {
-	// 		boundingbox = cv::boundingRect(contours[target]);
-
-	// 		if(options[3]) {
-	// 			cv::rectangle(buffer, boundingbox.tl(), boundingbox.br(), cv::Scalar(255, 0, 0), 1);
-
-	// 			cv::cvtColor(binary, binary, cv::COLOR_GRAY2BGR, 3);
-	// 			cv::vconcat(binary, buffer, vertical);
-	// 			cv::vconcat(vertical, cv::Mat::zeros(frame.size().height - vertical.size().height, vertical.size().width, CV_8UC3), vertical);
-	// 			cv::hconcat(frame, vertical, full);
-	// 		}
-			
-	// 		cv::Point2i tl = boundingbox.tl(), br = boundingbox.br();
-	// 		cv::rectangle(frame, cv::Point2i(tl.x*scale, tl.y*scale), cv::Point(br.x*scale, br.y*scale), cv::Scalar(255, 0, 0), 2);
-	// 	} else {
-	// 		if(options[3]) {
-	// 			cv::cvtColor(binary, binary, cv::COLOR_GRAY2BGR, 3);
-	// 			cv::vconcat(binary, cv::Mat::zeros(frame.size().height - binary.size().height, binary.size().width, CV_8UC3), vertical);
-	// 			cv::hconcat(frame, vertical, full);
-
-	// 			frame = no_targets;
-	// 		} else {
-	// 			cv::putText(
-	// 				frame, "NO TARGETS DETECTED", 
-	// 				cv::Point(frame.size().width*0.2, frame.size().height*0.5), 
-	// 				cv::FONT_HERSHEY_DUPLEX, 1, cv::Scalar(0, 0, 255), 2, cv::LINE_AA
-	// 			);
-	// 		}
-	// 	}
-
-	// 	cv::putText(
-	// 		frame, "CPU: " + std::to_string(CPU::get().refPercent()*100.f) + "% | " + std::to_string(CPU::temp()) + "*C", 
-	// 		cv::Point(0, 15), 
-	// 		cv::FONT_HERSHEY_DUPLEX, 0.45, cv::Scalar(0, 255, 0), 1, cv::LINE_AA
-	// 	);
-	// 	cv::putText(
-	// 		frame, "FPS (1F): " + std::to_string(fps), 
-	// 		cv::Point(0, 30), 
-	// 		cv::FONT_HERSHEY_DUPLEX, 0.45, cv::Scalar(0, 255, 0), 1, cv::LINE_AA
-	// 	);
-	// 	cv::putText(
-	// 		frame, "FPS (1S): " + std::to_string(fps_1s), 
-	// 		cv::Point(0, 45), 
-	// 		cv::FONT_HERSHEY_DUPLEX, 0.45, cv::Scalar(0, 255, 0), 1, cv::LINE_AA
-	// 	);
-	// 	cv::putText(
-	// 		frame, "Total Frames: " + std::to_string(tframes), 
-	// 		cv::Point(0, 60), 
-	// 		cv::FONT_HERSHEY_DUPLEX, 0.45, cv::Scalar(0, 255, 0), 1, cv::LINE_AA
-	// 	);
-
-	// 	if(options[3]) {
-	// 		cv::hconcat(full, frame, full);
-	// 		processed.PutFrame(full);
-	// 	} else {
-	// 		processed.PutFrame(frame);
-	// 	}
-
-	// 	tframes++;
-	// 	ttime = CHRONO::duration<double>(CHRONO::high_resolution_clock::now() - start).count();
-	// 	fps = 1.f/(ttime-ltime);
-	// 	if ((int)ttime > (int)ftime) {
-	// 		fps_1s = ((tframes - fframes) / (ttime - ftime));
-	// 		ftime = ttime;
-	// 		fframes = tframes;
-	// 	}
-	// 	ltime = ttime;
-	// }
 }
 
 // LIST OF THINGS

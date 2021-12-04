@@ -34,7 +34,7 @@ VisionServer::VisionServer(std::vector<VisionCamera>& cameras) : cameras(&camera
 		this->source = cameras[0].getVideo();
 		this->stream = cameras[0].getSeparateServer();
 	//}
-	table->GetEntry("Vision Camera Index").AddListener(
+	table->GetEntry("Camera Index").AddListener(
 		[&cameras, this](const nt::EntryNotification& event) {
 			if(event.value->IsDouble()) {
 				size_t idx = event.value->GetDouble();
@@ -63,4 +63,13 @@ bool VisionServer::setCamera(size_t idx) {
 }
 cv::Size VisionServer::getCurrentResolution() {
 	return getResolution(this->source.GetSource().GetVideoMode());
+}
+
+bool VisionServer::stopVision() {
+	this->runloop = false;
+	if(this->launched.joinable()) {
+		this->launched.join();
+		return true;
+	}
+	return false;
 }

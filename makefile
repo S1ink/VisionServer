@@ -33,9 +33,9 @@ PROGRAM := $(BIN_DIR)/vision_program
 SRCS := $(call rwildcard,$(SRC_DIR)/,*.cpp *.c *.S *.s)
 OBJS := $(SRCS:$(SRC_DIR)/%=$(OBJ_DIR)/%.o)
 
-CDEBUG := -g -Og
+CDEBUG := -g -Og -DDEBUG
 LDEBUG := -g
-CRELEASE := -O3
+CRELEASE := -O3 -DRELEASE
 LRELEASE :=
 
 CPPFLAGS := -pthread -Iinclude -Iinclude/opencv -MMD -MP
