@@ -1,19 +1,10 @@
 #include "visionserver.h"
+#include "vision.h"
 
-PipelineBase::PipelineBase(VisionServer* server) : env(server) {}
+PipelineBase::PipelineBase(const VisionServer* server) : env(server) {}
 
-void PipelineBase::process(cv::Mat& frame, cs::CvSource& output) {
+void PipelineBase::process(cv::Mat& frame, cs::CvSource& output, bool thresh) {
     output.PutFrame(frame);
-}
-
-std::vector<VisionCamera>* PipelineBase::getEnvCameras() {
-	return this->env->cameras;
-}
-cs::CvSink PipelineBase::getEnvSource() {
-	return this->env->source;
-}
-cs::CvSource PipelineBase::getEnvStream() {
-	return this->env->stream;
 }
 CHRONO::high_resolution_clock::time_point PipelineBase::getEnvStart() {
 	return this->env->start;
@@ -30,10 +21,10 @@ VisionServer::VisionServer(std::vector<VisionCamera>& cameras) : cameras(&camera
 	if(!this->table->ContainsKey("Cameras Available")) {
 		this->table->PutNumber("Cameras Available", cameras.size());
 	}
-	//if(cameras.size() > 0) {	// config parser should prevent this from happening
-		this->source = cameras[0].getVideo();
-		this->stream = cameras[0].getSeparateServer();
-	//}
+
+	this->source = cameras[0].getVideo();
+	this->stream = cameras[0].getSeparateServer();
+	
 	table->GetEntry("Camera Index").AddListener(
 		[&cameras, this](const nt::EntryNotification& event) {
 			if(event.value->IsDouble()) {
@@ -48,7 +39,7 @@ VisionServer::VisionServer(std::vector<VisionCamera>& cameras) : cameras(&camera
 	);
 }
 
-size_t VisionServer::validIndexes() {
+size_t VisionServer::validIndexes() const {
     if(this->cameras) {
         return this->cameras->size();
     }
@@ -61,7 +52,7 @@ bool VisionServer::setCamera(size_t idx) {
     }
     return false;
 }
-cv::Size VisionServer::getCurrentResolution() {
+cv::Size VisionServer::getCurrentResolution() const {
 	return getResolution(this->source.GetSource().GetVideoMode());
 }
 
