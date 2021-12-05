@@ -6,7 +6,7 @@
 #include <networktables/NetworkTable.h>
 #include <cameraserver/CameraServer.h>
 
-#include <opencv2/core/types.hpp>
+#include <opencv2/opencv.hpp>
 
 #include <type_traits>
 #include <thread>
@@ -15,6 +15,7 @@
 #include <tuple>
 
 #include "extras/resources.h"
+#include "extras/stats.h"
 #include "visioncamera.h"
 
 class VisionServer;
@@ -23,7 +24,7 @@ class PipelineBase {
 public:
     PipelineBase(const VisionServer* server);
     virtual ~PipelineBase() = default;
-    virtual void process(cv::Mat& frame, cs::CvSource& output, bool show_thresh = false);   // make this return the frametime (double)
+    virtual void process(cv::Mat& io_frame, bool show_thresh = false);
 
 protected:
     const VisionServer* env;
@@ -36,6 +37,7 @@ class VisionServer {
     friend class PipelineBase;
 public:
     VisionServer(std::vector<VisionCamera>& cameras);
+    ~VisionServer() {}    // implement this to delete all networktable entries created by the server
 
     size_t validIndexes() const;
     bool setCamera(size_t idx);
@@ -44,28 +46,33 @@ public:
     bool stopVision();
 
     template<class pipeline_t = PipelineBase>
-    void runVision();
+    void runVision(int8_t quality = 50);
     template<class pipeline_t1, class pipeline_t2>
-    void runVision();
+    void runVision(int8_t quality = 50);
     template<class pipeline_t1, class pipeline_t2, class pipeline_t3>
-    void runVision();
+    void runVision(int8_t quality = 50);
     template<class pipeline_t = PipelineBase>
-    bool runVisionThread();
+    bool runVisionThread(int8_t quality = 50);
 
 protected:
     template<typename pipeline_t>
-    static void visionWorker(VisionServer* server);
+    static void visionWorker(VisionServer* server, int8_t quality = 50);
+
+    void putStats(cv::Mat& io_frame);
 
     std::vector<VisionCamera>* cameras;
     cs::CvSink source;
-    cs::CvSource stream;
-    
-    CHRONO::high_resolution_clock::time_point start;
+    cs::CvSource output;
+    cs::MjpegServer stream;
 
     std::atomic_bool runloop{true};
     std::thread launched;
 
     std::shared_ptr<nt::NetworkTable> table = {nt::NetworkTableInstance::GetDefault().GetTable("Vision Server")};
+
+    uint64_t total_frames{0}, sec1_frames{0};
+	double total_time{0.f}, frame_time{0.f}, loop_time{0.f}, sec1_time{0.f}, fps_1s{0.f}, fps{0.f};
+	CHRONO::high_resolution_clock::time_point start, beg, end, last;
 
 };
 

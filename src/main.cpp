@@ -26,16 +26,16 @@ int main(int argc, char* argv[]) {
 	else { return EXIT_FAILURE; }
 
 	VisionServer server(cameras);
-	server.runVision<TestPipeline, PipelineBase>();
+	server.runVision<TestPipeline, PipelineBase>(25);
 }
 
 // LIST OF THINGS
 /*
-- Dynamic resizing/scaling
+x? Dynamic resizing/scaling
 - Position math -> networktables
-- GET NETWORKTABLES TO WORK
+x? GET NETWORKTABLES TO WORK
 x multiple cameras -> switching (find out what we want to do)
 - compression/stay under bandwidth limit
-- Modularize?
+x? Modularize?
 - MORE CUSTOM ASSEMBLY!!! :)
 */
