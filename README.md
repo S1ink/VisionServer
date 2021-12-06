@@ -58,5 +58,7 @@ code or the project with the most features/functionality. This will be utilized 
   ## Other Notes
   - The headers within *include/* and libraries within *lib/* originate from the C++ example project that can be downloaded from the WpiLibPi web dashboard (in the "Application" tab, under "Example Programs" -> [image](https://docs.wpilib.org/en/stable/docs/software/vision-processing/wpilibpi/the-raspberry-pi-frc-console.html#vision-workflows)). Currently I am unaware of a separate source to get these, so downloading them from the dashboard remains the best option to get the most up-to-date libraries. 
   - The [pigpio](https://abyz.me.uk/rpi/pigpio/) library is also included in the project. To install this manually, download and build pigpio, then copy *pigpio.h* into *include/* and *libpigpio.so* into *lib/*. There are a number of other libraries (.so files) that get made when pigpio is built, but none of these are needed. 
+  ## A Quick Demo (Release V3)
+  https://user-images.githubusercontent.com/60528506/144782431-3216b8dc-1f97-4670-a13f-1772aa9ad199.mp4
   
 ***This guide is not finished - more info to come***
