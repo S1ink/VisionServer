@@ -51,11 +51,20 @@ public:
     void runVision(int8_t quality = 50);
     template<class pipeline_t1, class pipeline_t2, class pipeline_t3>
     void runVision(int8_t quality = 50);
+
     template<class pipeline_t = PipelineBase>
+    bool runVisionThread(int8_t quality = 50);
+    template<class pipeline_t1, class pipeline_t2>
+    bool runVisionThread(int8_t quality = 50);
+    template<class pipeline_t1, class pipeline_t2, class pipeline_t3>
     bool runVisionThread(int8_t quality = 50);
 
 protected:
-    template<typename pipeline_t>
+    template<class pipeline_t>
+    static void visionWorker(VisionServer* server, int8_t quality = 50);
+    template<class pipeline_t1, class pipeline_t2>
+    static void visionWorker(VisionServer* server, int8_t quality = 50);
+    template<class pipeline_t1, class pipeline_t2, class pipeline_t3>
     static void visionWorker(VisionServer* server, int8_t quality = 50);
 
     void putStats(cv::Mat& io_frame);
