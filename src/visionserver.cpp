@@ -1,11 +1,18 @@
 #include "visionserver.h"
 #include "vision.h"
 
-PipelineBase::PipelineBase(const VisionServer* server) : env(server) {}
+PipelineBase::PipelineBase(VisionServer* server) : env(server) {}
 
 void PipelineBase::process(cv::Mat& io_frame, bool thresh) {}
+
 CHRONO::high_resolution_clock::time_point PipelineBase::getEnvStart() {
 	return this->env->start;
+}
+void PipelineBase::updateMatrices(const cv::Mat_<float>& tvec, const cv::Mat_<float>& rvec) {
+	this->env->updateMatrices(tvec, rvec);
+}
+void PipelineBase::updateMatrices(const cv::Mat_<float>& tvec) {
+	this->env->updateMatrices(tvec);
 }
 
 VisionServer::VisionServer(std::vector<VisionCamera>& cameras) : cameras(&cameras) {
@@ -19,7 +26,7 @@ VisionServer::VisionServer(std::vector<VisionCamera>& cameras) : cameras(&camera
 	//if(!this->table->ContainsKey("Cameras Available")) {
 		this->table->PutNumber("Cameras Available", cameras.size());
 	//}
-	//if(!this->table->ContainsKey("Stream Compression")) {
+	//if(!this->table->ContainsKey("Stream Quality")) {
 		//this->table->PutNumber("Stream Quality", 100);
 	//}
 
@@ -68,6 +75,9 @@ bool VisionServer::setCamera(size_t idx) {
 cv::Size VisionServer::getCurrentResolution() const {
 	return getResolution(this->source.GetSource().GetVideoMode());
 }
+void VisionServer::setCompression(int8_t quality) {
+	this->stream.SetCompression(quality > 100 ? 100 : (quality < -1 ? -1 : quality));
+}
 
 bool VisionServer::stopVision() {
 	this->runloop = false;
@@ -110,3 +120,6 @@ void VisionServer::putStats(cv::Mat& io_frame) {
 		cv::FONT_HERSHEY_DUPLEX, 0.45, cv::Scalar(0, 255, 0), 1, cv::LINE_AA
 	);
 }
+
+void VisionServer::updateMatrices(const cv::Mat_<float>& tvec, const cv::Mat_<float>& rvec) {}
+void VisionServer::updateMatrices(const cv::Mat_<float>& tvec) {}

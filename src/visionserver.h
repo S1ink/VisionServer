@@ -22,13 +22,19 @@ class VisionServer;
 
 class PipelineBase {
 public:
-    PipelineBase(const VisionServer* server);
+    PipelineBase(VisionServer* server);
     virtual ~PipelineBase() = default;
     virtual void process(cv::Mat& io_frame, bool show_thresh = false);
+    //virtual std::shared_ptr<nt::NetworkTable> getTable();
 
 protected:
-    const VisionServer* env;
+    VisionServer* env;
+    cv::Size resolution;
+
     CHRONO::high_resolution_clock::time_point getEnvStart();
+    void updateMatrices(const cv::Mat_<float>& tvec, const cv::Mat_<float>& rvec);
+    void updateMatrices(const cv::Mat_<float>& tvec);
+
 };
 
 
@@ -42,6 +48,7 @@ public:
     size_t validIndexes() const;
     bool setCamera(size_t idx);
     cv::Size getCurrentResolution() const;
+    void setCompression(int8_t quality);
 
     bool stopVision();
 
@@ -68,6 +75,9 @@ protected:
     static void visionWorker(VisionServer* server, int8_t quality = 50);
 
     void putStats(cv::Mat& io_frame);
+
+    void updateMatrices(const cv::Mat_<float>& tvec, const cv::Mat_<float>& rvec);
+    void updateMatrices(const cv::Mat_<float>& tvec);
 
     std::vector<VisionCamera>* cameras;
     cs::CvSink source;

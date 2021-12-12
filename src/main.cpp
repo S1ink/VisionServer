@@ -35,7 +35,7 @@ x? Dynamic resizing/scaling
 - Position math -> networktables
 x? GET NETWORKTABLES TO WORK
 x multiple cameras -> switching (find out what we want to do)
-- compression/stay under bandwidth limit
+x compression/stay under bandwidth limit
 x? Modularize?
 - MORE CUSTOM ASSEMBLY!!! :)
 */

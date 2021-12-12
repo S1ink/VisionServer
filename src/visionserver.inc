@@ -15,7 +15,6 @@ void VisionServer::runVision(int8_t quality) {
 
 template<class pipeline_t>
 bool VisionServer::runVisionThread(int8_t quality) {
-	static_assert(std::is_base_of<PipelineBase, pipeline_t>::value, "Template argument (pipeline_t) must inherit from PipelineBase");
 	if(!this->launched.joinable()) {
 		this->launched = std::move(std::thread(VisionServer::visionWorker<pipeline_t>, this, quality));
 		return true;
@@ -24,8 +23,6 @@ bool VisionServer::runVisionThread(int8_t quality) {
 }
 template<class pipeline_t1, class pipeline_t2>
 bool VisionServer::runVisionThread(int8_t quality) {
-	static_assert(std::is_base_of<PipelineBase, pipeline_t1>::value, "Template argument (pipeline_t1) must inherit from PipelineBase");
-	static_assert(std::is_base_of<PipelineBase, pipeline_t2>::value, "Template argument (pipeline_t2) must inherit from PipelineBase");
 	if(!this->launched.joinable()) {
 		this->launched = std::move(std::thread(VisionServer::visionWorker<pipeline_t1, pipeline_t2>, this, quality));
 		return true;
@@ -34,9 +31,6 @@ bool VisionServer::runVisionThread(int8_t quality) {
 }
 template<class pipeline_t1, class pipeline_t2, class pipeline_t3>
 bool VisionServer::runVisionThread(int8_t quality) {
-	static_assert(std::is_base_of<PipelineBase, pipeline_t1>::value, "Template argument (pipeline_t1) must inherit from PipelineBase");
-	static_assert(std::is_base_of<PipelineBase, pipeline_t2>::value, "Template argument (pipeline_t2) must inherit from PipelineBase");
-	static_assert(std::is_base_of<PipelineBase, pipeline_t3>::value, "Template argument (pipeline_t3) must inherit from PipelineBase");
 	if(!this->launched.joinable()) {
 		this->launched = std::move(std::thread(VisionServer::visionWorker<pipeline_t1, pipeline_t2, pipeline_t3>, this, quality));
 		return true;
