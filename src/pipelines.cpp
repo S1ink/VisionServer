@@ -23,7 +23,7 @@ void WSTPipeline::resizeBuffers(cv::Size size) {
 	}
 	this->resolution = size;
 }
-void WSTPipeline::threshold(cv::Mat& io_frame) {
+void WSTPipeline::threshold(const cv::Mat& io_frame) {
 	if(io_frame.size() != this->resolution) {
 		this->resizeBuffers(io_frame.size());
 	}
@@ -34,8 +34,33 @@ void WSTPipeline::threshold(cv::Mat& io_frame) {
 	cv::subtract(this->channels[(size_t)this->color], this->binary, this->binary);
 	memcpy_threshold_binary_asm(this->binary.data, this->binary.data, this->binary.size().area(), this->thresh);
 }
+void WSTPipeline::process(cv::Mat& io_frame, bool output_binary) {}
 
-BBoxDemo::BBoxDemo(VisionServer* server) : WSTPipeline(server, this->table) {}
+ContourPipeline::ContourPipeline() {}
+
+size_t ContourPipeline::findContours(const cv::Mat& binary_frame) {
+	this->contours.clear();
+	cv::findContours(binary_frame, this->contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+	return this->contours.size();
+}
+size_t ContourPipeline::findLargest(const cv::Mat& binary_frame) {
+	this->largest = 0.f;
+	this->target = -1;
+
+	this->findContours(binary_frame);
+	for(size_t i = 0; i < this->contours.size(); i++) {
+		this->area = cv::contourArea(this->contours[i]);
+		if(this->area > this->largest) {
+			this->largest = this->area;
+			this->target = i;
+		}
+	}
+	return this->target;
+}
+
+
+
+BBoxDemo::BBoxDemo(VisionServer* server) : WSTPipeline(server, this->table), ContourPipeline() {}
 
 void BBoxDemo::process(cv::Mat& io_frame, bool output_binary) {
 	this->threshold(io_frame);
@@ -43,20 +68,7 @@ void BBoxDemo::process(cv::Mat& io_frame, bool output_binary) {
 		cv::cvtColor(this->binary, this->buffer, cv::COLOR_GRAY2BGR, 3);
 		cv::resize(this->buffer, io_frame, cv::Size(), this->scale, this->scale, cv::INTER_NEAREST);
 	} else {
-		this->contours.clear();
-		this->t_contour.clear();
-		this->largest = 0.f;
-		this->target = -1;
-
-		cv::findContours(this->binary, this->contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
-
-		for(size_t i = 0; i < this->contours.size(); i++) {
-			this->area = cv::contourArea(this->contours[i]);
-			if(this->area > this->largest) {
-				this->largest = this->area;
-				this->target = i;
-			}
-		}
+		this->findLargest(this->binary);
 
 		if(this->target >= 0) {
 			this->boundingbox = cv::boundingRect(this->contours[this->target]);
@@ -68,6 +80,18 @@ void BBoxDemo::process(cv::Mat& io_frame, bool output_binary) {
 				cv::FONT_HERSHEY_DUPLEX, 1, cv::Scalar(0, 0, 255), 2, cv::LINE_AA
 			);
 		}
+	}
+}
+
+SquareTargetPNP::SquareTargetPNP(VisionServer* server) : WSTPipeline(server, this->table), ContourPipeline() {}
+
+void SquareTargetPNP::process(cv::Mat& io_frame, bool output_binary) {
+	this->threshold(io_frame);
+	if(output_binary) {
+		cv::cvtColor(this->binary, this->buffer, cv::COLOR_GRAY2BGR, 3);
+		cv::resize(this->buffer, io_frame, cv::Size(), this->scale, this->scale, cv::INTER_NEAREST);
+	} else {
+		
 	}
 }
 

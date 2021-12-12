@@ -28,11 +28,12 @@ protected:
 	WSTPipeline(const WSTPipeline& other) = delete;
 
 	virtual void resizeBuffers(cv::Size size);
-	void threshold(cv::Mat& io_frame);
+	void threshold(const cv::Mat& io_frame);
+	void process(cv::Mat& io_frame, bool output_binary = false) override;
 
 	enum class PColor {	//template param?
-		BLUE, GREEN, RED, 
-		TOTAL, ERROR
+		BLUE, GREEN, RED
+		//, TOTAL, ERROR
 	} color{PColor::BLUE};
 	static const std::array<std::array<uint8_t, 2>, 3> weighted_array;
 
@@ -44,8 +45,21 @@ protected:
 	std::array<cv::Mat, 3> channels;
 
 };
+class ContourPipeline {		// Provides contour functions and contour storage
+protected:
+	ContourPipeline();
+	ContourPipeline(const ContourPipeline& other) = delete;
 
-class BBoxDemo : public WSTPipeline {
+	size_t findContours(const cv::Mat& binary_frame);
+	size_t findLargest(const cv::Mat& binary_frame);
+
+	std::vector<std::vector<cv::Point2i> > contours;
+	double largest{0.f}, area{0.f};
+	size_t target{0};
+
+};
+
+class BBoxDemo : public WSTPipeline, public ContourPipeline {
 public:
 	BBoxDemo(VisionServer* server);
 	BBoxDemo(const BBoxDemo& other) = delete;
@@ -54,27 +68,56 @@ public:
 
 private:
 	const std::shared_ptr<nt::NetworkTable> table{nt::NetworkTableInstance::GetDefault().GetTable("BoundingBox Demo Pipeline")};
-
-	std::vector<std::vector<cv::Point> > contours;
-	std::vector<cv::Point> t_contour;
 	cv::Rect boundingbox;
-	double largest{0.f}, area{0.f};
-	size_t target{0};
 
 };
+class SquareTargetPNP : public WSTPipeline, public ContourPipeline {
+public:
+	SquareTargetPNP(VisionServer* server);
+	SquareTargetPNP(const SquareTargetPNP& other) = delete;
 
-// class SquareTargetPNP : public WSTPipeline {
-// public:
-// 	SquareTargetPNP(VisionServer* server);
-// 	SquareTargetPNP(const SquareTargetPNP& other) = delete;
+	void process(cv::Mat& io_frame, bool output_binary = false) override;
 
-// 	void resizeBuffers(cv::Size size);
+private:
+	const std::shared_ptr<nt::NetworkTable> table{nt::NetworkTableInstance::GetDefault().GetTable("Square Target Pipeline")};
 
-// 	void process(cv::Mat& io_frame, bool output_binary = false) override;
+	class SquareTarget {
+	public:
+		union SquarePoints {
+			SquarePoints() {}
 
-// private:
+			std::array<cv::Point2f, 4> array;
+			struct data {
+				cv::Point2f top_left, top_right, bottom_left, bottom_right;
+			} points;
+		} data;
 
-// };
+		void sortPoints(const std::vector<cv::Point>& points);
+		cv::Point2d getCenter();
+
+		void scaleUp(size_t scale);
+		void scaleDown(size_t scale);
+	} target_corners;
+	std::vector<cv::Point2d> target_points;
+
+	const std::array<cv::Point3f, 4> world_corners = {
+		cv::Point3f(-0.25f, 0.25f, 0.f),	//top-left
+		cv::Point3f(0.25f, 0.25f, 0.f), 	//top-right
+		cv::Point3f(-0.25f, -0.25f, 0.f), 	//bottom-left
+		cv::Point3f(0.25f, -0.25f, 0.f)		//bottom-right
+	};
+
+	cv::Mat_<float> rvec = cv::Mat_<float>(1, 3), tvec = rvec, rmat = cv::Mat_<float>(3, 3);
+
+	std::vector<cv::Point2d> projection2d;
+	const std::vector<cv::Point3d> projection3d = {
+		cv::Point3f(-0.25f, 0.25f, 0.25f),
+		cv::Point3f(0.25f, 0.25f, 0.25f), 
+		cv::Point3f(-0.25f, -0.25f, 0.25f), 
+		cv::Point3f(0.25f, -0.25f, 0.25f)
+	};
+
+};
 
 // DONT COPY INSTANCES THEY ARE EXTREMELY HEAVY
 class TestPipeline : public PipelineBase {
