@@ -60,5 +60,7 @@ code or the project with the most features/functionality. This will be utilized 
   - The [pigpio](https://abyz.me.uk/rpi/pigpio/) library is also included in the project. To install this manually, download and build pigpio, then copy *pigpio.h* into *include/* and *libpigpio.so* into *lib/*. There are a number of other libraries (.so files) that get made when pigpio is built, but none of these are needed. 
   ## A Quick Demo (Release V3)
   https://user-images.githubusercontent.com/60528506/144782431-3216b8dc-1f97-4670-a13f-1772aa9ad199.mp4
+  ## SolvePnP Demo (Release V4)
+  https://user-images.githubusercontent.com/60528506/145700989-09ce786e-3c32-4982-ad6f-9aaa964aa076.mp4
   
 ***This guide is not finished - more info to come***
