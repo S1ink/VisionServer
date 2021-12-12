@@ -49,19 +49,19 @@ bool readConfig(std::vector<VisionCamera>& cameras, const char* file) {
         wpi::errs() << "Config error in " << file << ": no camera configs found, this program requires cameras to function\n";
     } else {
         try {
-            for(const wpi::json::value_type& camera : j.at("cameras")) {
-                //wpi::outs() << "Reading camera: " << camera << newline;
-                // check for duplicates
-                // cs::UsbCamera cam;
-                // try {cam = cs::UsbCamera(camera.at("name").get<std::string>(), camera.at("path").get<std::string>());}
-                // catch (const wpi::json::exception& e) {
-                // 	wpi::errs() << "Config error in " << file << ": could not read camera name and/or path: " << e.what() << newline;
-                // 	return false;
-                // }
-                // cam.SetConfigJson(camera);
-                // cam.SetConnectionStrategy(cs::VideoSource::kConnectionKeepOpen);
-                // wpi::outs() << "Added camera '" << cam.GetName() << "' on " << cam.GetPath() << newline;
-                cameras.emplace_back(camera);
+            for(const wpi::json& camera : j.at("cameras")) {
+                if(camera.count("calibration") > 0 && j.count("calibrations") > 0) {
+                    wpi::json calibration;
+                    try {
+                        calibration = j.at("calibrations").at(camera.at("calibration").get<std::string>()); 
+                        cameras.emplace_back(camera, calibration);
+                    } catch (const wpi::json::exception& e) {
+                        wpi::errs() << "Config error in " << file << ": failed to get configuration object: " << e.what() << newline;  // print out more info if needed
+                        cameras.emplace_back(camera);
+                    }
+                } else {
+                    cameras.emplace_back(camera);
+                }
             }
         }
         catch (const wpi::json::exception& e) {
@@ -130,6 +130,19 @@ VisionCamera::VisionCamera(const cs::UsbCamera& source, const wpi::json& config)
 VisionCamera::VisionCamera(const cs::HttpCamera& source, const wpi::json& config) :
 	VideoCamera(source.GetHandle()), type(cs::VideoSource::Kind::kHttp), config(config)
 {}
+VisionCamera::VisionCamera(const wpi::json& source_config, const wpi::json& calibration) :	// add and/or find a way to determine device type from config json
+	type(cs::VideoSource::Kind::kUsb), config(source_config), calibration(calibration)
+{
+	cs::UsbCamera cam;
+	try {cam = cs::UsbCamera(source_config.at("name").get<std::string>(), source_config.at("path").get<std::string>());}
+	catch (const wpi::json::exception& e) {
+		wpi::errs() << "Config error in source JSON -> could not read camera name and/or path: " << e.what() << newline;
+	}
+	cam.SetConfigJson(source_config);
+	cam.SetConnectionStrategy(cs::VideoSource::kConnectionKeepOpen);
+	// print confirmation
+	swap(*this, cam);	// this should work
+}
 VisionCamera::VisionCamera(const wpi::json& source_config) :	// add and/or find a way to determine device type from config json
 	type(cs::VideoSource::Kind::kUsb), config(source_config)
 {
@@ -161,6 +174,67 @@ wpi::json VisionCamera::getStreamJson() const {
 		return this->config.at("stream");
 	}
 	return wpi::json();
+}
+
+bool VisionCamera::getCameraMatrix(cv::Mat_<double>& array) {
+    if(this->calibration.is_object()) {
+        try{
+            wpi::json matx = this->calibration.at("camera_matrix");
+            for(size_t i = 0; i < 3; i++) {
+                for(size_t j = 0; j < 3; j++) {
+                    array[i][j] = matx.at(i).at(j).get<double>();
+                }
+            }
+        } catch (const wpi::json::exception& e) {
+            wpi::errs() << "Failed to parse camera matrix: " << e.what() << newline;
+        }
+        return true;
+    }
+    return false;
+}
+bool VisionCamera::getCameraMatrix(cv::Mat_<float>& array) {
+    if(this->calibration.is_object()) {
+        try{
+            wpi::json matx = this->calibration.at("camera_matrix");
+            for(size_t i = 0; i < 3; i++) {
+                for(size_t j = 0; j < 3; j++) {
+                    array[i][j] = matx.at(i).at(j).get<float>();
+                }
+            }
+        } catch (const wpi::json::exception& e) {
+            wpi::errs() << "Failed to parse camera matrix: " << e.what() << newline;
+        }
+        return true;
+    }
+    return false;
+}
+bool VisionCamera::getDistortion(cv::Mat_<double>& array) {
+    if(this->calibration.is_object()) {
+        try{
+            wpi::json matx = this->calibration.at("distortion");
+            for(size_t i = 0; i < 5; i++) {
+                array[0][i] = matx.at(0).at(i).get<double>();
+            }
+        } catch (const wpi::json::exception& e) {
+            wpi::errs() << "Failed to parse camera matrix: " << e.what() << newline;
+        }
+        return true;
+    }
+    return false;
+}
+bool VisionCamera::getDistortion(cv::Mat_<float>& array) {
+    if(this->calibration.is_object()) {
+        try{
+            wpi::json matx = this->calibration.at("distortion");
+            for(size_t i = 0; i < 5; i++) {
+                array[0][i] = matx.at(0).at(i).get<float>();
+            }
+        } catch (const wpi::json::exception& e) {
+            wpi::errs() << "Failed to parse camera matrix: " << e.what() << newline;
+        }
+        return true;
+    }
+    return false;
 }
 
 cs::CvSink VisionCamera::getVideo() const {

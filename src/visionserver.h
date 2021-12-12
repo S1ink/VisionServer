@@ -32,6 +32,8 @@ protected:
     cv::Size resolution;
 
     CHRONO::high_resolution_clock::time_point getEnvStart();
+    const cv::Mat_<float>& getCameraMatrix();
+    const cv::Mat_<float>& getDistortion();
     void updateMatrices(const cv::Mat_<float>& tvec, const cv::Mat_<float>& rvec);
     void updateMatrices(const cv::Mat_<float>& tvec);
 
@@ -76,6 +78,9 @@ protected:
 
     void putStats(cv::Mat& io_frame);
 
+    const cv::Mat_<float>& getCameraMatrix();
+    const cv::Mat_<float>& getDistortion();
+
     void updateMatrices(const cv::Mat_<float>& tvec, const cv::Mat_<float>& rvec);
     void updateMatrices(const cv::Mat_<float>& tvec);
 
@@ -83,6 +88,8 @@ protected:
     cs::CvSink source;
     cs::CvSource output;
     cs::MjpegServer stream;
+
+    cv::Mat_<float> camera_matrix{cv::Mat_<float>(3, 3)}, distortion{cv::Mat_<float>(1, 5)};
 
     std::atomic_bool runloop{true};
     std::thread launched;

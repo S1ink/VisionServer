@@ -8,6 +8,12 @@ void PipelineBase::process(cv::Mat& io_frame, bool thresh) {}
 CHRONO::high_resolution_clock::time_point PipelineBase::getEnvStart() {
 	return this->env->start;
 }
+const cv::Mat_<float>& PipelineBase::getCameraMatrix() {
+	return this->env->getCameraMatrix();
+}
+const cv::Mat_<float>& PipelineBase::getDistortion() {
+	return this->env->getDistortion();
+}
 void PipelineBase::updateMatrices(const cv::Mat_<float>& tvec, const cv::Mat_<float>& rvec) {
 	this->env->updateMatrices(tvec, rvec);
 }
@@ -41,6 +47,8 @@ VisionServer::VisionServer(std::vector<VisionCamera>& cameras) : cameras(&camera
 				size_t idx = event.value->GetDouble();
 				if(idx >= 0 && idx < cameras.size()) {
 					this->source.SetSource(cameras[idx]);
+					cameras[idx].getCameraMatrix(this->camera_matrix);
+					cameras[idx].getDistortion(this->distortion);
 					//this->stream.SetConfigJson(cameras[idx].getStreamJson());
 				}
 			}
@@ -119,6 +127,13 @@ void VisionServer::putStats(cv::Mat& io_frame) {
 		cv::Point(0, 90), 
 		cv::FONT_HERSHEY_DUPLEX, 0.45, cv::Scalar(0, 255, 0), 1, cv::LINE_AA
 	);
+}
+
+const cv::Mat_<float>& VisionServer::getCameraMatrix() {
+	return this->camera_matrix;
+}
+const cv::Mat_<float>& VisionServer::getDistortion() {
+	return this->distortion;
 }
 
 void VisionServer::updateMatrices(const cv::Mat_<float>& tvec, const cv::Mat_<float>& rvec) {}

@@ -2,7 +2,7 @@
 
 #include <networktables/NetworkTableInstance.h>
 #include <networktables/NetworkTable.h>
-#include <opencv2/core/types.hpp>
+#include <opencv2/opencv.hpp>
 #include <wpi/raw_ostream.h>
 #include <wpi/json.h>
 #include <wpi/raw_istream.h>
@@ -29,6 +29,7 @@ public:
 	VisionCamera(const cs::VideoSource& source, const wpi::json& config = wpi::json());
 	VisionCamera(const cs::UsbCamera& source, const wpi::json& config = wpi::json());	// these were not working
 	VisionCamera(const cs::HttpCamera& source, const wpi::json& config = wpi::json());	// ^
+	VisionCamera(const wpi::json& source_config, const wpi::json& calibration);
 	VisionCamera(const wpi::json& source_config);
 
 	cs::VideoSource::Kind getType() const;
@@ -36,6 +37,11 @@ public:
 	wpi::json getJson() const;
 	bool isValidStreamJson() const;
 	wpi::json getStreamJson() const;
+
+	bool getCameraMatrix(cv::Mat_<double>& array);
+	bool getCameraMatrix(cv::Mat_<float>& array);
+	bool getDistortion(cv::Mat_<double>& array);
+	bool getDistortion(cv::Mat_<float>& array);
 
 	cs::CvSink getVideo() const;
 	cs::CvSource getSeparateServer() const;
@@ -65,7 +71,7 @@ public:
 
 private:
 	cs::VideoSource::Kind type;
-	wpi::json config;
+	wpi::json config, calibration;
 	// cs::CvSink for storing vision source?
 
 	int8_t brightness{50}, exposure{-1};

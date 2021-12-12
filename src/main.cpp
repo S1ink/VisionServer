@@ -1,3 +1,5 @@
+#include "opencv2/core/types.hpp"
+
 #include "extras/resources.h"
 #include "extras/sighandle.h"
 #include "extras/timing.h"
@@ -25,8 +27,22 @@ int main(int argc, char* argv[]) {
 	else if(readConfig(cameras)) {}
 	else { return EXIT_FAILURE; }
 
+	// cv::Mat_<double> cam_matx = cv::Mat_<double>(3, 3), cam_dist = cv::Mat_<double>(1, 5);
+	// for(size_t i = 0; i < cameras.size(); i++) {
+	// 	if(cameras[i].getCameraMatrix(cam_matx)) {
+	// 		std::cout << "Found camera matrix for '" << cameras[i].GetName() << "':\n" << cam_matx << "\n\n";
+	// 	} else {
+	// 		std::cout << "Failed to find camera matrix for '" << cameras[i].GetName() << "'\n\n";
+	// 	}
+	// 	if(cameras[i].getDistortion(cam_dist)) {
+	// 		std::cout << "Found distortion for '" << cameras[i].GetName() << "':\n" << cam_dist << "\n\n";
+	// 	} else {
+	// 		std::cout << "Failed to find distortion for '" << cameras[i].GetName() << "'\n\n";
+	// 	}
+	// }
+
 	VisionServer server(cameras);
-	server.runVision<TestPipeline, PipelineBase>(25);
+	server.runVision<SquareTargetPNP, BBoxDemo, PipelineBase>(25);
 }
 
 // LIST OF THINGS
