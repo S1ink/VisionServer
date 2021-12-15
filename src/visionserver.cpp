@@ -1,25 +1,52 @@
 #include "visionserver.h"
+#include "pipelines.h"
 #include "vision.h"
 
-PipelineBase::PipelineBase(VisionServer* server) : env(server) {}
+// PipelineBase::PipelineBase(VisionServer* server) : env(server) {}
 
-void PipelineBase::process(cv::Mat& io_frame, bool thresh) {}
+// void PipelineBase::process(cv::Mat& io_frame, bool thresh) {}
 
-CHRONO::high_resolution_clock::time_point PipelineBase::getEnvStart() {
-	return this->env->start;
+// CHRONO::high_resolution_clock::time_point PipelineBase::getEnvStart() {
+// 	return this->env->start;
+// }
+// const cv::Mat_<float>& PipelineBase::getCameraMatrix() {
+// 	return this->env->getCameraMatrix();
+// }
+// const cv::Mat_<float>& PipelineBase::getDistortion() {
+// 	return this->env->getDistortion();
+// }
+// void PipelineBase::updateMatrices(const cv::Mat_<float>& tvec, const cv::Mat_<float>& rvec) {
+// 	this->env->updateMatrices(tvec, rvec);
+// }
+// void PipelineBase::updateMatrices(const cv::Mat_<float>& tvec) {
+// 	this->env->updateMatrices(tvec);
+// }
+
+VPipeline::VPipeline(VisionServer& server) : env(&server) {}
+
+const cv::Mat_<float>& VPipeline::getCameraMatrix() const {
+	if(this->env) {
+		return this->env->getCameraMatrix();
+	}
+	return cv::Mat_<float>(3, 3);
 }
-const cv::Mat_<float>& PipelineBase::getCameraMatrix() {
-	return this->env->getCameraMatrix();
+const cv::Mat_<float>& VPipeline::getCameraDistortion() const {
+	if(this->env) {
+		return this->env->getDistortion();
+	}
+	return cv::Mat_<float>(1, 5);
 }
-const cv::Mat_<float>& PipelineBase::getDistortion() {
-	return this->env->getDistortion();
-}
-void PipelineBase::updateMatrices(const cv::Mat_<float>& tvec, const cv::Mat_<float>& rvec) {
-	this->env->updateMatrices(tvec, rvec);
-}
-void PipelineBase::updateMatrices(const cv::Mat_<float>& tvec) {
+void VPipeline::updateMatrices(const cv::Mat_<float>& tvec) {
 	this->env->updateMatrices(tvec);
 }
+void VPipeline::updateMatrices(const cv::Mat_<float>& tvec, const cv::Mat_<float>& rvec) {
+	this->env->updateMatrices(tvec, rvec);
+}
+const VisionServer* VPipeline::getEnv() const {
+	return this->env;
+}
+
+
 
 VisionServer::VisionServer(std::vector<VisionCamera>& cameras) : cameras(&cameras) {
 	for(size_t i = 0; i < cameras.size(); i++) {
@@ -129,12 +156,86 @@ void VisionServer::putStats(cv::Mat& io_frame) {
 	);
 }
 
-const cv::Mat_<float>& VisionServer::getCameraMatrix() {
+const cv::Mat_<float>& VisionServer::getCameraMatrix() const {
 	return this->camera_matrix;
 }
-const cv::Mat_<float>& VisionServer::getDistortion() {
+const cv::Mat_<float>& VisionServer::getDistortion() const {
 	return this->distortion;
 }
 
 void VisionServer::updateMatrices(const cv::Mat_<float>& tvec, const cv::Mat_<float>& rvec) {}
 void VisionServer::updateMatrices(const cv::Mat_<float>& tvec) {}
+
+
+
+// void VisionServer::runVisionTest(int8_t quality) {	
+// 	this->stream.SetCompression(quality);
+
+// 	SquareTargetPNP p1(this);
+// 	BBoxDemo p2(this);
+// 	PipelineBase p3(this);
+// 	PipelineBase pbase(this);
+	
+// 	this->table->PutNumber("Pipeline Index", 0);
+// 	this->table->PutNumber("Pipelines Available", 3);
+// 	this->table->PutBoolean("Show Threshold", false);
+// 	this->table->PutBoolean("Show Statistics", false);
+
+// 	cv::Mat frame(this->getCurrentResolution(), CV_8UC3);
+
+// 	this->start = CHRONO::high_resolution_clock::now();
+// 	while(this->runloop) {
+// 		std::cout << "Processing?\n";
+// 		this->source.GrabFrame(frame);
+// 		switch((int8_t)this->table->GetEntry("Pipeline Index").GetDouble(-1)) {
+// 			case 0 : {
+// 				this->beg = CHRONO::high_resolution_clock::now();
+// 				p1.process(frame, this->table->GetEntry("Show Threshold").GetBoolean(false));
+// 				this->end = CHRONO::high_resolution_clock::now();
+// 				break;
+// 			}
+// 			case 1 : {
+// 				this->beg = CHRONO::high_resolution_clock::now();
+// 				p2.process(frame, this->table->GetEntry("Show Threshold").GetBoolean(false));
+// 				this->end = CHRONO::high_resolution_clock::now();
+// 				break;
+// 			}
+// 			case 2 : {
+// 				this->beg = CHRONO::high_resolution_clock::now();
+// 				p3.process(frame, this->table->GetEntry("Show Threshold").GetBoolean(false));
+// 				this->end = CHRONO::high_resolution_clock::now();
+// 			}
+// 			case -1 :
+// 			default : {
+// 				std::cout << "Pipline index out of bounds, please only use values >0 and <'Piplines Available'\n";
+// 				this->beg = CHRONO::high_resolution_clock::now();
+// 				PipelineBase(this).process(frame, this->table->GetEntry("Show Threshold").GetBoolean(false));
+// 				this->end = CHRONO::high_resolution_clock::now();
+// 			}
+// 		}
+// 		this->total_frames++;
+
+// 		this->total_time = CHRONO::duration<double>(this->end - this->start).count();
+// 		this->frame_time = CHRONO::duration<double>(this->end - this->beg).count();
+// 		this->loop_time = CHRONO::duration<double>(this->end - this->last).count();
+// 		this->last = this->end;
+
+// 		this->fps = 1.f/this->loop_time;
+// 		if((int)this->total_time > (int)this->sec1_time) {
+// 			this->fps_1s = ((this->total_frames - this->sec1_frames) / (this->total_time - this->sec1_time));
+// 			this->sec1_time = this->total_time;
+// 			this->sec1_frames = this->total_frames;
+// 		}
+
+// 		if(this->table->GetEntry("Show Statistics").GetBoolean(false)) {
+// 			this->putStats(frame);
+// 		}
+// 		this->output.PutFrame(frame);
+// 	}
+// 	this->runloop = true;
+	
+// 	this->table->Delete("Pipeline Index");
+// 	this->table->Delete("Piplines Available");
+// 	this->table->Delete("Show Threshold");
+// 	this->table->Delete("Show Statistics");
+// }

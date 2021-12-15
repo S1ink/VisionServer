@@ -1,15 +1,49 @@
 #include "pipelines.h"
 #include "vision.h"
 
-BBoxDemo::BBoxDemo(VisionServer* server) : WSTPipeline(server, this->table), ContourPipeline() {}
+BBoxDemo::BBoxDemo(VisionServer& server) : VPipeline(server) {
+	addNetTableVar(this->weight, "Weight", this->table);
+	addNetTableVar(this->thresh, "Threshold", this->table);
+
+	this->resizeBuffers(server.getCurrentResolution());
+}
+
+void BBoxDemo::resizeBuffers(cv::Size size) {
+	this->buffer = cv::Mat(size/this->scale, CV_8UC3);
+	this->binary = cv::Mat(size/this->scale, CV_8UC1);
+	for(size_t i = 0; i < this->channels.size(); i++) {
+		channels[i] = cv::Mat(size/this->scale, CV_8UC1);
+	}
+}
 
 void BBoxDemo::process(cv::Mat& io_frame, bool output_binary) {
-	this->threshold(io_frame);
+	if(io_frame.size() != this->buffer.size()*(int)this->scale) {	// optional
+		this->resizeBuffers(io_frame.size());
+	}
+
+	cv::resize(io_frame, this->buffer, cv::Size(), 1.0/this->scale, 1.0/this->scale);
+	cv::split(this->buffer, this->channels);
+	cv::addWeighted(this->channels[1], this->weight, this->channels[2], this->weight, 0.0, this->binary);
+	cv::subtract(this->channels[0], this->binary, this->binary);
+	memcpy_threshold_binary_asm(this->binary.data, this->binary.data, this->binary.size().area(), this->thresh);
+
 	if(output_binary) {
 		cv::cvtColor(this->binary, this->buffer, cv::COLOR_GRAY2BGR, 3);
 		cv::resize(this->buffer, io_frame, cv::Size(), this->scale, this->scale, cv::INTER_NEAREST);
 	} else {
-		this->findLargest(this->binary);
+		this->largest = 0.f;
+		this->target = -1;
+		this->contours.clear();
+
+		cv::findContours(this->binary, this->contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+		
+		for(size_t i = 0; i < this->contours.size(); i++) {
+			this->area = cv::contourArea(this->contours[i]);
+			if(this->area > this->largest) {
+				this->largest = this->area;
+				this->target = i;
+			}
+		}
 
 		if(this->target >= 0) {
 			this->boundingbox = cv::boundingRect(this->contours[this->target]);
@@ -24,15 +58,49 @@ void BBoxDemo::process(cv::Mat& io_frame, bool output_binary) {
 	}
 }
 
-SquareTargetPNP::SquareTargetPNP(VisionServer* server) : WSTPipeline(server, this->table), ContourPipeline() {}
+SquareTargetPNP::SquareTargetPNP(VisionServer& server) : VPipeline(server) {
+	addNetTableVar(this->weight, "Weight", this->table);
+	addNetTableVar(this->thresh, "Threshold", this->table);
+
+	this->resizeBuffers(server.getCurrentResolution());
+}
+
+void SquareTargetPNP::resizeBuffers(cv::Size size) {
+	this->buffer = cv::Mat(size/this->scale, CV_8UC3);
+	this->binary = cv::Mat(size/this->scale, CV_8UC1);
+	for(size_t i = 0; i < this->channels.size(); i++) {
+		channels[i] = cv::Mat(size/this->scale, CV_8UC1);
+	}
+}
 
 void SquareTargetPNP::process(cv::Mat& io_frame, bool output_binary) {
-	this->threshold(io_frame);
+	if(io_frame.size() != this->buffer.size()*(int)this->scale) {	// optional
+		this->resizeBuffers(io_frame.size());
+	}
+
+	cv::resize(io_frame, this->buffer, cv::Size(), 1.0/this->scale, 1.0/this->scale);
+	cv::split(this->buffer, this->channels);
+	cv::addWeighted(this->channels[1], this->weight, this->channels[2], this->weight, 0.0, this->binary);
+	cv::subtract(this->channels[0], this->binary, this->binary);
+	memcpy_threshold_binary_asm(this->binary.data, this->binary.data, this->binary.size().area(), this->thresh);
+
 	if(output_binary) {
 		cv::cvtColor(this->binary, this->buffer, cv::COLOR_GRAY2BGR, 3);
 		cv::resize(this->buffer, io_frame, cv::Size(), this->scale, this->scale, cv::INTER_NEAREST);
 	} else {
-		this->findLargest(this->binary);
+		this->largest = 0.f;
+		this->target = -1;
+		this->contours.clear();
+
+		cv::findContours(this->binary, this->contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+		
+		for(size_t i = 0; i < this->contours.size(); i++) {
+			this->area = cv::contourArea(this->contours[i]);
+			if(this->area > this->largest) {
+				this->largest = this->area;
+				this->target = i;
+			}
+		}
 
 		if(this->target >= 0) {
 			cv::convexHull(this->contours[this->target], this->target_points);
@@ -41,7 +109,7 @@ void SquareTargetPNP::process(cv::Mat& io_frame, bool output_binary) {
 			if(this->target_points.size() == this->reference_points.getSize()) {
 				this->reference_points.sort(this->target_points);
 				this->reference_points.rescale(this->scale);
-				cv::solvePnP(this->reference_points.world, this->reference_points.points, this->getCameraMatrix(), this->getDistortion(), this->rvec, this->tvec);
+				cv::solvePnP(this->reference_points.world, this->reference_points.points, this->getCameraMatrix(), this->getCameraDistortion(), this->rvec, this->tvec);
 
 				// this will go in VisionServer
 				float 
@@ -83,7 +151,7 @@ void SquareTargetPNP::process(cv::Mat& io_frame, bool output_binary) {
 					cv::FONT_HERSHEY_SIMPLEX, 0.4, cv::Scalar(255, 0, 255), 1, cv::LINE_AA
 				);
 
-				cv::projectPoints(this->projection3d, this->rvec, this->tvec, this->getCameraMatrix(), this->getDistortion(), this->projection2d);
+				cv::projectPoints(this->projection3d, this->rvec, this->tvec, this->getCameraMatrix(), this->getCameraDistortion(), this->projection2d);
 				for(size_t i = 0; i < this->projection2d.size(); i++) {
 					cv::line(io_frame, this->projection2d[i], this->reference_points.points[i], cv::Scalar(255, 0, 0), 1);
 				}

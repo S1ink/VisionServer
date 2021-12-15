@@ -7,8 +7,8 @@
 //#define SWITCHED_CAMERA_CONFIG // enable this to setup switched cameras from the config file, otherwise the program starts a single switched camera for vision
 
 #include "visioncamera.h"
-#include "visionserver.h"
 #include "pipelines.h"
+#include "visionserver.h"
 #include "mem.h"
 
 StopWatch runtime("Runtime", &std::cout, 0);
@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
 	// }
 
 	VisionServer server(cameras);
-	server.runVision<SquareTargetPNP, BBoxDemo, PipelineBase>(25);
+	server.runVision<SquareTargetPNP, BBoxDemo, DefaultPipeline>(25);
 }
 
 // LIST OF THINGS

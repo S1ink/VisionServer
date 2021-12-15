@@ -2,6 +2,7 @@
 # https://stackoverflow.com/questions/30573481/how-to-write-a-makefile-with-separate-source-and-header-directories
 # https://stackoverflow.com/questions/2826029/passing-additional-variables-from-command-line-to-make
 # https://web.stanford.edu/class/archive/cs/cs107/cs107.1174/guide_make.html
+# https://github.com/KRMisha/Makefile/blob/master/Makefile
 
 # Compiler Options: https://gcc.gnu.org/onlinedocs/gcc/Option-Summary.html
 # -pthread -> link POSIX thread library - use in compiling AND linking
@@ -18,7 +19,7 @@
 
 rwildcard = $(foreach d,$(wildcard $(addsuffix *,$(1))),$(call rwildcard,$(d)/,$(2)) $(filter $(subst *,%,$(2)),$(d)))
 
-mode ?= windows-release
+mode ?= release
 
 CROSS_PREFIX := arm-raspbian10-linux-gnueabihf-
 CXX := g++
@@ -47,12 +48,16 @@ LDLIBS := -lm -lpigpio -lwpilibc -lwpiHal -lcameraserver -lntcore -lcscore -lope
 	-lopencv_videoio -lopencv_imgcodecs -lopencv_features2d -lopencv_video -lopencv_photo -lopencv_imgproc -lopencv_flann \
 	-lopencv_core -lwpiutil -latomic
 
-ifneq (,$(findstring windows,$(mode))) #windows
+ifeq ($(OS),Windows_NT) #windows
 CXX := $(CROSS_PREFIX)$(CXX)
+OS := windows
+RM-R := del /s
 else #native
+OS := native
+RM-R := rm -r
 endif
 
-ifneq (,$(findstring release,$(mode))) #release
+ifeq ($(mode),release) #release
 COPT := $(CRELEASE)
 LOPT := $(LRELEASE)
 else #ifneq (,$(findstring debug,$(mode))) #debug
@@ -60,11 +65,12 @@ COPT := $(CDEBUG)
 LOPT := $(LDEBUG)
 endif
 
-.PHONY: all rebuild clean
+.PHONY: build rebuild clean install copy
 
-all: $(PROGRAM)
+build: $(PROGRAM)
+	@echo "Building: $(OS)-$(mode)"
 
-rebuild: all | clean
+rebuild: build | clean
 
 #compile for each source
 $(OBJ_DIR)/%.cpp.o : $(SRC_DIR)/%.cpp | $(OBJ_DIR)
@@ -87,14 +93,19 @@ $(PROGRAM): $(OBJS) | $(BIN_DIR)
 $(BIN_DIR) $(OBJ_DIR):
 	mkdir $@
 
-#install: all
-#	cp runCamera $(BIN_DIR)
+copy:
+ifeq ($(OS),windows)
+	scp $(PROGRAM) pi@wpilibpi:/home/pi/uploaded
+	scp frc.json pi@wpilibpi:/boot
+else
+	cp $(PROGRAM) /home/pi/uploaded
+	chmod +x /home/pi/uploaded
+	cp frc.json /boot
+endif
+
+install: build copy
 
 clean:
-ifneq (,$(findstring windows,$(mode)))#find a better solution for windows, as this doesn't work if the dirs are not empty (kind of pointless)
-	rmdir $(OBJ_DIR) $(BIN_DIR)
-else 
-	$(RM) -rv $(OBJ_DIR) $(BIN_DIR)
-endif
+	$(RM-R) $(OBJ_DIR)
 
 -include $(OBJS:.o=.d)

@@ -182,8 +182,14 @@
     <ClCompile Include="src\extras\basic.cpp" />
     <ClCompile Include="src\extras\output.cpp" />
     <ClCompile Include="src\extras\sighandle.cpp" />
+    <ClCompile Include="src\extras\stats.cpp" />
     <ClCompile Include="src\extras\timing.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\pipelines.cpp" />
+    <ClCompile Include="src\processing.cpp" />
+    <ClCompile Include="src\vision.cpp" />
+    <ClCompile Include="src\visioncamera.cpp" />
+    <ClCompile Include="src\visionserver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\cameraserver\CameraServer.h" />
@@ -1003,7 +1009,14 @@
     <ClInclude Include="src\extras\output.h" />
     <ClInclude Include="src\extras\resources.h" />
     <ClInclude Include="src\extras\sighandle.h" />
+    <ClInclude Include="src\extras\stats.h" />
     <ClInclude Include="src\extras\timing.h" />
+    <ClInclude Include="src\mem.h" />
+    <ClInclude Include="src\pipelines.h" />
+    <ClInclude Include="src\processing.h" />
+    <ClInclude Include="src\vision.h" />
+    <ClInclude Include="src\visioncamera.h" />
+    <ClInclude Include="src\visionserver.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\cameraserver\CameraServer.inc" />
@@ -1022,6 +1035,9 @@
     <None Include="include\wpi\circular_buffer.inc" />
     <None Include="include\wpi\HttpUtil.inl" />
     <None Include="include\wpi\HttpWebSocketServerConnection.inl" />
+    <None Include="src\mem.S" />
+    <None Include="src\processing.inc" />
+    <None Include="src\visionserver.inc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

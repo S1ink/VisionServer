@@ -14,37 +14,84 @@
 
 #include <iostream>
 #include <chrono>
+#include <algorithm>
+#include <math.h>
+#include <vector>
+#include <array>
 
 #include "extras/resources.h"
 #include "extras/stats.h"
 
 #include "visionserver.h"
-#include "processing.h"
+//#include "processing.h"
 #include "vision.h"
 #include "mem.h"
-class BBoxDemo : public WSTPipeline, public ContourPipeline {
+
+template<size_t corners>
+struct Target {
+	Target(const std::array<cv::Point3f, corners>& world_pts);
+
+	std::array<cv::Point2f, corners> points;		// actual points 
+	const std::array<cv::Point3f, corners> world;	// world points that relate to the above 
+
+	size_t getSize();
+
+	virtual void sort(const std::vector<cv::Point2i>& contour);
+	void rescale(double scale);	// multiplies points (x and y) by scale for all points
+	std::array<cv::Point2f, corners> getRescaled(double scale);	// returns rescaled array of points, does not alter internal array
+
+};
+
+class BBoxDemo : public VPipeline {
 public:
-	BBoxDemo(VisionServer* server);
+	//using VPipeline::VPipeline;
+	BBoxDemo(VisionServer& server);
 	BBoxDemo(const BBoxDemo& other) = delete;
 
 	void process(cv::Mat& io_frame, bool output_binary = false) override;
 
 private:
+	void resizeBuffers(cv::Size size);
+
 	const std::shared_ptr<nt::NetworkTable> table{nt::NetworkTableInstance::GetDefault().GetTable("BoundingBox Demo Pipeline")};
+
+	double weight{0.5};
+	uint8_t thresh{50};
+	size_t scale{4};
+
+	double largest{0.f}, area{0.f};
+	int16_t target{0};
+
+	cv::Mat buffer, binary;
+	std::array<cv::Mat, 3> channels;
+	std::vector<std::vector<cv::Point2i> > contours;
 	cv::Rect boundingbox;
 
 };
-class SquareTargetPNP : public WSTPipeline, public ContourPipeline {
+class SquareTargetPNP : public VPipeline {
 public:
-	SquareTargetPNP(VisionServer* server);
+	SquareTargetPNP(VisionServer& server);
 	SquareTargetPNP(const SquareTargetPNP& other) = delete;
 
 	void process(cv::Mat& io_frame, bool output_binary = false) override;
 
 private:
+	void resizeBuffers(cv::Size size);
+
 	const std::shared_ptr<nt::NetworkTable> table{nt::NetworkTableInstance::GetDefault().GetTable("Square Target Pipeline")};
 
-	std::vector<cv::Point2i> target_points;
+	double weight{0.5};
+	uint8_t thresh{50};
+	size_t scale{4};
+
+	double largest{0.f}, area{0.f};
+	int16_t target{0};
+
+	cv::Mat buffer, binary;
+	std::array<cv::Mat, 3> channels;
+
+	std::vector<std::vector<cv::Point> > contours;
+	std::vector<cv::Point> target_points;
 	class Square : public Target<4> {
 	public:
 		Square() : Target<4>({
@@ -151,3 +198,5 @@ private:
 // 	std::vector<cv::Point2d> perpendicular2d;
 
 // };
+
+#include "processing.inc"

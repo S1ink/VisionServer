@@ -102,6 +102,24 @@
     <ClCompile Include="resources\pigpio-master\x_pigpiod_if2.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\extras\stats.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pipelines.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\processing.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\vision.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\visioncamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\visionserver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\extras\basic.h">
@@ -2558,6 +2576,27 @@
     <ClInclude Include="resources\pigpio-master\pigs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\extras\stats.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\pipelines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\processing.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vision.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\visioncamera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\visionserver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\cameraserver\CameraServer.inc">
@@ -2608,5 +2647,12 @@
     <None Include="include\cscore_oo.inl">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="src\processing.inc">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="src\visionserver.inc">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="src\mem.S" />
   </ItemGroup>
 </Project>

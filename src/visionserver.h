@@ -20,22 +20,54 @@
 
 class VisionServer;
 
-class PipelineBase {
+// class PipelineBase {     // legacy pipeline base class
+// public:
+//     explicit PipelineBase(VisionServer* server);
+//     PipelineBase(const PipelineBase& other) = delete;
+//     virtual ~PipelineBase() = default;
+//     PipelineBase& operator=(const PipelineBase& other) = delete;
+
+//     virtual void process(cv::Mat& io_frame, bool show_thresh = false);
+//     //virtual std::shared_ptr<nt::NetworkTable> getTable();
+
+// protected:
+//     VisionServer* env;
+
+//     CHRONO::high_resolution_clock::time_point getEnvStart();
+//     const cv::Mat_<float>& getCameraMatrix();
+//     const cv::Mat_<float>& getDistortion();
+//     void updateMatrices(const cv::Mat_<float>& tvec, const cv::Mat_<float>& rvec);
+//     void updateMatrices(const cv::Mat_<float>& tvec);
+
+// };
+
+class VPipeline {       // Vision Pipeline base interface
 public:
-    PipelineBase(VisionServer* server);
-    virtual ~PipelineBase() = default;
-    virtual void process(cv::Mat& io_frame, bool show_thresh = false);
-    //virtual std::shared_ptr<nt::NetworkTable> getTable();
+    //VPipeline() = default;
+    explicit VPipeline(VisionServer& server);
+    VPipeline(const VPipeline&) = delete;
+    virtual ~VPipeline() = default;
+    VPipeline& operator=(const VPipeline&) = delete;
 
-protected:
-    VisionServer* env;
-    cv::Size resolution;
+    virtual void process(cv::Mat& io_frame, bool debug = false) = 0;
+    //void setEnv(const VisionServer* server);
 
-    CHRONO::high_resolution_clock::time_point getEnvStart();
-    const cv::Mat_<float>& getCameraMatrix();
-    const cv::Mat_<float>& getDistortion();
+    const cv::Mat_<float>& getCameraMatrix() const;
+    const cv::Mat_<float>& getCameraDistortion() const;
+
     void updateMatrices(const cv::Mat_<float>& tvec, const cv::Mat_<float>& rvec);
     void updateMatrices(const cv::Mat_<float>& tvec);
+
+    const VisionServer* getEnv() const;
+
+private:
+    VisionServer* env;
+    
+};
+class DefaultPipeline : VPipeline {     // default pipeline (video passthrough)
+    using VPipeline::VPipeline;
+public:
+    void process(cv::Mat& io_frame, bool debug = false) override {}
 
 };
 
@@ -43,6 +75,7 @@ protected:
 
 class VisionServer {
     friend class PipelineBase;
+    friend class VPipeline;
 public:
     VisionServer(std::vector<VisionCamera>& cameras);
     ~VisionServer() {}    // implement this to delete all networktable entries created by the server
@@ -52,34 +85,36 @@ public:
     cv::Size getCurrentResolution() const;
     void setCompression(int8_t quality);
 
+    const cv::Mat_<float>& getCameraMatrix() const;
+    const cv::Mat_<float>& getDistortion() const;
+
     bool stopVision();
 
-    template<class pipeline_t = PipelineBase>
+    template<class pipeline_t = DefaultPipeline>
     void runVision(int8_t quality = 50);
     template<class pipeline_t1, class pipeline_t2>
     void runVision(int8_t quality = 50);
     template<class pipeline_t1, class pipeline_t2, class pipeline_t3>
     void runVision(int8_t quality = 50);
 
-    template<class pipeline_t = PipelineBase>
+    template<class pipeline_t = DefaultPipeline>
     bool runVisionThread(int8_t quality = 50);
     template<class pipeline_t1, class pipeline_t2>
     bool runVisionThread(int8_t quality = 50);
     template<class pipeline_t1, class pipeline_t2, class pipeline_t3>
     bool runVisionThread(int8_t quality = 50);
+
+    //void runVisionTest(int8_t quality = 50);
 
 protected:
     template<class pipeline_t>
-    static void visionWorker(VisionServer* server, int8_t quality = 50);
+    static void visionWorker(VisionServer& server, int8_t quality = 50);
     template<class pipeline_t1, class pipeline_t2>
-    static void visionWorker(VisionServer* server, int8_t quality = 50);
+    static void visionWorker(VisionServer& server, int8_t quality = 50);
     template<class pipeline_t1, class pipeline_t2, class pipeline_t3>
-    static void visionWorker(VisionServer* server, int8_t quality = 50);
+    static void visionWorker(VisionServer& server, int8_t quality = 50);
 
     void putStats(cv::Mat& io_frame);
-
-    const cv::Mat_<float>& getCameraMatrix();
-    const cv::Mat_<float>& getDistortion();
 
     void updateMatrices(const cv::Mat_<float>& tvec, const cv::Mat_<float>& rvec);
     void updateMatrices(const cv::Mat_<float>& tvec);
