@@ -1,7 +1,141 @@
 #include "pipelines.h"
-#include "vision.h"
 
-BBoxDemo::BBoxDemo(VisionServer& server) : VPipeline(server) {
+#include <iostream>
+#include <algorithm>
+#include <math.h>
+
+#include "vision.h"
+#include "mem.h"
+
+// DummyBase::DummyBase(VisionServer& server) {
+// 	server.getCurrentResolution();
+// }
+
+// Dummy::Dummy(VisionServer& server) : DummyBase(server) {
+// 	std::cout << "The camera resolution is: " << server.getCurrentResolution() << newline;
+// }
+// void Dummy::dummyfunc() {
+// 	std::cout << "YOUR HAVE CALLED A VIRTUAL FUNCTION OVERRIDE\n";
+// }
+
+TargetTest::TargetTest(VisionServer& server) : VPipeline(server, "Target Testing Pipeline"), WSThreshold(server.getCurrentResolution(), this->getTable()) {
+	std::cout << "Exhibit C\n";
+	// addNetTableVar(this->weight, "Weight", this->getTable());
+	// addNetTableVar(this->thresh, "Threshold", this->getTable());
+	addNetTableVar(this->cvh, "ConvexHull", this->getTable());
+	addNetTableVar(this->apdp, "ApproxPolyDP", this->getTable());
+
+	//this->resizeBuffers(server.getCurrentResolution());
+}
+
+// void TargetTest::resizeBuffers(cv::Size size) {
+// 	this->buffer = cv::Mat(size/this->scale, CV_8UC3);
+// 	this->binary = cv::Mat(size/this->scale, CV_8UC1);
+// 	for(size_t i = 0; i < this->channels.size(); i++) {
+// 		channels[i] = cv::Mat(size/this->scale, CV_8UC1);
+// 	}
+// }
+
+// void TargetTest::TestPoints::sort(const std::vector<cv::Point2i>& contour) {
+// 	this->center = findCenter<float>(contour);
+// 	this->limit = 4 > contour.size() ? contour.size() : 4;
+// 	for(size_t i = 0; i < limit; i++) {
+// 		this->points[i] = contour[i];
+// 	}
+// 	std::sort(
+// 		this->points.begin(), 
+// 		this->points.end(), 
+// 		[this](const cv::Point2f& a, const cv::Point2f& b) {
+// 			this->a = a - center;
+// 			this->b = b - center;
+// 			return -atan2(a.x, -a.y) < -atan2(b.x, -b.y);
+// 		}
+// 	);
+// }
+
+void TargetTest::process(cv::Mat& io_frame, bool output_binary) {
+	if(io_frame.size() != this->buffer.size()*(int)this->scale) {	// optional
+		this->resizeBuffers(io_frame.size());
+	}
+
+	cv::resize(io_frame, this->buffer, cv::Size(), 1.0/this->scale, 1.0/this->scale);
+	cv::split(this->buffer, this->channels);
+	cv::addWeighted(this->channels[1], this->weight, this->channels[2], this->weight, 0.0, this->binary);
+	cv::subtract(this->channels[0], this->binary, this->binary);
+	memcpy_threshold_binary_asm(this->binary.data, this->binary.data, this->binary.size().area(), this->thresh);
+
+	if(output_binary) {
+		cv::cvtColor(this->binary, this->buffer, cv::COLOR_GRAY2BGR, 3);
+		cv::resize(this->buffer, io_frame, cv::Size(), this->scale, this->scale, cv::INTER_NEAREST);
+	} else {
+		this->largest = 0.f;
+		this->target = -1;
+		this->contours.clear();
+
+		cv::findContours(this->binary, this->contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+
+		// show all
+		
+		for(size_t i = 0; i < this->contours.size(); i++) {
+			this->area = cv::contourArea(this->contours[i]);
+			if(this->area > this->largest) {
+				this->largest = this->area;
+				this->target = i;
+			}
+		}
+
+		cv::cvtColor(this->binary, this->buffer, cv::COLOR_GRAY2BGR, 3);
+		cv::resize(this->buffer, io_frame, cv::Size(), this->scale, this->scale, cv::INTER_NEAREST);
+
+		if(this->target >= 0) {
+
+			// show target all
+
+			if(this->cvh) {
+				cv::convexHull(this->contours[this->target], this->target_points);
+			} else {
+				this->target_points = std::move(this->contours[this->target]);
+			}
+			if(this->apdp) {
+				cv::approxPolyDP(this->target_points, this->target_points, 0.1*cv::arcLength(this->target_points, false), true);
+			}
+
+			// show simplified target
+
+			rescale(this->target_points, this->scale);
+			reorderClockWise(this->target_points);
+
+			if(this->target_points.size() == this->reference_points.getSize()) {
+
+				//this->reference_points.sort(this->target_points);
+
+				for(size_t i = 0; i < this->reference_points.points.size(); i++) {
+					//cv::circle(io_frame, this->image_corners.data.array[i]*(int)this->scale, 1, cv::Scalar(255, 0, 0), 2);
+					cv::putText(
+						io_frame, std::to_string(i), 
+						this->target_points[i], 
+						cv::FONT_HERSHEY_DUPLEX, 0.7, cv::Scalar(255, 0, 0), 1, cv::LINE_AA
+					);
+				}
+			} else {
+
+				//reorderClockWise(this->target_points);
+
+				for(size_t i = 0; i < this->target_points.size(); i++) {
+					//cv::circle(io_frame, this->t_contour[i]*(int)this->scale, 1, cv::Scalar(0, 0, 255), 2);
+					cv::putText(
+						io_frame, std::to_string(i), 
+						this->target_points[i], 
+						cv::FONT_HERSHEY_DUPLEX, 0.7, cv::Scalar(0, 0, 255), 1, cv::LINE_AA
+					);
+				}
+			}
+			cv::circle(io_frame, ::findCenter(this->target_points), 1, cv::Scalar(255, 255, 0), 2);
+		}
+	}
+}
+
+BBoxDemo::BBoxDemo(VisionServer& server) : VPipeline(server, "BoundingBox Demo Pipeline") {
 	addNetTableVar(this->weight, "Weight", this->table);
 	addNetTableVar(this->thresh, "Threshold", this->table);
 
@@ -58,7 +192,7 @@ void BBoxDemo::process(cv::Mat& io_frame, bool output_binary) {
 	}
 }
 
-SquareTargetPNP::SquareTargetPNP(VisionServer& server) : VPipeline(server) {
+SquareTargetPNP::SquareTargetPNP(VisionServer& server) : VPipeline(server, "Square Target Pipeline") {
 	addNetTableVar(this->weight, "Weight", this->table);
 	addNetTableVar(this->thresh, "Threshold", this->table);
 
@@ -156,9 +290,9 @@ void SquareTargetPNP::process(cv::Mat& io_frame, bool output_binary) {
 					cv::line(io_frame, this->projection2d[i], this->reference_points.points[i], cv::Scalar(255, 0, 0), 1);
 				}
 				cv::line(io_frame, this->projection2d[0], this->projection2d[1], cv::Scalar(255, 0, 0), 1);
-				cv::line(io_frame, this->projection2d[1], this->projection2d[3], cv::Scalar(255, 0, 0), 1);
-				cv::line(io_frame, this->projection2d[2], this->projection2d[0], cv::Scalar(255, 0, 0), 1);
-				cv::line(io_frame, this->projection2d[3], this->projection2d[2], cv::Scalar(255, 0, 0), 1);
+				cv::line(io_frame, this->projection2d[1], this->projection2d[2], cv::Scalar(255, 0, 0), 1);
+				cv::line(io_frame, this->projection2d[2], this->projection2d[3], cv::Scalar(255, 0, 0), 1);
+				cv::line(io_frame, this->projection2d[3], this->projection2d[0], cv::Scalar(255, 0, 0), 1);
 
 				for(size_t i = 0; i < this->reference_points.points.size(); i++) {
 					//cv::circle(io_frame, this->image_corners.data.array[i]*(int)this->scale, 1, cv::Scalar(255, 0, 0), 2);
@@ -189,22 +323,22 @@ void SquareTargetPNP::process(cv::Mat& io_frame, bool output_binary) {
 	}
 }
 
-void SquareTargetPNP::Square::sort(const std::vector<cv::Point2i>& contour) {
-	this->center = findCenter<float>(contour);
-	this->limit = 4 > contour.size() ? contour.size() : 4;
-	for(size_t i = 0; i < limit; i++) {
-		this->points[i] = contour[i];
-	}
-	std::sort(
-		this->points.begin(), 
-		this->points.end(), 
-		[this](const cv::Point2f& a, const cv::Point2f& b) {
-			this->a = a - center;
-			this->b = b - center;
-			return -atan2(a.x, -a.y) < -atan2(b.x, -b.y);
-		}
-	);
-}
+// void SquareTargetPNP::Square::sort(const std::vector<cv::Point2i>& contour) {
+// 	this->center = findCenter<float>(contour);
+// 	this->limit = this->getSize() > contour.size() ? contour.size() : this->getSize();
+// 	for(size_t i = 0; i < limit; i++) {
+// 		this->points[i] = contour[i];
+// 	}
+// 	std::sort(
+// 		this->points.begin(), 
+// 		this->points.end(), 
+// 		[this](const cv::Point2f& a, const cv::Point2f& b) {
+// 			this->a = a - center;
+// 			this->b = b - center;
+// 			return -atan2(a.x, a.y) < -atan2(b.x, b.y);
+// 		}
+// 	);
+// }
 
 
 

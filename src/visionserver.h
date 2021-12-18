@@ -1,21 +1,17 @@
 #pragma once
 
 #include <networktables/NetworkTableInstance.h>
-#include <networktables/EntryListenerFlags.h>
-#include <networktables/NetworkTableEntry.h>
 #include <networktables/NetworkTable.h>
 #include <cameraserver/CameraServer.h>
+#include <wpi/Twine.h>
 
 #include <opencv2/opencv.hpp>
 
-#include <type_traits>
 #include <thread>
 #include <chrono>
 #include <atomic>
-#include <tuple>
 
 #include "extras/resources.h"
-#include "extras/stats.h"
 #include "visioncamera.h"
 
 class VisionServer;
@@ -45,12 +41,13 @@ class VPipeline {       // Vision Pipeline base interface
 public:
     //VPipeline() = default;
     explicit VPipeline(VisionServer& server);
+    explicit VPipeline(VisionServer& server, const char* ntable);
+    explicit VPipeline(VisionServer& server, const wpi::Twine& ntable);
     VPipeline(const VPipeline&) = delete;
     virtual ~VPipeline() = default;
     VPipeline& operator=(const VPipeline&) = delete;
 
     virtual void process(cv::Mat& io_frame, bool debug = false) = 0;
-    //void setEnv(const VisionServer* server);
 
     const cv::Mat_<float>& getCameraMatrix() const;
     const cv::Mat_<float>& getCameraDistortion() const;
@@ -58,15 +55,23 @@ public:
     void updateMatrices(const cv::Mat_<float>& tvec, const cv::Mat_<float>& rvec);
     void updateMatrices(const cv::Mat_<float>& tvec);
 
+    const std::shared_ptr<nt::NetworkTable> getTable();
     const VisionServer* getEnv() const;
+
+protected:
+    const std::shared_ptr<nt::NetworkTable> table;
 
 private:
     VisionServer* env;
     
 };
 class DefaultPipeline : VPipeline {     // default pipeline (video passthrough)
-    using VPipeline::VPipeline;
 public:
+    //using VPipeline::VPipeline;
+    explicit DefaultPipeline(VisionServer&);
+    DefaultPipeline(const DefaultPipeline&) = delete;
+    DefaultPipeline& operator=(const DefaultPipeline&) = delete;
+
     void process(cv::Mat& io_frame, bool debug = false) override {}
 
 };
@@ -74,7 +79,7 @@ public:
 
 
 class VisionServer {
-    friend class PipelineBase;
+    //friend class PipelineBase;
     friend class VPipeline;
 public:
     VisionServer(std::vector<VisionCamera>& cameras);

@@ -1,5 +1,10 @@
 #include "visionserver.h"
-#include "pipelines.h"
+
+#include <networktables/EntryListenerFlags.h>
+#include <networktables/NetworkTableEntry.h>
+
+#include "extras/stats.h"
+//#include "pipelines.h"
 #include "vision.h"
 
 // PipelineBase::PipelineBase(VisionServer* server) : env(server) {}
@@ -22,19 +27,21 @@
 // 	this->env->updateMatrices(tvec);
 // }
 
-VPipeline::VPipeline(VisionServer& server) : env(&server) {}
+VPipeline::VPipeline(VisionServer& server) : 
+	table(nt::NetworkTableInstance::GetDefault().GetTable("PIPELINES")->GetSubTable("Unnamed Pipeline")), env(&server) 
+{}
+VPipeline::VPipeline(VisionServer& server, const char* ntable) : 
+	table(nt::NetworkTableInstance::GetDefault().GetTable("PIPELINES")->GetSubTable(ntable)), env(&server) 
+{}
+VPipeline::VPipeline(VisionServer& server, const wpi::Twine& ntable) : 
+	table(nt::NetworkTableInstance::GetDefault().GetTable("PIPELINES")->GetSubTable(ntable)), env(&server) 
+{}
 
 const cv::Mat_<float>& VPipeline::getCameraMatrix() const {
-	if(this->env) {
-		return this->env->getCameraMatrix();
-	}
-	return cv::Mat_<float>(3, 3);
+	return this->env->getCameraMatrix();
 }
 const cv::Mat_<float>& VPipeline::getCameraDistortion() const {
-	if(this->env) {
-		return this->env->getDistortion();
-	}
-	return cv::Mat_<float>(1, 5);
+	return this->env->getDistortion();
 }
 void VPipeline::updateMatrices(const cv::Mat_<float>& tvec) {
 	this->env->updateMatrices(tvec);
@@ -42,9 +49,14 @@ void VPipeline::updateMatrices(const cv::Mat_<float>& tvec) {
 void VPipeline::updateMatrices(const cv::Mat_<float>& tvec, const cv::Mat_<float>& rvec) {
 	this->env->updateMatrices(tvec, rvec);
 }
+const std::shared_ptr<nt::NetworkTable> VPipeline::getTable() {
+	return this->table;
+}
 const VisionServer* VPipeline::getEnv() const {
 	return this->env;
 }
+
+DefaultPipeline::DefaultPipeline(VisionServer& server) : VPipeline(server, "Default Pipeline") {}
 
 
 

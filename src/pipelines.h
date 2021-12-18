@@ -1,45 +1,103 @@
 #pragma once
 
-#include <networktables/NetworkTableInstance.h>
-#include <networktables/EntryListenerFlags.h>
-#include <networktables/NetworkTableEntry.h>
 #include <networktables/NetworkTable.h>
-#include <wpi/StringRef.h>
-#include <wpi/json.h>
 #include <wpi/raw_ostream.h>
-
-#include "cameraserver/CameraServer.h"
 
 #include <opencv2/opencv.hpp>
 
-#include <iostream>
-#include <chrono>
-#include <algorithm>
-#include <math.h>
 #include <vector>
 #include <array>
 
 #include "extras/resources.h"
-#include "extras/stats.h"
 
 #include "visionserver.h"
-//#include "processing.h"
-#include "vision.h"
-#include "mem.h"
+#include "processing.h"
 
-template<size_t corners>
-struct Target {
-	Target(const std::array<cv::Point3f, corners>& world_pts);
+// template<size_t corners>
+// struct Target {
+// 	Target(const std::array<cv::Point3f, corners>& world_pts);
 
-	std::array<cv::Point2f, corners> points;		// actual points 
-	const std::array<cv::Point3f, corners> world;	// world points that relate to the above 
+// 	std::array<cv::Point2f, corners> points;		// actual points 
+// 	const std::array<cv::Point3f, corners> world;	// world points that relate to the above 
 
-	size_t getSize();
+// 	size_t getSize();
 
-	virtual void sort(const std::vector<cv::Point2i>& contour);
-	void rescale(double scale);	// multiplies points (x and y) by scale for all points
-	std::array<cv::Point2f, corners> getRescaled(double scale);	// returns rescaled array of points, does not alter internal array
+// 	virtual void sort(const std::vector<cv::Point2i>& contour);
+// 	void rescale(double scale);	// multiplies points (x and y) by scale for all points
+// 	std::array<cv::Point2f, corners> getRescaled(double scale);	// returns rescaled array of points, does not alter internal array
 
+// };
+
+// #include "processing.inc"
+
+// class DummyBase {
+// public:
+// 	DummyBase(VisionServer& server);
+// 	//virtual ~DummyBase() = default;
+
+// 	virtual void dummyfunc() = 0;
+
+// };
+
+// class Dummy : public DummyBase {
+// public:
+// 	Dummy(VisionServer& server);
+// 	Dummy(const Dummy& other) = delete;
+// 	//virtual ~Dummy() = default;
+
+// 	void dummyfunc() override;
+
+// protected:
+// 	double weight{0.5};
+// 	uint8_t thresh{50};
+// 	size_t scale{4};
+
+// 	cv::Mat buffer, binary;
+// 	std::array<cv::Mat, 3> channels;
+
+// };
+
+class TargetTest : public VPipeline, public WSThreshold<VThreshold::LED::BLUE> {
+public:
+	TargetTest(VisionServer& server);
+	TargetTest(const TargetTest& other) = delete;
+
+	void process(cv::Mat& io_frame, bool debug = false) override;
+
+	//Dummy dummy;
+
+private:
+	//void resizeBuffers(cv::Size size);
+
+	//const std::shared_ptr<nt::NetworkTable> table{nt::NetworkTableInstance::GetDefault().GetTable("Target Testing Pipeline")};
+	bool cvh{false}, apdp{false};
+
+	// double weight{0.5};
+	// uint8_t thresh{50};
+	// size_t scale{4};
+
+	double largest{0.f}, area{0.f};
+	int16_t target{0};
+
+	//cv::Mat buffer, binary;
+	//std::array<cv::Mat, 3> channels;
+	std::vector<std::vector<cv::Point> > contours;
+	std::vector<cv::Point> target_points;
+
+	class TestPoints : public Target<4> {
+	public:
+		TestPoints() : Target<4>({
+			cv::Point3f(-0.25f, 0.25f, 0.f),	//top-left
+			cv::Point3f(0.25f, 0.25f, 0.f), 	//top-right
+			cv::Point3f(-0.25f, -0.25f, 0.f), 	//bottom-left
+			cv::Point3f(0.25f, -0.25f, 0.f)		//bottom-right
+		}) {}
+
+		//void sort(const std::vector<cv::Point2i>& contour) override;
+	private:
+		cv::Point2f center, a, b;
+		size_t limit;
+	} reference_points;
 };
 
 class BBoxDemo : public VPipeline {
@@ -53,7 +111,7 @@ public:
 private:
 	void resizeBuffers(cv::Size size);
 
-	const std::shared_ptr<nt::NetworkTable> table{nt::NetworkTableInstance::GetDefault().GetTable("BoundingBox Demo Pipeline")};
+	//const std::shared_ptr<nt::NetworkTable> table{nt::NetworkTableInstance::GetDefault().GetTable("BoundingBox Demo Pipeline")};
 
 	double weight{0.5};
 	uint8_t thresh{50};
@@ -78,7 +136,7 @@ public:
 private:
 	void resizeBuffers(cv::Size size);
 
-	const std::shared_ptr<nt::NetworkTable> table{nt::NetworkTableInstance::GetDefault().GetTable("Square Target Pipeline")};
+	//const std::shared_ptr<nt::NetworkTable> table{nt::NetworkTableInstance::GetDefault().GetTable("Square Target Pipeline")};
 
 	double weight{0.5};
 	uint8_t thresh{50};
@@ -94,14 +152,14 @@ private:
 	std::vector<cv::Point> target_points;
 	class Square : public Target<4> {
 	public:
-		Square() : Target<4>({
-			cv::Point3f(-0.25f, 0.25f, 0.f),	//top-left
+		Square() : Target<4>({				// world points in clockwise order
 			cv::Point3f(0.25f, 0.25f, 0.f), 	//top-right
-			cv::Point3f(-0.25f, -0.25f, 0.f), 	//bottom-left
-			cv::Point3f(0.25f, -0.25f, 0.f)		//bottom-right
+			cv::Point3f(0.25f, -0.25f, 0.f),	//bottom-right
+			cv::Point3f(-0.25f, -0.25f, 0.f),	//bottom-left
+			cv::Point3f(-0.25f, 0.25f, 0.f),	//top-left
 		}) {}
 
-		void sort(const std::vector<cv::Point2i>& contour) override;
+		//void sort(const std::vector<cv::Point2i>& contour) override;	// sorts points to be clockwise (match the world points)
 	private:
 		cv::Point2f center, a, b;
 		size_t limit;
@@ -111,10 +169,10 @@ private:
 
 	std::vector<cv::Point2d> projection2d;
 	const std::vector<cv::Point3d> projection3d{
-		cv::Point3f(-0.25f, 0.25f, 0.25f),
 		cv::Point3f(0.25f, 0.25f, 0.25f), 
-		cv::Point3f(-0.25f, -0.25f, 0.25f), 
-		cv::Point3f(0.25f, -0.25f, 0.25f)
+		cv::Point3f(0.25f, -0.25f, 0.25f),
+		cv::Point3f(-0.25f, -0.25f, 0.25f),
+		cv::Point3f(-0.25f, 0.25f, 0.25f), 
 	};
 
 };
@@ -198,5 +256,3 @@ private:
 // 	std::vector<cv::Point2d> perpendicular2d;
 
 // };
-
-#include "processing.inc"

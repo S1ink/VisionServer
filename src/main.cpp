@@ -9,7 +9,6 @@
 #include "visioncamera.h"
 #include "pipelines.h"
 #include "visionserver.h"
-#include "mem.h"
 
 StopWatch runtime("Runtime", &std::cout, 0);
 void on_exit() {
@@ -42,7 +41,7 @@ int main(int argc, char* argv[]) {
 	// }
 
 	VisionServer server(cameras);
-	server.runVision<SquareTargetPNP, BBoxDemo, DefaultPipeline>(25);
+	server.runVision<DefaultPipeline, TargetTest>(25);
 }
 
 // LIST OF THINGS

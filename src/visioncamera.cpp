@@ -1,5 +1,9 @@
 #include "visioncamera.h"
 
+#include <networktables/NetworkTableInstance.h>
+#include <wpi/raw_ostream.h>
+#include <wpi/raw_istream.h>
+
 bool readConfig(std::vector<VisionCamera>& cameras, const char* file) {
 
 	std::error_code ec;
@@ -289,7 +293,7 @@ void VisionCamera::setExposure(int8_t val) {
 }
 
 void VisionCamera::setBrightnessAdjustable() {
-	this->setBrightnessAdjustable(nt::NetworkTableInstance::GetDefault().GetTable(this->GetName()));
+	this->setBrightnessAdjustable(nt::NetworkTableInstance::GetDefault().GetTable("CAMERAS")->GetSubTable(this->GetName()));
 }
 void VisionCamera::setBrightnessAdjustable(std::shared_ptr<nt::NetworkTable> table) {
     const char* name = "Brightness";
@@ -306,7 +310,7 @@ void VisionCamera::setBrightnessAdjustable(std::shared_ptr<nt::NetworkTable> tab
 	);
 }
 void VisionCamera::setWhiteBalanceAdjustable() {
-	this->setWhiteBalanceAdjustable(nt::NetworkTableInstance::GetDefault().GetTable(this->GetName()));
+	this->setWhiteBalanceAdjustable(nt::NetworkTableInstance::GetDefault().GetTable("CAMERAS")->GetSubTable(this->GetName()));
 }
 void VisionCamera::setWhiteBalanceAdjustable(std::shared_ptr<nt::NetworkTable> table) {
     const char* name = "WhiteBalance";
@@ -323,7 +327,7 @@ void VisionCamera::setWhiteBalanceAdjustable(std::shared_ptr<nt::NetworkTable> t
 	);
 }
 void VisionCamera::setExposureAdjustable() {
-	this->setExposureAdjustable(nt::NetworkTableInstance::GetDefault().GetTable(this->GetName()));
+	this->setExposureAdjustable(nt::NetworkTableInstance::GetDefault().GetTable("CAMERAS")->GetSubTable(this->GetName()));
 }
 void VisionCamera::setExposureAdjustable(std::shared_ptr<nt::NetworkTable> table) {
     const char* name = "Exposure";

@@ -1,4 +1,7 @@
 #include "visionserver.h"
+
+#include <type_traits>
+
 //#include "pipelines.h"
 
 template<class pipeline_t>
@@ -91,7 +94,9 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 	server.stream.SetCompression(quality);
 
 	pipeline_t1 p1(server);
+	std::cout << "Exhbit A\n";
 	pipeline_t2 p2(server);
+	std::cout << "Exhbit A passed\n";
 	DefaultPipeline pbase(server);
 	
 	server.table->PutNumber("Pipeline Index", 0);
@@ -192,6 +197,7 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 				server.beg = CHRONO::high_resolution_clock::now();
 				p3.process(frame, server.table->GetEntry("Show Threshold").GetBoolean(false));
 				server.end = CHRONO::high_resolution_clock::now();
+				break;
 			}
 			case -1 :
 			default : {

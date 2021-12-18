@@ -1,16 +1,13 @@
 #pragma once
 
-#include <networktables/NetworkTableInstance.h>
 #include <networktables/NetworkTable.h>
-#include <opencv2/opencv.hpp>
-#include <wpi/raw_ostream.h>
+#include <cameraserver/CameraServer.h>
 #include <wpi/json.h>
-#include <wpi/raw_istream.h>
-#include <wpi/raw_ostream.h>
+
+#include <opencv2/opencv.hpp>
 
 #include <iostream>
 
-#include "cameraserver/CameraServer.h"
 #include "extras/resources.h"
 
 CE_STR _default = "/boot/frc.json";
@@ -73,6 +70,8 @@ private:
 	cs::VideoSource::Kind type;
 	wpi::json config, calibration;
 	// cs::CvSink for storing vision source?
+
+	// nt::NetworkTable?? (or method) -> ~CAMERAS/{name}~
 
 	int8_t brightness{50}, exposure{-1};
 	int16_t whitebalance{-1};
