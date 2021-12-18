@@ -57,13 +57,13 @@ public:
 	double getWeight() const;
 	void setWeight(double w);
 
-	cv::Mat buffer, binary;
-	std::array<cv::Mat, 3> channels;
-
 protected:
 	void resizeBuffers(cv::Size size);
 
 	static const std::array<std::array<uint8_t, 2>, 3> weighted_array;
+
+	cv::Mat buffer, binary;
+	std::array<cv::Mat, 3> channels;
 
 	double weight{0.5};
 	uint8_t thresh{50};
@@ -77,17 +77,17 @@ public:
 
 	size_t findContours(const cv::Mat& binary_frame);	// returns how many were found
 	size_t findLargest(const cv::Mat& binary_frame);	// returns index of the largest
-	size_t findLargestGT(const cv::Mat& binary_frame, double area);	// find largest that has a greater area than 'area', returns index
+	size_t findLargest_A(const cv::Mat& binary_frame, double area);	// find largest that has a greater area than 'area', returns index
 
 	size_t getTarget() const;
 
 	// function for finding corner points and/or reducing points?
 
+protected:
 	std::vector<std::vector<cv::Point2i> > contours;
 
-protected:
 	double largest{0.f}, area{0.f};
-	size_t target{0};
+	int16_t target{0};					// DONT CHANGE THIS TO SIZE_T!!!!!!!!!
 
 };
 

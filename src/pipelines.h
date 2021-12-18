@@ -57,30 +57,19 @@
 
 // };
 
-class TargetTest : public VPipeline, public WSThreshold<VThreshold::LED::BLUE> {
+class TestPipeline : public VPipeline, public WSThreshold<VThreshold::LED::BLUE> {
 public:
-	TargetTest(VisionServer& server);
-	TargetTest(const TargetTest& other) = delete;
+	TestPipeline(VisionServer& server);
+	TestPipeline(const TestPipeline& other) = delete;
 
 	void process(cv::Mat& io_frame, bool debug = false) override;
 
-	//Dummy dummy;
-
 private:
-	//void resizeBuffers(cv::Size size);
-
-	//const std::shared_ptr<nt::NetworkTable> table{nt::NetworkTableInstance::GetDefault().GetTable("Target Testing Pipeline")};
 	bool cvh{false}, apdp{false};
-
-	// double weight{0.5};
-	// uint8_t thresh{50};
-	// size_t scale{4};
 
 	double largest{0.f}, area{0.f};
 	int16_t target{0};
 
-	//cv::Mat buffer, binary;
-	//std::array<cv::Mat, 3> channels;
 	std::vector<std::vector<cv::Point> > contours;
 	std::vector<cv::Point> target_points;
 
@@ -100,55 +89,26 @@ private:
 	} reference_points;
 };
 
-class BBoxDemo : public VPipeline {
+class BBoxDemo : public VPipeline, public WSThreshold<VThreshold::LED::BLUE>, public ContourPipe {
 public:
 	//using VPipeline::VPipeline;
 	BBoxDemo(VisionServer& server);
 	BBoxDemo(const BBoxDemo& other) = delete;
 
-	void process(cv::Mat& io_frame, bool output_binary = false) override;
+	void process(cv::Mat& io_frame, bool debug = false) override;
 
 private:
-	void resizeBuffers(cv::Size size);
-
-	//const std::shared_ptr<nt::NetworkTable> table{nt::NetworkTableInstance::GetDefault().GetTable("BoundingBox Demo Pipeline")};
-
-	double weight{0.5};
-	uint8_t thresh{50};
-	size_t scale{4};
-
-	double largest{0.f}, area{0.f};
-	int16_t target{0};
-
-	cv::Mat buffer, binary;
-	std::array<cv::Mat, 3> channels;
-	std::vector<std::vector<cv::Point2i> > contours;
 	cv::Rect boundingbox;
 
 };
-class SquareTargetPNP : public VPipeline {
+class SquareTargetPNP : public VPipeline, public WSThreshold<VThreshold::LED::BLUE>, public ContourPipe {
 public:
 	SquareTargetPNP(VisionServer& server);
 	SquareTargetPNP(const SquareTargetPNP& other) = delete;
 
-	void process(cv::Mat& io_frame, bool output_binary = false) override;
+	void process(cv::Mat& io_frame, bool debug = false) override;
 
 private:
-	void resizeBuffers(cv::Size size);
-
-	//const std::shared_ptr<nt::NetworkTable> table{nt::NetworkTableInstance::GetDefault().GetTable("Square Target Pipeline")};
-
-	double weight{0.5};
-	uint8_t thresh{50};
-	size_t scale{4};
-
-	double largest{0.f}, area{0.f};
-	int16_t target{0};
-
-	cv::Mat buffer, binary;
-	std::array<cv::Mat, 3> channels;
-
-	std::vector<std::vector<cv::Point> > contours;
 	std::vector<cv::Point> target_points;
 	class Square : public Target<4> {
 	public:
@@ -165,7 +125,7 @@ private:
 		size_t limit;
 	} reference_points;
 
-	cv::Mat_<float> rvec = cv::Mat_<float>(1, 3), tvec = rvec, rmat = cv::Mat_<float>(3, 3);
+	cv::Mat_<float> rvec = cv::Mat_<float>(1, 3), tvec = rvec/*, rmat = cv::Mat_<float>(3, 3)*/;
 
 	std::vector<cv::Point2d> projection2d;
 	const std::vector<cv::Point3d> projection3d{

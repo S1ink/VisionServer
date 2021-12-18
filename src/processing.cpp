@@ -19,7 +19,7 @@ size_t ContourPipe::findLargest(const cv::Mat& binary_frame) {
 	}
 	return this->target;
 }
-size_t ContourPipe::findLargestGT(const cv::Mat& binary_frame, double area_gt) {
+size_t ContourPipe::findLargest_A(const cv::Mat& binary_frame, double area_gt) {
 	this->largest = 0.f;
 	this->target = -1;
 

@@ -18,7 +18,7 @@
 // 	std::cout << "YOUR HAVE CALLED A VIRTUAL FUNCTION OVERRIDE\n";
 // }
 
-TargetTest::TargetTest(VisionServer& server) : VPipeline(server, "Target Testing Pipeline"), WSThreshold(server.getCurrentResolution(), this->getTable()) {
+TestPipeline::TestPipeline(VisionServer& server) : VPipeline(server, "Target Testing Pipeline"), WSThreshold(server.getCurrentResolution(), this->getTable()) {
 	std::cout << "Exhibit C\n";
 	// addNetTableVar(this->weight, "Weight", this->getTable());
 	// addNetTableVar(this->thresh, "Threshold", this->getTable());
@@ -53,16 +53,8 @@ TargetTest::TargetTest(VisionServer& server) : VPipeline(server, "Target Testing
 // 	);
 // }
 
-void TargetTest::process(cv::Mat& io_frame, bool output_binary) {
-	if(io_frame.size() != this->buffer.size()*(int)this->scale) {	// optional
-		this->resizeBuffers(io_frame.size());
-	}
-
-	cv::resize(io_frame, this->buffer, cv::Size(), 1.0/this->scale, 1.0/this->scale);
-	cv::split(this->buffer, this->channels);
-	cv::addWeighted(this->channels[1], this->weight, this->channels[2], this->weight, 0.0, this->binary);
-	cv::subtract(this->channels[0], this->binary, this->binary);
-	memcpy_threshold_binary_asm(this->binary.data, this->binary.data, this->binary.size().area(), this->thresh);
+void TestPipeline::process(cv::Mat& io_frame, bool output_binary) {
+	this->threshold(io_frame);
 
 	if(output_binary) {
 		cv::cvtColor(this->binary, this->buffer, cv::COLOR_GRAY2BGR, 3);
@@ -135,49 +127,16 @@ void TargetTest::process(cv::Mat& io_frame, bool output_binary) {
 	}
 }
 
-BBoxDemo::BBoxDemo(VisionServer& server) : VPipeline(server, "BoundingBox Demo Pipeline") {
-	addNetTableVar(this->weight, "Weight", this->table);
-	addNetTableVar(this->thresh, "Threshold", this->table);
-
-	this->resizeBuffers(server.getCurrentResolution());
-}
-
-void BBoxDemo::resizeBuffers(cv::Size size) {
-	this->buffer = cv::Mat(size/this->scale, CV_8UC3);
-	this->binary = cv::Mat(size/this->scale, CV_8UC1);
-	for(size_t i = 0; i < this->channels.size(); i++) {
-		channels[i] = cv::Mat(size/this->scale, CV_8UC1);
-	}
-}
+BBoxDemo::BBoxDemo(VisionServer& server) : VPipeline(server, "BoundingBox Demo Pipeline"), WSThreshold(server.getCurrentResolution(), this->table) {}
 
 void BBoxDemo::process(cv::Mat& io_frame, bool output_binary) {
-	if(io_frame.size() != this->buffer.size()*(int)this->scale) {	// optional
-		this->resizeBuffers(io_frame.size());
-	}
-
-	cv::resize(io_frame, this->buffer, cv::Size(), 1.0/this->scale, 1.0/this->scale);
-	cv::split(this->buffer, this->channels);
-	cv::addWeighted(this->channels[1], this->weight, this->channels[2], this->weight, 0.0, this->binary);
-	cv::subtract(this->channels[0], this->binary, this->binary);
-	memcpy_threshold_binary_asm(this->binary.data, this->binary.data, this->binary.size().area(), this->thresh);
+	this->threshold(io_frame);
 
 	if(output_binary) {
 		cv::cvtColor(this->binary, this->buffer, cv::COLOR_GRAY2BGR, 3);
 		cv::resize(this->buffer, io_frame, cv::Size(), this->scale, this->scale, cv::INTER_NEAREST);
 	} else {
-		this->largest = 0.f;
-		this->target = -1;
-		this->contours.clear();
-
-		cv::findContours(this->binary, this->contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
-		
-		for(size_t i = 0; i < this->contours.size(); i++) {
-			this->area = cv::contourArea(this->contours[i]);
-			if(this->area > this->largest) {
-				this->largest = this->area;
-				this->target = i;
-			}
-		}
+		this->findLargest(this->binary);
 
 		if(this->target >= 0) {
 			this->boundingbox = cv::boundingRect(this->contours[this->target]);
@@ -192,49 +151,16 @@ void BBoxDemo::process(cv::Mat& io_frame, bool output_binary) {
 	}
 }
 
-SquareTargetPNP::SquareTargetPNP(VisionServer& server) : VPipeline(server, "Square Target Pipeline") {
-	addNetTableVar(this->weight, "Weight", this->table);
-	addNetTableVar(this->thresh, "Threshold", this->table);
-
-	this->resizeBuffers(server.getCurrentResolution());
-}
-
-void SquareTargetPNP::resizeBuffers(cv::Size size) {
-	this->buffer = cv::Mat(size/this->scale, CV_8UC3);
-	this->binary = cv::Mat(size/this->scale, CV_8UC1);
-	for(size_t i = 0; i < this->channels.size(); i++) {
-		channels[i] = cv::Mat(size/this->scale, CV_8UC1);
-	}
-}
+SquareTargetPNP::SquareTargetPNP(VisionServer& server) : VPipeline(server, "Square Target Pipeline"), WSThreshold(server.getCurrentResolution(), this->table) {}
 
 void SquareTargetPNP::process(cv::Mat& io_frame, bool output_binary) {
-	if(io_frame.size() != this->buffer.size()*(int)this->scale) {	// optional
-		this->resizeBuffers(io_frame.size());
-	}
-
-	cv::resize(io_frame, this->buffer, cv::Size(), 1.0/this->scale, 1.0/this->scale);
-	cv::split(this->buffer, this->channels);
-	cv::addWeighted(this->channels[1], this->weight, this->channels[2], this->weight, 0.0, this->binary);
-	cv::subtract(this->channels[0], this->binary, this->binary);
-	memcpy_threshold_binary_asm(this->binary.data, this->binary.data, this->binary.size().area(), this->thresh);
+	this->threshold(io_frame);
 
 	if(output_binary) {
 		cv::cvtColor(this->binary, this->buffer, cv::COLOR_GRAY2BGR, 3);
 		cv::resize(this->buffer, io_frame, cv::Size(), this->scale, this->scale, cv::INTER_NEAREST);
 	} else {
-		this->largest = 0.f;
-		this->target = -1;
-		this->contours.clear();
-
-		cv::findContours(this->binary, this->contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
-		
-		for(size_t i = 0; i < this->contours.size(); i++) {
-			this->area = cv::contourArea(this->contours[i]);
-			if(this->area > this->largest) {
-				this->largest = this->area;
-				this->target = i;
-			}
-		}
+		this->findLargest(this->binary);
 
 		if(this->target >= 0) {
 			cv::convexHull(this->contours[this->target], this->target_points);
