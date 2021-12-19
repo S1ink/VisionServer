@@ -1,97 +1,21 @@
 #pragma once
 
 #include <networktables/NetworkTable.h>
-#include <wpi/raw_ostream.h>
 
 #include <opencv2/opencv.hpp>
 
 #include <vector>
 #include <array>
+#include <type_traits>
 
 #include "extras/resources.h"
 
 #include "visionserver.h"
 #include "processing.h"
-
-// template<size_t corners>
-// struct Target {
-// 	Target(const std::array<cv::Point3f, corners>& world_pts);
-
-// 	std::array<cv::Point2f, corners> points;		// actual points 
-// 	const std::array<cv::Point3f, corners> world;	// world points that relate to the above 
-
-// 	size_t getSize();
-
-// 	virtual void sort(const std::vector<cv::Point2i>& contour);
-// 	void rescale(double scale);	// multiplies points (x and y) by scale for all points
-// 	std::array<cv::Point2f, corners> getRescaled(double scale);	// returns rescaled array of points, does not alter internal array
-
-// };
-
-// #include "processing.inc"
-
-// class DummyBase {
-// public:
-// 	DummyBase(VisionServer& server);
-// 	//virtual ~DummyBase() = default;
-
-// 	virtual void dummyfunc() = 0;
-
-// };
-
-// class Dummy : public DummyBase {
-// public:
-// 	Dummy(VisionServer& server);
-// 	Dummy(const Dummy& other) = delete;
-// 	//virtual ~Dummy() = default;
-
-// 	void dummyfunc() override;
-
-// protected:
-// 	double weight{0.5};
-// 	uint8_t thresh{50};
-// 	size_t scale{4};
-
-// 	cv::Mat buffer, binary;
-// 	std::array<cv::Mat, 3> channels;
-
-// };
-
-class TestPipeline : public VPipeline, public WSThreshold<VThreshold::LED::BLUE> {
-public:
-	TestPipeline(VisionServer& server);
-	TestPipeline(const TestPipeline& other) = delete;
-
-	void process(cv::Mat& io_frame, bool debug = false) override;
-
-private:
-	bool cvh{false}, apdp{false};
-
-	double largest{0.f}, area{0.f};
-	int16_t target{0};
-
-	std::vector<std::vector<cv::Point> > contours;
-	std::vector<cv::Point> target_points;
-
-	class TestPoints : public Target<4> {
-	public:
-		TestPoints() : Target<4>({
-			cv::Point3f(-0.25f, 0.25f, 0.f),	//top-left
-			cv::Point3f(0.25f, 0.25f, 0.f), 	//top-right
-			cv::Point3f(-0.25f, -0.25f, 0.f), 	//bottom-left
-			cv::Point3f(0.25f, -0.25f, 0.f)		//bottom-right
-		}) {}
-
-		//void sort(const std::vector<cv::Point2i>& contour) override;
-	private:
-		cv::Point2f center, a, b;
-		size_t limit;
-	} reference_points;
-};
+#include "targets.h"
 
 class BBoxDemo : public VPipeline, public WSThreshold<VThreshold::LED::BLUE>, public ContourPipe {
 public:
-	//using VPipeline::VPipeline;
 	BBoxDemo(VisionServer& server);
 	BBoxDemo(const BBoxDemo& other) = delete;
 
@@ -110,20 +34,7 @@ public:
 
 private:
 	std::vector<cv::Point> target_points;
-	class Square : public Target<4> {
-	public:
-		Square() : Target<4>({				// world points in clockwise order
-			cv::Point3f(0.25f, 0.25f, 0.f), 	//top-right
-			cv::Point3f(0.25f, -0.25f, 0.f),	//bottom-right
-			cv::Point3f(-0.25f, -0.25f, 0.f),	//bottom-left
-			cv::Point3f(-0.25f, 0.25f, 0.f),	//top-left
-		}) {}
-
-		//void sort(const std::vector<cv::Point2i>& contour) override;	// sorts points to be clockwise (match the world points)
-	private:
-		cv::Point2f center, a, b;
-		size_t limit;
-	} reference_points;
+	TestingSquare reference_points;
 
 	cv::Mat_<float> rvec = cv::Mat_<float>(1, 3), tvec = rvec/*, rmat = cv::Mat_<float>(3, 3)*/;
 
@@ -136,6 +47,34 @@ private:
 	};
 
 };
+
+// template <template <typename...> class BaseTemplate, typename Derived>
+// struct test_base_template<BaseTemplate, Derived, std::enable_if_t<std::is_class_v<Derived> > > : Derived
+// {
+//     template<typename...T>
+//     static constexpr std::true_type test(BaseTemplate<T...> *);
+//     static constexpr std::false_type test(...);
+//     using is_base = decltype(test((Derived *) nullptr));
+// };
+
+template<typename target_t, VThreshold::LED color = VThreshold::LED::BLUE>
+class TargetSolver : public VPipeline, public WSThreshold<color>, public ContourPipe {
+	//static_assert(std::is_convertible<Target<0>, target_t>::value, "Target type (target_t) must inherit from Target<t,c>");
+public:
+	TargetSolver(VisionServer& server);
+	TargetSolver(const TargetSolver& other) = delete;
+
+	void process(cv::Mat& io_frame, bool debug = false) override;
+
+private:
+	std::vector<cv::Point> target_points;
+	target_t reference_points;
+
+	cv::Mat_<float> rvec = cv::Mat_<float>(1, 3), tvec = rvec/*, rmat = cv::Mat_<float>(3, 3)*/;
+
+};
+
+#include "pipelines.inc"
 
 
 

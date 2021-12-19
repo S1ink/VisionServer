@@ -71,7 +71,7 @@
             "compilerPath": "C:\\Program Files (x86)\\raspbian10\bin\\arm-raspbian10-linux-gnueabihf-g++.exe",
             "cStandard": "c17",
             "cppStandard": "c++17",
-            "intelliSenseMode": "linux-gcc-arm"
+            "intelliSenseMode": "gcc-arm"
         }
     ],
     "version": 4

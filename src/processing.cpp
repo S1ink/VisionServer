@@ -6,33 +6,36 @@ size_t ContourPipe::findContours(const cv::Mat& binary_frame) {
 	return this->contours.size();
 }
 size_t ContourPipe::findLargest(const cv::Mat& binary_frame) {
-	this->largest = 0.f;
-	this->target = -1;
+	this->area_largest = 0.f;
+	this->target_idx = -1;
 
 	this->findContours(binary_frame);
 	for(size_t i = 0; i < this->contours.size(); i++) {
-		this->area = cv::contourArea(this->contours[i]);
-		if(this->area > this->largest) {
-			this->largest = this->area;
-			this->target = i;
+		this->area_buff = cv::contourArea(this->contours[i]);
+		if(this->area_buff > this->area_largest) {
+			this->area_largest = this->area_buff;
+			this->target_idx = i;
 		}
 	}
-	return this->target;
+	return this->target_idx;
 }
-size_t ContourPipe::findLargest_A(const cv::Mat& binary_frame, double area_gt) {
-	this->largest = 0.f;
-	this->target = -1;
+size_t ContourPipe::findLargest_A(const cv::Mat& binary_frame, double area) {
+	this->area_largest = 0.f;
+	this->target_idx = -1;
 
 	this->findContours(binary_frame);
 	for(size_t i = 0; i < this->contours.size(); i++) {
-		this->area = cv::contourArea(this->contours[i]);
-		if(this->area > area_gt && this->area > this->largest) {
-			this->largest = this->area;
-			this->target = i;
+		this->area_buff = cv::contourArea(this->contours[i]);
+		if(this->area_buff > area && this->area_buff > this->area_largest) {
+			this->area_largest = this->area_buff;
+			this->target_idx = i;
 		}
 	}
-	return this->target;
+	return this->target_idx;
 }
-size_t ContourPipe::getTarget() const {
-	return this->target;
+size_t ContourPipe::getTargetIdx() const {
+	return this->target_idx;
+}
+const std::vector<cv::Point2i>& ContourPipe::getTarget() const {
+	return this->contours[this->target_idx];
 }

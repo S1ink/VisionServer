@@ -79,6 +79,7 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 		if(server.table->GetEntry("Show Statistics").GetBoolean(false)) {
 			server.putStats(frame);
 		}
+		server.updateStats();
 		server.output.PutFrame(frame);
 	}
 	server.runloop = true;
@@ -124,7 +125,7 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 			}
 			case -1 :
 			default : {
-				std::cout << "Pipline index out of bounds, please only use values >0 and <Piplines Available\n";
+				//std::cout << "Pipline index out of bounds, please only use values >0 and <Piplines Available\n";
 				server.beg = CHRONO::high_resolution_clock::now();
 				pbase.process(frame, server.table->GetEntry("Show Threshold").GetBoolean(false));
 				server.end = CHRONO::high_resolution_clock::now();
@@ -147,6 +148,7 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 		if(server.table->GetEntry("Show Statistics").GetBoolean(false)) {
 			server.putStats(frame);
 		}
+		server.updateStats();
 		server.output.PutFrame(frame);
 	}
 	server.runloop = true;
@@ -201,7 +203,7 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 			}
 			case -1 :
 			default : {
-				std::cout << "Pipline index out of bounds, please only use values >0 and <'Piplines Available'\n";
+				//std::cout << "Pipline index out of bounds, please only use values >0 and <'Piplines Available'\n";
 				server.beg = CHRONO::high_resolution_clock::now();
 				pbase.process(frame, server.table->GetEntry("Show Threshold").GetBoolean(false));
 				server.end = CHRONO::high_resolution_clock::now();
@@ -224,6 +226,7 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 		if(server.table->GetEntry("Show Statistics").GetBoolean(false)) {
 			server.putStats(frame);
 		}
+		server.updateStats();
 		server.output.PutFrame(frame);
 	}
 	server.runloop = true;

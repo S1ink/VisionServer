@@ -16,27 +16,6 @@
 
 class VisionServer;
 
-// class PipelineBase {     // legacy pipeline base class
-// public:
-//     explicit PipelineBase(VisionServer* server);
-//     PipelineBase(const PipelineBase& other) = delete;
-//     virtual ~PipelineBase() = default;
-//     PipelineBase& operator=(const PipelineBase& other) = delete;
-
-//     virtual void process(cv::Mat& io_frame, bool show_thresh = false);
-//     //virtual std::shared_ptr<nt::NetworkTable> getTable();
-
-// protected:
-//     VisionServer* env;
-
-//     CHRONO::high_resolution_clock::time_point getEnvStart();
-//     const cv::Mat_<float>& getCameraMatrix();
-//     const cv::Mat_<float>& getDistortion();
-//     void updateMatrices(const cv::Mat_<float>& tvec, const cv::Mat_<float>& rvec);
-//     void updateMatrices(const cv::Mat_<float>& tvec);
-
-// };
-
 class VPipeline {       // Vision Pipeline base interface
 public:
     //VPipeline() = default;
@@ -52,10 +31,10 @@ public:
     const cv::Mat_<float>& getCameraMatrix() const;
     const cv::Mat_<float>& getCameraDistortion() const;
 
-    void updateMatrices(const cv::Mat_<float>& tvec, const cv::Mat_<float>& rvec);
-    void updateMatrices(const cv::Mat_<float>& tvec);
+    // void updateMatrices(const cv::Mat_<float>& tvec, const cv::Mat_<float>& rvec);
+    // void updateMatrices(const cv::Mat_<float>& tvec);
 
-    const std::shared_ptr<nt::NetworkTable> getTable();
+    const std::shared_ptr<nt::NetworkTable> getTable() const;
     const VisionServer* getEnv() const;
 
 protected:
@@ -78,7 +57,28 @@ public:
 
 
 
-class VisionServer {
+class Position {
+public:
+    static Position& Get();
+
+    void setPos(float x, float y, float z);
+    void setDistance(double d);
+    void setThetaUD(double deg);
+    void setThetaLR(double deg);
+    
+    void setAll(const cv::Mat_<float>& tvec);
+
+private:
+    Position() = default;
+    Position(const Position& other) = delete;
+
+    const std::shared_ptr<nt::NetworkTable> pos_table{nt::NetworkTableInstance::GetDefault().GetTable("robot/position")};
+
+};
+
+
+
+class VisionServer {    // make singleton?
     //friend class PipelineBase;
     friend class VPipeline;
 public:
@@ -120,9 +120,10 @@ protected:
     static void visionWorker(VisionServer& server, int8_t quality = 50);
 
     void putStats(cv::Mat& io_frame);
+    void updateStats();
 
-    void updateMatrices(const cv::Mat_<float>& tvec, const cv::Mat_<float>& rvec);
-    void updateMatrices(const cv::Mat_<float>& tvec);
+    // void updateMatrices(const cv::Mat_<float>& tvec, const cv::Mat_<float>& rvec);
+    // void updateMatrices(const cv::Mat_<float>& tvec);
 
     std::vector<VisionCamera>* cameras;
     cs::CvSink source;

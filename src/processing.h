@@ -2,8 +2,6 @@
 
 #include <opencv2/opencv.hpp>
 
-#include <algorithm>
-#include <math.h>
 #include <vector>
 #include <array>
 
@@ -23,21 +21,6 @@ public:
 		BLUE, GREEN, RED
 		//, TOTAL, ERROR
 	};
-
-};
-template<size_t corners>
-struct Target {
-	Target(const std::array<cv::Point3f, corners>& world_pts);
-
-	std::array<cv::Point2f, corners> points;		// actual points 
-	const std::array<cv::Point3f, corners> world;	// world points that relate to the above 
-
-	size_t getSize();
-
-	virtual void sort(const std::vector<cv::Point2i>& contour);
-	void rescale(double scale);	// multiplies points (x and y) by scale for all points
-	std::array<cv::Point2f, corners> getRescaled(double scale);	// returns rescaled array of points, does not alter internal array
-
 };
 
 
@@ -79,15 +62,19 @@ public:
 	size_t findLargest(const cv::Mat& binary_frame);	// returns index of the largest
 	size_t findLargest_A(const cv::Mat& binary_frame, double area);	// find largest that has a greater area than 'area', returns index
 
-	size_t getTarget() const;
+	size_t getTargetIdx() const;
+	const std::vector<cv::Point2i>& getTarget() const;
+	inline bool validTarget() {
+		return this->target_idx >= 0;
+	}
 
 	// function for finding corner points and/or reducing points?
 
 protected:
 	std::vector<std::vector<cv::Point2i> > contours;
 
-	double largest{0.f}, area{0.f};
-	int16_t target{0};					// DONT CHANGE THIS TO SIZE_T!!!!!!!!!
+	double area_largest{0.f}, area_buff{0.f};
+	int16_t target_idx{-1};					// DONT CHANGE THIS TO SIZE_T!!!!!!!!!
 
 };
 
