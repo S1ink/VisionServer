@@ -23,6 +23,9 @@ const cv::Mat_<float>& VPipeline::getCameraMatrix() const {
 const cv::Mat_<float>& VPipeline::getCameraDistortion() const {
 	return this->env->getDistortion();
 }
+void VPipeline::updateTarget(const std::string& target) {
+	this->env->updateTarget(target);
+}
 // void VPipeline::updateMatrices(const cv::Mat_<float>& tvec) {
 // 	this->env->updateMatrices(tvec);
 // }
@@ -40,32 +43,32 @@ DefaultPipeline::DefaultPipeline(VisionServer& server) : VPipeline(server, "Defa
 
 
 
-Position& Position::Get() {
-	static Position global;
-	return global;
-}
-void Position::setPos(float x, float y, float z) {
-	this->pos_table->PutNumber("x", x);
-	this->pos_table->PutNumber("y", y);
-	this->pos_table->PutNumber("z", z);
-}
-void Position::setDistance(double d) {
-	this->pos_table->PutNumber("distance", d);
-}
-void Position::setThetaUD(double deg) {
-	this->pos_table->PutNumber("up-down", deg);
-}
-void Position::setThetaLR(double deg) {
-	this->pos_table->PutNumber("right-left", deg);
-}
-void Position::setAll(const cv::Mat_<float>& tvec) {
-	this->pos_table->PutNumber("x", tvec[0][0]);
-	this->pos_table->PutNumber("y", tvec[1][0]);
-	this->pos_table->PutNumber("z", tvec[2][0]);
-	this->pos_table->PutNumber("distance", sqrt(pow(tvec[0][0], 2) + pow(tvec[1][0], 2) + pow(tvec[2][0], 2)));
-	this->pos_table->PutNumber("up-down", atan2(tvec[0][0], tvec[2][0])*180/M_PI);
-	this->pos_table->PutNumber("right-left", atan2(tvec[1][0], tvec[2][0])*-180/M_PI);
-}
+// Position& Position::Get() {
+// 	static Position global;
+// 	return global;
+// }
+// void Position::setPos(float x, float y, float z) {
+// 	this->pos_table->PutNumber("x", x);
+// 	this->pos_table->PutNumber("y", y);
+// 	this->pos_table->PutNumber("z", z);
+// }
+// void Position::setDistance(double d) {
+// 	this->pos_table->PutNumber("distance", d);
+// }
+// void Position::setThetaUD(double deg) {
+// 	this->pos_table->PutNumber("up-down", deg);
+// }
+// void Position::setThetaLR(double deg) {
+// 	this->pos_table->PutNumber("right-left", deg);
+// }
+// void Position::setAll(const cv::Mat_<float>& tvec) {
+// 	this->pos_table->PutNumber("x", tvec[0][0]);
+// 	this->pos_table->PutNumber("y", tvec[1][0]);
+// 	this->pos_table->PutNumber("z", tvec[2][0]);
+// 	this->pos_table->PutNumber("distance", sqrt(pow(tvec[0][0], 2) + pow(tvec[1][0], 2) + pow(tvec[2][0], 2)));
+// 	this->pos_table->PutNumber("up-down", atan2(tvec[0][0], tvec[2][0])*180/M_PI);
+// 	this->pos_table->PutNumber("right-left", atan2(tvec[1][0], tvec[2][0])*-180/M_PI);
+// }
 
 
 
@@ -77,7 +80,7 @@ VisionServer::VisionServer(std::vector<VisionCamera>& cameras) : cameras(&camera
 	this->table->PutNumber("Cameras Available", cameras.size());
 
 	this->source = cameras[0].getVideo();
-	this->output = cs::CvSource("Processed Output", cameras[0].GetVideoMode());
+	this->output = cs::CvSource("Vision Stream", cameras[0].GetVideoMode());
 	this->stream = frc::CameraServer::GetInstance()->AddServer("Vision Output");
 	this->stream.SetSource(this->output);
 	
@@ -179,11 +182,29 @@ void VisionServer::updateStats() {
 	stats->PutNumber("Frames", this->total_frames);
 }
 
+void VisionServer::setupNtVflag() {
+	this->table->PutBoolean("debug", false);
+	this->table->PutBoolean("threshold", false);
+	this->table->PutBoolean("demo", false);
+}
+uint8_t VisionServer::getNtVflag() {
+	return (this->table->GetBoolean("debug", false) | this->table->GetBoolean("threshold", false) << 1 | this->table->GetBoolean("demo", false) << 2);
+}
+void VisionServer::deleteNtVflag() {
+	this->table->Delete("debug");
+	this->table->Delete("threshold");
+	this->table->Delete("demo");
+}
+
 const cv::Mat_<float>& VisionServer::getCameraMatrix() const {
 	return this->camera_matrix;
 }
 const cv::Mat_<float>& VisionServer::getDistortion() const {
 	return this->distortion;
+}
+
+void VisionServer::updateTarget(const std::string& target) {
+	this->active_target.setTarget(target);
 }
 
 // void VisionServer::updateMatrices(const cv::Mat_<float>& tvec, const cv::Mat_<float>& rvec) {
@@ -193,3 +214,17 @@ const cv::Mat_<float>& VisionServer::getDistortion() const {
 // 	std::shared_ptr<nt::NetworkTable> pos = nt::NetworkTableInstance::GetDefault().GetTable("robot")->GetSubTable("position");
 	
 // }
+
+VisionServer::TargetInfo::TargetInfo(const std::shared_ptr<nt::NetworkTable> table) : ttable(table) {}
+
+void VisionServer::TargetInfo::setTarget(const std::string& target) {
+	this->ttable->GetEntry("Active Target").SetString(target);
+	this->last = CHRONO::high_resolution_clock::now();
+}
+bool VisionServer::TargetInfo::update(double ltime) {
+	if(CHRONO::duration<double>(CHRONO::high_resolution_clock::now() - this->last).count() > ltime) {
+		this->ttable->GetEntry("Active Target").SetString("none");
+		return true;
+	}
+	return false;
+}

@@ -50,8 +50,8 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 
 	pipeline_t pipeline(server);
 	
-	server.table->PutBoolean("Show Threshold", false);
 	server.table->PutBoolean("Show Statistics", false);
+	server.setupNtVflag();
 	
 	cv::Mat frame(server.getCurrentResolution(), CV_8UC3);
 	
@@ -60,7 +60,7 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 		server.source.GrabFrame(frame);
 
 		server.beg = CHRONO::high_resolution_clock::now();
-		pipeline.process(frame, server.table->GetEntry("Show Threshold").GetBoolean(false));
+		pipeline.process(frame, server.getNtVflag());
 		server.end = CHRONO::high_resolution_clock::now();
 		server.total_frames++;
 
@@ -68,6 +68,8 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 		server.frame_time = CHRONO::duration<double>(server.end - server.beg).count();
 		server.loop_time = CHRONO::duration<double>(server.end - server.last).count();
 		server.last = server.end;
+
+		server.active_target.update(server.loop_time);
 
 		server.fps = 1.f/server.loop_time;
 		if((int)server.total_time > (int)server.sec1_time) {
@@ -84,8 +86,8 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 	}
 	server.runloop = true;
 	
-	server.table->Delete("Show Threshold");
 	server.table->Delete("Show Statistics");
+	server.deleteNtVflag();
 }
 template<class pipeline_t1, class pipeline_t2>
 void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
@@ -95,15 +97,13 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 	server.stream.SetCompression(quality);
 
 	pipeline_t1 p1(server);
-	std::cout << "Exhbit A\n";
 	pipeline_t2 p2(server);
-	std::cout << "Exhbit A passed\n";
 	DefaultPipeline pbase(server);
 	
 	server.table->PutNumber("Pipeline Index", 0);
 	server.table->PutNumber("Pipelines Available", 2);
-	server.table->PutBoolean("Show Threshold", false);
 	server.table->PutBoolean("Show Statistics", false);
+	server.setupNtVflag();
 
 	cv::Mat frame(server.getCurrentResolution(), CV_8UC3);
 
@@ -113,13 +113,13 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 		switch((int8_t)server.table->GetEntry("Pipeline Index").GetDouble(-1)) {
 			case 0 : {
 				server.beg = CHRONO::high_resolution_clock::now();
-				p1.process(frame, server.table->GetEntry("Show Threshold").GetBoolean(false));
+				p1.process(frame, server.getNtVflag());
 				server.end = CHRONO::high_resolution_clock::now();
 				break;
 			}
 			case 1 : {
 				server.beg = CHRONO::high_resolution_clock::now();
-				p2.process(frame, server.table->GetEntry("Show Threshold").GetBoolean(false));
+				p2.process(frame, server.getNtVflag());
 				server.end = CHRONO::high_resolution_clock::now();
 				break;
 			}
@@ -127,7 +127,7 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 			default : {
 				//std::cout << "Pipline index out of bounds, please only use values >0 and <Piplines Available\n";
 				server.beg = CHRONO::high_resolution_clock::now();
-				pbase.process(frame, server.table->GetEntry("Show Threshold").GetBoolean(false));
+				pbase.process(frame, server.getNtVflag());
 				server.end = CHRONO::high_resolution_clock::now();
 			}
 		}
@@ -137,6 +137,8 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 		server.frame_time = CHRONO::duration<double>(server.end - server.beg).count();
 		server.loop_time = CHRONO::duration<double>(server.end - server.last).count();
 		server.last = server.end;
+
+		server.active_target.update(server.loop_time);
 
 		server.fps = 1.f/server.loop_time;
 		if((int)server.total_time > (int)server.sec1_time) {
@@ -155,8 +157,8 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 	
 	server.table->Delete("Pipeline Index");
 	server.table->Delete("Piplines Available");
-	server.table->Delete("Show Threshold");
 	server.table->Delete("Show Statistics");
+	server.deleteNtVflag();
 }
 template<class pipeline_t1, class pipeline_t2, class pipeline_t3>
 void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
@@ -174,8 +176,8 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 	
 	server.table->PutNumber("Pipeline Index", 0);
 	server.table->PutNumber("Pipelines Available", 3);
-	server.table->PutBoolean("Show Threshold", false);
 	server.table->PutBoolean("Show Statistics", false);
+	server.setupNtVflag();
 
 	cv::Mat frame(server.getCurrentResolution(), CV_8UC3);
 
@@ -185,19 +187,19 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 		switch((int8_t)server.table->GetEntry("Pipeline Index").GetDouble(-1)) {
 			case 0 : {
 				server.beg = CHRONO::high_resolution_clock::now();
-				p1.process(frame, server.table->GetEntry("Show Threshold").GetBoolean(false));
+				p1.process(frame, server.getNtVflag());
 				server.end = CHRONO::high_resolution_clock::now();
 				break;
 			}
 			case 1 : {
 				server.beg = CHRONO::high_resolution_clock::now();
-				p2.process(frame, server.table->GetEntry("Show Threshold").GetBoolean(false));
+				p2.process(frame, server.getNtVflag());
 				server.end = CHRONO::high_resolution_clock::now();
 				break;
 			}
 			case 2 : {
 				server.beg = CHRONO::high_resolution_clock::now();
-				p3.process(frame, server.table->GetEntry("Show Threshold").GetBoolean(false));
+				p3.process(frame, server.getNtVflag());
 				server.end = CHRONO::high_resolution_clock::now();
 				break;
 			}
@@ -205,7 +207,7 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 			default : {
 				//std::cout << "Pipline index out of bounds, please only use values >0 and <'Piplines Available'\n";
 				server.beg = CHRONO::high_resolution_clock::now();
-				pbase.process(frame, server.table->GetEntry("Show Threshold").GetBoolean(false));
+				pbase.process(frame, server.getNtVflag());
 				server.end = CHRONO::high_resolution_clock::now();
 			}
 		}
@@ -215,6 +217,8 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 		server.frame_time = CHRONO::duration<double>(server.end - server.beg).count();
 		server.loop_time = CHRONO::duration<double>(server.end - server.last).count();
 		server.last = server.end;
+
+		server.active_target.update(server.loop_time);
 
 		server.fps = 1.f/server.loop_time;
 		if((int)server.total_time > (int)server.sec1_time) {
@@ -233,6 +237,6 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 	
 	server.table->Delete("Pipeline Index");
 	server.table->Delete("Piplines Available");
-	server.table->Delete("Show Threshold");
 	server.table->Delete("Show Statistics");
+	server.deleteNtVflag();
 }

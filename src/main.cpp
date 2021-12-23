@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
 	else { return EXIT_FAILURE; }
 
 	VisionServer server(cameras);
-	server.runVision<DefaultPipeline, BBoxDemo, TargetSolver<TestingSquare> >(25);
+	server.runVision<DefaultPipeline, BBoxDemo, SquareSolver>(25);
 }
 
 // LIST OF THINGS

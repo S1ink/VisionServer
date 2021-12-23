@@ -5,19 +5,22 @@
 #include <math.h>
 
 template<size_t corners>
-Target<corners>::Target(const std::array<cv::Point3f, corners>& world_pts) : world(world_pts) {
-	std::string n = "targets/unnamed_" + std::to_string(corners) + "-pt_target";
-	this->table = nt::NetworkTableInstance::GetDefault().GetTable("Targets")->GetSubTable(n);
-}
+Target<corners>::Target(const std::array<cv::Point3f, corners>& world_pts) : 
+	world(world_pts), name("targets/unnamed_" + std::to_string(corners) + "-pt_target"),
+	table(nt::NetworkTableInstance::GetDefault().GetTable("Targets")->GetSubTable(this->name)) {}
 template<size_t corners>
-Target<corners>::Target(const std::array<cv::Point3f, corners>& world_pts, const char* tname) : 
-	world(world_pts), table(nt::NetworkTableInstance::GetDefault().GetTable("Targets")->GetSubTable(tname)) {}
+Target<corners>::Target(const std::array<cv::Point3f, corners>& world_pts, const char* name) : 
+	world(world_pts), name(name), table(nt::NetworkTableInstance::GetDefault().GetTable("Targets")->GetSubTable(name)) {}
 template<size_t corners>
-Target<corners>::Target(const std::array<cv::Point3f, corners>& world_pts, const wpi::Twine& tname) : 
-	world(world_pts), table(nt::NetworkTableInstance::GetDefault().GetTable("Targets")->GetSubTable(tname)) {}
+Target<corners>::Target(const std::array<cv::Point3f, corners>& world_pts, const std::string& name) : 
+	world(world_pts), name(name), table(nt::NetworkTableInstance::GetDefault().GetTable("Targets")->GetSubTable(name)) {}
 
 template<size_t corners>
 size_t Target<corners>::size() const {return corners;}
+template<size_t corners>
+const std::string& Target<corners>::getName() {
+	return this->name;
+}
 template<size_t corners>
 void Target<corners>::reorder(const std::vector<cv::Point2i>& contour) {
 	cv::Point2f center = findCenter<float>(contour), buff1, buff2;

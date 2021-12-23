@@ -10,24 +10,28 @@ template<typename target_t, VThreshold::LED color>
 TargetSolver<target_t, color>::TargetSolver(VisionServer& server) :
 	VPipeline(server, "TargetSolver Pipeline"), WSThreshold<color>(server.getCurrentResolution(), this->table) {}
 template<typename target_t, VThreshold::LED color>
-void TargetSolver<target_t, color>::process(cv::Mat& io_frame, bool debug) {
+void TargetSolver<target_t, color>::process(cv::Mat& io_frame, uint8_t mode) {
 	this->threshold(io_frame);
 	this->findLargest(this->binary);
 
-	if(debug) {
+	if(mode & (uint8_t)VFlag::THRESH) {
 		cv::cvtColor(this->binary, this->buffer, cv::COLOR_GRAY2BGR, 3);
 		cv::resize(this->buffer, io_frame, cv::Size(), this->scale, this->scale, cv::INTER_NEAREST);
-	} else {
+	}
 
-		if(this->validTarget()) {
-			cv::convexHull(this->getTarget(), this->target_points);
-			cv::approxPolyDP(this->target_points, this->target_points, 0.1*cv::arcLength(this->getTarget(), false), true);
+	if(this->validTarget()) {
+		cv::convexHull(this->getTarget(), this->target_points);
+		cv::approxPolyDP(this->target_points, this->target_points, 0.1*cv::arcLength(this->getTarget(), false), true);
+		rescale(this->target_points, this->scale);
 
-			rescale(this->target_points, this->scale);
-			if(this->reference_points.compatible(this->target_points)) {
-				this->reference_points.reorder(this->target_points);
-				this->reference_points.solvePerspective(this->tvec, this->rvec, this->getCameraMatrix(), this->getCameraDistortion());
+		if(this->reference_points.compatible(this->target_points)) {
+			this->reference_points.reorder(this->target_points);
+			this->reference_points.solvePerspective(this->tvec, this->rvec, this->getCameraMatrix(), this->getCameraDistortion());
 
+			this->updateTarget(this->reference_points.getName());
+
+			if(mode & (uint8_t)VFlag::DEBUG) {
+				cv::circle(io_frame, ::findCenter(this->target_points), 1, cv::Scalar(255, 255, 0), 2);
 				for(size_t i = 0; i < this->reference_points.points.size(); i++) {
 					cv::putText(
 						io_frame, std::to_string(i), 
@@ -35,22 +39,22 @@ void TargetSolver<target_t, color>::process(cv::Mat& io_frame, bool debug) {
 						cv::FONT_HERSHEY_DUPLEX, 0.5, cv::Scalar(255, 0, 0), 2, cv::LINE_AA
 					);
 				}
-			} else {
-				for(size_t i = 0; i < this->target_points.size(); i++) {
-					cv::putText(
-						io_frame, std::to_string(i), 
-						this->target_points[i], 
-						cv::FONT_HERSHEY_DUPLEX, 0.5, cv::Scalar(0, 0, 255), 2, cv::LINE_AA
-					);
-				}
 			}
+		} else if(mode & (uint8_t)VFlag::DEBUG) {
 			cv::circle(io_frame, ::findCenter(this->target_points), 1, cv::Scalar(255, 255, 0), 2);
-		} else {
-			cv::putText(
-				io_frame, "NO TARGETS DETECTED", 
-				cv::Point(io_frame.size().width*0.5 - 192, io_frame.size().height*0.5), 
-				cv::FONT_HERSHEY_DUPLEX, 1, cv::Scalar(0, 0, 255), 2, cv::LINE_AA
-			);
+			for(size_t i = 0; i < this->target_points.size(); i++) {
+				cv::putText(
+					io_frame, std::to_string(i), 
+					this->target_points[i], 
+					cv::FONT_HERSHEY_DUPLEX, 0.5, cv::Scalar(0, 0, 255), 2, cv::LINE_AA
+				);
+			}
 		}
+	} else {
+		cv::putText(
+			io_frame, "NO TARGETS DETECTED", 
+			cv::Point(io_frame.size().width*0.5 - 192, io_frame.size().height*0.5), 
+			cv::FONT_HERSHEY_DUPLEX, 1, cv::Scalar(0, 0, 255), 2, cv::LINE_AA
+		);
 	}
 }

@@ -16,6 +16,13 @@
 
 class VisionServer;
 
+enum class VFlag {
+    NONE = 0b000,       // signifies video passthrough, no markup
+    DEBUG = 0b001,      // debug (info/stats)
+    THRESH = 0b010,     // show threshold
+    DEMO = 0b100,       // demo (markup)
+};
+
 class VPipeline {       // Vision Pipeline base interface
 public:
     //VPipeline() = default;
@@ -26,10 +33,12 @@ public:
     virtual ~VPipeline() = default;
     VPipeline& operator=(const VPipeline&) = delete;
 
-    virtual void process(cv::Mat& io_frame, bool debug = false) = 0;
+    virtual void process(cv::Mat& io_frame, uint8_t mode = (uint8_t)VFlag::NONE) = 0;
 
     const cv::Mat_<float>& getCameraMatrix() const;
     const cv::Mat_<float>& getCameraDistortion() const;
+
+    void updateTarget(const std::string& target);
 
     // void updateMatrices(const cv::Mat_<float>& tvec, const cv::Mat_<float>& rvec);
     // void updateMatrices(const cv::Mat_<float>& tvec);
@@ -51,35 +60,34 @@ public:
     DefaultPipeline(const DefaultPipeline&) = delete;
     DefaultPipeline& operator=(const DefaultPipeline&) = delete;
 
-    void process(cv::Mat& io_frame, bool debug = false) override {}
+    void process(cv::Mat& io_frame, uint8_t mode = (uint8_t)VFlag::NONE) override {}
 
 };
 
 
 
-class Position {
-public:
-    static Position& Get();
+// class Position {
+// public:
+//     static Position& Get();
 
-    void setPos(float x, float y, float z);
-    void setDistance(double d);
-    void setThetaUD(double deg);
-    void setThetaLR(double deg);
+//     void setPos(float x, float y, float z);
+//     void setDistance(double d);
+//     void setThetaUD(double deg);
+//     void setThetaLR(double deg);
     
-    void setAll(const cv::Mat_<float>& tvec);
+//     void setAll(const cv::Mat_<float>& tvec);
 
-private:
-    Position() = default;
-    Position(const Position& other) = delete;
+// private:
+//     Position() = default;
+//     Position(const Position& other) = delete;
 
-    const std::shared_ptr<nt::NetworkTable> pos_table{nt::NetworkTableInstance::GetDefault().GetTable("robot/position")};
+//     const std::shared_ptr<nt::NetworkTable> pos_table{nt::NetworkTableInstance::GetDefault().GetTable("robot/position")};
 
-};
+// };
 
 
 
 class VisionServer {    // make singleton?
-    //friend class PipelineBase;
     friend class VPipeline;
 public:
     VisionServer(std::vector<VisionCamera>& cameras);
@@ -113,14 +121,20 @@ public:
 
 protected:
     template<class pipeline_t>
-    static void visionWorker(VisionServer& server, int8_t quality = 50);
+    static void visionWorker(VisionServer& server, int8_t quality);
     template<class pipeline_t1, class pipeline_t2>
-    static void visionWorker(VisionServer& server, int8_t quality = 50);
+    static void visionWorker(VisionServer& server, int8_t quality);
     template<class pipeline_t1, class pipeline_t2, class pipeline_t3>
-    static void visionWorker(VisionServer& server, int8_t quality = 50);
+    static void visionWorker(VisionServer& server, int8_t quality);
 
     void putStats(cv::Mat& io_frame);
     void updateStats();
+
+    void setupNtVflag();
+    uint8_t getNtVflag();
+    void deleteNtVflag();
+
+    void updateTarget(const std::string& target);
 
     // void updateMatrices(const cv::Mat_<float>& tvec, const cv::Mat_<float>& rvec);
     // void updateMatrices(const cv::Mat_<float>& tvec);
@@ -135,11 +149,29 @@ protected:
     std::atomic_bool runloop{true};
     std::thread launched;
 
-    std::shared_ptr<nt::NetworkTable> table = {nt::NetworkTableInstance::GetDefault().GetTable("Vision Server")};
+    const std::shared_ptr<nt::NetworkTable> table{nt::NetworkTableInstance::GetDefault().GetTable("Vision Server")};
 
+    // move to methods as these only need to be local -> can then run multiple threads at once off of the same server
     uint64_t total_frames{0}, sec1_frames{0};
 	double total_time{0.f}, frame_time{0.f}, loop_time{0.f}, sec1_time{0.f}, fps_1s{0.f}, fps{0.f};
 	CHRONO::high_resolution_clock::time_point start, beg, end, last;
+
+private:
+    class TargetInfo {
+    public:
+        TargetInfo(const std::shared_ptr<nt::NetworkTable> table);
+        TargetInfo(const TargetInfo&) = delete;
+        TargetInfo(TargetInfo&&) = default;
+        ~TargetInfo() = default;
+
+        void setTarget(const std::string& target);
+        bool update(double ltime);
+
+    private:
+        const std::shared_ptr<nt::NetworkTable> ttable;
+        CHRONO::high_resolution_clock::time_point last; 
+
+    } active_target{table};
 
 };
 

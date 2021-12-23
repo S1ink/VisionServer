@@ -8,6 +8,8 @@
 
 #include <vector>
 #include <array>
+#include <string>
+#include <unordered_map>
 
 #include "vision.h"
 
@@ -15,13 +17,14 @@ template<size_t corners>
 class Target {
 public:
 	Target(const std::array<cv::Point3f, corners>& world_pts);
-	Target(const std::array<cv::Point3f, corners>& world_pts, const char* tname);
-	Target(const std::array<cv::Point3f, corners>& world_pts, const wpi::Twine& tname);
+	Target(const std::array<cv::Point3f, corners>& world_pts, const char* name);
+	Target(const std::array<cv::Point3f, corners>& world_pts, const std::string& name);
 
 	std::array<cv::Point2f, corners> points;		// actual points 
 	const std::array<cv::Point3f, corners> world;	// world points that relate to the above 
 
 	size_t size() const;
+	const std::string& getName();
 	inline bool compatible(const std::vector<cv::Point>& contour) const {
 		return contour.size() == corners;
 	}
@@ -43,6 +46,7 @@ public:
 	// );
 
 private:
+	const std::string name;
 	const std::shared_ptr<nt::NetworkTable> table;
 
 };

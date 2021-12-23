@@ -25,11 +25,28 @@ CE_STR endline =
 "\n";
 #endif
 
-//typedef unsigned int uint;
+#ifdef _WIN32
+#define WINDOWS 1
+#endif
+#ifdef __linux__
+#define LINUX 1
+#endif
+#ifdef __APPLE__
+#define MACOS 1
+#endif
+
+template <template <typename...> class C, typename...Ts>
+std::true_type is_base_of_template_impl(const C<Ts...>*);
+template <template <typename...> class C>
+std::false_type is_base_of_template_impl(...);
+template <typename T, template <typename...> class C>
+using is_base_of_template = decltype(is_base_of_template_impl<C>(std::declval<T*>()));
+
+template <template <size_t> class C, size_t S>
+std::true_type is_base_of_num_template_impl(const C<S>*);
+template <template <size_t...> class C>
+std::false_type is_base_of_num_template_impl(...);
+template <typename T, template <size_t> class C>
+using is_base_of_num_template = decltype(is_base_of_num_template_impl<C>(std::declval<T*>()));
 
 //#endif
-
-//char32_t tr_end = U'└';
-//char32_t tr_cont = U'│';
-
-//U"└─"

@@ -8,11 +8,11 @@
 
 BBoxDemo::BBoxDemo(VisionServer& server) : 
 	VPipeline(server, "BoundingBox Demo Pipeline"), WSThreshold(server.getCurrentResolution(), this->table) {}
-void BBoxDemo::process(cv::Mat& io_frame, bool debug) {
+void BBoxDemo::process(cv::Mat& io_frame, uint8_t mode) {
 	this->threshold(io_frame);
 	this->findLargest(this->binary);
 
-	if(debug) {
+	if(mode & (uint8_t)VFlag::THRESH) {
 		cv::cvtColor(this->binary, this->buffer, cv::COLOR_GRAY2BGR, 3);
 		cv::resize(this->buffer, io_frame, cv::Size(), this->scale, this->scale, cv::INTER_NEAREST);
 	}
@@ -31,11 +31,11 @@ void BBoxDemo::process(cv::Mat& io_frame, bool debug) {
 
 SquareTargetPNP::SquareTargetPNP(VisionServer& server) : 
 	VPipeline(server, "Square Target Pipeline"), WSThreshold(server.getCurrentResolution(), this->table) {}
-void SquareTargetPNP::process(cv::Mat& io_frame, bool debug) {
+void SquareTargetPNP::process(cv::Mat& io_frame, uint8_t mode) {
 	this->threshold(io_frame);
 	this->findLargest(this->binary);
 
-	if(debug) {
+	if(mode & (uint8_t)VFlag::THRESH) {
 		cv::cvtColor(this->binary, this->buffer, cv::COLOR_GRAY2BGR, 3);
 		cv::resize(this->buffer, io_frame, cv::Size(), this->scale, this->scale, cv::INTER_NEAREST);
 	} else {
@@ -43,7 +43,6 @@ void SquareTargetPNP::process(cv::Mat& io_frame, bool debug) {
 		if(this->validTarget()) {
 			cv::convexHull(this->getTarget(), this->target_points);
 			cv::approxPolyDP(this->target_points, this->target_points, 0.1*cv::arcLength(this->getTarget(), false), true);
-
 			rescale(this->target_points, this->scale);
 
 			if(this->reference_points.compatible(this->target_points)) {

@@ -19,7 +19,7 @@ public:
 	BBoxDemo(VisionServer& server);
 	BBoxDemo(const BBoxDemo& other) = delete;
 
-	void process(cv::Mat& io_frame, bool debug = false) override;
+	void process(cv::Mat& io_frame, uint8_t mode = (uint8_t)VFlag::NONE) override;
 
 private:
 	cv::Rect boundingbox;
@@ -30,7 +30,7 @@ public:
 	SquareTargetPNP(VisionServer& server);
 	SquareTargetPNP(const SquareTargetPNP& other) = delete;
 
-	void process(cv::Mat& io_frame, bool debug = false) override;
+	void process(cv::Mat& io_frame, uint8_t mode = (uint8_t)VFlag::NONE) override;
 
 private:
 	std::vector<cv::Point> target_points;
@@ -48,23 +48,14 @@ private:
 
 };
 
-// template <template <typename...> class BaseTemplate, typename Derived>
-// struct test_base_template<BaseTemplate, Derived, std::enable_if_t<std::is_class_v<Derived> > > : Derived
-// {
-//     template<typename...T>
-//     static constexpr std::true_type test(BaseTemplate<T...> *);
-//     static constexpr std::false_type test(...);
-//     using is_base = decltype(test((Derived *) nullptr));
-// };
-
 template<typename target_t, VThreshold::LED color = VThreshold::LED::BLUE>
 class TargetSolver : public VPipeline, public WSThreshold<color>, public ContourPipe {
-	//static_assert(std::is_convertible<Target<0>, target_t>::value, "Target type (target_t) must inherit from Target<t,c>");
+	static_assert(is_base_of_num_template<target_t, Target>::value, "Target type (target_t) must inherit from Target<size_t>");
 public:
 	TargetSolver(VisionServer& server);
 	TargetSolver(const TargetSolver& other) = delete;
 
-	void process(cv::Mat& io_frame, bool debug = false) override;
+	void process(cv::Mat& io_frame, uint8_t mode = (uint8_t)VFlag::NONE) override;
 
 private:
 	std::vector<cv::Point> target_points;
@@ -73,8 +64,9 @@ private:
 	cv::Mat_<float> rvec = cv::Mat_<float>(1, 3), tvec = rvec/*, rmat = cv::Mat_<float>(3, 3)*/;
 
 };
+typedef TargetSolver<TestingSquare> SquareSolver;
 
-#include "pipelines.inc"
+#include "pipelines.inc" 
 
 
 
