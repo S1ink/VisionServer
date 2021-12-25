@@ -1,14 +1,13 @@
-#include "opencv2/core/types.hpp"
-
 #include "extras/resources.h"
 #include "extras/sighandle.h"
 #include "extras/timing.h"
 
-//#define SWITCHED_CAMERA_CONFIG	// enable this to setup switched cameras from the config file, otherwise the program starts a single switched camera for vision
+#include <vector>
 
 #include "visioncamera.h"
 #include "pipelines.h"
 #include "visionserver.h"
+#include "vision.h"
 
 StopWatch runtime("Runtime", &std::cout, 0);
 void on_exit() {
@@ -26,8 +25,8 @@ int main(int argc, char* argv[]) {
 	else if(readConfig(cameras)) {}
 	else { return EXIT_FAILURE; }
 
-	VisionServer server(cameras);
-	server.runVision<DefaultPipeline, BBoxDemo, SquareSolver>(25);
+	VisionServer server(std::move(cameras));
+	server.runVision<DefaultPipeline, BBoxDemo, Test6x6Solver>(25);
 }
 
 // LIST OF THINGS
@@ -39,6 +38,6 @@ x multiple cameras -> switching (find out what we want to do)
 x compression/stay under bandwidth limit
 x Modularize?
 ? MORE CUSTOM ASSEMBLY!!! :)		<--
-- Target abstraction and generalization (pipeline template param)
-- System for telling the robot when targeting info is outdated
+x Target abstraction and generalization (pipeline template param)
+x System for telling the robot when targeting info is outdated
 */

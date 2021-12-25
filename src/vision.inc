@@ -37,24 +37,17 @@ void rescale(std::vector<cv::Point_<num_t> >& points, double scale) {
 }
 
 template<typename num_t>
-cv::Size_<num_t> operator/(cv::Size_<num_t> input, size_t scale) {
-	static_assert(std::is_arithmetic<num_t>::value, "Template parameter (num_t) must be arithemetic type");
-	return cv::Size_<num_t>(input.width/scale, input.height/scale);
-}
-
-template<typename num_t>
 cv::Point_<num_t> findCenter(const std::vector<cv::Point_<num_t> >& contour) {
 	static_assert(std::is_arithmetic<num_t>::value, "Template parameter (num_t) must be arithemetic type");
 	if(contour.size() > 0) {
-		num_t x = 0, y = 0;
+		cv::Point_<num_t> ret;
 		for(size_t i = 0; i < contour.size(); i++) {
-			x += contour[i].x;
-			y += contour[i].y;
+			ret.x += contour[i].x;
+			ret.y += contour[i].y;
 		}
-		x /= contour.size();
-		y /= contour.size();
-
-		return cv::Point_<num_t>(x, y);
+		ret.x /= contour.size();
+		ret.y /= contour.size();
+		return ret;
 	}
 	return cv::Point_<num_t>();
 }
@@ -63,15 +56,14 @@ cv::Point_<onum_t> findCenter(const std::vector<cv::Point_<inum_t> >& contour) {
 	static_assert(std::is_arithmetic<onum_t>::value, "Template parameter (num_t) must be arithemetic type");
 	static_assert(std::is_arithmetic<inum_t>::value, "Template parameter (num_t) must be arithemetic type");
 	if(contour.size() > 0) {
-		onum_t x = 0, y = 0;
+		cv::Point_<onum_t> ret;
 		for(size_t i = 0; i < contour.size(); i++) {
-			x += contour[i].x;
-			y += contour[i].y;
+			ret.x += contour[i].x;
+			ret.y += contour[i].y;
 		}
-		x /= contour.size();
-		y /= contour.size();
-
-		return cv::Point_<onum_t>(x, y);
+		ret.x /= contour.size();
+		ret.y /= contour.size();
+		return ret;
 	}
 	return cv::Point_<onum_t>();
 }
@@ -79,17 +71,16 @@ template<typename num_t>
 cv::Point3_<num_t> findCenter3D(const std::vector<cv::Point3_<num_t> >& contour) {
 	static_assert(std::is_arithmetic<num_t>::value, "Template parameter (num_t) must be arithemetic type");
 	if(contour.size() > 0) {
-		num_t x = 0, y = 0, z = 0;
+		cv::Point3_<num_t> ret;
 		for(size_t i = 0; i < contour.size(); i++) {
-			x += contour[i].x;
-			y += contour[i].y;
-			z += contour[i].z;
+			ret.x += contour[i].x;
+			ret.y += contour[i].y;
+			ret.z += contour[i].z;
 		}
-		x /= contour.size();
-		y /= contour.size();
-		z /= contour.size();
-
-		return cv::Point3_<num_t>(x, y, z);
+		ret.x /= contour.size();
+		ret.y /= contour.size();
+		ret.z /= contour.size();
+		return ret;
 	}
 	return cv::Point3_<num_t>();
 }
@@ -98,23 +89,23 @@ cv::Point3_<onum_t> findCenter3D(const std::vector<cv::Point3_<inum_t> >& contou
 	static_assert(std::is_arithmetic<onum_t>::value, "Template parameter (num_t) must be arithemetic type");
 	static_assert(std::is_arithmetic<inum_t>::value, "Template parameter (num_t) must be arithemetic type");
 	if(contour.size() > 0) {
-		onum_t x = 0, y = 0, z = 0;
+		cv::Point3_<onum_t> ret;
 		for(size_t i = 0; i < contour.size(); i++) {
-			x += contour[i].x;
-			y += contour[i].y;
-			z += contour[i].z;
+			ret.x += contour[i].x;
+			ret.y += contour[i].y;
+			ret.z += contour[i].z;
 		}
-		x /= contour.size();
-		y /= contour.size();
-		z /= contour.size();
-
-		return cv::Point3_<onum_t>(x, y, z);
+		ret.x /= contour.size();
+		ret.y /= contour.size();
+		ret.z /= contour.size();
+		return ret;
 	}
 	return cv::Point3_<onum_t>();
 }
 
 template<typename num_t>
 void reorderClockWise(std::vector<cv::Point_<num_t> >& points) {
+	static_assert(std::is_arithmetic<num_t>::value, "Template parameter (num_t) must be arithemetic type");
 	cv::Point_<num_t> center = findCenter<num_t, num_t>(points), abuff, bbuff;
 	std::sort(
 		points.begin(),
@@ -128,6 +119,7 @@ void reorderClockWise(std::vector<cv::Point_<num_t> >& points) {
 }
 template<typename num_t>
 void reorderCClockWise(std::vector<cv::Point_<num_t> >& points) {
+	static_assert(std::is_arithmetic<num_t>::value, "Template parameter (num_t) must be arithemetic type");
 	cv::Point_<num_t> center = findCenter<num_t, num_t>(points), abuff, bbuff;
 	std::sort(
 		points.begin(),
@@ -138,4 +130,55 @@ void reorderCClockWise(std::vector<cv::Point_<num_t> >& points) {
 			return atan2(abuff.x, abuff.y) < atan2(bbuff.x, bbuff.y);
 		}
 	);
+}
+
+template<typename num_t, size_t s>
+std::array<cv::Point3_<num_t>, s> operator+(const std::array<cv::Point_<num_t>, s>& base, num_t depth) {
+	static_assert(std::is_arithmetic<num_t>::value, "Template parameter (num_t) must be arithemetic type");
+	std::array<cv::Point3_<num_t>, s> ret;
+	for(size_t i = 0; i < s; i++) {
+		ret[i] = std::move(cv::Point3_<num_t>(base[i].x, base[i].y, depth));
+	}
+	return ret;
+}
+template<typename num_t, size_t s>
+std::array<cv::Point3_<num_t>, s> operator+(const std::array<cv::Point3_<num_t>, s>& base, num_t depth) {
+	static_assert(std::is_arithmetic<num_t>::value, "Template parameter (num_t) must be arithemetic type");
+	std::array<cv::Point3_<num_t>, s> ret;
+	for(size_t i = 0; i < s; i++) {
+		ret[i] = base[i];
+		ret[i].z += depth;
+	}
+}
+template<typename num_t, size_t s>
+void operator+=(std::array<cv::Point3_<num_t>, s>& base, num_t depth) {
+	static_assert(std::is_arithmetic<num_t>::value, "Template parameter (num_t) must be arithemetic type");
+	for(size_t i = 0; i < s; i++) {
+		base[i].z += depth;
+	}
+}
+template<typename num_t>
+std::vector<cv::Point3_<num_t> > operator+(const std::vector<cv::Point_<num_t> >& base, num_t depth) {
+	static_assert(std::is_arithmetic<num_t>::value, "Template parameter (num_t) must be arithemetic type");
+	std::vector<cv::Point3_<num_t> > ret(base.size());
+	for(size_t i = 0; i < base.size(); i++) {
+		ret.emplace_back(base[i].x, base[i].y, depth);
+	}
+	return ret;
+}
+template<typename num_t>
+std::vector<cv::Point3_<num_t> > operator+(const std::vector<cv::Point3_<num_t> >& base, num_t depth) {
+	static_assert(std::is_arithmetic<num_t>::value, "Template parameter (num_t) must be arithemetic type");
+	std::vector<cv::Point3_<num_t> > ret(base.size());
+	for(size_t i = 0; i < base.size(); i++) {
+		ret.emplace_back(base[i].x, base[i].y, base[i].z + depth);
+	}
+	return ret;
+}
+template<typename num_t>
+void operator+=(std::vector<cv::Point3_<num_t>>& base, num_t depth) {
+	static_assert(std::is_arithmetic<num_t>::value, "Template parameter (num_t) must be arithemetic type");
+	for(size_t i = 0; i < base.size(); i++) {
+		base[i].depth += depth;
+	}
 }

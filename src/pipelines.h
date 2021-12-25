@@ -6,7 +6,6 @@
 
 #include <vector>
 #include <array>
-#include <type_traits>
 
 #include "extras/resources.h"
 
@@ -14,27 +13,27 @@
 #include "processing.h"
 #include "targets.h"
 
-class BBoxDemo : public VPipeline, public WSThreshold<VThreshold::LED::BLUE>, public ContourPipe {
+class BBoxDemo : public VPipeline, public WeightedSubtraction<VThreshold::LED::BLUE>, public Contours {
 public:
 	BBoxDemo(VisionServer& server);
 	BBoxDemo(const BBoxDemo& other) = delete;
 
-	void process(cv::Mat& io_frame, uint8_t mode = (uint8_t)VFlag::NONE) override;
+	void process(cv::Mat& io_frame, int8_t mode = 0) override;
 
 private:
 	cv::Rect boundingbox;
 
 };
-class SquareTargetPNP : public VPipeline, public WSThreshold<VThreshold::LED::BLUE>, public ContourPipe {
+class SquareTargetPNP : public VPipeline, public WeightedSubtraction<VThreshold::LED::BLUE>, public Contours {
 public:
 	SquareTargetPNP(VisionServer& server);
 	SquareTargetPNP(const SquareTargetPNP& other) = delete;
 
-	void process(cv::Mat& io_frame, uint8_t mode = (uint8_t)VFlag::NONE) override;
+	void process(cv::Mat& io_frame, int8_t mode = 0) override;
 
 private:
 	std::vector<cv::Point> target_points;
-	TestingSquare reference_points;
+	Test6x6 reference_points;
 
 	cv::Mat_<float> rvec = cv::Mat_<float>(1, 3), tvec = rvec/*, rmat = cv::Mat_<float>(3, 3)*/;
 
@@ -48,14 +47,36 @@ private:
 
 };
 
-template<typename target_t, VThreshold::LED color = VThreshold::LED::BLUE>
-class TargetSolver : public VPipeline, public WSThreshold<color>, public ContourPipe {
+
+
+template <template <typename...> class C, typename...Ts>
+std::true_type is_base_of_template_impl(const C<Ts...>*);
+template <template <typename...> class C>
+std::false_type is_base_of_template_impl(...);
+template <typename T, template <typename...> class C>
+using is_base_of_template = decltype(is_base_of_template_impl<C>(std::declval<T*>()));	// assert inheritance of template class
+
+template <template <size_t> class C, size_t S>
+std::true_type is_base_of_num_template_impl(const C<S>*);
+template <template <size_t...> class C>
+std::false_type is_base_of_num_template_impl(...);
+template <typename T, template <size_t> class C>
+using is_base_of_num_template = decltype(is_base_of_num_template_impl<C>(std::declval<T*>()));	// assert inheritance of template size class
+
+
+
+template<class target_t, VThreshold::LED color = VThreshold::LED::BLUE>
+class TargetSolver : public VPipeline, public WeightedSubtraction<color>, public Contours {
 	static_assert(is_base_of_num_template<target_t, Target>::value, "Target type (target_t) must inherit from Target<size_t>");
 public:
 	TargetSolver(VisionServer& server);
-	TargetSolver(const TargetSolver& other) = delete;
+	TargetSolver(const TargetSolver&) = delete;
+	//TargetSolver(TargetSolver&&);
+	~TargetSolver() = default;
+	TargetSolver& operator=(const TargetSolver&) = delete;
+	//TargetSolver& operator=(TargetSolver&&);
 
-	void process(cv::Mat& io_frame, uint8_t mode = (uint8_t)VFlag::NONE) override;
+	void process(cv::Mat& io_frame, int8_t mode = 0) override;
 
 private:
 	std::vector<cv::Point> target_points;
@@ -64,7 +85,7 @@ private:
 	cv::Mat_<float> rvec = cv::Mat_<float>(1, 3), tvec = rvec/*, rmat = cv::Mat_<float>(3, 3)*/;
 
 };
-typedef TargetSolver<TestingSquare> SquareSolver;
+typedef TargetSolver<Test6x6> Test6x6Solver;
 
 #include "pipelines.inc" 
 

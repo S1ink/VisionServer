@@ -1,141 +1,19 @@
 #include "visioncamera.h"
 
-#include <networktables/NetworkTableInstance.h>
 #include <wpi/raw_ostream.h>
-#include <wpi/raw_istream.h>
 
-bool readConfig(std::vector<VisionCamera>& cameras, const char* file) {
-
-	std::error_code ec;
-    wpi::raw_fd_istream is(file, ec);
-    if (ec) {
-        wpi::errs() << "Could not open '" << file << "': " << ec.message() << newline;
-        return false;
-    }
-
-    wpi::json j;
-    try { j = wpi::json::parse(is); }
-    catch (const wpi::json::parse_error& e) {
-        wpi::errs() << "Config error in " << file << ": byte " << e.byte << ": " << e.what() << newline;
-        return false;
-    }
-    if (!j.is_object()) {
-        wpi::errs() << "Config error in " << file << ": must be JSON object\n";
-        return false;
-    }
-
-    if(j.count("ntmode") != 0) {
-        try {
-            std::string str = j.at("ntmode").get<std::string>();
-            wpi::StringRef s(str);
-            if(s.equals_lower("client")) {
-                wpi::outs() << "Setting up NetworkTables in CLIENT mode\n";
-                try { 
-                    nt::NetworkTableInstance::GetDefault().StartClientTeam(j.at("team").get<unsigned int>());
-                    nt::NetworkTableInstance::GetDefault().StartDSClient();
-                }
-                catch (const wpi::json::exception& e) {
-                    wpi::errs() << "Config error in " << file << ": could not read team number: " << e.what() << newline;
-                    return false;
-                }
-            } else if (s.equals_lower("server")) {
-                wpi::outs() << "Setting up NetworkTables in SERVER mode\n";
-                nt::NetworkTableInstance::GetDefault().StartServer();
-            } else {
-                wpi::errs() << "Config error in " << file << ": could not understand ntmode value '" << str << "'\n";
-            }
-        } catch (const wpi::json::exception& e) {
-            wpi::errs() << "Config error in " << file << ": coud not read ntmode: " << e.what() << newline;
-        }
-    }
-
-    if(j.count("cameras") < 1) {
-        wpi::errs() << "Config error in " << file << ": no camera configs found, this program requires cameras to function\n";
-    } else {
-        try {
-            for(const wpi::json& camera : j.at("cameras")) {
-                if(camera.count("calibration") > 0 && j.count("calibrations") > 0) {
-                    wpi::json calibration;
-                    try {
-                        calibration = j.at("calibrations").at(camera.at("calibration").get<std::string>()); 
-                        cameras.emplace_back(camera, calibration);
-                    } catch (const wpi::json::exception& e) {
-                        wpi::errs() << "Config error in " << file << ": failed to get configuration object: " << e.what() << newline;  // print out more info if needed
-                        cameras.emplace_back(camera);
-                    }
-                } else {
-                    cameras.emplace_back(camera);
-                }
-            }
-        }
-        catch (const wpi::json::exception& e) {
-            wpi::errs() << "Config error in " << file << ": could not read cameras: " << e.what() << newline;
-        }
-    }
-    if(j.count("switched cameras") != 0) {
-#ifdef SWITCHED_CAMERAS_CONFIG
-        try {
-            for(const wpi::json::value_type& stream : j.at("switched cameras")) {
-                cs::MjpegServer server;
-                try { server = frc::CameraServer::GetInstance()->AddSwitchedCamera(stream.at("name").get<std::string>()); }
-                catch (const wpi::json::exception& e) {
-                    wpi::errs() << "Could not read switched camera name: " << e.what() << newline;
-                    return false;
-                }
-                try { nt::NetworkTableInstance::GetDefault()
-                    .GetEntry(stream.at("key").get<std::string>())
-                    .AddListener(
-                        [server, cameras](const nt::EntryNotification& event) mutable {
-                            if(event.value->IsDouble()) {
-                                size_t i = event.value->GetDouble();
-                                if(i >= 0 && i < cameras.size()) {
-                                    server.SetSource(cameras[i]);
-                                }
-                            } else if (event.value->IsString()) {
-                                wpi::StringRef str = event.value->GetString();
-                                for(size_t i = 0; i < cameras.size(); i++) {
-                                    if(str == cameras[i].GetName()) {
-                                        server.SetSource(cameras[i]);
-                                        break;
-                                    }
-                                }
-                            }
-                        },
-                        NT_NOTIFY_IMMEDIATE | NT_NOTIFY_NEW | NT_NOTIFY_UPDATE
-                    );
-                }
-                catch (const wpi::json::exception& e) {
-                    wpi::errs() << "Config error in " << file << ": could not read key: " << e.what() << newline;
-                    return false;
-                }
-            }
-        }
-        catch (const wpi::json::exception& e) {
-            wpi::errs() << "Config error in " << file << ": could not read switched cameras: " << e.what() << newline;
-            return false;
-        }
-#else
-		std::cout << "Switched cameras are ignored from config in this build - all cameras are already added to the vision processing server\n";
-#endif
-    }
-
-    return true;
-}
+#include "extras/resources.h"
 
 VisionCamera::VisionCamera(CS_Source handle) : 
-	VideoCamera(handle), type((cs::VideoSource::Kind)CS_GetSourceKind(handle, &this->m_status))
-{}
+	VideoCamera(handle)/*, type((cs::VideoSource::Kind)CS_GetSourceKind(handle, &this->m_status))*/ {}
 VisionCamera::VisionCamera(const cs::VideoSource& source, const wpi::json& config) : 
-	VideoCamera(source.GetHandle()), type((cs::VideoSource::Kind)CS_GetSourceKind(source.GetHandle(), nullptr)), config(config)
-{}
+	VideoCamera(source.GetHandle())/*, type((cs::VideoSource::Kind)CS_GetSourceKind(source.GetHandle(), nullptr))*/, config(config) {}
 VisionCamera::VisionCamera(const cs::UsbCamera& source, const wpi::json& config) : 
-	VideoCamera(source.GetHandle()), type(cs::VideoSource::Kind::kUsb), config(config)
-{}
+	VideoCamera(source.GetHandle())/*, type(cs::VideoSource::Kind::kUsb)*/, config(config) {}
 VisionCamera::VisionCamera(const cs::HttpCamera& source, const wpi::json& config) :
-	VideoCamera(source.GetHandle()), type(cs::VideoSource::Kind::kHttp), config(config)
-{}
+	VideoCamera(source.GetHandle())/*, type(cs::VideoSource::Kind::kHttp)*/, config(config) {}
 VisionCamera::VisionCamera(const wpi::json& source_config, const wpi::json& calibration) :	// add and/or find a way to determine device type from config json
-	type(cs::VideoSource::Kind::kUsb), config(source_config), calibration(calibration)
+	/*type(cs::VideoSource::Kind::kUsb),*/ config(source_config), calibration(calibration)
 {
 	cs::UsbCamera cam;
 	try {cam = cs::UsbCamera(source_config.at("name").get<std::string>(), source_config.at("path").get<std::string>());}
@@ -148,7 +26,7 @@ VisionCamera::VisionCamera(const wpi::json& source_config, const wpi::json& cali
 	swap(*this, cam);	// this should work
 }
 VisionCamera::VisionCamera(const wpi::json& source_config) :	// add and/or find a way to determine device type from config json
-	type(cs::VideoSource::Kind::kUsb), config(source_config)
+	/*type(cs::VideoSource::Kind::kUsb),*/ config(source_config)
 {
 	cs::UsbCamera cam;
 	try {cam = cs::UsbCamera(source_config.at("name").get<std::string>(), source_config.at("path").get<std::string>());}
@@ -160,10 +38,40 @@ VisionCamera::VisionCamera(const wpi::json& source_config) :	// add and/or find 
 	// print confirmation
 	swap(*this, cam);	// this should work
 }
-
-cs::VideoSource::Kind VisionCamera::getType() const {
-	return this->type;
+// VisionCamera::VisionCamera(const VisionCamera& other) : 
+//     VideoCamera(other.GetHandle())/*, type(other.type)*/, config(other.config), calibration(other.calibration), 
+//     camera(other.camera), brightness(other.brightness), exposure(other.exposure), whitebalance(other.whitebalance) {}
+// VisionCamera::VisionCamera(VisionCamera&& other) : 
+//     VideoCamera(other.GetHandle())/*, type(other.type)*/, config(std::move(other.config)), calibration(std::move(other.calibration)), 
+//     camera(std::move(other.camera)), brightness(other.brightness), exposure(other.exposure), whitebalance(other.whitebalance) {}
+VisionCamera::~VisionCamera() {
+    this->deleteEntries();
 }
+
+// VisionCamera& VisionCamera::operator=(const VisionCamera& other) {
+//     this->m_handle = other.m_handle;
+//     /*this->type = other.type;*/
+//     this->config = other.config;
+//     this->calibration = other.calibration;
+//     this->camera = other.camera;
+//     this->brightness = other.brightness;
+//     this->exposure = other.exposure;
+//     this->whitebalance = other.whitebalance;
+// }
+// VisionCamera& VisionCamera::operator=(VisionCamera&& other) {    // there's really no point because wpi::json doesn't have a move operator
+//     this->m_handle = other.m_handle;
+//     this->type = other.type;
+//     this->config = std::move(other.config);
+//     this->calibration = std::move(other.calibration);
+//     this->camera = std::move(other.camera);
+//     this->brightness = other.brightness;
+//     this->exposure = other.exposure;
+//     this->whitebalance = other.whitebalance;
+// }
+
+// cs::VideoSource::Kind VisionCamera::getType() const {
+// 	return this->type;
+// }
 bool VisionCamera::isValidJson() const {
 	return this->config.is_object();
 }
@@ -180,7 +88,7 @@ wpi::json VisionCamera::getStreamJson() const {
 	return wpi::json();
 }
 
-bool VisionCamera::getCameraMatrix(cv::Mat_<double>& array) {
+bool VisionCamera::getCameraMatrix(cv::Mat_<double>& array) const {
     if(this->calibration.is_object()) {
         try{
             wpi::json matx = this->calibration.at("camera_matrix");
@@ -196,7 +104,7 @@ bool VisionCamera::getCameraMatrix(cv::Mat_<double>& array) {
     }
     return false;
 }
-bool VisionCamera::getCameraMatrix(cv::Mat_<float>& array) {
+bool VisionCamera::getCameraMatrix(cv::Mat_<float>& array) const {
     if(this->calibration.is_object()) {
         try{
             wpi::json matx = this->calibration.at("camera_matrix");
@@ -212,7 +120,7 @@ bool VisionCamera::getCameraMatrix(cv::Mat_<float>& array) {
     }
     return false;
 }
-bool VisionCamera::getDistortion(cv::Mat_<double>& array) {
+bool VisionCamera::getDistortion(cv::Mat_<double>& array) const {
     if(this->calibration.is_object()) {
         try{
             wpi::json matx = this->calibration.at("distortion");
@@ -226,7 +134,7 @@ bool VisionCamera::getDistortion(cv::Mat_<double>& array) {
     }
     return false;
 }
-bool VisionCamera::getDistortion(cv::Mat_<float>& array) {
+bool VisionCamera::getDistortion(cv::Mat_<float>& array) const {
     if(this->calibration.is_object()) {
         try{
             wpi::json matx = this->calibration.at("distortion");
@@ -248,7 +156,7 @@ cs::CvSink VisionCamera::getVideo() const {
 	}
 	return video;
 }
-cs::CvSource VisionCamera::getSeparateServer() const {
+cs::CvSource VisionCamera::generateServer() const {
 	return frc::CameraServer::GetInstance()->PutVideo(("Camera stream: " + this->GetName()), this->getWidth(), this->getHeight());
 }
 
@@ -292,15 +200,23 @@ void VisionCamera::setExposure(int8_t val) {
     this->exposure = (val > 100 ? 100 : val);
 }
 
-void VisionCamera::setBrightnessAdjustable() {
-	this->setBrightnessAdjustable(nt::NetworkTableInstance::GetDefault().GetTable("CAMERAS")->GetSubTable(this->GetName()));
+void VisionCamera::setNetworkBase(std::shared_ptr<nt::NetworkTable> table) {
+    this->camera = table->GetSubTable("Cameras")->GetSubTable(this->GetName());
 }
-void VisionCamera::setBrightnessAdjustable(std::shared_ptr<nt::NetworkTable> table) {
-    const char* name = "Brightness";
-    if(!table->ContainsKey(name)) {
-		table->PutNumber(name, this->brightness);
-	} else {}
-	table->GetEntry(name).AddListener(
+void VisionCamera::setNetworkAdjustable() {
+    this->setBrightnessAdjustable();
+    this->setWhiteBalanceAdjustable();
+    this->setExposureAdjustable();
+}
+void VisionCamera::deleteEntries() {
+    this->camera->Delete("Brightness");
+    this->camera->Delete("WhiteBalance");
+    this->camera->Delete("Exposure");
+}
+
+void VisionCamera::setBrightnessAdjustable() {
+    this->camera->PutNumber("Brightness", this->brightness);
+	this->camera->GetEntry("Brightness").AddListener(
 		[this](const nt::EntryNotification& event){
 			if(event.value->IsDouble()) {
 				this->setBrightness(event.value->GetDouble());
@@ -310,14 +226,8 @@ void VisionCamera::setBrightnessAdjustable(std::shared_ptr<nt::NetworkTable> tab
 	);
 }
 void VisionCamera::setWhiteBalanceAdjustable() {
-	this->setWhiteBalanceAdjustable(nt::NetworkTableInstance::GetDefault().GetTable("CAMERAS")->GetSubTable(this->GetName()));
-}
-void VisionCamera::setWhiteBalanceAdjustable(std::shared_ptr<nt::NetworkTable> table) {
-    const char* name = "WhiteBalance";
-    if(!table->ContainsKey(name)) {
-		table->PutNumber(name, this->whitebalance);
-	} else {}
-	table->GetEntry(name).AddListener(
+    this->camera->PutNumber("WhiteBalance", this->whitebalance);
+	this->camera->GetEntry("WhiteBalance").AddListener(
 		[this](const nt::EntryNotification& event){
 			if(event.value->IsDouble()) {
 				this->setWhiteBalance(event.value->GetDouble());
@@ -327,14 +237,8 @@ void VisionCamera::setWhiteBalanceAdjustable(std::shared_ptr<nt::NetworkTable> t
 	);
 }
 void VisionCamera::setExposureAdjustable() {
-	this->setExposureAdjustable(nt::NetworkTableInstance::GetDefault().GetTable("CAMERAS")->GetSubTable(this->GetName()));
-}
-void VisionCamera::setExposureAdjustable(std::shared_ptr<nt::NetworkTable> table) {
-    const char* name = "Exposure";
-    if(!table->ContainsKey(name)) {
-		table->PutNumber(name, this->exposure);
-	} else {}
-	table->GetEntry(name).AddListener(
+    this->camera->PutNumber("Exposure", this->exposure);
+	this->camera->GetEntry("Exposure").AddListener(
 		[this](const nt::EntryNotification& event){
 			if(event.value->IsDouble()) {
 				this->setExposure(event.value->GetDouble());
@@ -342,10 +246,4 @@ void VisionCamera::setExposureAdjustable(std::shared_ptr<nt::NetworkTable> table
 		},
 		NT_NOTIFY_IMMEDIATE | NT_NOTIFY_NEW | NT_NOTIFY_UPDATE
 	);
-}
-
-void VisionCamera::setNetworkAdjustable() {
-    this->setBrightnessAdjustable();
-    this->setWhiteBalanceAdjustable();
-    this->setExposureAdjustable();
 }

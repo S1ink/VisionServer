@@ -39,7 +39,7 @@ LDEBUG := -g
 CRELEASE := -O3 -DRELEASE
 LRELEASE :=
 
-CPPFLAGS := -pthread -Iinclude -Iinclude/opencv -MMD -MP
+CPPFLAGS := -pthread -Iinclude -Iinclude/opencv -Isrc -Isrc/petra/include -MMD -MP
 CFLAGS := -Wall
 ASMFLAGS := -mcpu=cortex-a72 -mfpu=neon-fp-armv8
 LDFLAGS := -pthread -Wall -Llib -Wl,--unresolved-symbols=ignore-in-shared-libs

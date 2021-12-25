@@ -1,12 +1,14 @@
 #include "targets.h"
 
+#include <networktables/NetworkTableInstance.h>
+
 #include <string>
 #include <algorithm>
 #include <math.h>
 
 template<size_t corners>
 Target<corners>::Target(const std::array<cv::Point3f, corners>& world_pts) : 
-	world(world_pts), name("targets/unnamed_" + std::to_string(corners) + "-pt_target"),
+	world(world_pts), name("Unnamed " + std::to_string(corners) + "-pt target"),
 	table(nt::NetworkTableInstance::GetDefault().GetTable("Targets")->GetSubTable(this->name)) {}
 template<size_t corners>
 Target<corners>::Target(const std::array<cv::Point3f, corners>& world_pts, const char* name) : 
@@ -16,14 +18,10 @@ Target<corners>::Target(const std::array<cv::Point3f, corners>& world_pts, const
 	world(world_pts), name(name), table(nt::NetworkTableInstance::GetDefault().GetTable("Targets")->GetSubTable(name)) {}
 
 template<size_t corners>
-size_t Target<corners>::size() const {return corners;}
-template<size_t corners>
-const std::string& Target<corners>::getName() {
-	return this->name;
-}
-template<size_t corners>
-void Target<corners>::reorder(const std::vector<cv::Point2i>& contour) {
-	cv::Point2f center = findCenter<float>(contour), buff1, buff2;
+template<typename num_t>
+void Target<corners>::sort(const std::vector<cv::Point_<num_t> >& contour) {
+	static_assert(std::is_arithmetic<num_t>::value, "Number type must be arithmetic");
+	this->center = findCenter<float, num_t>(contour);
 	size_t limit = corners > contour.size() ? contour.size() : corners;
 	for(size_t i = 0; i < limit; i++) {
 		this->points[i] = contour[i];
@@ -31,10 +29,10 @@ void Target<corners>::reorder(const std::vector<cv::Point2i>& contour) {
 	std::sort(
 		this->points.begin(), 
 		this->points.end(), 
-		[this, center, &buff1, &buff2](const cv::Point2f& a, const cv::Point2f& b) {
-			buff1 = a - center;
-			buff2 = b - center;
-			return -atan2(buff1.x, buff1.y) < -atan2(buff2.x, buff2.y);	// note that x and y are switched -> clockwise
+		[this](const cv::Point2f& a, const cv::Point2f& b) {
+			this->a = a - this->center;
+			this->a = b - this->center;
+			return -atan2(this->a.x, this->a.y) < -atan2(this->b.x, this->b.y);	// note that x and y are switched -> clockwise
 		}
 	);
 }
@@ -68,13 +66,3 @@ void Target<corners>::solvePerspective(
 	this->table->PutNumber("up-down", atan2(tvec[1][0], tvec[2][0])*-180/M_PI);
 	this->table->PutNumber("left-right", atan2(tvec[0][0], tvec[2][0])*180/M_PI);
 }
-// template<size_t corners>
-// void Target<corners>::solvePerspective(
-// 	const std::vector<cv::Point>& contour,
-// 	cv::OutputArray tvec, cv::OutputArray rvec, 
-// 	cv::InputArray camera_matrix, cv::InputArray camera_coeffs, 
-// 	bool ext_guess, int flags
-// ) {
-// 	this->reorder(contour);
-// 	this->solvePerspective(tvec, rvec, camera_matrix, camera_coeffs, ext_guess, flags);
-// }

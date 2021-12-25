@@ -7,12 +7,12 @@
 #include "mem.h"
 
 BBoxDemo::BBoxDemo(VisionServer& server) : 
-	VPipeline(server, "BoundingBox Demo Pipeline"), WSThreshold(server.getCurrentResolution(), this->table) {}
-void BBoxDemo::process(cv::Mat& io_frame, uint8_t mode) {
+	VPipeline(server, "BoundingBox Demo Pipeline"), WeightedSubtraction(server.getCurrentResolution(), this->table) {}
+void BBoxDemo::process(cv::Mat& io_frame, int8_t mode) {
 	this->threshold(io_frame);
 	this->findLargest(this->binary);
 
-	if(mode & (uint8_t)VFlag::THRESH) {
+	if(mode) {
 		cv::cvtColor(this->binary, this->buffer, cv::COLOR_GRAY2BGR, 3);
 		cv::resize(this->buffer, io_frame, cv::Size(), this->scale, this->scale, cv::INTER_NEAREST);
 	}
@@ -30,12 +30,12 @@ void BBoxDemo::process(cv::Mat& io_frame, uint8_t mode) {
 }
 
 SquareTargetPNP::SquareTargetPNP(VisionServer& server) : 
-	VPipeline(server, "Square Target Pipeline"), WSThreshold(server.getCurrentResolution(), this->table) {}
-void SquareTargetPNP::process(cv::Mat& io_frame, uint8_t mode) {
+	VPipeline(server, "Square Target Pipeline"), WeightedSubtraction(server.getCurrentResolution(), this->table) {}
+void SquareTargetPNP::process(cv::Mat& io_frame, int8_t mode) {
 	this->threshold(io_frame);
 	this->findLargest(this->binary);
 
-	if(mode & (uint8_t)VFlag::THRESH) {
+	if(mode) {
 		cv::cvtColor(this->binary, this->buffer, cv::COLOR_GRAY2BGR, 3);
 		cv::resize(this->buffer, io_frame, cv::Size(), this->scale, this->scale, cv::INTER_NEAREST);
 	} else {
@@ -46,7 +46,7 @@ void SquareTargetPNP::process(cv::Mat& io_frame, uint8_t mode) {
 			rescale(this->target_points, this->scale);
 
 			if(this->reference_points.compatible(this->target_points)) {
-				this->reference_points.reorder(this->target_points);
+				this->reference_points.sort(this->target_points);
 				//this->reference_points.rescale(this->scale);
 				//cv::solvePnP(this->reference_points.world, this->reference_points.points, this->getCameraMatrix(), this->getCameraDistortion(), this->rvec, this->tvec);
 				this->reference_points.solvePerspective(this->tvec, this->rvec, this->getCameraMatrix(), this->getCameraDistortion());

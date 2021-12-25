@@ -15,24 +15,30 @@ public:
 	VThreshold() = default;
 	virtual ~VThreshold() = default;
 
-	virtual void threshold(const cv::Mat& i_frame) = 0;
+	virtual const cv::Mat& threshold(const cv::Mat& i_frame) = 0;
+	virtual const cv::Mat& getBinary() = 0;
 
 	enum class LED {
-		BLUE, GREEN, RED
-		//, TOTAL, ERROR
+		BLUE = 0, 
+		GREEN = 1, 
+		RED = 2
 	};
 };
 
 
 
-template<VThreshold::LED color>			// 'Weighted Subtraction Threshold' pipeline
-struct WSThreshold : public VThreshold {
+template<VThreshold::LED color>		// 'Weighted Subtraction Threshold' pipeline
+class WeightedSubtraction : public VThreshold {
 public:
 	//WSThreshold() = default;
-	WSThreshold(cv::Size frame_sz, std::shared_ptr<nt::NetworkTable> table);
-	WSThreshold(const WSThreshold& other) = delete;
+	WeightedSubtraction(cv::Size frame_sz, std::shared_ptr<nt::NetworkTable> table);
+	WeightedSubtraction(const WeightedSubtraction& other) = delete;
+	// WSThreshold(WSThreshold&&);
+	// void operator=(const WSThreshold&) = delete;
+	// void operator=(WSThreshold&&);
 
-	void threshold(const cv::Mat& i_frame) override;
+	const cv::Mat& threshold(const cv::Mat& i_frame) override;
+	const cv::Mat& getBinary() override;
 
 	size_t getScale() const;
 	uint8_t getThresh() const;
@@ -53,14 +59,14 @@ protected:
 	size_t scale{4};
 
 };
-struct ContourPipe {		// Provides contour functions and contour storage
+class Contours {		// Provides contour functions and contour storage
 public:
-	ContourPipe() = default;	// maybe take in a networktable to publish settings for area threshold?
-	ContourPipe(const ContourPipe& other) = delete;
+	Contours() = default;	// maybe take in a networktable to publish settings for area threshold?
+	Contours(const Contours& other) = delete;
 
-	size_t findContours(const cv::Mat& binary_frame);	// returns how many were found
-	size_t findLargest(const cv::Mat& binary_frame);	// returns index of the largest
-	size_t findLargest_A(const cv::Mat& binary_frame, double area);	// find largest that has a greater area than 'area', returns index
+	size_t findContours(const cv::Mat& binary_frame, int mode = cv::RETR_EXTERNAL, int method = cv::CHAIN_APPROX_SIMPLE);	// returns how many were found
+	size_t findLargest(const cv::Mat& binary_frame, int mode = cv::RETR_EXTERNAL, int method = cv::CHAIN_APPROX_SIMPLE);	// returns index of the largest
+	size_t findLargestThreshold(const cv::Mat& binary_frame, double area, int mode = cv::RETR_EXTERNAL, int method = cv::CHAIN_APPROX_SIMPLE);	// find largest that has a greater area than 'area', returns index
 
 	size_t getTargetIdx() const;
 	const std::vector<cv::Point2i>& getTarget() const;
@@ -74,7 +80,7 @@ protected:
 	std::vector<std::vector<cv::Point2i> > contours;
 
 	double area_largest{0.f}, area_buff{0.f};
-	int16_t target_idx{-1};					// DONT CHANGE THIS TO SIZE_T!!!!!!!!!
+	int16_t target_idx{-1};		// DONT CHANGE THIS TO SIZE_T YOU IDIOT!!!
 
 };
 

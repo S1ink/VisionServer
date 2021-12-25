@@ -2,20 +2,27 @@
 
 #include <networktables/EntryListenerFlags.h>
 #include <networktables/NetworkTableEntry.h>
+#include <wpi/raw_istream.h>
+#include <wpi/raw_ostream.h>
+#include <wpi/Twine.h>
 
 #include "extras/stats.h"
 //#include "pipelines.h"
 #include "vision.h"
 
 VPipeline::VPipeline(VisionServer& server) : 
-	table(nt::NetworkTableInstance::GetDefault().GetTable("PIPELINES")->GetSubTable("Unnamed Pipeline")), env(&server) 
-{}
-VPipeline::VPipeline(VisionServer& server, const char* ntable) : 
-	table(nt::NetworkTableInstance::GetDefault().GetTable("PIPELINES")->GetSubTable(ntable)), env(&server) 
-{}
-VPipeline::VPipeline(VisionServer& server, const wpi::Twine& ntable) : 
-	table(nt::NetworkTableInstance::GetDefault().GetTable("PIPELINES")->GetSubTable(ntable)), env(&server) 
-{}
+	name("Unnamed Pipeline"), table(server.vision->GetSubTable("Pipelines")->GetSubTable(this->name)), env(&server) {}
+VPipeline::VPipeline(VisionServer& server, const char* name) : 
+	name(name), table(server.vision->GetSubTable("Pipelines")->GetSubTable(name)), env(&server) {}
+VPipeline::VPipeline(VisionServer& server, const std::string& name) : 
+	name(name), table(server.vision->GetSubTable("Pipelines")->GetSubTable(name)), env(&server) {}
+VPipeline::VPipeline(VPipeline&& other) : table(std::move(other.table)), env(other.env) {}
+VPipeline::~VPipeline() {}
+// VPipeline& VPipeline::operator=(VPipeline&& other) {
+// 	this->table = std::move(other.table);
+// 	this->env = other.env;
+// 	return *this;
+// }
 
 const cv::Mat_<float>& VPipeline::getCameraMatrix() const {
 	return this->env->getCameraMatrix();
@@ -26,12 +33,9 @@ const cv::Mat_<float>& VPipeline::getCameraDistortion() const {
 void VPipeline::updateTarget(const std::string& target) {
 	this->env->updateTarget(target);
 }
-// void VPipeline::updateMatrices(const cv::Mat_<float>& tvec) {
-// 	this->env->updateMatrices(tvec);
-// }
-// void VPipeline::updateMatrices(const cv::Mat_<float>& tvec, const cv::Mat_<float>& rvec) {
-// 	this->env->updateMatrices(tvec, rvec);
-// }
+const std::string& VPipeline::getName() const {
+	return this->name;
+}
 const std::shared_ptr<nt::NetworkTable> VPipeline::getTable() const {
 	return this->table;
 }
@@ -40,58 +44,61 @@ const VisionServer* VPipeline::getEnv() const {
 }
 
 DefaultPipeline::DefaultPipeline(VisionServer& server) : VPipeline(server, "Default Pipeline") {}
-
-
-
-// Position& Position::Get() {
-// 	static Position global;
-// 	return global;
-// }
-// void Position::setPos(float x, float y, float z) {
-// 	this->pos_table->PutNumber("x", x);
-// 	this->pos_table->PutNumber("y", y);
-// 	this->pos_table->PutNumber("z", z);
-// }
-// void Position::setDistance(double d) {
-// 	this->pos_table->PutNumber("distance", d);
-// }
-// void Position::setThetaUD(double deg) {
-// 	this->pos_table->PutNumber("up-down", deg);
-// }
-// void Position::setThetaLR(double deg) {
-// 	this->pos_table->PutNumber("right-left", deg);
-// }
-// void Position::setAll(const cv::Mat_<float>& tvec) {
-// 	this->pos_table->PutNumber("x", tvec[0][0]);
-// 	this->pos_table->PutNumber("y", tvec[1][0]);
-// 	this->pos_table->PutNumber("z", tvec[2][0]);
-// 	this->pos_table->PutNumber("distance", sqrt(pow(tvec[0][0], 2) + pow(tvec[1][0], 2) + pow(tvec[2][0], 2)));
-// 	this->pos_table->PutNumber("up-down", atan2(tvec[0][0], tvec[2][0])*180/M_PI);
-// 	this->pos_table->PutNumber("right-left", atan2(tvec[1][0], tvec[2][0])*-180/M_PI);
+// DefaultPipeline::DefaultPipeline(DefaultPipeline&& other) : VPipeline(static_cast<VPipeline&&>(other)) {}
+// DefaultPipeline& DefaultPipeline::operator=(DefaultPipeline&& other) {
+// 	this->table = std::move(other.table);
+// 	this->env = other.env;
+// 	return *this;
 // }
 
 
 
-VisionServer::VisionServer(std::vector<VisionCamera>& cameras) : cameras(&cameras) {
-	for(size_t i = 0; i < cameras.size(); i++) {
-		cameras[i].setNetworkAdjustable();
-	}
-	this->table->PutNumber("Camera Index", 0);
-	this->table->PutNumber("Cameras Available", cameras.size());
+VisionServer::VisionServer(const char* file) {
+	this->updateFromConfig(file);
+
+	this->vision->PutNumber("Camera Index", 0);
+	//this->vision->PutNumber("Cameras Available", cameras.size());
 
 	this->source = cameras[0].getVideo();
 	this->output = cs::CvSource("Vision Stream", cameras[0].GetVideoMode());
 	this->stream = frc::CameraServer::GetInstance()->AddServer("Vision Output");
 	this->stream.SetSource(this->output);
 	
-	table->GetEntry("Camera Index").AddListener(
-		[&cameras, this](const nt::EntryNotification& event) {
+	this->vision->GetEntry("Camera Index").AddListener(
+		[this](const nt::EntryNotification& event) {
 			if(event.value->IsDouble()) {
 				size_t idx = event.value->GetDouble();
 				if(idx >= 0 && idx < cameras.size()) {
 					this->source.SetSource(cameras[idx]);
 					cameras[idx].getCameraMatrix(this->camera_matrix);
 					cameras[idx].getDistortion(this->distortion);
+				}
+			}
+		},
+		NT_NOTIFY_IMMEDIATE | NT_NOTIFY_NEW | NT_NOTIFY_UPDATE
+	);
+}
+VisionServer::VisionServer(std::vector<VisionCamera>&& cameras) : cameras(std::move(cameras)) {
+	for(size_t i = 0; i < this->cameras.size(); i++) {
+		this->cameras[i].setNetworkBase(this->vision);
+		this->cameras[i].setNetworkAdjustable();
+	}
+	this->vision->PutNumber("Camera Index", 0);
+	this->vision->PutNumber("Cameras Available", this->cameras.size());
+
+	this->source = this->cameras[0].getVideo();
+	this->output = cs::CvSource("Vision Stream", this->cameras[0].GetVideoMode());
+	this->stream = frc::CameraServer::GetInstance()->AddServer("Vision Output");
+	this->stream.SetSource(this->output);
+	
+	this->vision->GetEntry("Camera Index").AddListener(
+		[this](const nt::EntryNotification& event) {
+			if(event.value->IsDouble()) {
+				size_t idx = event.value->GetDouble();
+				if(idx >= 0 && idx < this->cameras.size()) {
+					this->source.SetSource(this->cameras[idx]);
+					this->cameras[idx].getCameraMatrix(this->camera_matrix);
+					this->cameras[idx].getDistortion(this->distortion);
 					//this->stream.SetConfigJson(cameras[idx].getStreamJson());
 				}
 			}
@@ -109,17 +116,89 @@ VisionServer::VisionServer(std::vector<VisionCamera>& cameras) : cameras(&camera
 	// 	NT_NOTIFY_IMMEDIATE | NT_NOTIFY_NEW | NT_NOTIFY_UPDATE
 	// );
 }
+VisionServer::~VisionServer() {
+	this->vision->Delete("Camera Index");
+	this->vision->Delete("Cameras Available");
+}
 
-size_t VisionServer::validIndexes() const {
-    if(this->cameras) {
-        return this->cameras->size();
+bool VisionServer::updateFromConfig(const char* file) {
+	std::error_code ec;
+    wpi::raw_fd_istream is(file, ec);
+    if (ec) {
+        wpi::errs() << "Could not open '" << file << "': " << ec.message() << newline;
+        return false;
     }
-    return 0;
+    wpi::json j;
+    try { j = wpi::json::parse(is); }
+    catch (const wpi::json::parse_error& e) {
+        wpi::errs() << "Config error in " << file << ": byte " << e.byte << ": " << e.what() << newline;
+        return false;
+    }
+    if (!j.is_object()) {
+        wpi::errs() << "Config error in " << file << ": must be JSON object\n";
+        return false;
+    }
+	if(j.count("ntmode") != 0 && !nt::NetworkTableInstance::GetDefault().IsConnected()) {
+		try {
+			std::string str = j.at("ntmode").get<std::string>();
+			wpi::StringRef s(str);
+			if(s.equals_lower("client")) {
+				wpi::outs() << "Setting up NetworkTables in CLIENT mode\n";
+				try { 
+					nt::NetworkTableInstance::GetDefault().StartClientTeam(j.at("team").get<unsigned int>());
+					nt::NetworkTableInstance::GetDefault().StartDSClient();
+				}
+				catch (const wpi::json::exception& e) {
+					wpi::errs() << "Config error in " << file << ": could not read team number: " << e.what() << newline;
+					return false;
+				}
+			} else if (s.equals_lower("server")) {
+				wpi::outs() << "Setting up NetworkTables in SERVER mode\n";
+				nt::NetworkTableInstance::GetDefault().StartServer();
+			} else {
+				wpi::errs() << "Config error in " << file << ": could not understand ntmode value '" << str << "'\n";
+			}
+		} catch (const wpi::json::exception& e) {
+			wpi::errs() << "Config error in " << file << ": coud not read ntmode: " << e.what() << newline;
+		}
+	}
+    if(j.count("cameras") < 1) {
+        wpi::errs() << "Config error in " << file << ": no camera configs found, this program requires cameras to function\n";
+    } else {
+		std::vector<VisionCamera> backup(std::move(this->cameras));
+		this->cameras.clear();
+		try {
+            for(const wpi::json& camera : j.at("cameras")) {
+                if(camera.count("calibration") > 0 && j.count("calibrations") > 0) {
+                    wpi::json calibration;
+                    try {
+                        calibration = j.at("calibrations").at(camera.at("calibration").get<std::string>()); 
+                        this->cameras.emplace_back(camera, calibration);
+                    } catch (const wpi::json::exception& e) {
+                        wpi::errs() << "Config error in " << file << ": failed to get configuration object: " << e.what() << newline;  // print out more info if needed
+                        this->cameras.emplace_back(camera);
+                    }
+                } else { this->cameras.emplace_back(camera); }
+				this->cameras.back().setNetworkBase(this->vision);
+				this->cameras.back().setNetworkAdjustable();
+        	} 
+			this->vision->PutNumber("Cameras Available", this->cameras.size());
+		}
+        catch (const wpi::json::exception& e) { 
+			wpi::errs() << "Config error in " << file << ": could not read cameras: " << e.what() << newline; 
+			this->cameras = std::move(backup);
+		}
+    }
+	return true;
+}
+
+size_t VisionServer::validIndexes() const {	// make inline
+    return this->cameras.size();
 }
 bool VisionServer::setCamera(size_t idx) {
     if(idx < this->validIndexes()) {
         //this->source.SetSource(this->cameras->operator[](idx));   // this should be taken care of by the networktables callback
-        this->table->GetEntry("Camera Index").SetDouble(idx);
+        this->vision->GetEntry("Camera Index").SetDouble(idx);
     }
     return false;
 }
@@ -128,6 +207,9 @@ cv::Size VisionServer::getCurrentResolution() const {
 }
 void VisionServer::setCompression(int8_t quality) {
 	this->stream.SetCompression(quality > 100 ? 100 : (quality < -1 ? -1 : quality));
+}
+const std::vector<VisionCamera>& VisionServer::getCameras() {
+	return this->cameras;
 }
 
 bool VisionServer::stopVision() {
@@ -141,38 +223,28 @@ bool VisionServer::stopVision() {
 
 void VisionServer::putStats(cv::Mat& io_frame) {
 	cv::putText(
-		io_frame, "CPU: " + std::to_string(CPU::get().refPercent()*100.f) + "% | " + std::to_string(CPU::temp()) + "*C", 
-		cv::Point(0, 15), 
-		cv::FONT_HERSHEY_DUPLEX, 0.45, cv::Scalar(0, 255, 0), 1, cv::LINE_AA
+		io_frame, "FPS (1F instantanious): " + std::to_string(this->fps), 
+		cv::Point(10, 10), 
+		cv::FONT_HERSHEY_DUPLEX, 0.7, cv::Scalar(0, 255, 0), 1, cv::LINE_AA
+	);
+	cv::putText(
+		io_frame, "FPS (1S floating avg): " + std::to_string(this->fps_1s), 
+		cv::Point(10, 35), 
+		cv::FONT_HERSHEY_DUPLEX, 0.7, cv::Scalar(0, 255, 0), 1, cv::LINE_AA
 	);
 	cv::putText(
 		io_frame, "Frametime: " + std::to_string(this->frame_time*1000) + " ms", 
-		cv::Point(0, 30), 
-		cv::FONT_HERSHEY_DUPLEX, 0.45, cv::Scalar(0, 255, 0), 1, cv::LINE_AA
+		cv::Point(10, 60), 
+		cv::FONT_HERSHEY_DUPLEX, 0.7, cv::Scalar(0, 255, 0), 1, cv::LINE_AA
 	);
 	cv::putText(
 		io_frame, "Looptime: " + std::to_string(this->loop_time*1000) + " ms", 
-		cv::Point(0, 45), 
-		cv::FONT_HERSHEY_DUPLEX, 0.45, cv::Scalar(0, 255, 0), 1, cv::LINE_AA
-	);
-	cv::putText(
-		io_frame, "FPS (1F): " + std::to_string(this->fps), 
-		cv::Point(0, 60), 
-		cv::FONT_HERSHEY_DUPLEX, 0.45, cv::Scalar(0, 255, 0), 1, cv::LINE_AA
-	);
-	cv::putText(
-		io_frame, "FPS (1S): " + std::to_string(this->fps_1s), 
-		cv::Point(0, 75), 
-		cv::FONT_HERSHEY_DUPLEX, 0.45, cv::Scalar(0, 255, 0), 1, cv::LINE_AA
-	);
-	cv::putText(
-		io_frame, "Total Frames: " + std::to_string(this->total_frames), 
-		cv::Point(0, 90), 
-		cv::FONT_HERSHEY_DUPLEX, 0.45, cv::Scalar(0, 255, 0), 1, cv::LINE_AA
+		cv::Point(10, 85), 
+		cv::FONT_HERSHEY_DUPLEX, 0.7, cv::Scalar(0, 255, 0), 1, cv::LINE_AA
 	);
 }
 void VisionServer::updateStats() {
-	std::shared_ptr<nt::NetworkTable> stats = this->table->GetSubTable("stats");
+	std::shared_ptr<nt::NetworkTable> stats = this->vision->GetSubTable("stats");
 	stats->PutNumber("CPU Utilization(%-1F)", CPU::get().refPercent()*100.f);
 	stats->PutNumber("CPU Temp(*C)", CPU::temp());
 	stats->PutNumber("Frametime(ms)", this->frame_time*1000);
@@ -180,20 +252,6 @@ void VisionServer::updateStats() {
 	stats->PutNumber("FPS(1F)", this->fps);
 	stats->PutNumber("FPS(1s)", this->fps_1s);
 	stats->PutNumber("Frames", this->total_frames);
-}
-
-void VisionServer::setupNtVflag() {
-	this->table->PutBoolean("debug", false);
-	this->table->PutBoolean("threshold", false);
-	this->table->PutBoolean("demo", false);
-}
-uint8_t VisionServer::getNtVflag() {
-	return (this->table->GetBoolean("debug", false) | this->table->GetBoolean("threshold", false) << 1 | this->table->GetBoolean("demo", false) << 2);
-}
-void VisionServer::deleteNtVflag() {
-	this->table->Delete("debug");
-	this->table->Delete("threshold");
-	this->table->Delete("demo");
 }
 
 const cv::Mat_<float>& VisionServer::getCameraMatrix() const {
@@ -206,14 +264,6 @@ const cv::Mat_<float>& VisionServer::getDistortion() const {
 void VisionServer::updateTarget(const std::string& target) {
 	this->active_target.setTarget(target);
 }
-
-// void VisionServer::updateMatrices(const cv::Mat_<float>& tvec, const cv::Mat_<float>& rvec) {
-
-// }
-// void VisionServer::updateMatrices(const cv::Mat_<float>& tvec) {
-// 	std::shared_ptr<nt::NetworkTable> pos = nt::NetworkTableInstance::GetDefault().GetTable("robot")->GetSubTable("position");
-	
-// }
 
 VisionServer::TargetInfo::TargetInfo(const std::shared_ptr<nt::NetworkTable> table) : ttable(table) {}
 
