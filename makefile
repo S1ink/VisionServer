@@ -23,24 +23,57 @@ mode ?= release
 
 CROSS_PREFIX := arm-raspbian10-linux-gnueabihf-
 CXX := g++
+AR := ar
+
+ifeq ($(OS),Windows_NT)
+CXX := $(CROSS_PREFIX)$(CXX)
+AR := $(CROSS_PREFIX)$(AR)
+OS := windows
+RM-R := del /s /y
+CP := copy
+DIR := \\
+
+else #native
+OS := native
+RM-R := rm -r
+CP := cp
+DIR := /
+endif
 
 SRC_DIR := src
 OBJ_DIR := obj
-BIN_DIR := bin
+OUT_DIR := out
+HEADER_DIR := $(OUT_DIR)$(DIR)include
 
 #SRC_EXT := cpp c s S
+#$(foreach ext,$(SRC_EXT),*.$(ext))
 
-PROGRAM := $(BIN_DIR)/vision_program
+PNAME := vision_program
+LNAME := 3407visionserver
+
+PROGRAM := $(OUT_DIR)/$(PNAME)
+LIBSTATIC := $(OUT_DIR)/lib$(LNAME).a
+#LIBSHARED := $(OUT_DIR)/lib$(LNAME).so
+
 SRCS := $(call rwildcard,$(SRC_DIR)/,*.cpp *.c *.S *.s)
 OBJS := $(SRCS:$(SRC_DIR)/%=$(OBJ_DIR)/%.o)
+
+LIB_SRCS := $(call rwildcard,$(SRC_DIR)/api/,*.cpp *.c *.S *.s)
+LIB_OBJS := $(LIB_SRCS:$(SRC_DIR)/%=$(OBJ_DIR)/%.o)
+ifeq ($(OS),windows)
+HEADERS := $(subst /,\,$(call rwildcard,$(SRC_DIR)/api/,*.h *.hpp *.inc))
+else
+HEADERS := $(call rwildcard,$(SRC_DIR)/api/,*.h *.hpp *.inc)
+endif
+COPY_HEADERS := $(HEADERS:$(SRC_DIR)\api%=$(HEADER_DIR)%)
 
 CDEBUG := -g -Og -DDEBUG
 LDEBUG := -g
 CRELEASE := -O3 -DRELEASE
 LRELEASE :=
 
-CPPFLAGS := -pthread -Iinclude -Iinclude/opencv -Isrc -Isrc/petra/include -MMD -MP
-CFLAGS := -Wall
+CPPFLAGS := -pthread -Iinclude -Ireferences -Iinclude/opencv -MMD -MP
+CFLAGS := -Wall -fpermissive
 ASMFLAGS := -mcpu=cortex-a72 -mfpu=neon-fp-armv8
 LDFLAGS := -pthread -Wall -Llib -Wl,--unresolved-symbols=ignore-in-shared-libs
 LDLIBS := -lm -lpigpio -lwpilibc -lwpiHal -lcameraserver -lntcore -lcscore -lopencv_dnn -lopencv_highgui -lopencv_ml \
@@ -48,27 +81,22 @@ LDLIBS := -lm -lpigpio -lwpilibc -lwpiHal -lcameraserver -lntcore -lcscore -lope
 	-lopencv_videoio -lopencv_imgcodecs -lopencv_features2d -lopencv_video -lopencv_photo -lopencv_imgproc -lopencv_flann \
 	-lopencv_core -lwpiutil -latomic
 
-ifeq ($(OS),Windows_NT) #windows
-CXX := $(CROSS_PREFIX)$(CXX)
-OS := windows
-RM-R := del /s
-else #native
-OS := native
-RM-R := rm -r
-endif
-
-ifeq ($(mode),release) #release
+ifeq ($(mode),release)
 COPT := $(CRELEASE)
 LOPT := $(LRELEASE)
-else #ifneq (,$(findstring debug,$(mode))) #debug
+else
 COPT := $(CDEBUG)
 LOPT := $(LDEBUG)
 endif
 
-.PHONY: build rebuild clean install copy
+.PHONY: build static rebuild clean install copy #shared
 
 build: $(PROGRAM)
-	@echo "Building: $(OS)-$(mode)"
+#	@echo "Building: $(OS)-$(mode)"
+
+static: $(LIBSTATIC) $(COPY_HEADERS)
+
+#shared: $(LIBSHARED) $(COPY_HEADERS)
 
 rebuild: build | clean
 
@@ -86,26 +114,36 @@ $(OBJ_DIR)/%.s.o : $(SRC_DIR)/%.s | $(OBJ_DIR)
 	$(CXX) $(COPT) -c -o $(OBJ_DIR)/$(@F) -std=c++17 $(ASMFLAGS) $(CPPFLAGS) $(CFLAGS) $<
 
 #link all objects
-$(PROGRAM): $(OBJS) | $(BIN_DIR)
+$(PROGRAM): $(OBJS) | $(OUT_DIR)
 	$(CXX) $(LOPT) -o $@ $(LDFLAGS) $(foreach file,$(^F),$(OBJ_DIR)/$(file)) $(LDLIBS)
 
+$(LIBSTATIC): $(LIB_OBJS) | $(OUT_DIR)
+	$(AR) rcs $@ $(foreach file,$(^F),$(OBJ_DIR)/$(file))
+
+$(COPY_HEADERS): $(HEADER_DIR)% : $(SRC_DIR)\api% | $(HEADER_DIR)
+	$(CP) $< $@
+
 #create dirs if nonexistant
-$(BIN_DIR) $(OBJ_DIR):
+$(OUT_DIR) $(OBJ_DIR):
 	mkdir $@
 
-copy:
-ifeq ($(OS),windows)
-	scp $(PROGRAM) pi@wpilibpi:/home/pi/uploaded
-	scp frc.json pi@wpilibpi:/boot
-else
-	cp $(PROGRAM) /home/pi/uploaded
-	chmod +x /home/pi/uploaded
-	cp frc.json /boot
-endif
+$(HEADER_DIR): | $(OUT_DIR)
+	mkdir $@
+
+copy: $(COPY_HEADERS)
+# ifeq ($(OS),windows)
+# 	scp $(PROGRAM) pi@wpilibpi:/home/pi/uploaded
+# 	scp frc.json pi@wpilibpi:/boot
+# else
+# 	cp $(PROGRAM) /home/pi/uploaded
+# 	chmod +x /home/pi/uploaded
+# 	cp frc.json /boot
+# endif
 
 install: build copy
 
 clean:
 	$(RM-R) $(OBJ_DIR)
+	$(RM-R) $(OUT_DIR)
 
 -include $(OBJS:.o=.d)

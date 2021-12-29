@@ -1,13 +1,16 @@
-#include "extras/resources.h"
-#include "extras/sighandle.h"
-#include "extras/timing.h"
-
 #include <vector>
 
-#include "visioncamera.h"
-#include "pipelines.h"
-#include "visionserver.h"
-#include "vision.h"
+#include "tools/src/resources.h"
+#include "tools/src/sighandle.h"
+#include "tools/src/timing.h"
+
+#include "api/weightedsubtraction.h"
+#include "api/visioncamera.h"
+#include "api/visionserver.h"
+#include "api/processing.h"
+#include "api/vision.h"
+
+#include "testing2021.h"
 
 StopWatch runtime("Runtime", &std::cout, 0);
 void on_exit() {
@@ -26,7 +29,7 @@ int main(int argc, char* argv[]) {
 	else { return EXIT_FAILURE; }
 
 	VisionServer server(std::move(cameras));
-	server.runVision<DefaultPipeline, BBoxDemo, Test6x6Solver>(25);
+	server.runVision<DefaultPipeline, BBoxDemo, TargetSolver<Test6x6, WeightedSubtraction<VThreshold::LED::BLUE> > >(25);
 }
 
 // LIST OF THINGS
