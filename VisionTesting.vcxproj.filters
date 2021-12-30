@@ -120,6 +120,162 @@
     <ClCompile Include="src\visionserver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="references\neon_vision\src\c\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\petra-master\examples\callback_table.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\petra-master\examples\map.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\petra-master\examples\sequence_map.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\petra-master\examples\sequential_table.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\petra-master\examples\string_hash.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\petra-master\examples\switch_table.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\petra-master\test\base_table.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\petra-master\test\callback_table.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\petra-master\test\chd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\petra-master\test\enum_map.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\petra-master\test\exhaustive_string_hash.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\petra-master\test\indexed_bases.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\petra-master\test\linear_hash.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\petra-master\test\map.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\petra-master\test\sequence_map.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\petra-master\test\sequential_table.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\petra-master\test\string_map.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\petra-master\test\switch_table.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\pigpio-master\command.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\pigpio-master\pig2vcd.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\pigpio-master\pigpio.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\pigpio-master\pigpiod.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\pigpio-master\pigpiod_if.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\pigpio-master\pigpiod_if2.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\pigpio-master\pigs.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\pigpio-master\x_pigpio.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\pigpio-master\x_pigpiod_if.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\pigpio-master\x_pigpiod_if2.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\tools\src\rpi\gpio.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\tools\src\server\http.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\tools\src\server\mimetype.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\tools\src\server\server.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\tools\src\unix\stats.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\tools\src\unix\syscom.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\tools\src\basic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\tools\src\networking.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\tools\src\output.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\tools\src\program.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\tools\src\sighandle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\tools\src\timing.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="references\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\api\processing.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\api\stats.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\api\vision.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\api\visioncamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\api\visionserver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\external\basic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\external\output.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\external\sighandle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\external\timing.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\testing2021.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\extras\basic.h">
@@ -2597,6 +2753,219 @@
     <ClInclude Include="src\visionserver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="references\petra-master\include\petra\detail\chd.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\petra-master\include\petra\detail\index_map.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\petra-master\include\petra\detail\macros.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\petra-master\include\petra\detail\string_literal.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\petra-master\include\petra\detail\switch_table.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\petra-master\include\petra\utilities\fold.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\petra-master\include\petra\utilities\sequence.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\petra-master\include\petra\utilities\tuple.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\petra-master\include\petra\base_table.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\petra-master\include\petra\callback_table.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\petra-master\include\petra\chd.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\petra-master\include\petra\concepts.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\petra-master\include\petra\enum_map.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\petra-master\include\petra\expected.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\petra-master\include\petra\indexed_bases.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\petra-master\include\petra\linear_hash.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\petra-master\include\petra\map.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\petra-master\include\petra\sequence_map.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\petra-master\include\petra\sequential_table.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\petra-master\include\petra\string_literal.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\petra-master\include\petra\string_map.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\petra-master\include\petra\switch_table.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\petra-master\include\petra\utilities.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\petra-master\test\utilities.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\pigpio-master\command.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\pigpio-master\pigpio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\pigpio-master\pigpiod_if.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\pigpio-master\pigpiod_if2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\pigpio-master\pigs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\tools\include\pigpio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\tools\out\include\rpi\gpio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\tools\out\include\server\http.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\tools\out\include\server\mimetype.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\tools\out\include\server\server.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\tools\out\include\unix\stats.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\tools\out\include\unix\stats2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\tools\out\include\unix\syscom.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\tools\out\include\basic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\tools\out\include\networking.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\tools\out\include\output.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\tools\out\include\program.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\tools\out\include\resources.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\tools\out\include\sighandle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\tools\out\include\threading.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\tools\out\include\timing.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\tools\out\include\types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\tools\src\rpi\gpio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\tools\src\server\http.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\tools\src\server\mimetype.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\tools\src\server\server.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\tools\src\unix\stats.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\tools\src\unix\stats2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\tools\src\unix\syscom.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\tools\src\basic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\tools\src\networking.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\tools\src\output.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\tools\src\program.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\tools\src\resources.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\tools\src\sighandle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\tools\src\threading.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\tools\src\timing.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="references\tools\src\types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\api\expirimental.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\api\mem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\api\processing.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\api\target.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\api\vision.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\api\visioncamera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\api\visionserver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\api\weightedsubtraction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\testing2021.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\cameraserver\CameraServer.inc">
@@ -2654,5 +3023,21 @@
       <Filter>Header Files</Filter>
     </None>
     <None Include="src\mem.S" />
+    <None Include="src\api\target.inc">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="src\api\vision.inc">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="src\api\visionserver.inc">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="src\api\weightedsubtraction.inc">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="frc.json" />
+    <None Include="make.exe" />
+    <None Include="src\api\mem.S" />
+    <None Include="makefile" />
   </ItemGroup>
 </Project>

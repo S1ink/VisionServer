@@ -64,75 +64,75 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <NMakeBuildCommandLine>make</NMakeBuildCommandLine>
-    <NMakeOutput>
-    </NMakeOutput>
+    <NMakeOutput>vision_program</NMakeOutput>
     <NMakeCleanCommandLine>make clean</NMakeCleanCommandLine>
     <NMakeReBuildCommandLine>make rebuild</NMakeReBuildCommandLine>
     <NMakePreprocessorDefinitions>
     </NMakePreprocessorDefinitions>
-    <OutDir>$(ProjectDir)bin</OutDir>
+    <OutDir>$(ProjectDir)out</OutDir>
     <IntDir>$(ProjectDir)obj</IntDir>
     <ExecutablePath />
-    <IncludePath>$(ProjectDir)include</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(ProjectDir)references</IncludePath>
     <LibraryPath>$(ProjectDir)lib</LibraryPath>
     <SourcePath>$(ProjectDir)src</SourcePath>
     <ExcludePath />
     <LibraryWPath />
     <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);D:\Programs\Raspbian10-Windows64-Toolchain-8.3.0\raspbian10\sys-root\usr\include</ExternalIncludePath>
+    <NMakeIncludeSearchPath>$(ProjectDir)include;$(ProjectDir)references</NMakeIncludeSearchPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <NMakeBuildCommandLine>make</NMakeBuildCommandLine>
-    <NMakeOutput>
-    </NMakeOutput>
+    <NMakeOutput>vision_program</NMakeOutput>
     <NMakeCleanCommandLine>make clean</NMakeCleanCommandLine>
     <NMakeReBuildCommandLine>make rebuild</NMakeReBuildCommandLine>
     <NMakePreprocessorDefinitions>
     </NMakePreprocessorDefinitions>
-    <OutDir>$(ProjectDir)bin</OutDir>
+    <OutDir>$(ProjectDir)out</OutDir>
     <IntDir>$(ProjectDir)obj</IntDir>
     <ExecutablePath />
-    <IncludePath>$(ProjectDir)include</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(ProjectDir)references</IncludePath>
     <LibraryPath>$(ProjectDir)lib</LibraryPath>
     <SourcePath>$(ProjectDir)src</SourcePath>
     <ExcludePath />
     <LibraryWPath />
     <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);D:\Programs\Raspbian10-Windows64-Toolchain-8.3.0\raspbian10\sys-root\usr\include</ExternalIncludePath>
+    <NMakeIncludeSearchPath>$(ProjectDir)include;$(ProjectDir)references</NMakeIncludeSearchPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <NMakeBuildCommandLine>make</NMakeBuildCommandLine>
-    <NMakeOutput>
-    </NMakeOutput>
+    <NMakeOutput>vision_program</NMakeOutput>
     <NMakeCleanCommandLine>make clean</NMakeCleanCommandLine>
     <NMakeReBuildCommandLine>make rebuild</NMakeReBuildCommandLine>
     <NMakePreprocessorDefinitions>
     </NMakePreprocessorDefinitions>
-    <OutDir>$(ProjectDir)bin</OutDir>
+    <OutDir>$(ProjectDir)out</OutDir>
     <IntDir>$(ProjectDir)obj</IntDir>
     <ExecutablePath />
-    <IncludePath>$(ProjectDir)include</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(ProjectDir)references</IncludePath>
     <LibraryPath>$(ProjectDir)lib</LibraryPath>
     <SourcePath>$(ProjectDir)src</SourcePath>
     <ExcludePath />
     <LibraryWPath />
     <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);D:\Programs\Raspbian10-Windows64-Toolchain-8.3.0\raspbian10\sys-root\usr\include</ExternalIncludePath>
+    <NMakeIncludeSearchPath>$(ProjectDir)include;$(ProjectDir)references</NMakeIncludeSearchPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <NMakeBuildCommandLine>make</NMakeBuildCommandLine>
-    <NMakeOutput>
-    </NMakeOutput>
+    <NMakeOutput>vision_program</NMakeOutput>
     <NMakeCleanCommandLine>make clean</NMakeCleanCommandLine>
     <NMakeReBuildCommandLine>make rebuild</NMakeReBuildCommandLine>
     <NMakePreprocessorDefinitions>
     </NMakePreprocessorDefinitions>
-    <OutDir>$(ProjectDir)bin</OutDir>
+    <OutDir>$(ProjectDir)out</OutDir>
     <IntDir>$(ProjectDir)obj</IntDir>
     <ExecutablePath />
-    <IncludePath>$(ProjectDir)include</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(ProjectDir)references</IncludePath>
     <LibraryPath>$(ProjectDir)lib</LibraryPath>
     <SourcePath>$(ProjectDir)src</SourcePath>
     <ExcludePath />
     <LibraryWPath />
     <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);D:\Programs\Raspbian10-Windows64-Toolchain-8.3.0\raspbian10\sys-root\usr\include</ExternalIncludePath>
+    <NMakeIncludeSearchPath>$(ProjectDir)include;$(ProjectDir)references</NMakeIncludeSearchPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <BuildLog>
@@ -155,6 +155,48 @@
     </BuildLog>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="references\main.cpp" />
+    <ClCompile Include="references\neon_vision\src\c\main.cpp" />
+    <ClCompile Include="references\petra-master\examples\callback_table.cpp" />
+    <ClCompile Include="references\petra-master\examples\map.cpp" />
+    <ClCompile Include="references\petra-master\examples\sequence_map.cpp" />
+    <ClCompile Include="references\petra-master\examples\sequential_table.cpp" />
+    <ClCompile Include="references\petra-master\examples\string_hash.cpp" />
+    <ClCompile Include="references\petra-master\examples\switch_table.cpp" />
+    <ClCompile Include="references\petra-master\test\base_table.cpp" />
+    <ClCompile Include="references\petra-master\test\callback_table.cpp" />
+    <ClCompile Include="references\petra-master\test\chd.cpp" />
+    <ClCompile Include="references\petra-master\test\enum_map.cpp" />
+    <ClCompile Include="references\petra-master\test\exhaustive_string_hash.cpp" />
+    <ClCompile Include="references\petra-master\test\indexed_bases.cpp" />
+    <ClCompile Include="references\petra-master\test\linear_hash.cpp" />
+    <ClCompile Include="references\petra-master\test\map.cpp" />
+    <ClCompile Include="references\petra-master\test\sequence_map.cpp" />
+    <ClCompile Include="references\petra-master\test\sequential_table.cpp" />
+    <ClCompile Include="references\petra-master\test\string_map.cpp" />
+    <ClCompile Include="references\petra-master\test\switch_table.cpp" />
+    <ClCompile Include="references\pigpio-master\command.c" />
+    <ClCompile Include="references\pigpio-master\pig2vcd.c" />
+    <ClCompile Include="references\pigpio-master\pigpio.c" />
+    <ClCompile Include="references\pigpio-master\pigpiod.c" />
+    <ClCompile Include="references\pigpio-master\pigpiod_if.c" />
+    <ClCompile Include="references\pigpio-master\pigpiod_if2.c" />
+    <ClCompile Include="references\pigpio-master\pigs.c" />
+    <ClCompile Include="references\pigpio-master\x_pigpio.c" />
+    <ClCompile Include="references\pigpio-master\x_pigpiod_if.c" />
+    <ClCompile Include="references\pigpio-master\x_pigpiod_if2.c" />
+    <ClCompile Include="references\tools\src\basic.cpp" />
+    <ClCompile Include="references\tools\src\networking.cpp" />
+    <ClCompile Include="references\tools\src\output.cpp" />
+    <ClCompile Include="references\tools\src\program.cpp" />
+    <ClCompile Include="references\tools\src\rpi\gpio.cpp" />
+    <ClCompile Include="references\tools\src\server\http.cpp" />
+    <ClCompile Include="references\tools\src\server\mimetype.c" />
+    <ClCompile Include="references\tools\src\server\server.cpp" />
+    <ClCompile Include="references\tools\src\sighandle.cpp" />
+    <ClCompile Include="references\tools\src\timing.cpp" />
+    <ClCompile Include="references\tools\src\unix\stats.cpp" />
+    <ClCompile Include="references\tools\src\unix\syscom.cpp" />
     <ClCompile Include="resources\cross-platform\basic.cpp" />
     <ClCompile Include="resources\cross-platform\networking.cpp" />
     <ClCompile Include="resources\cross-platform\output.cpp" />
@@ -178,7 +220,16 @@
     <ClCompile Include="resources\pigpio-master\x_pigpio.c" />
     <ClCompile Include="resources\pigpio-master\x_pigpiod_if.c" />
     <ClCompile Include="resources\pigpio-master\x_pigpiod_if2.c" />
+    <ClCompile Include="src\api\processing.cpp" />
+    <ClCompile Include="src\api\stats.cpp" />
+    <ClCompile Include="src\api\vision.cpp" />
+    <ClCompile Include="src\api\visioncamera.cpp" />
+    <ClCompile Include="src\api\visionserver.cpp" />
     <ClCompile Include="src\cameraconfig.cpp" />
+    <ClCompile Include="src\external\basic.cpp" />
+    <ClCompile Include="src\external\output.cpp" />
+    <ClCompile Include="src\external\sighandle.cpp" />
+    <ClCompile Include="src\external\timing.cpp" />
     <ClCompile Include="src\extras\basic.cpp" />
     <ClCompile Include="src\extras\output.cpp" />
     <ClCompile Include="src\extras\sighandle.cpp" />
@@ -187,6 +238,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\pipelines.cpp" />
     <ClCompile Include="src\processing.cpp" />
+    <ClCompile Include="src\testing2021.cpp" />
     <ClCompile Include="src\vision.cpp" />
     <ClCompile Include="src\visioncamera.cpp" />
     <ClCompile Include="src\visionserver.cpp" />
@@ -984,6 +1036,68 @@
     <ClInclude Include="include\wpi\WebSocketServer.h" />
     <ClInclude Include="include\wpi\WindowsError.h" />
     <ClInclude Include="include\wpi\WorkerThread.h" />
+    <ClInclude Include="references\petra-master\include\petra\base_table.hpp" />
+    <ClInclude Include="references\petra-master\include\petra\callback_table.hpp" />
+    <ClInclude Include="references\petra-master\include\petra\chd.hpp" />
+    <ClInclude Include="references\petra-master\include\petra\concepts.hpp" />
+    <ClInclude Include="references\petra-master\include\petra\detail\chd.hpp" />
+    <ClInclude Include="references\petra-master\include\petra\detail\index_map.hpp" />
+    <ClInclude Include="references\petra-master\include\petra\detail\macros.hpp" />
+    <ClInclude Include="references\petra-master\include\petra\detail\string_literal.hpp" />
+    <ClInclude Include="references\petra-master\include\petra\detail\switch_table.hpp" />
+    <ClInclude Include="references\petra-master\include\petra\enum_map.hpp" />
+    <ClInclude Include="references\petra-master\include\petra\expected.hpp" />
+    <ClInclude Include="references\petra-master\include\petra\indexed_bases.hpp" />
+    <ClInclude Include="references\petra-master\include\petra\linear_hash.hpp" />
+    <ClInclude Include="references\petra-master\include\petra\map.hpp" />
+    <ClInclude Include="references\petra-master\include\petra\sequence_map.hpp" />
+    <ClInclude Include="references\petra-master\include\petra\sequential_table.hpp" />
+    <ClInclude Include="references\petra-master\include\petra\string_literal.hpp" />
+    <ClInclude Include="references\petra-master\include\petra\string_map.hpp" />
+    <ClInclude Include="references\petra-master\include\petra\switch_table.hpp" />
+    <ClInclude Include="references\petra-master\include\petra\utilities.hpp" />
+    <ClInclude Include="references\petra-master\include\petra\utilities\fold.hpp" />
+    <ClInclude Include="references\petra-master\include\petra\utilities\sequence.hpp" />
+    <ClInclude Include="references\petra-master\include\petra\utilities\tuple.hpp" />
+    <ClInclude Include="references\petra-master\test\utilities.hpp" />
+    <ClInclude Include="references\pigpio-master\command.h" />
+    <ClInclude Include="references\pigpio-master\pigpio.h" />
+    <ClInclude Include="references\pigpio-master\pigpiod_if.h" />
+    <ClInclude Include="references\pigpio-master\pigpiod_if2.h" />
+    <ClInclude Include="references\pigpio-master\pigs.h" />
+    <ClInclude Include="references\tools\include\pigpio.h" />
+    <ClInclude Include="references\tools\out\include\basic.h" />
+    <ClInclude Include="references\tools\out\include\networking.h" />
+    <ClInclude Include="references\tools\out\include\output.h" />
+    <ClInclude Include="references\tools\out\include\program.h" />
+    <ClInclude Include="references\tools\out\include\resources.h" />
+    <ClInclude Include="references\tools\out\include\rpi\gpio.h" />
+    <ClInclude Include="references\tools\out\include\server\http.h" />
+    <ClInclude Include="references\tools\out\include\server\mimetype.h" />
+    <ClInclude Include="references\tools\out\include\server\server.h" />
+    <ClInclude Include="references\tools\out\include\sighandle.h" />
+    <ClInclude Include="references\tools\out\include\threading.h" />
+    <ClInclude Include="references\tools\out\include\timing.h" />
+    <ClInclude Include="references\tools\out\include\types.h" />
+    <ClInclude Include="references\tools\out\include\unix\stats.h" />
+    <ClInclude Include="references\tools\out\include\unix\stats2.h" />
+    <ClInclude Include="references\tools\out\include\unix\syscom.h" />
+    <ClInclude Include="references\tools\src\basic.h" />
+    <ClInclude Include="references\tools\src\networking.h" />
+    <ClInclude Include="references\tools\src\output.h" />
+    <ClInclude Include="references\tools\src\program.h" />
+    <ClInclude Include="references\tools\src\resources.h" />
+    <ClInclude Include="references\tools\src\rpi\gpio.h" />
+    <ClInclude Include="references\tools\src\server\http.h" />
+    <ClInclude Include="references\tools\src\server\mimetype.h" />
+    <ClInclude Include="references\tools\src\server\server.h" />
+    <ClInclude Include="references\tools\src\sighandle.h" />
+    <ClInclude Include="references\tools\src\threading.h" />
+    <ClInclude Include="references\tools\src\timing.h" />
+    <ClInclude Include="references\tools\src\types.h" />
+    <ClInclude Include="references\tools\src\unix\stats.h" />
+    <ClInclude Include="references\tools\src\unix\stats2.h" />
+    <ClInclude Include="references\tools\src\unix\syscom.h" />
     <ClInclude Include="resources\cross-platform\basic.h" />
     <ClInclude Include="resources\cross-platform\networking.h" />
     <ClInclude Include="resources\cross-platform\output.h" />
@@ -1004,6 +1118,14 @@
     <ClInclude Include="resources\pigpio-master\pigpiod_if.h" />
     <ClInclude Include="resources\pigpio-master\pigpiod_if2.h" />
     <ClInclude Include="resources\pigpio-master\pigs.h" />
+    <ClInclude Include="src\api\expirimental.h" />
+    <ClInclude Include="src\api\mem.h" />
+    <ClInclude Include="src\api\processing.h" />
+    <ClInclude Include="src\api\target.h" />
+    <ClInclude Include="src\api\vision.h" />
+    <ClInclude Include="src\api\visioncamera.h" />
+    <ClInclude Include="src\api\visionserver.h" />
+    <ClInclude Include="src\api\weightedsubtraction.h" />
     <ClInclude Include="src\cameraconfig.h" />
     <ClInclude Include="src\extras\basic.h" />
     <ClInclude Include="src\extras\output.h" />
@@ -1014,11 +1136,13 @@
     <ClInclude Include="src\mem.h" />
     <ClInclude Include="src\pipelines.h" />
     <ClInclude Include="src\processing.h" />
+    <ClInclude Include="src\testing2021.h" />
     <ClInclude Include="src\vision.h" />
     <ClInclude Include="src\visioncamera.h" />
     <ClInclude Include="src\visionserver.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="frc.json" />
     <None Include="include\cameraserver\CameraServer.inc" />
     <None Include="include\cscore_oo.inl" />
     <None Include="include\frc\kinematics\SwerveDriveKinematics.inc" />
@@ -1035,6 +1159,13 @@
     <None Include="include\wpi\circular_buffer.inc" />
     <None Include="include\wpi\HttpUtil.inl" />
     <None Include="include\wpi\HttpWebSocketServerConnection.inl" />
+    <None Include="make.exe" />
+    <None Include="makefile" />
+    <None Include="src\api\mem.S" />
+    <None Include="src\api\target.inc" />
+    <None Include="src\api\vision.inc" />
+    <None Include="src\api\visionserver.inc" />
+    <None Include="src\api\weightedsubtraction.inc" />
     <None Include="src\mem.S" />
     <None Include="src\processing.inc" />
     <None Include="src\visionserver.inc" />
