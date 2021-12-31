@@ -47,6 +47,8 @@ void SquareTargetPNP::process(cv::Mat& io_frame, int8_t mode) {
 				//cv::solvePnP(this->reference_points.world, this->reference_points.points, this->getCameraMatrix(), this->getCameraDistortion(), this->rvec, this->tvec);
 				this->reference_points.solvePerspective(this->tvec, this->rvec, this->getCameraMatrix(), this->getCameraDistortion());
 
+				this->updateTarget(this->reference_points.getName());
+
 				// this will go in VisionServer
 				// float 
 				// 	x = this->tvec[0][0],

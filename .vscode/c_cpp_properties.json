@@ -1,6 +1,60 @@
 {
     "configurations": [
-        // {
+        {
+            "name": "CC-ARM-DESKTOP-8GI6FFU",   // my desktop computer
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/include",
+                "${workspaceFolder}/references"
+            ],
+            "defines": [
+                "UNICODE",
+                "_UNICODE",
+                "__linux__",
+                "__unix__"
+            ],
+            "compilerPath": "D:\\Programs\\Raspbian10-Windows64-Toolchain-8.3.0\\raspbian10\\bin\\arm-raspbian10-linux-gnueabihf-g++.exe",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "linux-gcc-arm"
+        },
+        {
+            "name": "CC-ARM-DESKTOP-R6IKQEI",   // my laptop
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/include",
+                "${workspaceFolder}/references"
+            ],
+            "defines": [
+                "UNICODE",
+                "_UNICODE",
+                "__linux__",
+                "__unix__"
+            ],
+            "compilerPath": "C:\\Packages\\raspbian10\\bin\\arm-raspbian10-linux-gnueabihf-g++.exe",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "linux-gcc-arm"
+        },
+        {
+            "name": "CC-ARM-ROBOTICS-1",   // OG robotics desktop 
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/include",
+                "${workspaceFolder}/references"
+            ],
+            "defines": [
+                "UNICODE",
+                "_UNICODE",
+                "__linux__",
+                "__unix__"
+            ],
+            "compilerPath": "C:\\Program Files (x86)\\raspbian10\bin\\arm-raspbian10-linux-gnueabihf-g++.exe",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "gcc-arm"
+        }
+        // ,{
         //     "name": "Win32",
         //     "includePath": [
         //         "${workspaceFolder}/**"
@@ -15,67 +69,7 @@
         //     "cStandard": "c17",
         //     "cppStandard": "c++17",
         //     "intelliSenseMode": "windows-msvc-x64"
-        // },
-        {
-            "name": "CC-ARM-DESKTOP-8GI6FFU",   // my desktop computer
-            "includePath": [
-                "${workspaceFolder}/**",
-                "${workspaceFolder}/include",
-                "${workspaceFolder}/references"
-            ],
-            "defines": [
-                "_DEBUG",
-                "UNICODE",
-                "_UNICODE",
-                "__linux__",
-                "__unix__"
-            ],
-            "windowsSdkVersion": "10.0.19041.0",
-            "compilerPath": "D:\\Programs\\Raspbian10-Windows64-Toolchain-8.3.0\\raspbian10\\bin\\arm-raspbian10-linux-gnueabihf-g++.exe",
-            "cStandard": "c17",
-            "cppStandard": "c++17",
-            "intelliSenseMode": "linux-gcc-arm"
-        },
-        {
-            "name": "CC-ARM-DESKTOP-R6IKQEI",   // my laptop
-            "includePath": [
-                "${workspaceFolder}/**",
-                "${workspaceFolder}/include",
-                "${workspaceFolder}/references"
-            ],
-            "defines": [
-                "_DEBUG",
-                "UNICODE",
-                "_UNICODE",
-                "__linux__",
-                "__unix__"
-            ],
-            "windowsSdkVersion": "10.0.19041.0",
-            "compilerPath": "C:\\Packages\\raspbian10\\bin\\arm-raspbian10-linux-gnueabihf-g++.exe",
-            "cStandard": "c17",
-            "cppStandard": "c++17",
-            "intelliSenseMode": "linux-gcc-arm"
-        },
-        {
-            "name": "CC-ARM-ROBOTICS-1",   // OG robotics desktop 
-            "includePath": [
-                "${workspaceFolder}/**",
-                "${workspaceFolder}/include",
-                "${workspaceFolder}/references"
-            ],
-            "defines": [
-                "_DEBUG",
-                "UNICODE",
-                "_UNICODE",
-                "__linux__",
-                "__unix__"
-            ],
-            "windowsSdkVersion": "10.0.19041.0",
-            "compilerPath": "C:\\Program Files (x86)\\raspbian10\bin\\arm-raspbian10-linux-gnueabihf-g++.exe",
-            "cStandard": "c17",
-            "cppStandard": "c++17",
-            "intelliSenseMode": "gcc-arm"
-        }
+        // }
     ],
     "version": 4
 }

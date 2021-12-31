@@ -73,7 +73,7 @@ CRELEASE := -O3 -DRELEASE
 LRELEASE :=
 
 CPPFLAGS := -pthread -Iinclude -Ireferences -Iinclude/opencv -MMD -MP
-CFLAGS := -Wall -fpermissive
+CFLAGS := -Wall #-fpermissive
 ASMFLAGS := -mcpu=cortex-a72 -mfpu=neon-fp-armv8
 LDFLAGS := -pthread -Wall -Llib -Wl,--unresolved-symbols=ignore-in-shared-libs
 LDLIBS := -lm -lpigpio -lwpilibc -lwpiHal -lcameraserver -lntcore -lcscore -lopencv_dnn -lopencv_highgui -lopencv_ml \
