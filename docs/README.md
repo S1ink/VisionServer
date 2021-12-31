@@ -1,5 +1,5 @@
 # VisionServer
-__VisionServer was originally a test project for learning how to implement vision on an FRC robot (raspberry pi coprocessor), but now has morphed into an api for multiple types of vision workflows. The base api features currently includes:__
+__VisionServer was originally a test project for learning how to implement vision on an FRC robot (raspberry pi coprocessor), but now has morphed into an api for multiple types of vision workflows. The base api currently features:__
   - Loading camera configurations and calibrations from a json (ex. /boot/frc.json on wpilibpi)
   - Handling any number of cameras (generated from json) and switching the output stream between each of the sources (networktable setting)
   - Brightness, exposure, and whitebalance control for each camera during runtime through networktables
@@ -25,11 +25,5 @@ __User extendable features include:__
 __Additionally, source code for interfaceing with VisionServer from a robot-side program is included for both Java and C++ under [_robot-impl_](robot-impl).__
 
 # Getting Started
-__To start using VisionServer, either download the sample program, the prebuild library and headers, or the entire project (recommended). The demo and library can be downloaded from the latest release, and the project can be either cloned or downloaded the same way.__
-
-### **_IMPORTANT - READ BEFORE DOWNLOADING_**
-- The library needs to be linked appropriately with OpenCV and other Wpilib libraries - please read the tutorial on building for further information.
-- The project requires a cross-compiler and additional configuration to be developed and build properly on Windows - more info in the tutorial.
-- Also note that target solving requires camera calibration values which need to be added to the source json. A sample json is included in the root of this repo, but more info can be found in the tutorial.
-
-**_Also note that there is no tutorial yet... COMING SOON_**
+__A guide for downloading and setting up the project can be found [here](SETUP.md). Additionally, a precompiled library (and headers) of the api along with a demo program can be found in the latest [release](https://github.com/FRC3407/VisionServer/releases). If you use the library in your own project, make sure to link in the libraries for OpenCV and Wpilib correctly (these are found in [lib/](../lib/) and [include/](../include/), link options can be found in the [makefile](../makefile)).__
+  - *Note that the demo program is configured to track pure blue (the color or the led I am testing with), and target solving requires camera configuration values to be present within the source json (see the included [json](../frc.json)).*
