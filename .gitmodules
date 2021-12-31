@@ -1,7 +1,7 @@
 [submodule "references/neon_vision"]
 	path = references/neon_vision
-	url = git://https://github.com/JaciBrunning/neon_vision/
+	url = https://github.com/JaciBrunning/neon_vision/
 
 [submodule "references/tools"]
 	path = references/tools
-	url = git://https://github.com/S1ink/Cpp-Tools/
+	url = https://github.com/S1ink/Cpp-Tools/
