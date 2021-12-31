@@ -1,6 +1,0 @@
-﻿  arm-raspbian10-linux-gnueabihf-g++ -O3 -DRELEASE -c -o obj/processing.cpp.o -std=c++17 -pthread -Iinclude -Ireferences -Iinclude/opencv -MMD -MP -Wall -fpermissive src/api/processing.cpp
-  process_begin: CreateProcess(NULL, arm-raspbian10-linux-gnueabihf-g++ -O3 -DRELEASE -c -o obj/processing.cpp.o -std=c++17 -pthread -Iinclude -Ireferences -Iinclude/opencv -MMD -MP -Wall -fpermissive src/api/processing.cpp, ...) failed.
-  make (e=2): The system cannot find the file specified.
-  
-  make: *** [obj/api/processing.cpp.o] Error 2
-D:\Applications\VisualStudio\MSBuild\Microsoft\VC\v160\Microsoft.MakeFile.Targets(46,5): error MSB3073: The command "make" exited with code 2.
