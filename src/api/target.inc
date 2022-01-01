@@ -32,7 +32,7 @@ void Target<corners>::sort(const std::vector<cv::Point_<num_t> >& contour) {
 		this->points.end(), 
 		[this](const cv::Point2f& a, const cv::Point2f& b) {
 			this->a = a - this->center;
-			this->a = b - this->center;
+			this->b = b - this->center;
 			return -atan2(this->a.x, this->a.y) < -atan2(this->b.x, this->b.y);	// note that x and y are switched -> clockwise
 		}
 	);

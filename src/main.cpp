@@ -29,7 +29,7 @@ int main(int argc, char* argv[]) {
 	else { return EXIT_FAILURE; }
 
 	VisionServer server(std::move(cameras));
-	server.runVision<DefaultPipeline, BBoxDemo, TargetSolver<Test6x6, WeightedSubtraction<VThreshold::LED::BLUE> > >(25);
+	server.runVision<BBoxDemo, SquareTargetPNP, TargetSolver<Test6x6, WeightedSubtraction<VThreshold::LED::BLUE> > >(25);
 }
 
 // LIST OF THINGS
