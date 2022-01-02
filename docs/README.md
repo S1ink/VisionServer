@@ -27,3 +27,6 @@ __Additionally, source code for interfaceing with VisionServer from a robot-side
 # Getting Started
 __A guide for downloading and setting up the project can be found [here](SETUP.md). Additionally, a precompiled library (and headers) of the api along with a demo program can be found in the latest [release](https://github.com/FRC3407/VisionServer/releases). If you use the library in your own project, make sure to link in the libraries for OpenCV and Wpilib correctly (these are found in [lib/](../lib/) and [include/](../include/), link options can be found in the [makefile](../makefile)).__
   - *Note that the demo program is configured to track pure blue (the color or the led I am testing with), and target solving requires camera configuration values to be present within the source json (see the included [json](../frc.json)).*
+
+# Documentation
+__Doxygen-generated documentation for the api can be found [here](https://frc3407.github.io/VisionServer/doxygen/html/).__
