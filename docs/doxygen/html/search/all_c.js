@@ -1,0 +1,7 @@
+var searchData=
+[
+  ['operator_2b_0',['operator+',['../vision_8h.html#a95bbbcf528cba6b86f423f8044b10c84',1,'operator+(const std::array&lt; cv::Point_&lt; num_t &gt;, s &gt; &amp;base, num_t depth):&#160;vision.h'],['../vision_8h.html#ab57cfc4eda823af45591dad5fc3ce66a',1,'operator+(const std::array&lt; cv::Point3_&lt; num_t &gt;, s &gt; &amp;base, num_t depth):&#160;vision.h'],['../vision_8h.html#a1b3f9f72bbafd657d0ce9362b47330a3',1,'operator+(const std::vector&lt; cv::Point_&lt; num_t &gt; &gt; &amp;base, num_t depth):&#160;vision.h'],['../vision_8h.html#a90f73c2297490e3b4e9206d56ea9c7c5',1,'operator+(const std::vector&lt; cv::Point3_&lt; num_t &gt; &gt; &amp;base, num_t depth):&#160;vision.h']]],
+  ['operator_2b_3d_1',['operator+=',['../vision_8h.html#ad9e0976e6aa0a83e18e437c694ac9e69',1,'operator+=(std::array&lt; cv::Point3_&lt; num_t &gt;, s &gt; &amp;base, num_t depth):&#160;vision.h'],['../vision_8h.html#a4d261b6355bcb578912223a38b41909c',1,'operator+=(std::vector&lt; cv::Point3_&lt; num_t &gt; &gt; &amp;base, num_t depth):&#160;vision.h']]],
+  ['operator_3d_2',['operator=',['../classTargetSolver.html#a7dc727f0f9dc7934631431bc97308013',1,'TargetSolver::operator=()'],['../classVPipeline.html#a2eff01d9f3112f72f74086eb117194c9',1,'VPipeline::operator=()'],['../classDefaultPipeline.html#a37db8bd422404051d679dbdd4ccb89bc',1,'DefaultPipeline::operator=()']]],
+  ['output_3',['output',['../classVisionServer.html#a80b6476b78d82866214f1bd4274f3d95',1,'VisionServer']]]
+];
