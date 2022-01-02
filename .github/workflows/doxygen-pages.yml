@@ -16,8 +16,8 @@ jobs:
       - uses: langroodi/doxygenize@v1.5
         with:
           # Generated HTML documents output folder
-          htmloutput: ./docs/doxygen/
+          htmloutput: ./docs/doxygen/out/
           # GitHub Pages branch name
           ghpagesbranch: main
           # GitHub Pages directory path
-          ghpagesdir: ./docs/
+          ghpagesdir: ./docs/doxygen/
