@@ -123,8 +123,9 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a004c4a671c423fff706a9d2c126a2f40"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00020">20</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<div class="textblock"><p >A pipeline interface that must be implemented by each pipeline to be used by <a class="el" href="classVisionServer.html">VisionServer</a> </p>
+
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00023">23</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a2a3aef5756d2896f0d26e21707ebb4b6" name="a2a3aef5756d2896f0d26e21707ebb4b6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2a3aef5756d2896f0d26e21707ebb4b6">&#9670;&nbsp;</a></span>VPipeline() <span class="overload">[1/5]</span></h2>
@@ -141,6 +142,12 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p >Construct a pipeline </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">server</td><td>The surrounding <a class="el" href="classVisionServer.html">VisionServer</a> instance - passed in when pipelines are created within a processing instance (ex. <a class="el" href="classVisionServer.html#abb863ec1fbd24a0acaaa167c55844fe2">VisionServer::runVision</a>) </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p class="definition">Definition at line <a class="el" href="visionserver_8cpp_source.html#l00013">13</a> of file <a class="el" href="visionserver_8cpp_source.html">visionserver.cpp</a>.</p>
 
@@ -171,6 +178,13 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p >Construct a pipeline with a name </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">server</td><td>The surrounding <a class="el" href="classVisionServer.html">VisionServer</a> instance - passed in when pipelines are created within a processing instance (ex. <a class="el" href="classVisionServer.html#abb863ec1fbd24a0acaaa167c55844fe2">VisionServer::runVision</a>) </td></tr>
+    <tr><td class="paramname">ntable</td><td>The name of the pipeline and networktable that will be created </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p class="definition">Definition at line <a class="el" href="visionserver_8cpp_source.html#l00015">15</a> of file <a class="el" href="visionserver_8cpp_source.html">visionserver.cpp</a>.</p>
 
@@ -201,6 +215,13 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p >Construct a pipeline with a name </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">server</td><td>The surrounding <a class="el" href="classVisionServer.html">VisionServer</a> instance - passed in when pipelines are created within a processing instance (ex. <a class="el" href="classVisionServer.html#abb863ec1fbd24a0acaaa167c55844fe2">VisionServer::runVision</a>) </td></tr>
+    <tr><td class="paramname">ntable</td><td>The name of the pipeline and networktable that will be created </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p class="definition">Definition at line <a class="el" href="visionserver_8cpp_source.html#l00017">17</a> of file <a class="el" href="visionserver_8cpp_source.html">visionserver.cpp</a>.</p>
 
@@ -229,6 +250,7 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p >Oftentimes pipelines have fairly large framebuffers (cv::Mat) and lots of other members, so we don't want them to be copied </p>
 
 </div>
 </div>
@@ -247,6 +269,7 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p >Move constructor </p>
 
 <p class="definition">Definition at line <a class="el" href="visionserver_8cpp_source.html#l00019">19</a> of file <a class="el" href="visionserver_8cpp_source.html">visionserver.cpp</a>.</p>
 
@@ -294,6 +317,7 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p >Get the current camera's distortion coefficients from the <a class="el" href="classVisionServer.html">VisionServer</a> instance (to be used by classes that extend this) </p><dl class="section return"><dt>Returns</dt><dd>The distortion coefficients - size if 5x1 (float) </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="visionserver_8cpp_source.html#l00030">30</a> of file <a class="el" href="visionserver_8cpp_source.html">visionserver.cpp</a>.</p>
 
@@ -313,6 +337,7 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p >Get the current camera's matrix array from the <a class="el" href="classVisionServer.html">VisionServer</a> instance (to be used by classes that extend this) </p><dl class="section return"><dt>Returns</dt><dd>The camera matrix - size is 3x3 (float) </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="visionserver_8cpp_source.html#l00027">27</a> of file <a class="el" href="visionserver_8cpp_source.html">visionserver.cpp</a>.</p>
 
@@ -332,6 +357,7 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p >Get the <a class="el" href="classVisionServer.html">VisionServer</a> instance that the pipeline was created with </p><dl class="section return"><dt>Returns</dt><dd>A const pointer to the <a class="el" href="classVisionServer.html">VisionServer</a> isntance </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="visionserver_8cpp_source.html#l00042">42</a> of file <a class="el" href="visionserver_8cpp_source.html">visionserver.cpp</a>.</p>
 
@@ -351,6 +377,7 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p >Get the pipeline name </p><dl class="section return"><dt>Returns</dt><dd>The name of the pipeline </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="visionserver_8cpp_source.html#l00036">36</a> of file <a class="el" href="visionserver_8cpp_source.html">visionserver.cpp</a>.</p>
 
@@ -370,6 +397,7 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p >Get the underlying networktable for the pipeline </p><dl class="section return"><dt>Returns</dt><dd>A const shared pointer to the pipeline's networktable </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="visionserver_8cpp_source.html#l00039">39</a> of file <a class="el" href="visionserver_8cpp_source.html">visionserver.cpp</a>.</p>
 
@@ -398,6 +426,7 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p >Oftentimes pipelines have fairly large framebuffers (cv::Mat) and lots of other members, so we don't want them to be copy assigned </p>
 
 </div>
 </div>
@@ -434,6 +463,13 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p >Processing function to be overloaded by each pipeline </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">io_frame</td><td>The frame that is recieved from a camera and is sent to the stream after processing finishes </td></tr>
+    <tr><td class="paramname">mode</td><td>Indicates modes (settings from <a class="el" href="classVisionServer.html">VisionServer</a> networktable) to be implemented during processing - currently not used </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p>Implemented in <a class="el" href="classTargetSolver.html#a21610d5b7311e3639e6558682d772ecf">TargetSolver&lt; target_t, threshold_t &gt;</a>, and <a class="el" href="classDefaultPipeline.html#a5c95887c88390be60ac02a80348484c4">DefaultPipeline</a>.</p>
 
@@ -454,6 +490,12 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p >Update the current target by passing it's name </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">target</td><td>The target's name - can be gotten by calling '<a class="el" href="classVPipeline.html#aa731181fa964d5a0b46a76c751042314">getName()</a>' on a target </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p class="definition">Definition at line <a class="el" href="visionserver_8cpp_source.html#l00033">33</a> of file <a class="el" href="visionserver_8cpp_source.html">visionserver.cpp</a>.</p>
 
@@ -480,7 +522,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00045">45</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00100">100</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 
 </div>
 </div>
@@ -504,7 +546,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00043">43</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00098">98</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 
 </div>
 </div>
@@ -528,7 +570,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00044">44</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00099">99</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 
 </div>
 </div>

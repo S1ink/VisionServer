@@ -131,8 +131,9 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:a004c4a671c423fff706a9d2c126a2f40 inherit pub_attribs_classVPipeline"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00048">48</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<div class="textblock"><p >A default pipeline implentation that does no processing but still overloads <a class="el" href="classDefaultPipeline.html#a5c95887c88390be60ac02a80348484c4">process()</a>, and thus can be used in a processing instance </p>
+
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00106">106</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ab514469ef31aadddae88468810a0f32e" name="ab514469ef31aadddae88468810a0f32e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab514469ef31aadddae88468810a0f32e">&#9670;&nbsp;</a></span>DefaultPipeline() <span class="overload">[1/2]</span></h2>
@@ -273,10 +274,17 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p >Processing function to be overloaded by each pipeline </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">io_frame</td><td>The frame that is recieved from a camera and is sent to the stream after processing finishes </td></tr>
+    <tr><td class="paramname">mode</td><td>Indicates modes (settings from <a class="el" href="classVisionServer.html">VisionServer</a> networktable) to be implemented during processing - currently not used </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p>Implements <a class="el" href="classVPipeline.html#a493eb537fdc6af432ddcd0cfbcd99796">VPipeline</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00058">58</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00116">116</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 
 </div>
 </div>
