@@ -8,25 +8,6 @@
 //#include "pipelines.h"
 
 template<class pipeline_t>
-void VisionServer::runVision(int8_t quality) {
-	VisionServer::visionWorker<pipeline_t>(*this, quality);
-}
-template<class pipeline_t1, class pipeline_t2>
-void VisionServer::runVision(int8_t quality) {
-	VisionServer::visionWorker<pipeline_t1, pipeline_t2>(*this, quality);
-}
-template<class pipeline_t1, class pipeline_t2, class pipeline_t3>
-void VisionServer::runVision(int8_t quality) {
-	VisionServer::visionWorker<pipeline_t1, pipeline_t2, pipeline_t3>(*this, quality);
-}
-
-// TOO CONFUSING
-// template<typename... pipelines>
-// void VisionServer::runVision(int8_t quality) {
-// 	VisionServer::visionWorker<pipelines...>(*this, quality);
-// }
-
-template<class pipeline_t>
 bool VisionServer::runVisionThread(int8_t quality) {
 	if(!this->launched.joinable()) {
 		this->launched = std::move(std::thread(VisionServer::visionWorker<pipeline_t>, *this, quality));
@@ -55,8 +36,10 @@ template<class pipeline_t>
 void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 	static_assert(std::is_base_of<VPipeline, pipeline_t>::value, "Template argument (pipeline_t) must implement VPipeline");
 
-	server.stream.SetCompression(quality);	
+	server.stream.SetCompression(quality);
+	server.stream.SetDefaultCompression(quality);
 	server.vision->PutBoolean("Show Statistics", false);
+	server.vision->PutBoolean("Enable Processing", true);
 	
 	cv::Mat frame(server.getCurrentResolution(), CV_8UC3);
 	pipeline_t pipeline(server);
@@ -66,7 +49,9 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 		server.source.GrabFrame(frame);
 
 		server.beg = CHRONO::high_resolution_clock::now();
-		pipeline.process(frame);
+		if(server.vision->GetBoolean("Enable Processing", true)) {
+			pipeline.process(frame);
+		}
 		server.end = CHRONO::high_resolution_clock::now();
 		server.total_frames++;
 
@@ -91,6 +76,7 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 		server.output.PutFrame(frame);
 	}
 	server.vision->Delete("Show Statistics");
+	server.vision->Delete("Enable Processing");
 	server.runloop = true;
 }
 template<class pipeline_t1, class pipeline_t2>
@@ -99,37 +85,35 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 	static_assert(std::is_base_of<VPipeline, pipeline_t2>::value, "Template argument (pipeline_t2) must implement VPipeline");
 	
 	server.stream.SetCompression(quality);
+	server.stream.SetDefaultCompression(quality);
 	server.vision->PutNumber("Pipeline Index", 0);
 	server.vision->PutNumber("Pipelines Available", 2);
 	server.vision->PutBoolean("Show Statistics", false);
+	server.vision->PutBoolean("Enable Processing", true);
 
 	cv::Mat frame(server.getCurrentResolution(), CV_8UC3);
-	DefaultPipeline pbase(server);
 	pipeline_t1 p1(server);
 	pipeline_t2 p2(server);
 
 	server.start = CHRONO::high_resolution_clock::now();
 	while(server.runloop) {
 		server.source.GrabFrame(frame);
-		switch((int8_t)server.vision->GetEntry("Pipeline Index").GetDouble(-1)) {
-			case 0 : {
+		switch(server.vision->GetBoolean("Enable Processing", true) * ((int8_t)server.vision->GetEntry("Pipeline Index").GetDouble(-1) + 1)) {
+			case 1 : {
 				server.beg = CHRONO::high_resolution_clock::now();
 				p1.process(frame);
 				server.end = CHRONO::high_resolution_clock::now();
 				break;
 			}
-			case 1 : {
+			case 2 : {
 				server.beg = CHRONO::high_resolution_clock::now();
 				p2.process(frame);
 				server.end = CHRONO::high_resolution_clock::now();
 				break;
 			}
-			case -1 :
-			default : {
+			default : {	// includes case 0
 				//std::cout << "Pipline index out of bounds, please only use values >0 and <Piplines Available\n";
-				server.beg = CHRONO::high_resolution_clock::now();
-				pbase.process(frame);
-				server.end = CHRONO::high_resolution_clock::now();
+				server.beg = server.end = CHRONO::high_resolution_clock::now();
 			}
 		}
 		server.total_frames++;
@@ -157,6 +141,7 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 	server.vision->Delete("Pipeline Index");
 	server.vision->Delete("Piplines Available");
 	server.vision->Delete("Show Statistics");
+	server.vision->Delete("Enable Processing");
 	server.runloop = true;
 }
 template<class pipeline_t1, class pipeline_t2, class pipeline_t3>
@@ -166,12 +151,13 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 	static_assert(std::is_base_of<VPipeline, pipeline_t3>::value, "Template argument (pipeline_t3) must implement VPipeline");
 	
 	server.stream.SetCompression(quality);
+	server.stream.SetDefaultCompression(quality);
 	server.vision->PutNumber("Pipeline Index", 0);
 	server.vision->PutNumber("Pipelines Available", 3);
 	server.vision->PutBoolean("Show Statistics", false);
+	server.vision->PutBoolean("Enable Processing", true);
 
 	cv::Mat frame(server.getCurrentResolution(), CV_8UC3);
-	DefaultPipeline pbase(server);
 	pipeline_t1 p1(server);
 	pipeline_t2 p2(server);
 	pipeline_t3 p3(server);
@@ -179,31 +165,29 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 	server.start = CHRONO::high_resolution_clock::now();
 	while(server.runloop) {
 		server.source.GrabFrame(frame);
-		switch((int8_t)server.vision->GetEntry("Pipeline Index").GetDouble(-1)) {
-			case 0 : {
+		switch(server.vision->GetBoolean("Enable Processing", true) * ((int8_t)server.vision->GetEntry("Pipeline Index").GetDouble(-1) + 1)) {
+			case 1 : {
 				server.beg = CHRONO::high_resolution_clock::now();
 				p1.process(frame);
 				server.end = CHRONO::high_resolution_clock::now();
 				break;
 			}
-			case 1 : {
+			case 2 : {
 				server.beg = CHRONO::high_resolution_clock::now();
 				p2.process(frame);
 				server.end = CHRONO::high_resolution_clock::now();
 				break;
 			}
-			case 2 : {
+			case 3 : {
 				server.beg = CHRONO::high_resolution_clock::now();
 				p3.process(frame);
 				server.end = CHRONO::high_resolution_clock::now();
 				break;
 			}
-			case -1 :
+			case 0 :
 			default : {
 				//std::cout << "Pipline index out of bounds, please only use values >0 and <'Piplines Available'\n";
-				server.beg = CHRONO::high_resolution_clock::now();
-				pbase.process(frame);
-				server.end = CHRONO::high_resolution_clock::now();
+				server.beg = server.end = CHRONO::high_resolution_clock::now();
 			}
 		}
 		server.total_frames++;
@@ -231,6 +215,7 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 	server.vision->Delete("Pipeline Index");
 	server.vision->Delete("Piplines Available");
 	server.vision->Delete("Show Statistics");
+	server.vision->Delete("Enable Processing");
 	server.runloop = true;
 }
 

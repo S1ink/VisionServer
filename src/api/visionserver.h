@@ -82,18 +82,20 @@ public:
 
     bool stopVision();
 
-    template<class pipeline_t = DefaultPipeline>
-    void runVision(int8_t quality = 50);
+    inline void runVision(int8_t quality = 50) { VisionServer::visionWorker(*this, quality); }
+    template<class pipeline_t>
+    inline void runVision(int8_t quality = 50) { VisionServer::visionWorker<pipeline_t>(*this, quality); }
     template<class pipeline_t1, class pipeline_t2>
-    void runVision(int8_t quality = 50);
+    inline void runVision(int8_t quality = 50) { VisionServer::visionWorker<pipeline_t1, pipeline_t2>(*this, quality); }
     template<class pipeline_t1, class pipeline_t2, class pipeline_t3>
-    void runVision(int8_t quality = 50);
+    inline void runVision(int8_t quality = 50) { VisionServer::visionWorker<pipeline_t1, pipeline_t2, pipeline_t3>(*this, quality); }
 
     // Nope, too confusing
     // template<typename... pipelines_t>
     // void runVision(int8_t quality = 50);
 
-    template<class pipeline_t = DefaultPipeline>
+    bool runVisionThread(int8_t quality = 50);
+    template<class pipeline_t>
     bool runVisionThread(int8_t quality = 50);
     template<class pipeline_t1, class pipeline_t2>
     bool runVisionThread(int8_t quality = 50);
@@ -103,6 +105,7 @@ public:
     const std::shared_ptr<nt::NetworkTable> vision{nt::NetworkTableInstance::GetDefault().GetTable("Vision Server")};
 
 protected:
+    static void visionWorker(VisionServer& server, int8_t quality);
     template<class pipeline_t>
     static void visionWorker(VisionServer& server, int8_t quality);
     template<class pipeline_t1, class pipeline_t2>

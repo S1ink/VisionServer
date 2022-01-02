@@ -36,9 +36,13 @@ public:
 	inline VsCamera& getCurrentCamera() { return *this->getCamera(this->getCameraIdx()); }	// could possibly segfault if the index isn't up to date, but this is unlikely
 	inline VsPipeline& getCurrentPipeline() { return *this->getPipeline(this->getPipelineIdx()); }	//^
 
-	inline bool isShowingStatistics() const { return root->GetEntry("Show Statistics").GetBoolean(false); }
+	inline bool getIsShowingStatistics() const { return root->GetEntry("Show Statistics").GetBoolean(false); }
 	inline void setStatistics(bool val) { root->GetEntry("Show Statistics").SetBoolean(val); }
-	inline void toggleStatistics() { this->setStatistics(!this->isShowingStatistics()); }
+	inline void toggleStatistics() { this->setStatistics(!this->getIsShowingStatistics()); }
+
+	bool getIsPipelineEnabled();
+	bool setPipelineEnabled(bool val);
+	bool togglePipelineEnabled();
 
 	inline bool hasActiveTarget() const { return active_target.GetString("none") != "none"; }
 	inline std::shared_ptr<nt::NetworkTable> getActiveTarget() const { return targets->GetSubTable(active_target.GetString("none")); }
@@ -166,14 +170,20 @@ private:
 		inline void Initialize() override { Get().toggleStatistics(); }
 		inline bool IsFinished() override { return true; }
 	};
+	class TogglePipeline : public frc2::CommandBase {
+	public:
+		TogglePipeline() = default;
+		inline void Initialize() override { Get().togglePipelineEnabled(); }
+		inline bool IsFinished() override { return true; }
+	};
 	//class ToggleDebug : public frc2::CommandBase {};
-	//class TogglePipeline : public frc2::CommandBase {};
 
 	static IncrementCamera inc_camera;
 	static DecrementCamera dec_camera;
 	static IncrementPipeline inc_pipeline;
 	static DecrementPipeline dec_pipeline;
 	static ToggleStatistics toggle_stats;
+	static TogglePipeline toggle_pipeline;
 
 public:
 	inline static IncrementCamera& getCameraIncrementCommand() { return inc_camera; }
@@ -181,5 +191,6 @@ public:
 	inline static IncrementPipeline& getPipelineIncrementCommand() { return inc_pipeline; }
 	inline static DecrementPipeline& getPipelineDecrementCommand() { return dec_pipeline; }
 	inline static ToggleStatistics& getStatisticsToggleCommand() { return toggle_stats; }
+	inline static TogglePipeline& getPipelineToggleCommand() { return toggle_pipeline; }
 #endif
 };

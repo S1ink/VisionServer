@@ -55,9 +55,28 @@ public class VisionServer {
 	public VsCamera getCurrentCamera() { return this.getCamera(this.getCameraIdx()); }
 	public VsPipeline getCurrentPipeline() { return this.getPipeline(this.getPipelineIdx()); }
 
-	public boolean isShowingStatistics() { return root.getEntry("Show Statistics").getBoolean(false); }
+	public boolean getIsShowingStatistics() { return root.getEntry("Show Statistics").getBoolean(false); }
 	public void setStatistics(boolean val) { root.getEntry("Show Statistics").setBoolean(val); }
-	public void toggleStatistics() { this.setStatistics(!this.isShowingStatistics()); }
+	public void toggleStatistics() { this.setStatistics(!this.getIsShowingStatistics()); }
+
+	public boolean getIsPipelineEnabled() { 
+		if(root.containsKey("Enable Processing")) {
+			return root.getEntry("Enable Processing").getBoolean(true);
+		}
+		return false;
+	}
+	public boolean setPipelineEnabled(boolean val) {
+		if(root.containsKey("Enable Processing")) {
+			return root.getEntry("Enable Processing").setBoolean(val);
+		}
+		return false;
+	}
+	public boolean togglePipelineEnabled() {
+		if(root.containsKey("Enable Processing")) {
+			return root.getEntry("Enable Processing").setBoolean(!root.getEntry("Enable Processing").getBoolean(true));
+		}
+		return false;
+	}
 
 	public boolean hasActiveTarget() { return !active_target.getString("none").equals("none"); }
 	public NetworkTable getActiveTarget() { return targets.getSubTable(active_target.getString("none")); }
@@ -339,6 +358,10 @@ public class VisionServer {
 		@Override public void initialize() { toggleStatistics(); }
 		@Override public boolean isFinished() { return true; }
 	}
+	private static class TogglePipeline extends CommandBase {
+		public TogglePipeline() {}
+		@Override public void initialize() { togglePipelineEnabled(); }
+		@Override public boolean isFinshed() { return true; }
+	}
 // 	private static class ToggleDebug extends CommandBase {		// not implemented yet
-// 	private static class TogglePipeline extends CommandBase {}
 }

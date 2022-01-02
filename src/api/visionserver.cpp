@@ -220,6 +220,49 @@ bool VisionServer::stopVision() {
 	}
 	return false;
 }
+bool VisionServer::runVisionThread(int8_t quality) {
+	if(!this->launched.joinable()) {
+		this->launched = std::move(std::thread(static_cast<void(*)(VisionServer&, int8_t)>(VisionServer::visionWorker), std::ref(*this), quality));
+		return true;
+	}
+	return false;
+}
+
+void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
+
+	server.stream.SetCompression(quality);
+	server.stream.SetDefaultCompression(quality);
+	server.vision->PutBoolean("Show Statistics", false);
+
+	cv::Mat frame(server.getCurrentResolution(), CV_8UC3);
+	while(server.runloop) {
+		server.source.GrabFrame(frame);
+		server.beg = server.end = CHRONO::high_resolution_clock::now();
+		server.total_frames++;
+
+		server.total_time = CHRONO::duration<double>(server.end - server.start).count();
+		server.frame_time = CHRONO::duration<double>(server.end - server.beg).count();
+		server.loop_time = CHRONO::duration<double>(server.end - server.last).count();
+		server.last = server.end;
+
+		server.active_target.update(server.loop_time);
+
+		server.fps = 1.f/server.loop_time;
+		if((int)server.total_time > (int)server.sec1_time) {
+			server.fps_1s = ((server.total_frames - server.sec1_frames) / (server.total_time - server.sec1_time));
+			server.sec1_time = server.total_time;
+			server.sec1_frames = server.total_frames;
+		}
+
+		if(server.vision->GetEntry("Show Statistics").GetBoolean(false)) {
+			server.putStats(frame);
+		}
+		server.updateStats();
+		server.output.PutFrame(frame);
+	}
+	server.vision->Delete("Show Statistics");
+	server.runloop = true;
+}
 
 void VisionServer::putStats(cv::Mat& io_frame) {
 	cv::putText(

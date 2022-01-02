@@ -33,6 +33,26 @@ void VisionServer::updatePipelines() {
 	}
 }
 
+bool VisionServer::getIsPipelineEnabled() {
+	if(root->ContainsKey("Enable Pipeline")) {
+		return root->GetEntry("Enable Processing").GetBoolean(true);
+	}
+	return false;
+}
+bool VisionServer::setPipelineEnabled(bool val) {
+	if(root->ContainsKey("Enable Pipeline")) {
+		return root->GetEntry("Enable Pipeline").SetBoolean(val);
+	}
+	return false;
+}
+bool VisionServer::togglePipelineEnabled() {
+	if(root->ContainsKey("Enable Pipeline")) {
+		nt::NetworkTableEntry enbl = root->GetEntry("Enable Pipeline");
+		return enbl.SetBoolean(!enbl.GetBoolean(true));
+	}
+	return false;
+}
+
 bool VisionServer::incrementCamera() {
 	int8_t idx = this->getCameraIdx();
 	if(idx + 1 < this->numCameras()) {
