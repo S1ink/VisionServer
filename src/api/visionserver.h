@@ -60,33 +60,97 @@ public:
 };
 
 
-
+/**
+ * Manages cameras, base networktables communication, statistics, target notifications, and pipeline instances
+*/
 class VisionServer {    // make singleton?
     friend class VPipeline;
 public:
+    /**
+     * Parse a json to construct cameras
+     * @param file Path to the json, default it "/boot/frc.json"
+    */
     VisionServer(const char* file = _default);
+    /**
+     * Uses preexisting cameras
+     * @param cameras A vector of VisionCameras that will be used for processing
+    */
     VisionServer(std::vector<VisionCamera>&& cameras);
     VisionServer(const VisionServer&) = delete;
     VisionServer(VisionServer&&) = delete;
     ~VisionServer();
 
+    /**
+     * Gets the number of cameras avaiable
+     * @return The number of avaiable camera indexes, starting at 0
+    */
     size_t validIndexes() const;
+    /**
+     * Set a specific camera index as a source for the output stream (and processing)
+     * @param idx The index of the camera, starting at 0 and <= validIndexes()
+    */
     bool setCamera(size_t idx);
+    /**
+     * Get the frame size of the current camera
+     * @return The dimensions of the output frame in a cv::Size object
+    */
     cv::Size getCurrentResolution() const;
+    /**
+     * Set the default compression of the Mjpeg stream output
+     * @param quality compression quality, ranging from 0-100 (100 being the highest quality), and -1 for auto
+    */
     void setCompression(int8_t quality);
 
+    /**
+     * Get a const reference to the internally stored camera vector
+     * @return Returns a const reference to the internal vector of VisionCameras
+    */
     const std::vector<VisionCamera>& getCameras();
 
+    /**
+     * Get the camera matrix for the currently selected camera
+     * @return A cv::Mat(of floats) array representing the current camera's matrix - the size is 3x3
+    */
     const cv::Mat_<float>& getCameraMatrix() const;
+    /**
+     * Get the distortion coefficients for the currently selected camera
+     * @return A cv::Mat(of floats) array representing the current camera's distortion coefficients - the size is 5x1
+    */
     const cv::Mat_<float>& getDistortion() const;
 
+    /**
+     * Joins any processing threads that are currently running
+     * @return Returns if there was a thread running that got stopped
+    */
     bool stopVision();
 
+    /**
+     * Run a streaming instance with no processing pipelines
+     * @param quality The default streaming quality
+    */
     inline void runVision(int8_t quality = 50) { VisionServer::visionWorker(*this, quality); }
+    /**
+     * Runs a processing instance with 1 pipeline
+     * @param pipeline_t The typename of the pipeline class that will be used
+     * @param quality The default streaming quality
+    */
     template<class pipeline_t>
     inline void runVision(int8_t quality = 50) { VisionServer::visionWorker<pipeline_t>(*this, quality); }
+    /**
+     * Runs a processing instance with 2 pipelines (switchable with networktables)
+     * @param pipeline_t1 The typename of the first pipeline class that will be used
+     * @param pipeline_t2 The typename of the second pipeline class that will be used
+     * @param quality The default streaming quality
+    */
     template<class pipeline_t1, class pipeline_t2>
     inline void runVision(int8_t quality = 50) { VisionServer::visionWorker<pipeline_t1, pipeline_t2>(*this, quality); }
+    /**
+     * Runs a processing instance with 3 pipelines (switchable with networktables)
+     * @param pipeline_t1 The typename of the first pipeline class that will be used
+     * @param pipeline_t2 The typename of the second pipeline class that will be used
+     * @param pipeline_t3 The typename of the third pipeline class that will be used
+     * @param quality The default streaming quality
+    */
     template<class pipeline_t1, class pipeline_t2, class pipeline_t3>
     inline void runVision(int8_t quality = 50) { VisionServer::visionWorker<pipeline_t1, pipeline_t2, pipeline_t3>(*this, quality); }
 

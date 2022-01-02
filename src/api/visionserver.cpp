@@ -207,6 +207,7 @@ cv::Size VisionServer::getCurrentResolution() const {
 }
 void VisionServer::setCompression(int8_t quality) {
 	this->stream.SetCompression(quality > 100 ? 100 : (quality < -1 ? -1 : quality));
+	// add SetDefualtCompression as well?
 }
 const std::vector<VisionCamera>& VisionServer::getCameras() {
 	return this->cameras;
@@ -230,7 +231,7 @@ bool VisionServer::runVisionThread(int8_t quality) {
 
 void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 
-	server.stream.SetCompression(quality);
+	server.stream.SetCompression(quality);	// this should call the VisionServer method directly instead of from MjpegServer
 	server.stream.SetDefaultCompression(quality);
 	server.vision->PutBoolean("Show Statistics", false);
 
