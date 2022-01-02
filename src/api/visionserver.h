@@ -17,26 +17,81 @@
 
 class VisionServer;
 
+/**
+ * A pipeline interface that must be implemented by each pipeline to be used by VisionServer
+*/
 class VPipeline {       // Vision Pipeline base interface
 public:
+    /**
+     * Construct a pipeline
+     * @param server The surrounding VisionServer instance - passed in when pipelines are created within a processing instance (ex. VisionServer::runVision)
+    */
     VPipeline(VisionServer& server);
+    /**
+     * Construct a pipeline with a name
+     * @param server The surrounding VisionServer instance - passed in when pipelines are created within a processing instance (ex. VisionServer::runVision)
+     * @param ntable The name of the pipeline and networktable that will be created
+    */
     VPipeline(VisionServer& server, const char* ntable);
+    /**
+     * Construct a pipeline with a name
+     * @param server The surrounding VisionServer instance - passed in when pipelines are created within a processing instance (ex. VisionServer::runVision)
+     * @param ntable The name of the pipeline and networktable that will be created
+    */
     VPipeline(VisionServer& server, const std::string& ntable);
+    /**
+     * Oftentimes pipelines have fairly large framebuffers (cv::Mat) and lots of other members, so we don't want them to be copied
+    */
     VPipeline(const VPipeline&) = delete;
+    /**
+     * Move constructor
+    */
     VPipeline(VPipeline&&);
     virtual ~VPipeline();
 
+    /**
+     * Oftentimes pipelines have fairly large framebuffers (cv::Mat) and lots of other members, so we don't want them to be copy assigned
+    */
     VPipeline& operator=(const VPipeline&) = delete;
     //VPipeline& operator=(VPipeline&&);
 
+    /**
+     * Get the pipeline name
+     * @return The name of the pipeline
+    */
     const std::string& getName() const;
+    /**
+     * Get the underlying networktable for the pipeline
+     * @return A const shared pointer to the pipeline's networktable
+    */
     const std::shared_ptr<nt::NetworkTable> getTable() const;
+    /**
+     * Get the VisionServer instance that the pipeline was created with
+     * @return A const pointer to the VisionServer isntance
+    */
     const VisionServer* getEnv() const;
 
+    /**
+     * Processing function to be overloaded by each pipeline
+     * @param io_frame The frame that is recieved from a camera and is sent to the stream after processing finishes
+     * @param mode Indicates modes (settings from VisionServer networktable) to be implemented during processing - currently not used
+    */
     virtual void process(cv::Mat& io_frame, int8_t mode = 0) = 0;
 
+    /**
+     * Get the current camera's matrix array from the VisionServer instance (to be used by classes that extend this)
+     * @return The camera matrix - size is 3x3 (float)
+    */
     const cv::Mat_<float>& getCameraMatrix() const;
+    /**
+     * Get the current camera's distortion coefficients from the VisionServer instance (to be used by classes that extend this)
+     * @return The distortion coefficients - size if 5x1 (float)
+    */
     const cv::Mat_<float>& getCameraDistortion() const;
+    /**
+     * Update the current target by passing it's name
+     * @param target The target's name - can be gotten by calling 'getName()' on a target
+    */
     void updateTarget(const std::string& target);
 
 protected:
@@ -45,6 +100,9 @@ protected:
     VisionServer* env;
 
 };
+/**
+ * A default pipeline implentation that does no processing but still overloads process(), and thus can be used in a processing instance
+*/
 class DefaultPipeline : VPipeline {     // default pipeline (video passthrough)
 public:
     //using VPipeline::VPipeline;
@@ -78,6 +136,9 @@ public:
     VisionServer(std::vector<VisionCamera>&& cameras);
     VisionServer(const VisionServer&) = delete;
     VisionServer(VisionServer&&) = delete;
+    /**
+     * Deletes all networktable entries created by the instance
+    */
     ~VisionServer();
 
     /**
