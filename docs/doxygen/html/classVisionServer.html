@@ -220,7 +220,7 @@ Friends</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Manages cameras, base networktables communication, statistics, target notifications, and pipeline instances </p>
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00124">124</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00127">127</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aba0e7ff6b8826ab4ddbd2335f82b0453" name="aba0e7ff6b8826ab4ddbd2335f82b0453"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aba0e7ff6b8826ab4ddbd2335f82b0453">&#9670;&nbsp;</a></span>VisionServer() <span class="overload">[1/4]</span></h2>
@@ -239,7 +239,7 @@ Friends</h2></td></tr>
 </div><div class="memdoc">
 <p >Parse a json to construct cameras </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">file</td><td>Path to the json, default it "/boot/frc.json" </td></tr>
+    <tr><td class="paramname">file</td><td>Path to the json, default is "/boot/frc.json" </td></tr>
   </table>
   </dd>
 </dl>
@@ -450,6 +450,12 @@ Friends</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p >Puts current fps and frametime statistics in the upper-left corner of a frame </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">io_frame</td><td>The frame to be modified </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p class="definition">Definition at line <a class="el" href="visionserver_8cpp_source.html#l00268">268</a> of file <a class="el" href="visionserver_8cpp_source.html">visionserver.cpp</a>.</p>
 
@@ -485,7 +491,7 @@ Friends</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00192">192</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00195">195</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 
 </div>
 </div>
@@ -522,7 +528,7 @@ template&lt;class pipeline_t &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00199">199</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00202">202</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 
 </div>
 </div>
@@ -551,7 +557,7 @@ template&lt;class pipeline_t1 , class pipeline_t2 &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p >Runs a processing instance with 2 pipelines (switchable with networktables) </p><dl class="params"><dt>Parameters</dt><dd>
+<p >Runs a processing instance with 2 pipelines (switchable via networktables) </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">pipeline_t1</td><td>The typename of the first pipeline class that will be used </td></tr>
     <tr><td class="paramname">pipeline_t2</td><td>The typename of the second pipeline class that will be used </td></tr>
@@ -560,7 +566,7 @@ template&lt;class pipeline_t1 , class pipeline_t2 &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00207">207</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00210">210</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 
 </div>
 </div>
@@ -589,7 +595,7 @@ template&lt;class pipeline_t1 , class pipeline_t2 , class pipeline_t3 &gt; </div
   </tr>
 </table>
 </div><div class="memdoc">
-<p >Runs a processing instance with 3 pipelines (switchable with networktables) </p><dl class="params"><dt>Parameters</dt><dd>
+<p >Runs a processing instance with 3 pipelines (switchable via networktables) </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">pipeline_t1</td><td>The typename of the first pipeline class that will be used </td></tr>
     <tr><td class="paramname">pipeline_t2</td><td>The typename of the second pipeline class that will be used </td></tr>
@@ -599,7 +605,7 @@ template&lt;class pipeline_t1 , class pipeline_t2 , class pipeline_t3 &gt; </div
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00216">216</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00219">219</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 
 </div>
 </div>
@@ -618,6 +624,12 @@ template&lt;class pipeline_t1 , class pipeline_t2 , class pipeline_t3 &gt; </div
         </tr>
       </table>
 </div><div class="memdoc">
+<p >Runs a streaming thread with no processing pipelines </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">quality</td><td>The default streaming quality </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p class="definition">Definition at line <a class="el" href="visionserver_8cpp_source.html#l00224">224</a> of file <a class="el" href="visionserver_8cpp_source.html">visionserver.cpp</a>.</p>
 
@@ -640,6 +652,13 @@ template&lt;class pipeline_t &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
+<p >Runs a processing thread with 1 pipeline </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pipeline_t</td><td>The typename of the pipeline class that will be used </td></tr>
+    <tr><td class="paramname">quality</td><td>The default streaming quality </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -660,6 +679,14 @@ template&lt;class pipeline_t1 , class pipeline_t2 &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
+<p >Runs a processing thread with 2 pipelines (switchable via networktables) </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pipeline_t1</td><td>The typename of the first pipeline class that will be used </td></tr>
+    <tr><td class="paramname">pipeline_t2</td><td>The typename of the second pipeline class that will be used </td></tr>
+    <tr><td class="paramname">quality</td><td>The default streaming quality </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -680,6 +707,15 @@ template&lt;class pipeline_t1 , class pipeline_t2 , class pipeline_t3 &gt; </div
         </tr>
       </table>
 </div><div class="memdoc">
+<p >Runs a processing thread with 3 pipelines (switchable via networktables) </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pipeline_t1</td><td>The typename of the first pipeline class that will be used </td></tr>
+    <tr><td class="paramname">pipeline_t2</td><td>The typename of the second pipeline class that will be used </td></tr>
+    <tr><td class="paramname">pipeline_t3</td><td>The typename of the third pipeline class that will be used </td></tr>
+    <tr><td class="paramname">quality</td><td>The default streaming quality </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -749,7 +785,7 @@ template&lt;class pipeline_t1 , class pipeline_t2 , class pipeline_t3 &gt; </div
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Joins any processing threads that are currently running </p><dl class="section return"><dt>Returns</dt><dd>Returns if there was a thread running that got stopped </dd></dl>
+<p >Joins any processing threads that are currently running </p><dl class="section return"><dt>Returns</dt><dd>Returns if there was a thread running that was joined </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="visionserver_8cpp_source.html#l00216">216</a> of file <a class="el" href="visionserver_8cpp_source.html">visionserver.cpp</a>.</p>
 
@@ -778,6 +814,12 @@ template&lt;class pipeline_t1 , class pipeline_t2 , class pipeline_t3 &gt; </div
   </tr>
 </table>
 </div><div class="memdoc">
+<p >Called from <a class="el" href="classVisionServer.html#aba0e7ff6b8826ab4ddbd2335f82b0453">VisionServer(const char*)</a> to parse the json and create cameras - can be called again to update the cameras </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">file</td><td>The path to the source json - default is "/boot/frc.json" </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p class="definition">Definition at line <a class="el" href="visionserver_8cpp_source.html#l00124">124</a> of file <a class="el" href="visionserver_8cpp_source.html">visionserver.cpp</a>.</p>
 
@@ -805,6 +847,7 @@ template&lt;class pipeline_t1 , class pipeline_t2 , class pipeline_t3 &gt; </div
   </tr>
 </table>
 </div><div class="memdoc">
+<p >Updates networtables with current statistics - called within each processing instance at each frame </p>
 
 <p class="definition">Definition at line <a class="el" href="visionserver_8cpp_source.html#l00290">290</a> of file <a class="el" href="visionserver_8cpp_source.html">visionserver.cpp</a>.</p>
 
@@ -833,6 +876,12 @@ template&lt;class pipeline_t1 , class pipeline_t2 , class pipeline_t3 &gt; </div
   </tr>
 </table>
 </div><div class="memdoc">
+<p >Gives pipelines access to updating the current target </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">target</td><td>The name of the target that is actively being tracked </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p class="definition">Definition at line <a class="el" href="visionserver_8cpp_source.html#l00308">308</a> of file <a class="el" href="visionserver_8cpp_source.html">visionserver.cpp</a>.</p>
 
@@ -891,6 +940,7 @@ template&lt;class pipeline_t1 , class pipeline_t2 , class pipeline_t3 &gt; </div
   </tr>
 </table>
 </div><div class="memdoc">
+<p >The underlying worker function called by both <a class="el" href="classVisionServer.html#abb863ec1fbd24a0acaaa167c55844fe2">runVision()</a> and <a class="el" href="classVisionServer.html#a2629e7d8af77fbec10510dba46fa459e">runVisionThread()</a> </p>
 
 <p class="definition">Definition at line <a class="el" href="visionserver_8cpp_source.html#l00232">232</a> of file <a class="el" href="visionserver_8cpp_source.html">visionserver.cpp</a>.</p>
 
@@ -931,6 +981,7 @@ template&lt;class pipeline_t &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p >The underlying worker function called by both <a class="el" href="classVisionServer.html#abb863ec1fbd24a0acaaa167c55844fe2">runVision&lt;pipeline_t&gt;()</a> and <a class="el" href="classVisionServer.html#a2629e7d8af77fbec10510dba46fa459e">runVisionThread&lt;pipeline_t&gt;()</a> </p>
 
 </div>
 </div>
@@ -969,6 +1020,7 @@ template&lt;class pipeline_t1 , class pipeline_t2 &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p >The underlying worker function called by both <a class="el" href="classVisionServer.html#abb863ec1fbd24a0acaaa167c55844fe2">runVision&lt;pipeline_t1, pipeline_t2&gt;()</a> and <a class="el" href="classVisionServer.html#a2629e7d8af77fbec10510dba46fa459e">runVisionThread&lt;pipeline_t1, pipeline_t2&gt;()</a> </p>
 
 </div>
 </div>
@@ -1007,6 +1059,7 @@ template&lt;class pipeline_t1 , class pipeline_t2 , class pipeline_t3 &gt; </div
   </tr>
 </table>
 </div><div class="memdoc">
+<p >The underlying worker function called by both <a class="el" href="classVisionServer.html#abb863ec1fbd24a0acaaa167c55844fe2">runVision&lt;pipeline_t1, pipeline_t2, pipeline_t3&gt;()</a> and <a class="el" href="classVisionServer.html#a2629e7d8af77fbec10510dba46fa459e">runVisionThread&lt;pipeline_t1, pipeline_t2, pipeline_t3&gt;()</a> </p>
 
 </div>
 </div>
@@ -1031,7 +1084,7 @@ template&lt;class pipeline_t1 , class pipeline_t2 , class pipeline_t3 &gt; </div
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00125">125</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00128">128</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 
 </div>
 </div>
@@ -1056,7 +1109,7 @@ template&lt;class pipeline_t1 , class pipeline_t2 , class pipeline_t3 &gt; </div
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00265">265</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00312">312</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 
 </div>
 </div>
@@ -1080,7 +1133,7 @@ template&lt;class pipeline_t1 , class pipeline_t2 , class pipeline_t3 &gt; </div
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00257">257</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00304">304</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 
 </div>
 </div>
@@ -1104,7 +1157,7 @@ template&lt;class pipeline_t1 , class pipeline_t2 , class pipeline_t3 &gt; </div
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00252">252</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00299">299</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 
 </div>
 </div>
@@ -1128,7 +1181,7 @@ template&lt;class pipeline_t1 , class pipeline_t2 , class pipeline_t3 &gt; </div
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00257">257</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00304">304</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 
 </div>
 </div>
@@ -1152,7 +1205,7 @@ template&lt;class pipeline_t1 , class pipeline_t2 , class pipeline_t3 &gt; </div
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00265">265</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00312">312</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 
 </div>
 </div>
@@ -1176,7 +1229,7 @@ template&lt;class pipeline_t1 , class pipeline_t2 , class pipeline_t3 &gt; </div
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00264">264</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00311">311</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 
 </div>
 </div>
@@ -1200,7 +1253,7 @@ template&lt;class pipeline_t1 , class pipeline_t2 , class pipeline_t3 &gt; </div
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00264">264</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00311">311</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 
 </div>
 </div>
@@ -1224,7 +1277,7 @@ template&lt;class pipeline_t1 , class pipeline_t2 , class pipeline_t3 &gt; </div
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00264">264</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00311">311</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 
 </div>
 </div>
@@ -1248,7 +1301,7 @@ template&lt;class pipeline_t1 , class pipeline_t2 , class pipeline_t3 &gt; </div
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00265">265</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00312">312</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 
 </div>
 </div>
@@ -1272,7 +1325,7 @@ template&lt;class pipeline_t1 , class pipeline_t2 , class pipeline_t3 &gt; </div
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00260">260</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00307">307</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 
 </div>
 </div>
@@ -1296,7 +1349,7 @@ template&lt;class pipeline_t1 , class pipeline_t2 , class pipeline_t3 &gt; </div
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00264">264</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00311">311</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 
 </div>
 </div>
@@ -1320,7 +1373,7 @@ template&lt;class pipeline_t1 , class pipeline_t2 , class pipeline_t3 &gt; </div
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00254">254</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00301">301</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 
 </div>
 </div>
@@ -1344,7 +1397,7 @@ template&lt;class pipeline_t1 , class pipeline_t2 , class pipeline_t3 &gt; </div
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00259">259</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00306">306</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 
 </div>
 </div>
@@ -1368,7 +1421,7 @@ template&lt;class pipeline_t1 , class pipeline_t2 , class pipeline_t3 &gt; </div
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00263">263</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00310">310</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 
 </div>
 </div>
@@ -1392,7 +1445,7 @@ template&lt;class pipeline_t1 , class pipeline_t2 , class pipeline_t3 &gt; </div
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00264">264</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00311">311</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 
 </div>
 </div>
@@ -1416,7 +1469,7 @@ template&lt;class pipeline_t1 , class pipeline_t2 , class pipeline_t3 &gt; </div
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00253">253</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00300">300</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 
 </div>
 </div>
@@ -1440,7 +1493,7 @@ template&lt;class pipeline_t1 , class pipeline_t2 , class pipeline_t3 &gt; </div
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00265">265</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00312">312</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 
 </div>
 </div>
@@ -1464,7 +1517,7 @@ template&lt;class pipeline_t1 , class pipeline_t2 , class pipeline_t3 &gt; </div
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00255">255</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00302">302</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 
 </div>
 </div>
@@ -1488,7 +1541,7 @@ template&lt;class pipeline_t1 , class pipeline_t2 , class pipeline_t3 &gt; </div
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00263">263</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00310">310</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 
 </div>
 </div>
@@ -1512,7 +1565,7 @@ template&lt;class pipeline_t1 , class pipeline_t2 , class pipeline_t3 &gt; </div
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00264">264</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00311">311</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 
 </div>
 </div>
@@ -1527,8 +1580,9 @@ template&lt;class pipeline_t1 , class pipeline_t2 , class pipeline_t3 &gt; </div
         </tr>
       </table>
 </div><div class="memdoc">
+<p >The root networktable for all <a class="el" href="classVisionServer.html">VisionServer</a> entries </p>
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00230">230</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00258">258</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 
 </div>
 </div>

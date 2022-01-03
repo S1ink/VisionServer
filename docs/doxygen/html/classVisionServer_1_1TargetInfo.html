@@ -97,8 +97,9 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a7afad5078422712023e171fc3bdf1c50"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00268">268</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<div class="textblock"><p >Manages pushing data for the active target to networktables and reseting after enough time with no target detection. This is necessary so that a robot never gets stuck reusing old targeting data when a target goes out of view </p>
+
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00319">319</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a36e115ff22a6370bd0bf29172220454e" name="a36e115ff22a6370bd0bf29172220454e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a36e115ff22a6370bd0bf29172220454e">&#9670;&nbsp;</a></span>TargetInfo() <span class="overload">[1/3]</span></h2>
@@ -115,6 +116,12 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">table</td><td>The root networktable that targeting info is contained in </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p class="definition">Definition at line <a class="el" href="visionserver_8cpp_source.html#l00312">312</a> of file <a class="el" href="visionserver_8cpp_source.html">visionserver.cpp</a>.</p>
 
@@ -213,6 +220,12 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p >Set the current target using it's name </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">target</td><td>The target's name </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p class="definition">Definition at line <a class="el" href="visionserver_8cpp_source.html#l00314">314</a> of file <a class="el" href="visionserver_8cpp_source.html">visionserver.cpp</a>.</p>
 
@@ -233,6 +246,12 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p >Checks if enough time has passed since the last call to <a class="el" href="classVisionServer_1_1TargetInfo.html#a83f6b39189be23f5c279c628178664ab">setTarget()</a> to reset the active target to "none" </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ltime</td><td>loop time of a processing instance (this should be called each frame within an instance) </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p class="definition">Definition at line <a class="el" href="visionserver_8cpp_source.html#l00318">318</a> of file <a class="el" href="visionserver_8cpp_source.html">visionserver.cpp</a>.</p>
 
@@ -259,7 +278,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00280">280</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00342">342</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 
 </div>
 </div>
@@ -283,7 +302,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00279">279</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00341">341</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 
 </div>
 </div>
