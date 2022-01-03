@@ -95,8 +95,11 @@ public:
     void updateTarget(const std::string& target);
 
 protected:
+    /**The pipeline's name*/
     std::string name;
+    /**A networktable for the pipeline*/
     const std::shared_ptr<nt::NetworkTable> table;
+    /**A pointer to the surrounding VisionServer instance*/
     VisionServer* env;
 
 };
@@ -126,7 +129,7 @@ class VisionServer {    // make singleton?
 public:
     /**
      * Parse a json to construct cameras
-     * @param file Path to the json, default it "/boot/frc.json"
+     * @param file Path to the json, default is "/boot/frc.json"
     */
     VisionServer(const char* file = _default);
     /**
@@ -181,7 +184,7 @@ public:
 
     /**
      * Joins any processing threads that are currently running
-     * @return Returns if there was a thread running that got stopped
+     * @return Returns if there was a thread running that was joined
     */
     bool stopVision();
 
@@ -198,7 +201,7 @@ public:
     template<class pipeline_t>
     inline void runVision(int8_t quality = 50) { VisionServer::visionWorker<pipeline_t>(*this, quality); }
     /**
-     * Runs a processing instance with 2 pipelines (switchable with networktables)
+     * Runs a processing instance with 2 pipelines (switchable via networktables)
      * @param pipeline_t1 The typename of the first pipeline class that will be used
      * @param pipeline_t2 The typename of the second pipeline class that will be used
      * @param quality The default streaming quality
@@ -206,7 +209,7 @@ public:
     template<class pipeline_t1, class pipeline_t2>
     inline void runVision(int8_t quality = 50) { VisionServer::visionWorker<pipeline_t1, pipeline_t2>(*this, quality); }
     /**
-     * Runs a processing instance with 3 pipelines (switchable with networktables)
+     * Runs a processing instance with 3 pipelines (switchable via networktables)
      * @param pipeline_t1 The typename of the first pipeline class that will be used
      * @param pipeline_t2 The typename of the second pipeline class that will be used
      * @param pipeline_t3 The typename of the third pipeline class that will be used
@@ -219,22 +222,51 @@ public:
     // template<typename... pipelines_t>
     // void runVision(int8_t quality = 50);
 
+    /**
+     * Runs a streaming thread with no processing pipelines
+     * @param quality The default streaming quality
+    */
     bool runVisionThread(int8_t quality = 50);
+    /**
+     * Runs a processing thread with 1 pipeline
+     * @param pipeline_t The typename of the pipeline class that will be used
+     * @param quality The default streaming quality
+    */
     template<class pipeline_t>
     bool runVisionThread(int8_t quality = 50);
+    /**
+     * Runs a processing thread with 2 pipelines (switchable via networktables)
+     * @param pipeline_t1 The typename of the first pipeline class that will be used
+     * @param pipeline_t2 The typename of the second pipeline class that will be used
+     * @param quality The default streaming quality
+    */
     template<class pipeline_t1, class pipeline_t2>
     bool runVisionThread(int8_t quality = 50);
+    /**
+     * Runs a processing thread with 3 pipelines (switchable via networktables)
+     * @param pipeline_t1 The typename of the first pipeline class that will be used
+     * @param pipeline_t2 The typename of the second pipeline class that will be used
+     * @param pipeline_t3 The typename of the third pipeline class that will be used
+     * @param quality The default streaming quality
+    */
     template<class pipeline_t1, class pipeline_t2, class pipeline_t3>
     bool runVisionThread(int8_t quality = 50);
 
+    /**
+     * The root networktable for all VisionServer entries
+    */
     const std::shared_ptr<nt::NetworkTable> vision{nt::NetworkTableInstance::GetDefault().GetTable("Vision Server")};
 
 protected:
+    /**The underlying worker function called by both runVision() and runVisionThread()*/
     static void visionWorker(VisionServer& server, int8_t quality);
+    /**The underlying worker function called by both runVision<pipeline_t>() and runVisionThread<pipeline_t>()*/
     template<class pipeline_t>
     static void visionWorker(VisionServer& server, int8_t quality);
+    /**The underlying worker function called by both runVision<pipeline_t1, pipeline_t2>() and runVisionThread<pipeline_t1, pipeline_t2>()*/
     template<class pipeline_t1, class pipeline_t2>
     static void visionWorker(VisionServer& server, int8_t quality);
+    /**The underlying worker function called by both runVision<pipeline_t1, pipeline_t2, pipeline_t3>() and runVisionThread<pipeline_t1, pipeline_t2, pipeline_t3>()*/
     template<class pipeline_t1, class pipeline_t2, class pipeline_t3>
     static void visionWorker(VisionServer& server, int8_t quality);
 
@@ -242,11 +274,26 @@ protected:
     // template<typename... pipelines>
     // static void visionWorker(VisionServer& server, int8_t quality);
 
+    /**
+     * Called from VisionServer(const char*) to parse the json and create cameras - can be called again to update the cameras
+     * @param file The path to the source json - default is "/boot/frc.json"
+    */
     bool updateFromConfig(const char* file = _default);
 
+    /**
+     * Puts current fps and frametime statistics in the upper-left corner of a frame
+     * @param io_frame The frame to be modified
+    */
     void putStats(cv::Mat& io_frame);
+    /**
+     * Updates networtables with current statistics - called within each processing instance at each frame
+    */
     void updateStats();
 
+    /**
+     * Gives pipelines access to updating the current target
+     * @param target The name of the target that is actively being tracked
+    */
     void updateTarget(const std::string& target);
 
     std::vector<VisionCamera> cameras;
@@ -265,14 +312,29 @@ protected:
 	CHRONO::high_resolution_clock::time_point start, beg, end, last;
 
 private:
+    /**
+     * Manages pushing data for the active target to networktables and reseting after enough time with no target detection. 
+     * This is necessary so that a robot never gets stuck reusing old targeting data when a target goes out of view
+    */
     class TargetInfo {
     public:
+        /**
+         * @param table The root networktable that targeting info is contained in
+        */
         TargetInfo(const std::shared_ptr<nt::NetworkTable> table);
         TargetInfo(const TargetInfo&) = delete;
         TargetInfo(TargetInfo&&) = default;
         ~TargetInfo() = default;
 
+        /**
+         * Set the current target using it's name
+         * @param target The target's name
+        */
         void setTarget(const std::string& target);
+        /**
+         * Checks if enough time has passed since the last call to setTarget() to reset the active target to "none"
+         * @param ltime loop time of a processing instance (this should be called each frame within an instance)
+        */
         bool update(double ltime);
 
     private:

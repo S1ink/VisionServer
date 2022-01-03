@@ -75,7 +75,7 @@ VisionCamera::~VisionCamera() {
 bool VisionCamera::isValidJson() const {
 	return this->config.is_object();
 }
-wpi::json VisionCamera::getJson() const {
+const wpi::json& VisionCamera::getJson() const {
 	return this->config;
 }
 bool VisionCamera::isValidStreamJson() const {
