@@ -156,7 +156,8 @@ bool VisionServer::updateFromConfig(const char* file) {
 				wpi::outs() << "Setting up NetworkTables in SERVER mode\n";
 				nt::NetworkTableInstance::GetDefault().StartServer();
 			} else {
-				wpi::errs() << "Config error in " << file << ": could not understand ntmode value '" << str << "'\n";
+				wpi::outs() << "Setting up NetworkTables for SIMULATION mode - host: " << s << newline;
+                nt::NetworkTableInstance::GetDefault().StartClient(s);
 			}
 		} catch (const wpi::json::exception& e) {
 			wpi::errs() << "Config error in " << file << ": coud not read ntmode: " << e.what() << newline;
