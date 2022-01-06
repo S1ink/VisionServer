@@ -12,29 +12,31 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class VisionServer {
 
+	public final NetworkTable 
+		root, targets, cameras, pipelines;
+	private final NetworkTableEntry 
+		active_target, num_cams, cam_idx, num_pipes, pipe_idx;
+	private ArrayList<VsCamera> vscameras = new ArrayList<VsCamera>();
+	private ArrayList<VsPipeline> vspipelines = new ArrayList<VsPipeline>();
+
 	// singleton
 	private VisionServer() {
+		root = NetworkTableInstance.getDefault().getTable("Vision Server");
+		targets = NetworkTableInstance.getDefault().getTable("Targets");
+		cameras = root.getSubTable("Cameras");
+		pipelines = root.getSubTable("Pipelines");
+
+		active_target = root.getEntry("Active Target");
+		num_cams = root.getEntry("Cameras Available");
+		cam_idx = root.getEntry("Camera Index");
+		num_pipes = root.getEntry("Pipelines Available");
+		pipe_idx = root.getEntry("Pipeline Index");
+
 		this.updateCameras();
 		this.updatePipelines();
 	}
 	public static VisionServer Get() { return VisionServer.global; }
 	private static final VisionServer global = new VisionServer();
-	
-	private ArrayList<VsCamera> vscameras;
-	private ArrayList<VsPipeline> vspipelines;
-
-	public static final NetworkTable 
-		root = NetworkTableInstance.getDefault().getTable("Vision Server"),	// /Vision Server
-		targets = NetworkTableInstance.getDefault().getTable("Targets"),	// /Targets
-		cameras = root.getSubTable("Cameras"),								// /Vision Server/Cameras
-		pipelines = root.getSubTable("Pipelines");							// /Vision Server/Pipelines
-	private static final NetworkTableEntry 
-		active_target = root.getEntry("Active Target"), 
-		num_cams = root.getEntry("Cameras Available"), 
-		cam_idx = root.getEntry("Camera Index"), 
-		num_pipes = root.getEntry("Pipelines Available"), 
-		pipe_idx = root.getEntry("Pipeline Index");
-//		pipe_state = root.getEntry("Enable Pipeline");		// not added to VS source yet
 
 	public void updateCameras() {
 		this.vscameras.clear();
@@ -148,7 +150,7 @@ public class VisionServer {
 			this.name = NetworkTable.basenameKey(nt.getPath());
 		}
 		public void update(String tname) {
-			this.self = VisionServer.cameras.getSubTable(name);
+			this.self = VisionServer.Get().cameras.getSubTable(name);
 			this.name = tname;
 		}
 		public VsCamera(NetworkTable nt) { this.update(nt); }
@@ -184,7 +186,7 @@ public class VisionServer {
 			this.name = NetworkTable.basenameKey(nt.getPath());
 		}
 		public void update(String tname) {
-			this.self = VisionServer.pipelines.getSubTable(tname);
+			this.self = VisionServer.Get().pipelines.getSubTable(tname);
 			this.name = tname;
 		}
 		public VsPipeline(NetworkTable nt) {
@@ -326,12 +328,14 @@ public class VisionServer {
 	private final IncrementPipeline inc_pipeline = new IncrementPipeline();
 	private final DecrementPipeline dec_pipeline = new DecrementPipeline();
 	private final ToggleStatistics toggle_stats = new ToggleStatistics();
+	private final TogglePipeline toggle_pipeline = new TogglePipeline();
 
 	public static IncrementCamera getCameraIncrementCommand() { return global.inc_camera; }
 	public static DecrementCamera getCameraDecrementCommand() { return global.dec_camera; }
 	public static IncrementPipeline getPipelineIncrementCommand() { return global.inc_pipeline; }
 	public static DecrementPipeline getPipelineDecrementCommand() { return global.dec_pipeline; }
 	public static ToggleStatistics getToggleStatisticsCommand() { return global.toggle_stats; }
+	public static TogglePipeline getPipelineToggleCommand() { return global.toggle_pipeline; }
 
 	private class IncrementCamera extends CommandBase {
 		public IncrementCamera() {}
@@ -358,10 +362,10 @@ public class VisionServer {
 		@Override public void initialize() { toggleStatistics(); }
 		@Override public boolean isFinished() { return true; }
 	}
-	private static class TogglePipeline extends CommandBase {
+	private class TogglePipeline extends CommandBase {
 		public TogglePipeline() {}
 		@Override public void initialize() { togglePipelineEnabled(); }
-		@Override public boolean isFinshed() { return true; }
+		@Override public boolean isFinished() { return true; }
 	}
 // 	private static class ToggleDebug extends CommandBase {		// not implemented yet
 }
