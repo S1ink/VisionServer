@@ -12,7 +12,7 @@ var searchData=
   ['getenv_9',['getEnv',['../classVPipeline.html#a0c4e54ef053c015fdc32264f0dec5d32',1,'VPipeline']]],
   ['getexposure_10',['getExposure',['../classVisionCamera.html#a27090c92b4d741c2354cfb73dd182c8e',1,'VisionCamera']]],
   ['getheight_11',['getHeight',['../classVisionCamera.html#ac6fdb27abee65235a2d914e62bcce908',1,'VisionCamera']]],
-  ['getjson_12',['getJson',['../classVisionCamera.html#a3300601eb2f9fa7186ebc8349906d9c5',1,'VisionCamera']]],
+  ['getjson_12',['getJson',['../classVisionCamera.html#ad2283118d1607aa33f5eb82b5b864611',1,'VisionCamera']]],
   ['getname_13',['getName',['../classTarget.html#a38efcfb0aa812201bc9bf62debca8b57',1,'Target::getName()'],['../classVPipeline.html#aa731181fa964d5a0b46a76c751042314',1,'VPipeline::getName()']]],
   ['getpixels_14',['getPixels',['../classVisionCamera.html#a1c15e0ccff5d55c84a946510df61343b',1,'VisionCamera']]],
   ['getrescaled_15',['getRescaled',['../classTarget.html#ab775fd99ca6f13d15c86b15f831c2aa8',1,'Target']]],

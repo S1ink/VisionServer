@@ -118,6 +118,14 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p >Adds a networktable entry to the provided networktable with a listener that will update the variable to match the networktable entry </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">var</td><td>A reference to the boolean variable </td></tr>
+    <tr><td class="paramname">name</td><td>The name of the entry </td></tr>
+    <tr><td class="paramname">table</td><td>The root networktable </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p class="definition">Definition at line <a class="el" href="vision_8cpp_source.html#l00147">147</a> of file <a class="el" href="vision_8cpp_source.html">vision.cpp</a>.</p>
 
@@ -139,7 +147,7 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>file</em>&#160;</td>
+          <td class="paramname"><em>file</em> = <code><a class="el" href="vision_8h.html#a218465907e06aff6d59145fb7e09f46d">_default</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -148,6 +156,14 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p >Reads a config json and creates appropriate VisionCameras in the supplied vector </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cameras</td><td>The output vector in which cameras will be created </td></tr>
+    <tr><td class="paramname">file</td><td>The path to the json, default is "/boot/frc.json" </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>false if there was an error </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="vision_8cpp_source.html#l00006">6</a> of file <a class="el" href="vision_8cpp_source.html">vision.cpp</a>.</p>
 
@@ -169,7 +185,7 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">std::shared_ptr&lt; nt::NetworkTable &gt;&#160;</td>
-          <td class="paramname"><em>table</em>&#160;</td>
+          <td class="paramname"><em>table</em> = <code>nt::NetworkTableInstance::GetDefault().GetTable(&quot;Vision&quot;)</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -178,6 +194,14 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p >Starts a stream and creates a networktable value for changing which camera is streamed </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cameras</td><td>A vector of VisionCameras to be used </td></tr>
+    <tr><td class="paramname">table</td><td>A networktable in which to put the camera index entries </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A cs::CvSink which is is the source for the stream </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="vision_8cpp_source.html#l00121">121</a> of file <a class="el" href="vision_8cpp_source.html">vision.cpp</a>.</p>
 

@@ -214,6 +214,14 @@ template&lt;typename num_t &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
+<p >Adds a networktable entry to the provided networktable with a listener that will update the variable to match the networktable entry </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">var</td><td>A reference to the boolean variable </td></tr>
+    <tr><td class="paramname">name</td><td>The name of the entry </td></tr>
+    <tr><td class="paramname">table</td><td>The root networktable </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p class="definition">Definition at line <a class="el" href="vision_8cpp_source.html#l00147">147</a> of file <a class="el" href="vision_8cpp_source.html">vision.cpp</a>.</p>
 
@@ -252,6 +260,15 @@ template&lt;typename num_t &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
+<p >Adds a networktable entry to the provided networktable with a listener that will update the variable to match the networktable entry </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">num_t</td><td>Any numeric type - does not need to be explicitly provided </td></tr>
+    <tr><td class="paramname">var</td><td>A reference to the numeric variable </td></tr>
+    <tr><td class="paramname">name</td><td>The name of the entry </td></tr>
+    <tr><td class="paramname">table</td><td>The root networktable </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -540,6 +557,14 @@ template&lt;typename num_t &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
+<p >Reads a config json and creates appropriate VisionCameras in the supplied vector </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cameras</td><td>The output vector in which cameras will be created </td></tr>
+    <tr><td class="paramname">file</td><td>The path to the json, default is "/boot/frc.json" </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>false if there was an error </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="vision_8cpp_source.html#l00006">6</a> of file <a class="el" href="vision_8cpp_source.html">vision.cpp</a>.</p>
 
@@ -670,6 +695,14 @@ template&lt;typename num_t &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
+<p >Starts a stream and creates a networktable value for changing which camera is streamed </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cameras</td><td>A vector of VisionCameras to be used </td></tr>
+    <tr><td class="paramname">table</td><td>A networktable in which to put the camera index entries </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A cs::CvSink which is is the source for the stream </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="vision_8cpp_source.html#l00121">121</a> of file <a class="el" href="vision_8cpp_source.html">vision.cpp</a>.</p>
 
@@ -706,7 +739,7 @@ template&lt;typename num_t , size_t s&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00073">73</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00108">108</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
 
 </div>
 </div>
@@ -724,7 +757,7 @@ template&lt;typename num_t &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00075">75</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00110">110</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
 
 </div>
 </div>
