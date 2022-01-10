@@ -14,6 +14,7 @@
 #include "tools/src/resources.h"
 #include "visioncamera.h"
 #include "vision.h"
+#include "defines.h"
 
 class VisionServer;
 

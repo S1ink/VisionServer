@@ -67,6 +67,9 @@ bool readConfig(std::vector<VisionCamera>& cameras, const char* file) {
                 } else {
                     cameras.emplace_back(camera);
                 }
+#ifdef REMOVE_DISCONNECTED_CAMERAS
+                if(!cameras.back().IsConnected()) { cameras.pop_back(); }
+#endif
             }
         }
         catch (const wpi::json::exception& e) {

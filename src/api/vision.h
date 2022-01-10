@@ -9,8 +9,9 @@
 
 #include <type_traits>
 
-#include "visioncamera.h"
 #include "tools/src/resources.h"
+#include "visioncamera.h"
+#include "defines.h"
 
 // helper functions that extend cameraserver and opencv functionality
 

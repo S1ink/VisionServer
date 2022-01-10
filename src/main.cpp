@@ -10,12 +10,10 @@
 #include "api/processing.h"
 #include "api/vision.h"
 
-#include "testing2021.h"
+#include "2021/testing.h"
 
 StopWatch runtime("Runtime", &std::cout, 0);
-void on_exit() {
-	runtime.end();
-}
+void on_exit() { runtime.end(); }
 
 int main(int argc, char* argv[]) {
 	runtime.setStart();
@@ -29,7 +27,7 @@ int main(int argc, char* argv[]) {
 	else { return EXIT_FAILURE; }
 
 	VisionServer server(std::move(cameras));
-	server.runVision<BBoxDemo, SquareTargetPNP, TargetSolver<Test6x6, WeightedSubtraction<VThreshold::LED::BLUE> > >(25);
+	server.runVision<SquareTargetPNP, TargetSolver<Test6x6, WeightedSubtraction<VThreshold::LED::BLUE> >, TargetSolver<Test6x6, WeightedSubtraction<VThreshold::LED::GREEN> > >(25);
 }
 
 // LIST OF THINGS
@@ -43,4 +41,7 @@ x Modularize?
 ? MORE CUSTOM ASSEMBLY!!! :)		<--
 x Target abstraction and generalization (pipeline template param)
 x System for telling the robot when targeting info is outdated
+x Toggle pipeline processing (processing or just streaming)
+- Networktables continuity with multiple class instances
+- Multiple VisionServer processing instances, data protection/management -> vector of threads?
 */

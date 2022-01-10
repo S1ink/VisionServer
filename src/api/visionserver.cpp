@@ -180,8 +180,13 @@ bool VisionServer::updateFromConfig(const char* file) {
                         this->cameras.emplace_back(camera);
                     }
                 } else { this->cameras.emplace_back(camera); }
-				this->cameras.back().setNetworkBase(this->vision);
-				this->cameras.back().setNetworkAdjustable();
+#ifdef REMOVE_DISCONNECTED_CAMERAS
+                if(!this->cameras.back().IsConnected()) { this->cameras.pop_back(); } else
+#endif
+				{
+					this->cameras.back().setNetworkBase(this->vision);
+					this->cameras.back().setNetworkAdjustable();
+				}
         	} 
 			this->vision->PutNumber("Cameras Available", this->cameras.size());
 		}
