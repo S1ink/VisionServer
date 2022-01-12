@@ -4,10 +4,10 @@
 
 #include <vector>
 
-#include "api/weightedsubtraction.h"
-#include "api/visionserver.h"
-#include "api/processing.h"
-#include "api/target.h"
+#include "../api/weightedsubtraction.h"
+#include "../api/visionserver.h"
+#include "../api/processing.h"
+#include "../api/target.h"
 //#include "vision.h"
 
 class Test6x6 : public Target<4> {

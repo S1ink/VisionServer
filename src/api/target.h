@@ -38,14 +38,22 @@ public:
 		bool ext_guess = false, int flags = 0
 	);
 
-private:
+protected:
 	const std::string name;
 	const std::shared_ptr<nt::NetworkTable> table;
 
 	cv::Point2f center, a, b;
-	size_t limit;
 
 };
+
+// template<size_t pts_odd, size_t pts_even>
+// class MultiTarget : public Target<pts_odd>, public Target<pts_even> {
+// public:
+// 	Target2(const std::array<cv::Point3f, pts_odd>& world_1, const std::array<cv::Point3f, pts_even>& world_2);
+// 	Target2(const std::array<cv::Point3f, pts_odd>& world_1, const std::array<cv::Point3f, pts_even>& world_2, const char* name);
+// 	Target2(const std::array<cv::Point3f, pts_odd>& world_1, const std::array<cv::Point3f, pts_even>& world_2, const std::string& name);
+
+// };
 
 
 

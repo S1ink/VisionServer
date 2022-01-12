@@ -23,7 +23,7 @@ template<typename num_t>
 void Target<corners>::sort(const std::vector<cv::Point_<num_t> >& contour) {
 	static_assert(std::is_arithmetic<num_t>::value, "Number type must be arithmetic");
 	this->center = ::findCenter<float, num_t>(contour);
-	size_t limit = corners > contour.size() ? contour.size() : corners;
+	size_t limit = contour.size() < corners ? contour.size() : corners;
 	for(size_t i = 0; i < limit; i++) {
 		this->points[i] = contour[i];
 	}
