@@ -20,7 +20,7 @@ var searchData=
   ['getscale_17',['getScale',['../classVThreshold.html#a71c8fa598f81689c3d5513cf98bd8a6a',1,'VThreshold::getScale()'],['../classWeightedSubtraction.html#a385189eb448982d7eafbe81b1245d5b5',1,'WeightedSubtraction::getScale()']]],
   ['getsetfps_18',['getSetFPS',['../classVisionCamera.html#afc653f4ff28a8c26c62b59b1433c53d3',1,'VisionCamera']]],
   ['getstreamjson_19',['getStreamJson',['../classVisionCamera.html#a2b6df074403cfb38845880cbb1035d01',1,'VisionCamera']]],
-  ['gettable_20',['getTable',['../classVPipeline.html#a4a067e04c13e0c5f1752c1e58ff59a18',1,'VPipeline']]],
+  ['gettable_20',['getTable',['../classVPipeline.html#a4a067e04c13e0c5f1752c1e58ff59a18',1,'VPipeline::getTable()'],['../classTarget.html#a388adf0c800dc77ff054ebcbf1fa620a',1,'Target::getTable()']]],
   ['gettarget_21',['getTarget',['../classContours.html#adf0a7ee38c5814e65b3e14b11dfea6fa',1,'Contours']]],
   ['gettargetidx_22',['getTargetIdx',['../classContours.html#ac07987babf3ccc88d13e32dc9f3d139f',1,'Contours']]],
   ['getthresh_23',['getThresh',['../classWeightedSubtraction.html#a9c6da83da1a81cbba4fc7a9deffef583',1,'WeightedSubtraction']]],
