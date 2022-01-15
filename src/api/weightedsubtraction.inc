@@ -15,6 +15,7 @@ WeightedSubtraction<color>::WeightedSubtraction(VisionServer& server, std::share
 {
 	addNetTableVar(this->weight, "Weight", table);
 	addNetTableVar(this->thresh, "Threshold", table);
+	addNetTableVar(this->scale, "Scaling", table);
 
 	this->resizeBuffers(server.getCurrentResolution());
 }

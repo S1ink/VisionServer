@@ -37,7 +37,7 @@ protected:
 
 	double weight{0.5};
 	uint8_t thresh{50};
-	size_t scale{1};
+	size_t scale{4};
 
 };
 

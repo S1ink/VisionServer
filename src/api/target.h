@@ -39,10 +39,13 @@ public:
 	);
 
 protected:
-	const std::string name;
-	const std::shared_ptr<nt::NetworkTable> table;
+	inline const std::shared_ptr<nt::NetworkTable>& getTable() const { return this->table; }
 
 	cv::Point2f center, a, b;
+
+private:
+	const std::string name;
+	const std::shared_ptr<nt::NetworkTable> table;
 
 };
 

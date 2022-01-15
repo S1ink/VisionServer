@@ -2,7 +2,7 @@
 
 template<typename num_t>
 void addNetTableVar(num_t& var, const wpi::Twine& name, std::shared_ptr<nt::NetworkTable> table) {
-	static_assert(std::is_arithmetic<num_t>::value, "num_t must be a numeric type");
+	static_assert(std::is_arithmetic<num_t>::value, "Template parameter (num_t) must be arithemetic type");
 	if(!table->ContainsKey(name)) {
 		table->PutNumber(name.str(), var);
 	} else {}
@@ -101,6 +101,28 @@ cv::Point3_<onum_t> findCenter3D(const std::vector<cv::Point3_<inum_t> >& contou
 		return ret;
 	}
 	return cv::Point3_<onum_t>();
+}
+
+template<typename num_t>
+cv::Point_<num_t> findCenter(const cv::Rect_<num_t>& rect) {
+	static_assert(std::is_arithmetic<num_t>::value, "Template parameter (num_t) must be arithemetic type");
+	cv::Point_<num_t> ret;
+	ret.x = rect.tl().x + rect.br().x;
+	ret.y = rect.tl().y + rect.br().y;
+	ret.x /= 2;
+	ret.y /= 2;
+	return ret;
+}
+template<typename onum_t, typename inum_t>
+cv::Point_<onum_t> findCenter(const cv::Rect_<inum_t>& rect) {
+	static_assert(std::is_arithmetic<onum_t>::value, "Template parameter (num_t) must be arithemetic type");
+	static_assert(std::is_arithmetic<inum_t>::value, "Template parameter (num_t) must be arithemetic type");
+	cv::Point_<onum_t> ret;
+	ret.x = rect.tl().x + rect.br().x;
+	ret.y = rect.tl().y + rect.br().y;
+	ret.x /= 2;
+	ret.y /= 2;
+	return ret;
 }
 
 template<typename num_t>
