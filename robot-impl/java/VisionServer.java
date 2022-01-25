@@ -53,7 +53,23 @@ public class VisionServer {
 	public ArrayList<VsCamera> getCameras() { return this.vscameras; }
 	public ArrayList<VsPipeline> getPipelines() { return this.vspipelines; }
 	public VsCamera getCamera(int idx) { return idx < this.vscameras.size() ? idx > 0 ? this.vscameras.get(idx) : null : null; }
+	public VsCamera getCamera(String name) {
+		for(int i = 0; i < this.vscameras.size(); i++) {
+			if(this.vscameras.get(i).name.equals(name)) {
+				return this.vscameras.get(i);
+			}
+		}
+		return null;
+	}
 	public VsPipeline getPipeline(int idx) { return idx < this.vspipelines.size() ? idx > 0 ? this.vspipelines.get(idx) : null : null; }
+	public VsPipeline getPipeline(String name) {
+		for(int i = 0; i < this.vspipelines.size(); i++) {
+			if(this.vspipelines.get(i).name.equals(name)) {
+				return this.vspipelines.get(i);
+			}
+		}
+		return null;
+	}
 	public VsCamera getCurrentCamera() { return this.getCamera(this.getCameraIdx()); }
 	public VsPipeline getCurrentPipeline() { return this.getPipeline(this.getPipelineIdx()); }
 
