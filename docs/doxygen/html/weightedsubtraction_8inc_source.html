@@ -86,56 +86,57 @@ $(function() {
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>{</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    <a class="code hl_function" href="vision_8cpp.html#a26de0e4f8dd58fbfbf661cc70d3847f4">addNetTableVar</a>(this-&gt;weight, <span class="stringliteral">&quot;Weight&quot;</span>, table);</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    <a class="code hl_function" href="vision_8cpp.html#a26de0e4f8dd58fbfbf661cc70d3847f4">addNetTableVar</a>(this-&gt;thresh, <span class="stringliteral">&quot;Threshold&quot;</span>, table);</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    this-&gt;resizeBuffers(server.<a class="code hl_function" href="classVisionServer.html#af0d14746a5eefcf09fd6d29a60a26171">getCurrentResolution</a>());</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>}</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">template</span>&lt;VThreshold::LED color&gt;</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keywordtype">void</span> <a class="code hl_function" href="classWeightedSubtraction.html#a497976a53361834e9b06eb5e66cef1c8">WeightedSubtraction&lt;color&gt;::resizeBuffers</a>(cv::Size size) {</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    this-&gt;buffer = cv::Mat(size/this-&gt;scale, CV_8UC3);</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    this-&gt;binary = cv::Mat(size/this-&gt;scale, CV_8UC1);</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <span class="keywordflow">for</span>(<span class="keywordtype">size_t</span> i = 0; i &lt; this-&gt;channels.size(); i++) {</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        channels[i] = cv::Mat(size/this-&gt;scale, CV_8UC1);</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    }</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>}</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">template</span>&lt;VThreshold::LED color&gt;</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">const</span> cv::Mat&amp; <a class="code hl_function" href="classWeightedSubtraction.html#af127d5b6aca67b7aa9da0d6235bfa93d">WeightedSubtraction&lt;color&gt;::threshold</a>(<span class="keyword">const</span> cv::Mat&amp; io_frame) {</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="keywordflow">if</span>(io_frame.size() != this-&gt;buffer.size()*(<span class="keywordtype">int</span>)this-&gt;scale) {</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        this-&gt;resizeBuffers(io_frame.size());</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    }</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    cv::resize(io_frame, this-&gt;buffer, cv::Size(), 1.0/this-&gt;scale, 1.0/this-&gt;scale);</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    cv::split(this-&gt;buffer, this-&gt;channels);</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    cv::addWeighted(this-&gt;channels[weighted_array[(uint8_t)color][0]], this-&gt;weight, this-&gt;channels[weighted_array[(uint8_t)color][1]], this-&gt;weight, 0.0, this-&gt;binary);</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    cv::subtract(this-&gt;channels[(uint8_t)color], this-&gt;binary, this-&gt;binary);</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <a class="code hl_function" href="mem_8h.html#a551e6aa9b017cf6b6e5a15788db597f5">memcpy_threshold_binary_asm</a>(this-&gt;binary.data, this-&gt;binary.data, this-&gt;binary.size().area(), this-&gt;thresh);</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keywordflow">return</span> this-&gt;binary;</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>}</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="keyword">template</span>&lt;VThreshold::LED color&gt;</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="keywordtype">void</span> <a class="code hl_function" href="classWeightedSubtraction.html#aa337bd6a682d12e3304d9aa326eadc15">WeightedSubtraction&lt;color&gt;::fromBinary</a>(cv::Mat&amp; o_frame)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    cv::cvtColor(this-&gt;binary, this-&gt;buffer, cv::COLOR_GRAY2BGR, 3);</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    cv::resize(this-&gt;buffer, o_frame, cv::Size(), this-&gt;scale, this-&gt;scale, cv::INTER_NEAREST);</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>}</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="keyword">template</span>&lt;VThreshold::LED color&gt;</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="keywordtype">size_t</span> <a class="code hl_function" href="classWeightedSubtraction.html#a385189eb448982d7eafbe81b1245d5b5">WeightedSubtraction&lt;color&gt;::getScale</a>()<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keywordflow">return</span> this-&gt;scale;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>}</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="keyword">template</span>&lt;VThreshold::LED color&gt;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>uint8_t <a class="code hl_function" href="classWeightedSubtraction.html#a9c6da83da1a81cbba4fc7a9deffef583">WeightedSubtraction&lt;color&gt;::getThresh</a>()<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keywordflow">return</span> this-&gt;thresh;</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>}</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="keyword">template</span>&lt;VThreshold::LED color&gt;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="keywordtype">void</span> <a class="code hl_function" href="classWeightedSubtraction.html#a43f74b98fd04deff460c25108d4c7d2a">WeightedSubtraction&lt;color&gt;::setThresh</a>(uint8_t t) {</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    this-&gt;thresh = t;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>}</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="keyword">template</span>&lt;VThreshold::LED color&gt;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="keywordtype">double</span> <a class="code hl_function" href="classWeightedSubtraction.html#ae3ccc860b6b3707c5c60c2395161fc29">WeightedSubtraction&lt;color&gt;::getWeight</a>()<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keywordflow">return</span> this-&gt;weight;</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>}</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="keyword">template</span>&lt;VThreshold::LED color&gt;</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="keywordtype">void</span> <a class="code hl_function" href="classWeightedSubtraction.html#ab9a5d5007a4f3fd9026c4d4c16fb301e">WeightedSubtraction&lt;color&gt;::setWeight</a>(<span class="keywordtype">double</span> w) {</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    this-&gt;weight = w;</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>}</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    <a class="code hl_function" href="vision_8cpp.html#a26de0e4f8dd58fbfbf661cc70d3847f4">addNetTableVar</a>(this-&gt;scale, <span class="stringliteral">&quot;Scaling&quot;</span>, table);</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    this-&gt;resizeBuffers(server.<a class="code hl_function" href="classVisionServer.html#af0d14746a5eefcf09fd6d29a60a26171">getCurrentResolution</a>());</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>}</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">template</span>&lt;VThreshold::LED color&gt;</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keywordtype">void</span> <a class="code hl_function" href="classWeightedSubtraction.html#a497976a53361834e9b06eb5e66cef1c8">WeightedSubtraction&lt;color&gt;::resizeBuffers</a>(cv::Size size) {</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    this-&gt;buffer = cv::Mat(size/this-&gt;scale, CV_8UC3);</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    this-&gt;binary = cv::Mat(size/this-&gt;scale, CV_8UC1);</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="keywordflow">for</span>(<span class="keywordtype">size_t</span> i = 0; i &lt; this-&gt;channels.size(); i++) {</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        channels[i] = cv::Mat(size/this-&gt;scale, CV_8UC1);</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    }</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>}</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">template</span>&lt;VThreshold::LED color&gt;</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">const</span> cv::Mat&amp; <a class="code hl_function" href="classWeightedSubtraction.html#af127d5b6aca67b7aa9da0d6235bfa93d">WeightedSubtraction&lt;color&gt;::threshold</a>(<span class="keyword">const</span> cv::Mat&amp; io_frame) {</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="keywordflow">if</span>(io_frame.size() != this-&gt;buffer.size()*(<span class="keywordtype">int</span>)this-&gt;scale) {</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        this-&gt;resizeBuffers(io_frame.size());</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    }</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    cv::resize(io_frame, this-&gt;buffer, cv::Size(), 1.0/this-&gt;scale, 1.0/this-&gt;scale);</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    cv::split(this-&gt;buffer, this-&gt;channels);</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    cv::addWeighted(this-&gt;channels[weighted_array[(uint8_t)color][0]], this-&gt;weight, this-&gt;channels[weighted_array[(uint8_t)color][1]], this-&gt;weight, 0.0, this-&gt;binary);</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    cv::subtract(this-&gt;channels[(uint8_t)color], this-&gt;binary, this-&gt;binary);</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <a class="code hl_function" href="mem_8h.html#a551e6aa9b017cf6b6e5a15788db597f5">memcpy_threshold_binary_asm</a>(this-&gt;binary.data, this-&gt;binary.data, this-&gt;binary.size().area(), this-&gt;thresh);</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keywordflow">return</span> this-&gt;binary;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>}</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="keyword">template</span>&lt;VThreshold::LED color&gt;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="keywordtype">void</span> <a class="code hl_function" href="classWeightedSubtraction.html#aa337bd6a682d12e3304d9aa326eadc15">WeightedSubtraction&lt;color&gt;::fromBinary</a>(cv::Mat&amp; o_frame)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    cv::cvtColor(this-&gt;binary, this-&gt;buffer, cv::COLOR_GRAY2BGR, 3);</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    cv::resize(this-&gt;buffer, o_frame, cv::Size(), this-&gt;scale, this-&gt;scale, cv::INTER_NEAREST);</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>}</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="keyword">template</span>&lt;VThreshold::LED color&gt;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="keywordtype">size_t</span> <a class="code hl_function" href="classWeightedSubtraction.html#a385189eb448982d7eafbe81b1245d5b5">WeightedSubtraction&lt;color&gt;::getScale</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordflow">return</span> this-&gt;scale;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>}</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="keyword">template</span>&lt;VThreshold::LED color&gt;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>uint8_t <a class="code hl_function" href="classWeightedSubtraction.html#a9c6da83da1a81cbba4fc7a9deffef583">WeightedSubtraction&lt;color&gt;::getThresh</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keywordflow">return</span> this-&gt;thresh;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>}</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="keyword">template</span>&lt;VThreshold::LED color&gt;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="keywordtype">void</span> <a class="code hl_function" href="classWeightedSubtraction.html#a43f74b98fd04deff460c25108d4c7d2a">WeightedSubtraction&lt;color&gt;::setThresh</a>(uint8_t t) {</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    this-&gt;thresh = t;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>}</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="keyword">template</span>&lt;VThreshold::LED color&gt;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="keywordtype">double</span> <a class="code hl_function" href="classWeightedSubtraction.html#ae3ccc860b6b3707c5c60c2395161fc29">WeightedSubtraction&lt;color&gt;::getWeight</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keywordflow">return</span> this-&gt;weight;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>}</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="keyword">template</span>&lt;VThreshold::LED color&gt;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="keywordtype">void</span> <a class="code hl_function" href="classWeightedSubtraction.html#ab9a5d5007a4f3fd9026c4d4c16fb301e">WeightedSubtraction&lt;color&gt;::setWeight</a>(<span class="keywordtype">double</span> w) {</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    this-&gt;weight = w;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>}</div>
 <div class="ttc" id="aclassVThreshold_html"><div class="ttname"><a href="classVThreshold.html">VThreshold</a></div><div class="ttdef"><b>Definition:</b> <a href="processing_8h_source.html#l00011">processing.h:11</a></div></div>
 <div class="ttc" id="aclassVisionServer_html"><div class="ttname"><a href="classVisionServer.html">VisionServer</a></div><div class="ttdef"><b>Definition:</b> <a href="visionserver_8h_source.html#l00128">visionserver.h:128</a></div></div>
 <div class="ttc" id="aclassVisionServer_html_af0d14746a5eefcf09fd6d29a60a26171"><div class="ttname"><a href="classVisionServer.html#af0d14746a5eefcf09fd6d29a60a26171">VisionServer::getCurrentResolution</a></div><div class="ttdeci">cv::Size getCurrentResolution() const</div><div class="ttdef"><b>Definition:</b> <a href="visionserver_8cpp_source.html#l00211">visionserver.cpp:211</a></div></div>

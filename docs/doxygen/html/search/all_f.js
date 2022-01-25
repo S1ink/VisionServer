@@ -24,5 +24,6 @@ var searchData=
   ['stats_2ecpp_21',['stats.cpp',['../stats_8cpp.html',1,'']]],
   ['stopvision_22',['stopVision',['../classVisionServer.html#ad1e752321328d5bf1e9882e05e9d7c89',1,'VisionServer']]],
   ['stream_23',['stream',['../classVisionServer.html#a80efe158452652ff64b287a1836fc103',1,'VisionServer']]],
-  ['switchedcameravision_24',['switchedCameraVision',['../vision_8cpp.html#aaaff09fde08179d16fe5e301abc7be7c',1,'switchedCameraVision(const std::vector&lt; VisionCamera &gt; &amp;cameras, std::shared_ptr&lt; nt::NetworkTable &gt; table):&#160;vision.cpp'],['../vision_8h.html#a6aece20ba8f156f2415b29849dadeb66',1,'switchedCameraVision(const std::vector&lt; VisionCamera &gt; &amp;cameras, std::shared_ptr&lt; nt::NetworkTable &gt; table=nt::NetworkTableInstance::GetDefault().GetTable(&quot;Vision&quot;)):&#160;vision.cpp']]]
+  ['swapidx_24',['swapIdx',['../vision_8h.html#a6131dde83902a4fbe13f1814d44af392',1,'vision.h']]],
+  ['switchedcameravision_25',['switchedCameraVision',['../vision_8cpp.html#aaaff09fde08179d16fe5e301abc7be7c',1,'switchedCameraVision(const std::vector&lt; VisionCamera &gt; &amp;cameras, std::shared_ptr&lt; nt::NetworkTable &gt; table):&#160;vision.cpp'],['../vision_8h.html#a6aece20ba8f156f2415b29849dadeb66',1,'switchedCameraVision(const std::vector&lt; VisionCamera &gt; &amp;cameras, std::shared_ptr&lt; nt::NetworkTable &gt; table=nt::NetworkTableInstance::GetDefault().GetTable(&quot;Vision&quot;)):&#160;vision.cpp']]]
 ];
