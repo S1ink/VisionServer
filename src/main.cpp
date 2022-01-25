@@ -10,7 +10,7 @@
 #include "api/processing.h"
 #include "api/vision.h"
 
-//#include "2021/testing.h"
+#include "2021/testing.h"
 #include "2022/rapidreact.h"
 
 StopWatch runtime("Runtime", &std::cout, 0);
@@ -29,7 +29,7 @@ int main(int argc, char* argv[]) {
 
 	VisionServer server(std::move(cameras));
 	//server.runVision<SquareTargetPNP, TargetSolver<Test6x6, WeightedSubtraction<VThreshold::LED::BLUE> >, TargetSolver<Test6x6, WeightedSubtraction<VThreshold::LED::GREEN> > >(25);
-	server.runVision<StripFinder<VThreshold::LED::BLUE> >(25);
+	server.runVision<TargetSolver<Test6x6, WeightedSubtraction<VThreshold::LED::BLUE> >, StripFinder<VThreshold::LED::BLUE> >(25);
 }
 
 // LIST OF THINGS

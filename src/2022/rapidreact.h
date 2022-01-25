@@ -72,6 +72,11 @@ protected:
 	void matchWorld();
 
 private:
+	std::array<cv::Mat, 2> tvecs, rvecs;
+	// cv::Mat_<float>
+	// 	tstart = (cv::Mat_<float>(1, 3) << -5.377486299340092, 87.15036371545433, 124.0995064393181),
+	// 	rstart = (cv::Mat_<float>(1, 3) << 2.928241467489054, -0.2228350190508827, -0.05335716651782262);
+
 	std::vector<cv::Point2f> points;
 	std::vector<cv::Point3f> world_match;
 	const std::array<cv::Point3f, 6> world{		// left to right

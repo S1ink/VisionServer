@@ -20,11 +20,12 @@ void UpperHub::sort(std::vector<cv::Rect_<num_t> >& contour) {
 			sample_width = contour[i].width;
 		}
 	}
+	sample_width *= 2;
 	size_t world_idx = 0;
 	for(size_t i = 1; i <= this->points.size() && world_idx < this->world.size(); i++) {
 		this->world_match[i-1] = this->world[world_idx];
 		if(i < this->points.size()) {
-			world_idx += (size_t)((std::abs(this->points[i].x - this->points[i-1].x)/sample_width)+1.f)/2;
+			world_idx += (size_t)((std::abs(this->points[i].x - this->points[i-1].x)/sample_width)+0.5f);	// find distance, divide by width, round
 		}
 	}
 }
@@ -115,7 +116,7 @@ void StripFinder<color>::process(cv::Mat& io_frame, int8_t mode) {
 					cv::putText(io_frame, std::to_string(i), this->target.getPoints()[i], cv::FONT_HERSHEY_DUPLEX, 0.75, cv::Scalar(255, 0, 255));
 					cv::circle(io_frame, this->target.getPoints()[i], 0, cv::Scalar(255, 255, 0), 2);
 				}
-				this->target.solvePerspective(this->tvec, this->rvec, this->getCameraMatrix(), this->getCameraDistortion());
+				this->target.solvePerspective(this->tvec, this->rvec, this->getCameraMatrix(), this->getCameraDistortion(), cv::SOLVEPNP_IPPE);
 				this->updateTarget(this->target.getName());
 
 				cv::projectPoints(this->pose3D, this->rvec, this->tvec, this->getCameraMatrix(), this->getCameraDistortion(), this->pose2D);

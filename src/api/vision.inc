@@ -19,18 +19,21 @@ void addNetTableVar(num_t& var, const wpi::Twine& name, std::shared_ptr<nt::Netw
 
 template<typename num_t>
 void rescale(std::vector<cv::Point_<num_t> >& points, size_t scale) {
+	static_assert(std::is_arithmetic<num_t>::value, "Template parameter (num_t) must be arithemetic type");
 	for(size_t i = 0; i < points.size(); i++) {
 		points[i] *= (int)scale;
 	}
 }
 template<typename num_t>
 void _rescale(std::vector<cv::Point_<num_t> >& points, size_t scale) {
+	static_assert(std::is_arithmetic<num_t>::value, "Template parameter (num_t) must be arithemetic type");
 	for(size_t i = 0; i < points.size(); i++) {
 		points[i] /= (int)scale;
 	}
 }
 template<typename num_t>
 void rescale(std::vector<cv::Point_<num_t> >& points, double scale) {
+	static_assert(std::is_arithmetic<num_t>::value, "Template parameter (num_t) must be arithemetic type");
 	for(size_t i = 0; i < points.size(); i++) {
 		points[i] *= scale;
 	}
