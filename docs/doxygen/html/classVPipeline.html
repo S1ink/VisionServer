@@ -112,6 +112,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aebdfb82616524a92306e1aa75ba992c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acd7969a2cf4393d203441f84a77508e3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVPipeline.html#acd7969a2cf4393d203441f84a77508e3">updateTarget</a> (const std::string &amp;target)</td></tr>
 <tr class="separator:acd7969a2cf4393d203441f84a77508e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4907c5b76c40898f9a68ff26a56270a8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classVisionCamera.html">VisionCamera</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVPipeline.html#a4907c5b76c40898f9a68ff26a56270a8">getCurrentCamera</a> ()</td></tr>
+<tr class="separator:a4907c5b76c40898f9a68ff26a56270a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -343,6 +345,26 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a4907c5b76c40898f9a68ff26a56270a8" name="a4907c5b76c40898f9a68ff26a56270a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4907c5b76c40898f9a68ff26a56270a8">&#9670;&nbsp;</a></span>getCurrentCamera()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classVisionCamera.html">VisionCamera</a> &amp; VPipeline::getCurrentCamera </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Get access to the current camera source </p><dl class="section return"><dt>Returns</dt><dd>The camera as a <a class="el" href="classVisionCamera.html">VisionCamera</a> </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="visionserver_8cpp_source.html#l00036">36</a> of file <a class="el" href="visionserver_8cpp_source.html">visionserver.cpp</a>.</p>
+
+</div>
+</div>
 <a id="a0c4e54ef053c015fdc32264f0dec5d32" name="a0c4e54ef053c015fdc32264f0dec5d32"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0c4e54ef053c015fdc32264f0dec5d32">&#9670;&nbsp;</a></span>getEnv()</h2>
 
@@ -359,7 +381,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >Get the <a class="el" href="classVisionServer.html">VisionServer</a> instance that the pipeline was created with </p><dl class="section return"><dt>Returns</dt><dd>A const pointer to the <a class="el" href="classVisionServer.html">VisionServer</a> isntance </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8cpp_source.html#l00042">42</a> of file <a class="el" href="visionserver_8cpp_source.html">visionserver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8cpp_source.html#l00045">45</a> of file <a class="el" href="visionserver_8cpp_source.html">visionserver.cpp</a>.</p>
 
 </div>
 </div>
@@ -379,7 +401,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >Get the pipeline name </p><dl class="section return"><dt>Returns</dt><dd>The name of the pipeline </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8cpp_source.html#l00036">36</a> of file <a class="el" href="visionserver_8cpp_source.html">visionserver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8cpp_source.html#l00039">39</a> of file <a class="el" href="visionserver_8cpp_source.html">visionserver.cpp</a>.</p>
 
 </div>
 </div>
@@ -399,7 +421,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >Get the underlying networktable for the pipeline </p><dl class="section return"><dt>Returns</dt><dd>A const shared pointer to the pipeline's networktable </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8cpp_source.html#l00039">39</a> of file <a class="el" href="visionserver_8cpp_source.html">visionserver.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8cpp_source.html#l00042">42</a> of file <a class="el" href="visionserver_8cpp_source.html">visionserver.cpp</a>.</p>
 
 </div>
 </div>
@@ -523,7 +545,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >A pointer to the surrounding <a class="el" href="classVisionServer.html">VisionServer</a> instance </p>
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00104">104</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00109">109</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 
 </div>
 </div>
@@ -548,7 +570,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >The pipeline's name </p>
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00100">100</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00105">105</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 
 </div>
 </div>
@@ -573,7 +595,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >A networktable for the pipeline </p>
 
-<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00102">102</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visionserver_8h_source.html#l00107">107</a> of file <a class="el" href="visionserver_8h_source.html">visionserver.h</a>.</p>
 
 </div>
 </div>
