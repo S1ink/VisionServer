@@ -33,6 +33,9 @@ const cv::Mat_<float>& VPipeline::getCameraDistortion() const {
 void VPipeline::updateTarget(const std::string& target) {
 	this->env->updateTarget(target);
 }
+VisionCamera& VPipeline::getCurrentCamera() {
+	return this->env->getCurrentCamera();
+}
 const std::string& VPipeline::getName() const {
 	return this->name;
 }
@@ -57,10 +60,11 @@ VisionServer::VisionServer(const char* file) {
 	this->updateFromConfig(file);
 
 	this->vision->PutNumber("Camera Index", 0);
+	this->vision->PutString("Camera Name", this->cameras[0].GetName());
 	//this->vision->PutNumber("Cameras Available", cameras.size());
 
-	this->source = cameras[0].getVideo();
-	this->output = cs::CvSource("Vision Stream", cameras[0].GetVideoMode());
+	this->source = this->cameras[0].getVideo();
+	this->output = cs::CvSource("Vision Stream", this->cameras[0].GetVideoMode());
 	this->stream = frc::CameraServer::GetInstance()->AddServer("Vision Output");
 	this->stream.SetSource(this->output);
 	
@@ -68,10 +72,11 @@ VisionServer::VisionServer(const char* file) {
 		[this](const nt::EntryNotification& event) {
 			if(event.value->IsDouble()) {
 				size_t idx = event.value->GetDouble();
-				if(idx >= 0 && idx < cameras.size()) {
+				if(idx >= 0 && idx < this->cameras.size()) {
 					this->source.SetSource(cameras[idx]);
-					cameras[idx].getCameraMatrix(this->camera_matrix);
-					cameras[idx].getDistortion(this->distortion);
+					this->vision->GetEntry("Camera Name").SetString(this->cameras[idx].GetName());
+					this->cameras[idx].getCameraMatrix(this->camera_matrix);
+					this->cameras[idx].getDistortion(this->distortion);
 				}
 			}
 		},
@@ -84,6 +89,7 @@ VisionServer::VisionServer(std::vector<VisionCamera>&& cameras) : cameras(std::m
 		this->cameras[i].setNetworkAdjustable();
 	}
 	this->vision->PutNumber("Camera Index", 0);
+	this->vision->PutString("Camera Name", this->cameras[0].GetName());
 	this->vision->PutNumber("Cameras Available", this->cameras.size());
 
 	this->source = this->cameras[0].getVideo();
@@ -97,6 +103,7 @@ VisionServer::VisionServer(std::vector<VisionCamera>&& cameras) : cameras(std::m
 				size_t idx = event.value->GetDouble();
 				if(idx >= 0 && idx < this->cameras.size()) {
 					this->source.SetSource(this->cameras[idx]);
+					this->vision->GetEntry("Camera Name").SetString(this->cameras[idx].GetName());
 					this->cameras[idx].getCameraMatrix(this->camera_matrix);
 					this->cameras[idx].getDistortion(this->distortion);
 					//this->stream.SetConfigJson(cameras[idx].getStreamJson());
@@ -118,6 +125,7 @@ VisionServer::VisionServer(std::vector<VisionCamera>&& cameras) : cameras(std::m
 }
 VisionServer::~VisionServer() {
 	this->vision->Delete("Camera Index");
+	this->vision->Delete("Camera Name");
 	this->vision->Delete("Cameras Available");
 }
 
@@ -313,6 +321,9 @@ const cv::Mat_<float>& VisionServer::getDistortion() const {
 
 void VisionServer::updateTarget(const std::string& target) {
 	this->active_target.setTarget(target);
+}
+VisionCamera& VisionServer::getCurrentCamera() {
+	return this->cameras.at(this->vision->GetEntry("Camera Index").GetDouble(0));
 }
 
 VisionServer::TargetInfo::TargetInfo(const std::shared_ptr<nt::NetworkTable> table) : ttable(table) {}

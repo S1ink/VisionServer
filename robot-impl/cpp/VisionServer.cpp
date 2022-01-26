@@ -32,22 +32,80 @@ void VisionServer::updatePipelines() {
 		this->vspipelines.emplace_back(subtable);
 	}
 }
+std::vector<VisionServer::VsCamera>& VisionServer::getCameras() { 
+	if(!this->areCamerasUpdated()) { 
+		this->updateCameras(); 
+	}
+	return this->vscameras; 
+}
+std::vector<VisionServer::VsPipeline>& VisionServer::getPipelines() { 
+	if(!this->arePipelinesUpdated()) { 
+		this->updatePipelines(); 
+	}
+	return this->vspipelines; 
+}
+VisionServer::VsCamera* VisionServer::getCamera(size_t idx) { 
+	if(!this->areCamerasUpdated()) { 
+		this->updateCameras(); 
+	}
+	return idx < this->vscameras.size() ? &this->vscameras[idx] : nullptr; 
+}
+VisionServer::VsCamera* VisionServer::getCamera(const std::string& name) {
+	if(!this->areCamerasUpdated()) { 
+		this->updateCameras(); 
+	}
+	for(size_t i = 0; i < this->vscameras.size(); i++) {
+		if(this->vscameras[i].getName() == name) {
+			return &this->vscameras[i];
+		}
+	}
+	return nullptr;
+}
+VisionServer::VsPipeline* VisionServer::getPipeline(size_t idx) { 
+	if(!this->arePipelinesUpdated()) { 
+		this->updatePipelines(); 
+	}
+	return idx < this->vspipelines.size() ? &this->vspipelines[idx] : nullptr; 
+}
+VisionServer::VsPipeline* VisionServer::getPipeline(const std::string& name) {
+	if(!this->arePipelinesUpdated()) { 
+		this->updatePipelines(); 
+	}
+	for(size_t i = 0; i < this->vspipelines.size(); i++) {
+		if(this->vspipelines[i].getName() == name) {
+			return &this->vspipelines[i];
+		}
+	}
+	return nullptr;
+}
+VisionServer::VsCamera& VisionServer::getCurrentCamera() { 
+	if(!this->areCamerasUpdated()) { 
+		this->updateCameras(); 
+	}
+	return *this->getCamera(this->root->GetEntry("Camera Name").GetString("none")); 
+}
+VisionServer::VsPipeline& VisionServer::getCurrentPipeline() { 
+	if(!this->arePipelinesUpdated()) { 
+		this->updatePipelines(); 
+	}
+	return *this->getPipeline(this->getPipelineIdx()); 
+}
 
-bool VisionServer::getIsPipelineEnabled() {
-	if(root->ContainsKey("Enable Pipeline")) {
+bool VisionServer::getIsPipelineEnabled() const {
+	if(root->ContainsKey("Enable Processing")) {
 		return root->GetEntry("Enable Processing").GetBoolean(true);
 	}
 	return false;
 }
 bool VisionServer::setPipelineEnabled(bool val) {
-	if(root->ContainsKey("Enable Pipeline")) {
-		return root->GetEntry("Enable Pipeline").SetBoolean(val);
+	if(root->ContainsKey("Enable Processing")) {
+		return root->GetEntry("Enable Processing").SetBoolean(val);
 	}
 	return false;
 }
 bool VisionServer::togglePipelineEnabled() {
-	if(root->ContainsKey("Enable Pipeline")) {
-		nt::NetworkTableEntry enbl = root->GetEntry("Enable Pipeline");
+	if(root->ContainsKey("Enable Processing")) {
+		nt::NetworkTableEntry enbl = root->GetEntry("Enable Processing");
 		return enbl.SetBoolean(!enbl.GetBoolean(true));
 	}
 	return false;

@@ -7,5 +7,5 @@
 	url = https://github.com/S1ink/Cpp-Tools/
 
 [submodule "robot-impl"]
-	path = robot-impl/
+	path = robot-impl
 	url = https://github.com/S1ink/VisionServer-Robot/

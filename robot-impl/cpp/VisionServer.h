@@ -27,20 +27,24 @@ public:
 
 	static VisionServer& Get();
 
+	inline bool areCamerasUpdated() const { return this->vscameras.size() == (size_t)this->num_cams.GetDouble(0.0); }
+	inline bool arePipelinesUpdated() const { return this->vspipelines.size() == (size_t)this->num_pipes.GetDouble(0.0); }
 	void updateCameras();
 	void updatePipelines();
-	inline std::vector<VsCamera>& getCameras() { return this->vscameras; }
-	inline std::vector<VsPipeline>& getPipelines() { return this->vspipelines; }
-	inline VsCamera* getCamera(size_t idx) { return idx < this->vscameras.size() ? &this->vscameras[idx] : nullptr; }	// returns nullptr on oob error
-	inline VsPipeline* getPipeline(size_t idx) { return idx < this->vspipelines.size() ? &this->vspipelines[idx] : nullptr; }	// returns nullptr on oob error
-	inline VsCamera& getCurrentCamera() { return *this->getCamera(this->getCameraIdx()); }	// could possibly segfault if the index isn't up to date, but this is unlikely
-	inline VsPipeline& getCurrentPipeline() { return *this->getPipeline(this->getPipelineIdx()); }	//^
+	std::vector<VsCamera>& getCameras();
+	std::vector<VsPipeline>& getPipelines();
+	VsCamera* getCamera(size_t idx);	// returns nullptr on oob error
+	VsCamera* getCamera(const std::string& name);
+	VsPipeline* getPipeline(size_t idx);	// returns nullptr on oob error
+	VsPipeline* getPipeline(const std::string& name);
+	VsCamera& getCurrentCamera();	// could possibly segfault if the index isn't up to date, but this is unlikely
+	VsPipeline& getCurrentPipeline();	//^
 
 	inline bool getIsShowingStatistics() const { return root->GetEntry("Show Statistics").GetBoolean(false); }
 	inline void setStatistics(bool val) { root->GetEntry("Show Statistics").SetBoolean(val); }
 	inline void toggleStatistics() { this->setStatistics(!this->getIsShowingStatistics()); }
 
-	bool getIsPipelineEnabled();
+	bool getIsPipelineEnabled() const;
 	bool setPipelineEnabled(bool val);
 	bool togglePipelineEnabled();
 
