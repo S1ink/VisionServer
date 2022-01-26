@@ -6,6 +6,6 @@
 	path = references/tools
 	url = https://github.com/S1ink/Cpp-Tools/
 
-[submodule "robot-impl"]
-	path = robot-impl
+[submodule "robot-impl/submodule"]
+	path = robot-impl/submodule
 	url = https://github.com/S1ink/VisionServer-Robot/
