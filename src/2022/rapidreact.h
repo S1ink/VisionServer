@@ -97,7 +97,6 @@ private:
 	};
 
 };
-
 template<VThreshold::LED color>
 class StripFinder : public VPipeline, public WeightedSubtraction<color>, public Contours {
 public:
@@ -118,6 +117,83 @@ private:
 
 	cv::Mat_<float> rvec = cv::Mat_<float>(1, 3), tvec = rvec/*, rmat = cv::Mat_<float>(3, 3)*/;
 
+};
+
+enum class CargoColor {
+	NONE = 0b00,
+	RED = 0b01,
+	BLUE = 0b10
+};
+struct CargoOutline {
+	CargoOutline() {}
+	CargoOutline(cv::Point c, double r) : center(c), radius(r) {}
+	CargoOutline(cv::Point c, double r, CargoColor color) : center(c), radius(r), color(color) {}
+
+	cv::Point2f center;
+	float radius{0.0};
+	CargoColor color{CargoColor::NONE};
+};
+
+class Cargo : public Target<3> {
+public:
+	Cargo(size_t ball_num, CargoColor color) : Target<3>({	// in inches
+		cv::Point3f(-4.75f, 0.f, 0.f),
+		cv::Point3f(0.f, 4.75f, 0.f),
+		cv::Point3f(4.75f, 0.f, 0.f)
+	}, "Cargo-" + std::to_string(ball_num) + ((uint)color == 1 ? 'r' : 'b')) {}
+	Cargo(const Cargo& other) = delete;
+
+	template<typename num_t>
+	inline bool compatible(const std::vector<cv::Point_<num_t> >& contour) const { return this->size() == contour.size(); }
+	// template<typename num_t>
+	// void sort(std::vector<cv::Point_<num_t> >& points);
+	//template<typename num_t>
+	void sort(CargoOutline outline);
+
+	// void solvePerspective(
+	// 	cv::Mat_<float>& tvec, cv::Mat_<float>& rvec,
+	// 	cv::InputArray camera_matrix, cv::InputArray camera_coeffs,
+	// 	int flags = cv::SOLVEPNP_ITERATIVE, bool ext_guess = false
+	// );
+
+private:
+
+};
+class CargoFinder : public VPipeline, public WeightedSubtraction<VThreshold::LED::RED> {
+public:
+	CargoFinder(VisionServer& server);
+	CargoFinder(const CargoFinder& other) = delete;
+
+	void process(cv::Mat& io_frame, int8_t mode = 0) override;
+
+protected:
+	class RedFinder : public Contours {
+	public:
+		RedFinder(CargoFinder& env) : env(&env) {}
+
+		void threshold();
+
+		std::vector<std::vector<cv::Point> > filtered;
+		CargoFinder* env;
+
+	} red;
+	class BlueFinder : public Contours {
+	public:
+		BlueFinder(CargoFinder& env) : env(&env) {}
+
+		void threshold();
+
+		std::vector<std::vector<cv::Point> > filtered;
+		CargoFinder* env;
+
+	} blue;
+
+	//std::vector<Cargo> balls;
+	std::vector<CargoOutline> filtered;
+	std::vector<cv::Point> point_buffer;
+	CargoOutline outline_buffer;
+	double max_val = 0.0;
+	
 };
 
 #include "rapidreact.inc"

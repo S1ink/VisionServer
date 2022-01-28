@@ -18,6 +18,7 @@ public:
 	Target(const std::array<cv::Point3f, corners>& world_pts);
 	Target(const std::array<cv::Point3f, corners>& world_pts, const char* name);
 	Target(const std::array<cv::Point3f, corners>& world_pts, const std::string& name);
+	//virtual ~Target() {}	// delete nt entries
 
 	std::array<cv::Point2f, corners> points;		// actual points 
 	const std::array<cv::Point3f, corners> world;	// world points that relate to the above 
