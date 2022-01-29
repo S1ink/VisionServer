@@ -4,11 +4,15 @@
 
 #include <vector>
 #include <array>
+#include <thread>
 
 #include "../api/weightedsubtraction.h"
 #include "../api/visionserver.h"
 #include "../api/processing.h"
 #include "../api/target.h"
+
+#include "../defines.h"
+
 
 // template<typename _Tp>
 // class Tile_ : public cv::Rect_<_Tp> {
@@ -97,6 +101,7 @@ private:
 	};
 
 };
+
 template<VThreshold::LED color>
 class StripFinder : public VPipeline, public WeightedSubtraction<color>, public Contours {
 public:
@@ -122,8 +127,13 @@ private:
 enum class CargoColor {
 	NONE = 0b00,
 	RED = 0b01,
-	BLUE = 0b10
+	BLUE = 0b10,
+	BOTH = 0b11
 };
+template<typename num_t>
+inline num_t operator~(CargoColor color) { return static_cast<num_t>(color); }
+inline uint8_t operator~(CargoColor color) { return static_cast<uint8_t>(color); }
+
 struct CargoOutline {
 	CargoOutline() {}
 	CargoOutline(cv::Point c, double r) : center(c), radius(r) {}
@@ -134,32 +144,33 @@ struct CargoOutline {
 	CargoColor color{CargoColor::NONE};
 };
 
-class Cargo : public Target<3> {
+class Cargo : public Target<4> {
 public:
-	Cargo(size_t ball_num, CargoColor color) : Target<3>({	// in inches
+	Cargo(size_t ball_idx, CargoColor color) : Target<4>({	// in inches
 		cv::Point3f(-4.75f, 0.f, 0.f),
 		cv::Point3f(0.f, 4.75f, 0.f),
-		cv::Point3f(4.75f, 0.f, 0.f)
-	}, "Cargo-" + std::to_string(ball_num) + ((uint)color == 1 ? 'r' : 'b')) {}
+		cv::Point3f(4.75f, 0.f, 0.f),
+		cv::Point3f(0.f, -4.75f, 0.f)
+	}, "Cargo-" + std::to_string(ball_idx) + (~color == 1 ? 'r' : 'b')) {}
 	Cargo(const Cargo& other) = delete;
 
-	template<typename num_t>
-	inline bool compatible(const std::vector<cv::Point_<num_t> >& contour) const { return this->size() == contour.size(); }
-	// template<typename num_t>
-	// void sort(std::vector<cv::Point_<num_t> >& points);
-	//template<typename num_t>
 	void sort(CargoOutline outline);
 
-	// void solvePerspective(
-	// 	cv::Mat_<float>& tvec, cv::Mat_<float>& rvec,
-	// 	cv::InputArray camera_matrix, cv::InputArray camera_coeffs,
-	// 	int flags = cv::SOLVEPNP_ITERATIVE, bool ext_guess = false
-	// );
-
-private:
-
 };
-class CargoFinder : public VPipeline, public WeightedSubtraction<VThreshold::LED::RED> {
+class Tennis : public Target<4> {
+public:
+	Tennis(size_t ball_idx) : Target<4>({
+		cv::Point3f(-1.29f, 0.f, 0.f),
+		cv::Point3f(0.f, 1.29f, 0.f),
+		cv::Point3f(1.29f, 0.f, 0.f),
+		cv::Point3f(0.f, -1.29f, 0.f)
+	}, "Normal-Sized-" + std::to_string(ball_idx)) {}
+	Tennis(const Tennis& other) = delete;
+
+	void sort(CargoOutline outline);
+};
+
+class CargoFinder : public VPipeline {
 public:
 	CargoFinder(VisionServer& server);
 	CargoFinder(const CargoFinder& other) = delete;
@@ -167,32 +178,40 @@ public:
 	void process(cv::Mat& io_frame, int8_t mode = 0) override;
 
 protected:
-	class RedFinder : public Contours {
+	template<VThreshold::LED primary, uint8_t alpha, uint8_t beta, uint8_t thresh_percent>
+	class BallFilter : public WeightedSubtraction<primary>, public Contours {
+		friend class CargoFinder;
 	public:
-		RedFinder(CargoFinder& env) : env(&env) {}
+		BallFilter(VisionServer& server, CargoFinder& env);
+		BallFilter(const BallFilter& other) = delete;
 
-		void threshold();
+		void threshold(cv::Mat& o_frame, const std::array<cv::Mat, 3>& channels);
+		bool launchThresholding(cv::Mat& o_frame, const std::array<cv::Mat, 3>& channels);
+		bool join();
 
-		std::vector<std::vector<cv::Point> > filtered;
+	protected:
+		static inline void thresholdWorker(BallFilter* that, cv::Mat& o_frame, const std::array<cv::Mat, 3>& channels) { that->threshold(o_frame, channels); }
+
+		std::vector<CargoOutline> filtered;
+		std::thread worker;
+
+	private:
+		std::vector<cv::Point> point_buffer;
+		CargoOutline outline_buffer;
+		double max_val{0.0};
 		CargoFinder* env;
 
-	} red;
-	class BlueFinder : public Contours {
-	public:
-		BlueFinder(CargoFinder& env) : env(&env) {}
+	};
+	BallFilter<VThreshold::LED::RED, 100, 100, 30> red;
+	BallFilter<VThreshold::LED::BLUE, 20, 100, 15> blue;
 
-		void threshold();
+	cv::Mat_<float> rvec = cv::Mat_<float>(1, 3), tvec = rvec/*, rmat = cv::Mat_<float>(3, 3)*/;
+	Cargo red_c{1, CargoColor::RED}, blue_c{1, CargoColor::BLUE};
 
-		std::vector<std::vector<cv::Point> > filtered;
-		CargoFinder* env;
-
-	} blue;
-
-	//std::vector<Cargo> balls;
-	std::vector<CargoOutline> filtered;
-	std::vector<cv::Point> point_buffer;
-	CargoOutline outline_buffer;
-	double max_val = 0.0;
+#ifdef TENNIS_DEMO
+	BallFilter<VThreshold::LED::GREEN, 100, 15, 15> normal;
+	Tennis tennis{1};
+#endif
 	
 };
 

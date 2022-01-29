@@ -131,124 +131,69 @@ void StripFinder<color>::process(cv::Mat& io_frame, int8_t mode) {
 		}
 	}
 
-	// this->target_idx = -1;
-	// this->area_largest = 0.f;
-	// for(size_t i = 0; i < this->contours.size(); i++) {
-	// 	this->extent = cv::boundingRect(this->contours[i]);
-	// 	if(
-	// 		this->extent.width >= 1.75*this->extent.height && this->extent.width <= 2.75*this->extent.height &&
-	// 		this->extent.area() > this->area_largest
-	// 	) {
-	// 		this->target_idx = i;
-	// 		this->area_largest = this->extent.area();
-	// 	} 
-	// }
-	// if(this->target_idx > -1) {
-	// 	this->extent = cv::boundingRect(this->contours[this->target_idx]);
-	// 		cv::rectangle(io_frame, this->extent, cv::Scalar(0, 255, 0));
-	// 	this->point_buffer.clear();
-	// 	this->point_buffer.emplace_back(std::move(::findCenter<int>({this->extent.tl(), this->extent.br()})));
-	// 	cv::Size2i range = cv::Size2i(this->extent.width*7, this->extent.height*4);
-	// 		cv::rectangle(io_frame, this->point_buffer[0] - range, this->point_buffer[0] + range, cv::Scalar(0, 255, 255));
-	// 	for(size_t i = 0; i < this->contours.size(); i++) {
-	// 		if(i != this->target_idx) {
-	// 			this->extent = cv::boundingRect(this->contours[i]);
-	// 			if(std::abs(this->point_buffer[0].x-this->extent.x) <= range.width && std::abs(this->point_buffer[0].y-this->extent.y) <= range.height) {
-	// 					cv::rectangle(io_frame, this->extent, cv::Scalar(255, 255, 0));
-	// 				this->point_buffer.emplace_back(std::move(::findCenter<int>({this->extent.tl(), this->extent.br()})));
-	// 			}	 else {
-	// 					cv::rectangle(io_frame, this->extent, cv::Scalar(0, 0, 255));
-	// 				}
-	// 		}
-	// 	}
-	// 	if(this->target.compatible(this->point_buffer)) {
-	// 		::rescale(this->point_buffer, this->getScale());
-	// 		this->target.sort(this->point_buffer);
-	// 		this->target.solvePerspective(this->tvec, this->rvec, this->getCameraMatrix(), this->getCameraDistortion());
+}
 
-	// 		this->updateTarget(this->target.getName());
+template<VThreshold::LED primary, uint8_t alpha, uint8_t beta, uint8_t thresh_percent>
+CargoFinder::BallFilter<primary, alpha, beta, thresh_percent>::BallFilter(VisionServer& server, CargoFinder& env) :
+	WeightedSubtraction<primary>(server), env(&env)
+{
+	this->alpha = alpha/100.0;
+	this->beta = beta/100.0;
+	this->gamma = thresh_percent/100.0;
+}
 
-	// 			for(size_t i = 0; i < this->point_buffer.size(); i++) {
-	// 				cv::circle(io_frame, this->point_buffer[i], 0, cv::Scalar(255, 255, 0), 2);
-	// 			}
-	// 	}
-	// } else {
-	// 	cv::putText(
-	// 		io_frame, "!", 
-	// 		cv::Point(io_frame.size().width*0.9, io_frame.size().height*0.9), 
-	// 		cv::FONT_HERSHEY_DUPLEX, 2, cv::Scalar(0, 0, 255), 1, cv::LINE_AA
-	// 	);
-	// }
+template<VThreshold::LED primary, uint8_t alpha, uint8_t beta, uint8_t thresh_percent>
+void CargoFinder::BallFilter<primary, alpha, beta, thresh_percent>::threshold(cv::Mat& o_frame, const std::array<cv::Mat, 3>& channels) {
+	cv::addWeighted(channels[this->weighted_array[~primary][0]], this->alpha, channels[this->weighted_array[~primary][1]], this->beta, 0.0, this->binary);
+	cv::subtract(channels[~primary], this->binary, this->binary);
+	cv::minMaxIdx(this->binary, nullptr, &this->max_val);
+	memcpy_threshold_asm(this->binary.data, this->binary.data, this->binary.size().area(), this->max_val*this->gamma);
 
+	if(this->env->table->GetBoolean("Show Threshold", false)) {
+		this->fromBinary(this->buffer);
+	}
 
+	this->findContours(this->binary);
 
-	// this->filtered.clear();
-	// for(size_t i = 0; i < this->contours.size(); i++) {
-	// 	cv::convexHull(this->contours[i], this->point_buffer);
-	// 	cv::approxPolyDP(this->point_buffer, this->point_buffer, 0.1*cv::arcLength(this->contours[i], false), true);
-	// 	if(this->point_buffer.size() == 4) {
-	// 		this->candidates.emplace_back(this->point_buffer);
-	// 		this->point_buffer.clear();
-	// 	}
-	// }
-	// if(this->candidates.size() > 0) {
-	// 	int upper = this->candidates[0].center + this->candidates[0].extent.width*6;
-	// 	int lower = this->candidates[0].center - this->candidates[0].extent.width*6;
-	// 	for(size_t i = 0; i < this->contours.size(); i++) {
-	// 		this->candidates_buffer.load(this->contours[i]);
-	// 		if()
-	// 	}
-	// }
-	
-	// this->point_buffer.clear();
-	// for(size_t i = 0; i < this->filtered.size(); i++) {
-	// 	rescale(this->filtered[i], this->getScale());
-	// 	this->point_buffer.emplace_back(std::move(::findCenter(this->filtered[i])));
-	// 	cv::circle(io_frame, this->point_buffer[i], 1, cv::Scalar(255, 255, 0), 2);
-	// 	// if(this->filtered[i].size() > this->highest) {
-	// 	// 	this->highest = this->filtered[i].size();
-	// 	// }
-	// 	cv::putText(
-	// 		io_frame, std::to_string(this->filtered[i].size()), 
-	// 		this->point_buffer[i], 
-	// 		cv::FONT_HERSHEY_DUPLEX, 0.7, cv::Scalar(255, 0, 0), 1, cv::LINE_AA
-	// 	);
-	// }
-	// cv::putText(
-	// 	io_frame, std::to_string(this->highest), 
-	// 	cv::Point(200, 200), 
-	// 	cv::FONT_HERSHEY_DUPLEX, 1, cv::Scalar(255, 0, 0), 1, cv::LINE_AA
-	// );
+	this->filtered.clear();
+	this->target_idx = -1;
+	this->area_largest = 0.0;
+	for(size_t i = 0; i < this->contours.size(); i++) {
+		if(cv::contourArea(this->contours[i]) > this->binary.size().area()/500.0) {
+			cv::minEnclosingCircle(this->contours[i], this->outline_buffer.center, this->outline_buffer.radius);
+			cv::convexHull(this->contours[i], this->point_buffer);
+			if(cv::contourArea(this->point_buffer)/(CV_PI*pow(this->outline_buffer.radius, 2)) > 0.8) {
+				this->outline_buffer.color = (primary == VThreshold::LED::BLUE ? CargoColor::BLUE : (primary == VThreshold::LED::RED ? CargoColor::RED : CargoColor::NONE));
+				this->outline_buffer.center *= (int)this->scale;
+				this->outline_buffer.radius *= this->scale;
+				this->filtered.emplace_back(this->outline_buffer);
+				if(this->outline_buffer.radius > this->area_largest) {
+					this->target_idx = this->filtered.size()-1;
+					this->area_largest = this->outline_buffer.radius;
+				}
+				cv::circle(o_frame, this->outline_buffer.center, this->outline_buffer.radius, ::markup_map[~primary][0], 3);
+			}
+			if(this->env->table->GetBoolean("Show Contours", false)) {
+				::rescale(this->contours[i], this->scale);
+				cv::drawContours(o_frame, this->contours, i, ::markup_map[~primary][1]);
+			}
+		}
+	}
 
-	// std::sort(
-	// 	this->contours.begin(),
-	// 	this->contours.end(),
-	// 	[this](const std::vector<cv::Point>& a, const std::vector<cv::Point>& b) { 
-	// 		return ::findCenter(a).x < ::findCenter(b).x; 
-	// 	}
-	// );
-
-	// cv::Point center;
-	// for(size_t i = 0; i < this->contours.size(); i++) {
-	// 	::rescale(this->contours[i], this->getScale());
-	// 	for(size_t ii = 0; ii < this->contours[i].size(); ii++) {
-	// 		cv::circle(io_frame, this->contours[i][ii], 0, cv::Scalar(0, 0, 255), 2);
-	// 	}
-	// 	center = ::findCenter(this->contours[i]);
-	// 	cv::line(io_frame, center, cv::Point(i*70+25, io_frame.size().height*0.80), cv::Scalar(255, 0, 255));
-	// 	cv::Rect size = cv::boundingRect(this->contours[i]);
-	// 	cv::putText(
-	// 		io_frame, std::to_string(size.width) + "x" + std::to_string(size.height),
-	// 		cv::Point(i*70+10, io_frame.size().height*0.85), cv::FONT_HERSHEY_DUPLEX, 0.7, cv::Scalar(255, 0, 0), 1, cv::LINE_AA
-	// 	);
-	// 	cv::putText(
-	// 		io_frame, "Y:" + std::to_string(size.y),
-	// 		cv::Point(i*70+10, io_frame.size().height*0.9), cv::FONT_HERSHEY_DUPLEX, 0.7, cv::Scalar(255, 0, 0), 1, cv::LINE_AA
-	// 	);
-	// 	cv::putText(
-	// 		io_frame, "V:" + std::to_string(io_frame.at<uchar>(center)),
-	// 		cv::Point(i*70+10, io_frame.size().height*0.95), cv::FONT_HERSHEY_DUPLEX, 0.7, cv::Scalar(255, 0, 0), 1, cv::LINE_AA
-	// 	);
-	//}
-
+}
+template<VThreshold::LED primary, uint8_t alpha, uint8_t beta, uint8_t thresh_percent>
+bool CargoFinder::BallFilter<primary, alpha, beta, thresh_percent>::launchThresholding(cv::Mat& o_frame, const std::array<cv::Mat, 3>& channels) { 
+	if(!this->worker.joinable()) {
+		this->worker = std::thread(thresholdWorker, this, std::ref(o_frame), std::cref(channels));
+		return true;
+	} 
+	return false;
+}
+template<VThreshold::LED primary, uint8_t alpha, uint8_t beta, uint8_t thresh_percent>
+bool CargoFinder::BallFilter<primary, alpha, beta, thresh_percent>::join() {
+	if(this->worker.joinable()) {
+		this->worker.join();
+		return true;
+	}
+	return false;
 }

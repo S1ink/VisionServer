@@ -10,6 +10,7 @@
 #include <type_traits>
 #include <algorithm>
 #include <vector>
+#include <array>
 
 #include "tools/src/resources.h"
 #include "visioncamera.h"
@@ -195,5 +196,7 @@ template<typename num_t, size_t s>
 const auto extend_array = operator+=<num_t, s>;	// an alias
 template<typename num_t>
 const auto extend_vector = operator+=<num_t>;
+
+extern const std::array<std::array<cv::Scalar, 3>, 3> markup_map;
 
 #include "vision.inc"

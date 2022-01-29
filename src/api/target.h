@@ -26,9 +26,11 @@ public:
 	static inline size_t size() { return corners; }
 	inline const cv::Point2f& getCenter() { return this->center; }
 	inline const std::string& getName() const { return this->name; }
-	inline bool compatible(const std::vector<cv::Point>& contour) const { return contour.size() == corners; }
+	template<typename num_t>
+	inline bool compatible(const std::vector<cv::Point_<num_t> >& contour) const { return contour.size() == corners; }
 
-	template<typename num_t> void sort(const std::vector<cv::Point_<num_t> >& contour);
+	template<typename num_t> 
+	void sort(const std::vector<cv::Point_<num_t> >& contour);
 
 	void rescale(double scale);
 	std::array<cv::Point2f, corners> getRescaled(double scale) const;
@@ -36,7 +38,7 @@ public:
 	void solvePerspective(
 		cv::Mat_<float>& tvec, cv::Mat_<float>& rvec, 
 		cv::InputArray camera_matrix, cv::InputArray camera_coeffs, 
-		bool ext_guess = false, int flags = 0
+		int flags = 0, bool ext_guess = false
 	);
 
 protected:

@@ -66,79 +66,97 @@ void Cargo::sort(CargoOutline outline) {
 	this->points = {
 		cv::Point2f(outline.center.x - outline.radius, outline.center.y),
 		cv::Point2f(outline.center.x, outline.center.y-outline.radius),
-		cv::Point2f(outline.center.x + outline.radius, outline.center.y)
+		cv::Point2f(outline.center.x + outline.radius, outline.center.y),
+		cv::Point2f(outline.center.x, outline.center.y+outline.radius)
+	};
+}
+void Tennis::sort(CargoOutline outline) {
+	this->points = {
+		cv::Point2f(outline.center.x - outline.radius, outline.center.y),
+		cv::Point2f(outline.center.x, outline.center.y-outline.radius),
+		cv::Point2f(outline.center.x + outline.radius, outline.center.y),
+		cv::Point2f(outline.center.x, outline.center.y+outline.radius)
 	};
 }
 
 CargoFinder::CargoFinder(VisionServer& server) :
-	VPipeline(server, "Cargo Finder"), WeightedSubtraction<LED::RED>(server, this->table), red(*this), blue(*this)
+	VPipeline(server, "Cargo Finder"), red(server, *this), blue(server, *this)
+#ifdef TENNIS_DEMO
+	, normal(server, *this)
+#endif
 {
-	this->table->PutString("Show Thresholded", "None");
-	// add something to control which color is processed
+	this->table->PutBoolean("Process Red", true);
+	this->table->PutBoolean("Process Blue", true);
+	this->table->PutBoolean("Show Threshold", false);
+	this->table->PutBoolean("Show Contours", false);
+	this->table->PutNumber("Scaling", 1.0);
+	this->table->GetEntry("Scaling").AddListener(
+		[this](const nt::EntryNotification& event){
+			if(event.value->IsDouble()) {
+				this->red.scale = this->blue.scale = (event.value->GetDouble() > 0 ? event.value->GetDouble() : 1U);
+#ifdef TENNIS_DEMO
+				this->normal.scale = this->red.scale;
+#endif
+			}
+		},
+		NT_NOTIFY_IMMEDIATE | NT_NOTIFY_NEW | NT_NOTIFY_UPDATE
+	);
 }
 
 void CargoFinder::process(cv::Mat& io_frame, int8_t mode) {
-	if(io_frame.size() != this->buffer.size()*(int)this->scale) {
-		this->resizeBuffers(io_frame.size());
+	bool  do_red = this->table->GetBoolean("Process Red", true), 
+		do_blue = this->table->GetBoolean("Process Blue", true),
+		show_bin = this->table->GetBoolean("Show Threshold", false);
+
+	if(io_frame.size() != this->red.buffer.size()*(int)this->red.scale && do_red) { this->red.resizeBuffers(io_frame.size()); }
+	if(io_frame.size() != this->blue.buffer.size()*(int)this->blue.scale && do_blue) { this->blue.resizeBuffers(io_frame.size()); }
+#ifdef TENNIS_DEMO
+	if(io_frame.size() != this->normal.buffer.size()*(int)this->normal.scale) { this->normal.resizeBuffers(io_frame.size()); }
+#endif
+
+	cv::resize(io_frame, this->red.buffer, cv::Size(), 1.0/this->red.scale, 1.0/this->red.scale);
+	cv::split(this->red.buffer, this->red.channels);
+
+	if(do_red) { this->red.launchThresholding(io_frame, this->red.channels); } 
+	else if(show_bin) { this->red.buffer = cv::Mat::zeros(io_frame.size(), CV_8UC3); }
+	if(do_blue) { this->blue.launchThresholding(io_frame, this->red.channels); } 
+	else if(show_bin) { this->blue.buffer = cv::Mat::zeros(io_frame.size(), CV_8UC3); }
+#ifdef TENNIS_DEMO
+	this->normal.launchThresholding(io_frame, this->red.channels);
+	this->normal.join();
+#endif
+	this->red.join();
+	this->blue.join();
+
+	//this->red.threshold(io_frame, this->red.channels);
+	//this->blue.threshold(io_frame, this->red.channels);
+
+	if(show_bin) {
+		cv::bitwise_or(this->red.buffer, this->blue.buffer, io_frame);
+#ifdef TENNIS_DEMO
+		cv::bitwise_or(this->normal.buffer, io_frame, io_frame);
+#endif
 	}
-	cv::resize(io_frame, this->buffer, cv::Size(), 1.0/this->scale, 1.0/this->scale);
-	cv::split(this->buffer, this->channels);
 
-	this->filtered.clear();
-	this->red.threshold();
-	if(this->table->GetString("Show Thresholded", "None") == "Red" || this->table->GetString("Show Thresholded", "None") == "Both") {
-		this->fromBinary(io_frame);
-	}
-	this->blue.threshold();
-	if(this->table->GetString("Show Thresholded", "None") == "Blue") {
-		this->fromBinary(io_frame);
-	} else if(this->table->GetString("Show Thresholded", "None") == "Both") {
-		cv::cvtColor(this->binary, this->buffer, cv::COLOR_GRAY2BGR, 3);
-		cv::bitwise_or(io_frame, this->buffer, io_frame);
-	}
-
-	//this->balls.clear();
-	for(size_t i = 0; i < this->filtered.size(); i++) {
-		cv::circle(io_frame, this->filtered[i].center, this->filtered[i].radius, (this->filtered[i].color == CargoColor::RED ? cv::Scalar(0, 255, 255) : cv::Scalar(255, 255, 0)), 2);
-		//this->balls.emplace_back(i);
-		//this->balls.back().sort(this->filtered[i]);
-
-	}
-}
-void CargoFinder::RedFinder::threshold() {
-	cv::addWeighted(env->channels[0], 1.0, env->channels[1], 1.0, 0.0, env->binary);
-	cv::subtract(env->channels[2], env->binary, env->binary);
-	cv::minMaxIdx(env->binary, nullptr, &env->max_val);
-	memcpy_threshold_asm(env->binary.data, env->binary.data, env->binary.size().area(), env->max_val*0.2);
-
-	this->findContours(env->binary);
-	this->filtered.clear();
-
-	for(size_t i = 0; i < this->contours.size(); i++) {
-		cv::minEnclosingCircle(this->contours[i], env->outline_buffer.center, env->outline_buffer.radius);
-		cv::convexHull(this->contours[i], env->point_buffer);
-		if(cv::contourArea(env->point_buffer)/(CV_PI * pow(env->outline_buffer.radius, 2)) > 0.8) {
-			env->outline_buffer.color = CargoColor::RED;
-			env->filtered.push_back(env->outline_buffer);
+	if(this->red.validTarget() && do_red) {
+		this->red_c.sort(this->red.filtered[this->red.getTargetIdx()]);
+		this->red_c.solvePerspective(this->tvec, this->rvec, this->getCameraMatrix(), this->getCameraDistortion());
+		if(!this->blue.validTarget()) {
+			this->updateTarget(this->red_c.getName());
 		}
 	}
-}
-void CargoFinder::BlueFinder::threshold() {
-	cv::addWeighted(env->channels[1], 0.2, env->channels[2], 1.0, 0.0, env->binary);
-	cv::subtract(env->channels[0], env->binary, env->binary);
-	cv::minMaxIdx(env->binary, nullptr, &env->max_val);
-	memcpy_threshold_asm(env->binary.data, env->binary.data, env->binary.size().area(), env->max_val*0.2);
-
-	this->findContours(env->binary);
-	this->filtered.clear();
-
-	for(size_t i = 0; i < this->contours.size(); i++) {
-		cv::minEnclosingCircle(this->contours[i], env->outline_buffer.center, env->outline_buffer.radius);
-		cv::convexHull(this->contours[i], env->point_buffer);
-		if(cv::contourArea(env->point_buffer)/(CV_PI * pow(env->outline_buffer.radius, 2)) > 0.8) {
-			env->outline_buffer.color = CargoColor::BLUE;
-			env->filtered.push_back(env->outline_buffer);
+	if(this->blue.validTarget() && do_blue) {
+		this->blue_c.sort(this->blue.filtered[this->blue.getTargetIdx()]);
+		this->blue_c.solvePerspective(this->tvec, this->rvec, this->getCameraMatrix(), this->getCameraDistortion());
+		if(!this->red.validTarget()) {
+			this->updateTarget(this->blue_c.getName());
 		}
 	}
-	
+#ifdef TENNIS_DEMO
+	if(this->normal.validTarget()) {
+		this->tennis.sort(this->normal.filtered[this->normal.getTargetIdx()]);
+		this->tennis.solvePerspective(this->tvec, this->rvec, this->getCameraMatrix(), this->getCameraDistortion());
+	}
+#endif
+
 }

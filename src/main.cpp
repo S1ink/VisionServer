@@ -29,7 +29,7 @@ int main(int argc, char* argv[]) {
 
 	VisionServer server(std::move(cameras));
 	//server.runVision<SquareTargetPNP, TargetSolver<Test6x6, WeightedSubtraction<VThreshold::LED::BLUE> >, TargetSolver<Test6x6, WeightedSubtraction<VThreshold::LED::GREEN> > >(25);
-	server.runVision<CargoFinder, StripFinder<VThreshold::LED::GREEN> >(25);
+	server.runVision<CargoFinder, StripFinder<VThreshold::LED::BLUE> >(25);
 }
 
 // LIST OF THINGS

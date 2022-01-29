@@ -10,6 +10,9 @@
 #include "../api/target.h"
 //#include "vision.h"
 
+#include "../defines.h"
+
+
 class Test6x6 : public Target<4> {
 public:
 	Test6x6() : Target<4>({		// world points in clockwise order

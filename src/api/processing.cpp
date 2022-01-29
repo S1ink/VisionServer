@@ -33,9 +33,3 @@ size_t Contours::findLargestThreshold(const cv::Mat& binary_frame, double area, 
 	}
 	return this->target_idx;
 }
-size_t Contours::getTargetIdx() const {
-	return this->target_idx;
-}
-const std::vector<cv::Point2i>& Contours::getTarget() const {
-	return this->contours[this->target_idx];
-}
