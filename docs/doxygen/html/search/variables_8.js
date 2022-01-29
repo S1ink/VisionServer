@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['name_0',['name',['../classTarget.html#a2da9c986b8607c1b296bceb0df0b9f3e',1,'Target::name()'],['../classVPipeline.html#ad1c944c7ed204eaeb21d580e381ef57a',1,'VPipeline::name()']]]
+  ['last_0',['last',['../classVisionServer.html#a3436b862c56f02276800735cc72941b6',1,'VisionServer::last()'],['../classVisionServer_1_1TargetInfo.html#a7afad5078422712023e171fc3bdf1c50',1,'VisionServer::TargetInfo::last()']]],
+  ['launched_1',['launched',['../classVisionServer.html#a620fbbae162fdb08dee5f698eb2d9bab',1,'VisionServer']]],
+  ['loop_5ftime_2',['loop_time',['../classVisionServer.html#a0acbce85b7443d963a6f222dc2d50419',1,'VisionServer']]]
 ];

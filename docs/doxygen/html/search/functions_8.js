@@ -8,5 +8,6 @@ var searchData=
   ['operator_3c_3d_5',['operator&lt;=',['../vision_8h.html#a52fb859cc7c99fff76275742433eb6fa',1,'vision.h']]],
   ['operator_3d_6',['operator=',['../classVPipeline.html#a2eff01d9f3112f72f74086eb117194c9',1,'VPipeline::operator=()'],['../classDefaultPipeline.html#a37db8bd422404051d679dbdd4ccb89bc',1,'DefaultPipeline::operator=()'],['../classTargetSolver.html#a7dc727f0f9dc7934631431bc97308013',1,'TargetSolver::operator=()']]],
   ['operator_3e_7',['operator&gt;',['../vision_8h.html#a858c4701616d98261bb43c05c5c38d14',1,'vision.h']]],
-  ['operator_3e_3d_8',['operator&gt;=',['../vision_8h.html#a17efd5c269f35253c5d663c6d00adc94',1,'vision.h']]]
+  ['operator_3e_3d_8',['operator&gt;=',['../vision_8h.html#a17efd5c269f35253c5d663c6d00adc94',1,'vision.h']]],
+  ['operator_7e_9',['operator~',['../processing_8h.html#ac2d9e91680f0921d7a1da61c97c27f1f',1,'processing.h']]]
 ];

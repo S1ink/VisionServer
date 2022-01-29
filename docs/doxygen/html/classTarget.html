@@ -88,8 +88,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a592c0385342d6c603b3ca48427560ba1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a38efcfb0aa812201bc9bf62debca8b57"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTarget.html#a38efcfb0aa812201bc9bf62debca8b57">getName</a> () const</td></tr>
 <tr class="separator:a38efcfb0aa812201bc9bf62debca8b57"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aedd85f9d1ef7d8df995735e081ceaaf3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTarget.html#aedd85f9d1ef7d8df995735e081ceaaf3">compatible</a> (const std::vector&lt; cv::Point &gt; &amp;contour) const</td></tr>
-<tr class="separator:aedd85f9d1ef7d8df995735e081ceaaf3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac937738a3ecb733a492564d8b45767aa"><td class="memTemplParams" colspan="2">template&lt;typename num_t &gt; </td></tr>
+<tr class="memitem:ac937738a3ecb733a492564d8b45767aa"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classTarget.html#ac937738a3ecb733a492564d8b45767aa">compatible</a> (const std::vector&lt; cv::Point_&lt; num_t &gt; &gt; &amp;contour) const</td></tr>
+<tr class="separator:ac937738a3ecb733a492564d8b45767aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a67cf50a052c45b11d88b54a31910cb8d"><td class="memTemplParams" colspan="2">template&lt;typename num_t &gt; </td></tr>
 <tr class="memitem:a67cf50a052c45b11d88b54a31910cb8d"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classTarget.html#a67cf50a052c45b11d88b54a31910cb8d">sort</a> (const std::vector&lt; cv::Point_&lt; num_t &gt; &gt; &amp;contour)</td></tr>
 <tr class="separator:a67cf50a052c45b11d88b54a31910cb8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -97,8 +98,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a35f396ba77aa686e1022e4bb10a731c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab775fd99ca6f13d15c86b15f831c2aa8"><td class="memItemLeft" align="right" valign="top">std::array&lt; cv::Point2f, corners &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTarget.html#ab775fd99ca6f13d15c86b15f831c2aa8">getRescaled</a> (double scale) const</td></tr>
 <tr class="separator:ab775fd99ca6f13d15c86b15f831c2aa8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a84a7d5045bd66413fa32e094dac21615"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTarget.html#a84a7d5045bd66413fa32e094dac21615">solvePerspective</a> (cv::Mat_&lt; float &gt; &amp;tvec, cv::Mat_&lt; float &gt; &amp;rvec, cv::InputArray camera_matrix, cv::InputArray camera_coeffs, bool ext_guess=false, int flags=0)</td></tr>
-<tr class="separator:a84a7d5045bd66413fa32e094dac21615"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a204ebf48d1e49d97e3b7b4ac3ac6d78a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTarget.html#a204ebf48d1e49d97e3b7b4ac3ac6d78a">solvePerspective</a> (cv::Mat_&lt; float &gt; &amp;tvec, cv::Mat_&lt; float &gt; &amp;rvec, cv::InputArray camera_matrix, cv::InputArray camera_coeffs, int flags=0, bool ext_guess=false)</td></tr>
+<tr class="separator:a204ebf48d1e49d97e3b7b4ac3ac6d78a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -219,13 +220,15 @@ template&lt;size_t corners&gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="aedd85f9d1ef7d8df995735e081ceaaf3" name="aedd85f9d1ef7d8df995735e081ceaaf3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aedd85f9d1ef7d8df995735e081ceaaf3">&#9670;&nbsp;</a></span>compatible()</h2>
+<a id="ac937738a3ecb733a492564d8b45767aa" name="ac937738a3ecb733a492564d8b45767aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac937738a3ecb733a492564d8b45767aa">&#9670;&nbsp;</a></span>compatible()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;size_t corners&gt; </div>
+<div class="memtemplate">
+template&lt;typename num_t &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -233,7 +236,7 @@ template&lt;size_t corners&gt; </div>
         <tr>
           <td class="memname">bool <a class="el" href="classTarget.html">Target</a>&lt; corners &gt;::compatible </td>
           <td>(</td>
-          <td class="paramtype">const std::vector&lt; cv::Point &gt; &amp;&#160;</td>
+          <td class="paramtype">const std::vector&lt; cv::Point_&lt; num_t &gt; &gt; &amp;&#160;</td>
           <td class="paramname"><em>contour</em></td><td>)</td>
           <td> const</td>
         </tr>
@@ -245,7 +248,7 @@ template&lt;size_t corners&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="target_8h_source.html#l00029">29</a> of file <a class="el" href="target_8h_source.html">target.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="target_8h_source.html#l00030">30</a> of file <a class="el" href="target_8h_source.html">target.h</a>.</p>
 
 </div>
 </div>
@@ -352,7 +355,7 @@ template&lt;size_t corners&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="target_8h_source.html#l00043">43</a> of file <a class="el" href="target_8h_source.html">target.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="target_8h_source.html#l00045">45</a> of file <a class="el" href="target_8h_source.html">target.h</a>.</p>
 
 </div>
 </div>
@@ -405,8 +408,8 @@ template&lt;size_t corners&gt; </div>
 
 </div>
 </div>
-<a id="a84a7d5045bd66413fa32e094dac21615" name="a84a7d5045bd66413fa32e094dac21615"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a84a7d5045bd66413fa32e094dac21615">&#9670;&nbsp;</a></span>solvePerspective()</h2>
+<a id="a204ebf48d1e49d97e3b7b4ac3ac6d78a" name="a204ebf48d1e49d97e3b7b4ac3ac6d78a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a204ebf48d1e49d97e3b7b4ac3ac6d78a">&#9670;&nbsp;</a></span>solvePerspective()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -440,14 +443,14 @@ template&lt;size_t corners&gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>ext_guess</em> = <code>false</code>, </td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>flags</em> = <code>0</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>flags</em> = <code>0</code>&#160;</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>ext_guess</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -504,7 +507,7 @@ template&lt;size_t corners&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="target_8h_source.html#l00045">45</a> of file <a class="el" href="target_8h_source.html">target.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="target_8h_source.html#l00047">47</a> of file <a class="el" href="target_8h_source.html">target.h</a>.</p>
 
 </div>
 </div>
@@ -530,7 +533,7 @@ template&lt;size_t corners&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="target_8h_source.html#l00045">45</a> of file <a class="el" href="target_8h_source.html">target.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="target_8h_source.html#l00047">47</a> of file <a class="el" href="target_8h_source.html">target.h</a>.</p>
 
 </div>
 </div>
@@ -556,7 +559,7 @@ template&lt;size_t corners&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="target_8h_source.html#l00045">45</a> of file <a class="el" href="target_8h_source.html">target.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="target_8h_source.html#l00047">47</a> of file <a class="el" href="target_8h_source.html">target.h</a>.</p>
 
 </div>
 </div>
@@ -582,7 +585,7 @@ template&lt;size_t corners&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="target_8h_source.html#l00048">48</a> of file <a class="el" href="target_8h_source.html">target.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="target_8h_source.html#l00050">50</a> of file <a class="el" href="target_8h_source.html">target.h</a>.</p>
 
 </div>
 </div>
@@ -626,7 +629,7 @@ template&lt;size_t corners&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="target_8h_source.html#l00049">49</a> of file <a class="el" href="target_8h_source.html">target.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="target_8h_source.html#l00051">51</a> of file <a class="el" href="target_8h_source.html">target.h</a>.</p>
 
 </div>
 </div>
