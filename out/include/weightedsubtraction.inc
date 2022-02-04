@@ -11,11 +11,18 @@ const std::array<std::array<uint8_t, 2>, 3> WeightedSubtraction<color>::weighted
 };
 template<VThreshold::LED color>
 WeightedSubtraction<color>::WeightedSubtraction(VisionServer& server, std::shared_ptr<nt::NetworkTable> table) :
-	VThreshold(server, table)
+	VThreshold(server)
 {
-	addNetTableVar(this->weight, "Weight", table);
+	//addNetTableVar(this->weight, "Weight", table);
 	addNetTableVar(this->thresh, "Threshold", table);
+	addNetTableVar(this->scale, "Scaling", table);
 
+	this->resizeBuffers(server.getCurrentResolution());
+}
+template<VThreshold::LED color>
+WeightedSubtraction<color>::WeightedSubtraction(VisionServer& server) :
+	VThreshold(server)
+{
 	this->resizeBuffers(server.getCurrentResolution());
 }
 template<VThreshold::LED color>
@@ -34,8 +41,8 @@ const cv::Mat& WeightedSubtraction<color>::threshold(const cv::Mat& io_frame) {
 
 	cv::resize(io_frame, this->buffer, cv::Size(), 1.0/this->scale, 1.0/this->scale);
 	cv::split(this->buffer, this->channels);
-	cv::addWeighted(this->channels[weighted_array[(uint8_t)color][0]], this->weight, this->channels[weighted_array[(uint8_t)color][1]], this->weight, 0.0, this->binary);
-	cv::subtract(this->channels[(uint8_t)color], this->binary, this->binary);
+	cv::addWeighted(this->channels[weighted_array[~color][0]], this->alpha, this->channels[weighted_array[~color][1]], this->beta, this->gamma, this->binary);
+	cv::subtract(this->channels[~color], this->binary, this->binary);
 	memcpy_threshold_binary_asm(this->binary.data, this->binary.data, this->binary.size().area(), this->thresh);
 
 	return this->binary;

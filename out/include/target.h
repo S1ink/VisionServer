@@ -18,6 +18,7 @@ public:
 	Target(const std::array<cv::Point3f, corners>& world_pts);
 	Target(const std::array<cv::Point3f, corners>& world_pts, const char* name);
 	Target(const std::array<cv::Point3f, corners>& world_pts, const std::string& name);
+	//virtual ~Target() {}	// delete nt entries
 
 	std::array<cv::Point2f, corners> points;		// actual points 
 	const std::array<cv::Point3f, corners> world;	// world points that relate to the above 
@@ -25,9 +26,11 @@ public:
 	static inline size_t size() { return corners; }
 	inline const cv::Point2f& getCenter() { return this->center; }
 	inline const std::string& getName() const { return this->name; }
-	inline bool compatible(const std::vector<cv::Point>& contour) const { return contour.size() == corners; }
+	template<typename num_t>
+	inline bool compatible(const std::vector<cv::Point_<num_t> >& contour) const { return contour.size() == corners; }
 
-	template<typename num_t> void sort(const std::vector<cv::Point_<num_t> >& contour);
+	template<typename num_t> 
+	void sort(const std::vector<cv::Point_<num_t> >& contour);
 
 	void rescale(double scale);
 	std::array<cv::Point2f, corners> getRescaled(double scale) const;
@@ -35,14 +38,17 @@ public:
 	void solvePerspective(
 		cv::Mat_<float>& tvec, cv::Mat_<float>& rvec, 
 		cv::InputArray camera_matrix, cv::InputArray camera_coeffs, 
-		bool ext_guess = false, int flags = 0
+		int flags = 0, bool ext_guess = false
 	);
 
 protected:
-	const std::string name;
-	const std::shared_ptr<nt::NetworkTable> table;
+	inline const std::shared_ptr<nt::NetworkTable>& getTable() const { return this->table; }
 
 	cv::Point2f center, a, b;
+
+private:
+	const std::string name;
+	const std::shared_ptr<nt::NetworkTable> table;
 
 };
 

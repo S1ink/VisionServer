@@ -8,6 +8,9 @@
 #include <opencv2/core/types.hpp>
 
 #include <type_traits>
+#include <algorithm>
+#include <vector>
+#include <array>
 
 #include "tools/src/resources.h"
 #include "visioncamera.h"
@@ -73,6 +76,85 @@ cv::Size_<num_t> operator/(cv::Size_<num_t> input, size_t scale) {
 }
 
 template<typename num_t>
+inline bool inRange(num_t a, num_t lower, num_t upper) {
+	static_assert(std::is_arithmetic<num_t>::value, "Template parameter (num_t) must be arithemetic type");
+	return a <= upper && a >= lower;
+}
+
+// inserts(copies) the item at the specified index to the beginning, then erases the source -> effectively moves the item to the beginning while retaining order of other items
+template<typename t>
+void reinsert(std::vector<t>& vec, size_t idx) {
+	vec.insert(vec.begin(), vec.at(idx));
+	vec.erase(vec.begin() + idx + 1);
+}
+template<typename t>
+inline void swapIdx(std::vector<t>& vec, size_t idx1, size_t idx2) {
+	std::iter_swap(vec.begin()+idx1, vec.begin()+idx2);
+}
+
+template<typename num_t>
+inline cv::Size_<num_t> distance(const cv::Point_<num_t>& a, const cv::Point_<num_t>& b) {
+	static_assert(std::is_arithmetic<num_t>::value, "Template parameter (num_t) must be arithemetic type");
+	return cv::Size_<num_t>(std::abs(a.x-b.x), std::abs(a.y-b.y));
+}
+template<typename num_t>
+inline cv::Point3_<num_t> distance(const cv::Point3_<num_t>& a, const cv::Point3_<num_t>& b) {
+	static_assert(std::is_arithmetic<num_t>::value, "Template parameter (num_t) must be arithemetic type");
+	return cv::Point3_<num_t>(std::abs(a.x-b.x), std::abs(a.y-b.y), std::abs(a.z-b.z));
+}
+
+template<typename num_t>
+inline bool operator<(const cv::Size_<num_t>& a, const cv::Size_<num_t>& b) {
+	static_assert(std::is_arithmetic<num_t>::value, "Template parameter (num_t) must be arithemetic type");
+	return a.width < b.width && a.height < b.height;
+}
+template<typename num_t>
+inline bool operator<=(const cv::Size_<num_t>& a, const cv::Size_<num_t>& b) {
+	static_assert(std::is_arithmetic<num_t>::value, "Template parameter (num_t) must be arithemetic type");
+	return a.width <= b.width && a.height <= b.height;
+}
+template<typename num_t>
+inline bool operator>(const cv::Size_<num_t>& a, const cv::Size_<num_t>& b) {
+	static_assert(std::is_arithmetic<num_t>::value, "Template parameter (num_t) must be arithemetic type");
+	return a.width > b.width && a.height > b.height;
+}
+template<typename num_t>
+inline bool operator>=(const cv::Size_<num_t>& a, const cv::Size_<num_t>& b) {
+	static_assert(std::is_arithmetic<num_t>::value, "Template parameter (num_t) must be arithemetic type");
+	return a.width >= b.width && a.height >= b.height;
+}
+
+template<typename num_t>
+inline cv::Point_<num_t> operator - (const cv::Point_<num_t>& a, const cv::Size_<num_t>& b) {
+	static_assert(std::is_arithmetic<num_t>::value, "Template parameter (num_t) must be arithemetic type");
+	return cv::Point_<num_t>(a.x-b.width, a.y-b.height);
+}
+template<typename num_t>
+inline cv::Point_<num_t> operator + (const cv::Point_<num_t>& a, const cv::Size_<num_t>& b) {
+	static_assert(std::is_arithmetic<num_t>::value, "Template parameter (num_t) must be arithemetic type");
+	return cv::Point_<num_t>(a.x+b.width, a.y+b.height);
+}
+template<typename num_t>
+inline cv::Size_<num_t> operator - (const cv::Size_<num_t>& a, const cv::Point_<num_t>& b) {
+	static_assert(std::is_arithmetic<num_t>::value, "Template parameter (num_t) must be arithemetic type");
+	return cv::Point_<num_t>(a.width-b.x, a.height-b.y);
+}
+template<typename num_t>
+inline cv::Size_<num_t> operator + (const cv::Size_<num_t>& a, const cv::Point_<num_t>&  b) {
+	static_assert(std::is_arithmetic<num_t>::value, "Template parameter (num_t) must be arithemetic type");
+	return cv::Point_<num_t>(a.width+b.x, a.height+b.y);
+}
+
+template<typename num_t>
+void operator -= (const cv::Point_<num_t>& a, const cv::Size_<num_t>& b);
+template<typename num_t>
+void operator += (const cv::Point_<num_t>& a, const cv::Size_<num_t>& b);
+template<typename num_t>
+void operator -= (const cv::Size_<num_t>& a, const cv::Point_<num_t>& b);
+template<typename num_t>
+void operator += (const cv::Size_<num_t>& a, const cv::Point_<num_t>&  b);
+
+template<typename num_t>
 void rescale(std::vector<cv::Point_<num_t> >& points, size_t scale);	// scales up (multiplies by scale)
 template<typename num_t>
 void _rescale(std::vector<cv::Point_<num_t> >& points, size_t scale);	// scales down with a size value (multiplies by 1.0/value)
@@ -87,6 +169,11 @@ template<typename num_t>
 cv::Point3_<num_t> findCenter3D(const std::vector<cv::Point3_<num_t> >& contour);
 template<typename onum_t, typename inum_t>
 cv::Point3_<onum_t> findCenter3D(const std::vector<cv::Point3_<inum_t> >& contour);
+
+template<typename num_t>
+cv::Point_<num_t> findCenter(const cv::Rect_<num_t>& rect);
+template<typename onum_t, typename inum_t>
+cv::Point_<onum_t> findCenter(const cv::Rect_<inum_t>& rect);
 
 template<typename num_t>
 void reorderClockWise(std::vector<cv::Point_<num_t> >& points);
@@ -109,5 +196,7 @@ template<typename num_t, size_t s>
 const auto extend_array = operator+=<num_t, s>;	// an alias
 template<typename num_t>
 const auto extend_vector = operator+=<num_t>;
+
+extern const std::array<std::array<cv::Scalar, 3>, 3> markup_map;
 
 #include "vision.inc"

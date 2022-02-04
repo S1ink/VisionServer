@@ -43,6 +43,7 @@
  * See here: https://www.desmos.com/calculator/4onhrkdwhg
 */
 class UpperHub : public Target<0> {
+	template<VThreshold::LED color> friend class StripFinder;
 public:
 	UpperHub() : Target<0>({}, "Upper-Hub"), points(6), world_match(6) {}
 	UpperHub(const UpperHub&) = delete;
@@ -77,6 +78,7 @@ protected:
 
 private:
 	std::array<cv::Mat, 2> tvecs, rvecs;
+	//cv::Mat_<float> rmat, pzero_world;
 	// cv::Mat_<float>
 	// 	tstart = (cv::Mat_<float>(1, 3) << -5.377486299340092, 87.15036371545433, 124.0995064393181),
 	// 	rstart = (cv::Mat_<float>(1, 3) << 2.928241467489054, -0.2228350190508827, -0.05335716651782262);
@@ -99,6 +101,14 @@ private:
 		cv::Point3f(26.73803044f, 103.f, 0.f),				// @c=42	// perfectly 90*, unlike above
 		cv::Point3f(24.70271906f, 103.f, -10.23220126f),		// @c=52.5
 	};
+	// const std::array<float, 6> angles {	// in radians -> half of the angle between 0 and the point at the corresponding index ^
+	// 	0.f,
+	// 	0.196349540849f,
+	// 	0.392699081699f,
+	// 	0.589048622548f,
+	// 	0.785398163397f,
+	// 	0.981747704247f
+	// };
 
 };
 
@@ -117,8 +127,8 @@ private:
 
 	UpperHub target;
 
-	std::array<cv::Point3f, 2> pose3D{cv::Point3f(0.f, 103.f, 0.f), cv::Point3f(0.f, 0.f, 0.f)};
-	std::array<cv::Point2f, 2> pose2D;
+	std::array<cv::Point3f, 4> pose3D{cv::Point3f(0.f, 0.f, 0.f), cv::Point3f(0.f, 103.f, 0.f), cv::Point3f(50.f, 103.f, 0.f), cv::Point3f(0.f, 103.f, 50.f)};
+	std::array<cv::Point2f, 4> pose2D;
 
 	cv::Mat_<float> rvec = cv::Mat_<float>(1, 3), tvec = rvec/*, rmat = cv::Mat_<float>(3, 3)*/;
 

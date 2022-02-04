@@ -47,7 +47,7 @@ void UpperHub::sort(const std::vector<cv::Point_<num_t> >& contour) {
 
 template<VThreshold::LED color>
 StripFinder<color>::StripFinder(VisionServer& server) :
-	VPipeline(server, "Upper-Hub vision strip finder"), WeightedSubtraction<color>(server, this->table)
+	VPipeline(server, "Upper-Hub Pipeline"), WeightedSubtraction<color>(server, this->table)
 {
 	this->table->PutBoolean("Show Thresholded", false);
 }
@@ -121,6 +121,18 @@ void StripFinder<color>::process(cv::Mat& io_frame, int8_t mode) {
 
 				cv::projectPoints(this->pose3D, this->rvec, this->tvec, this->getCameraMatrix(), this->getCameraDistortion(), this->pose2D);
 				cv::line(io_frame, this->pose2D[0], this->pose2D[1], cv::Scalar(0, 255, 0));
+				cv::line(io_frame, this->pose2D[1], this->pose2D[2], cv::Scalar(0, 255, 0));
+				cv::line(io_frame, this->pose2D[1], this->pose2D[3], cv::Scalar(0, 255, 0));
+				for(size_t r = 0; r < this->target.rmat.rows; r++) {
+					for(size_t c = 0; c < this->target.rmat.cols; c++) {
+						cv::putText(
+							io_frame, 
+							std::to_string(this->target.rmat[r][c]*180/M_PI),
+							cv::Point(c*100, r*20 + 20),
+							cv::FONT_HERSHEY_DUPLEX, 0.5, cv::Scalar(255, 255, 0)
+						);
+					}
+				}
 
 				break;
 			} else {

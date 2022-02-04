@@ -56,7 +56,7 @@ template<size_t corners>
 void Target<corners>::solvePerspective(
 	cv::Mat_<float>& tvec, cv::Mat_<float>& rvec, 
 	cv::InputArray camera_matrix, cv::InputArray camera_coeffs, 
-	bool ext_guess, int flags
+	int flags, bool ext_guess
 ) {
 	cv::solvePnP(this->world, this->points, camera_matrix, camera_coeffs, rvec, tvec, ext_guess, flags);
 

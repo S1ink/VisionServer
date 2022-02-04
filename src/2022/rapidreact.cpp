@@ -53,12 +53,16 @@ void UpperHub::solvePerspective(
 	// }
 	// std::cout << "\n\n";
 
+	//cv::Rodrigues(rvec, this->rmat);
+	//cv::transpose(this->rmat, this->rmat);
+	//this->pzero_world = this->rmat * (-tvec);
+
 	this->getTable()->PutNumber("x", tvec[0][0]);
 	this->getTable()->PutNumber("y", tvec[1][0]);
 	this->getTable()->PutNumber("z", tvec[2][0]);
 	this->getTable()->PutNumber("distance", sqrt(pow(tvec[0][0], 2) + pow(tvec[1][0], 2) + pow(tvec[2][0], 2)));
 	//this->getTable()->PutNumber("up-down", atan2(tvec[1][0], tvec[2][0])*-180/M_PI);
-	//this->getTable()->PutNumber("left-right", atan2(tvec[0][0], tvec[2][0])*180/M_PI);
+	this->getTable()->PutNumber("left-right", acos(tvec[2][0]/(sqrt(pow(tvec[0][0], 2) + pow(tvec[2][0], 2)))) * 180 / CV_PI * sgn(tvec[0][0]));
 }
 
 //template<typename num_t>
@@ -80,7 +84,7 @@ void Tennis::sort(CargoOutline outline) {
 }
 
 CargoFinder::CargoFinder(VisionServer& server) :
-	VPipeline(server, "Cargo Finder"), red(server, *this), blue(server, *this)
+	VPipeline(server, "Cargo Pipeline"), red(server, *this), blue(server, *this)
 #ifdef TENNIS_DEMO
 	, normal(server, *this)
 #endif

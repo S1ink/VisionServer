@@ -92,6 +92,9 @@ inline void swapIdx(std::vector<t>& vec, size_t idx1, size_t idx2) {
 	std::iter_swap(vec.begin()+idx1, vec.begin()+idx2);
 }
 
+template <typename num_t> 
+inline int sgn(num_t val) { return (num_t(0) < val) - (val < num_t(0)); }
+
 template<typename num_t>
 inline cv::Size_<num_t> distance(const cv::Point_<num_t>& a, const cv::Point_<num_t>& b) {
 	static_assert(std::is_arithmetic<num_t>::value, "Template parameter (num_t) must be arithemetic type");

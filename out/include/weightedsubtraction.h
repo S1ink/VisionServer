@@ -13,6 +13,7 @@ class WeightedSubtraction : public VThreshold {
 public:
 	//WSThreshold() = default;
 	WeightedSubtraction(VisionServer& server, std::shared_ptr<nt::NetworkTable> table);
+	WeightedSubtraction(VisionServer& server);
 	WeightedSubtraction(const WeightedSubtraction& other) = delete;
 	// WSThreshold(WSThreshold&&);
 	// void operator=(const WSThreshold&) = delete;
@@ -35,7 +36,7 @@ protected:
 	cv::Mat buffer;
 	std::array<cv::Mat, 3> channels;
 
-	double weight{0.5};
+	double alpha{0.5}, beta{0.5}, gamma{0.0};
 	uint8_t thresh{50};
 	size_t scale{1};
 

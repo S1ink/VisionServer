@@ -11,6 +11,7 @@
 class VThreshold {	// Vision Thresholding base interface
 public:
 	VThreshold(VisionServer&, std::shared_ptr<nt::NetworkTable>) {}
+	VThreshold(VisionServer&) {}
 	virtual ~VThreshold() = default;
 
 	virtual const cv::Mat& threshold(const cv::Mat& i_frame) = 0;
@@ -32,6 +33,10 @@ protected:
 
 };
 
+template<typename num_t>
+inline num_t operator~(VThreshold::LED color) { return static_cast<num_t>(color); }
+inline uint8_t operator~(VThreshold::LED color) { return static_cast<uint8_t>(color); }
+
 class Contours {		// Provides contour functions and contour storage
 public:
 	Contours() = default;	// maybe take in a networktable to publish settings for area threshold?
@@ -41,11 +46,9 @@ public:
 	size_t findLargest(const cv::Mat& binary_frame, int mode = cv::RETR_EXTERNAL, int method = cv::CHAIN_APPROX_SIMPLE);	// returns index of the largest
 	size_t findLargestThreshold(const cv::Mat& binary_frame, double area, int mode = cv::RETR_EXTERNAL, int method = cv::CHAIN_APPROX_SIMPLE);	// find largest that has a greater area than 'area', returns index
 
-	size_t getTargetIdx() const;
-	const std::vector<cv::Point2i>& getTarget() const;
-	inline bool validTarget() {
-		return this->target_idx >= 0;
-	}
+	inline size_t getTargetIdx() const { return this->target_idx; }
+	inline const std::vector<cv::Point2i>& getTarget() const { return this->contours[this->target_idx]; }
+	inline bool validTarget() { return this->target_idx >= 0; }
 
 	// function for finding corner points and/or reducing points?
 

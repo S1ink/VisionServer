@@ -94,6 +94,11 @@ public:
      * @param target The target's name - can be gotten by calling 'getName()' on a target
     */
     void updateTarget(const std::string& target);
+    /**
+     * Get access to the current camera source
+     * @return The camera as a VisionCamera
+    */
+    VisionCamera& getCurrentCamera();
 
 protected:
     /**The pipeline's name*/
@@ -146,10 +151,15 @@ public:
     ~VisionServer();
 
     /**
-     * Gets the number of cameras avaiable
+     * Get the number of cameras avaiable
      * @return The number of avaiable camera indexes, starting at 0
     */
     size_t validIndexes() const;
+    /**
+     * Get the current camera index
+     * @return The index of the current camera
+    */
+    size_t getCurrentIndex() const;
     /**
      * Set a specific camera index as a source for the output stream (and processing)
      * @param idx The index of the camera, starting at 0 and <= validIndexes()
@@ -296,6 +306,11 @@ protected:
      * @param target The name of the target that is actively being tracked
     */
     void updateTarget(const std::string& target);
+    /**
+     * Gives pipelines access to changing camera settings for the current source
+     * @return The current camera
+    */
+    VisionCamera& getCurrentCamera();
 
     std::vector<VisionCamera> cameras;
     cs::CvSink source;
