@@ -47,4 +47,5 @@ x Toggle pipeline processing (processing or just streaming)
 - Networktables continuity with multiple class instances
 - Multiple VisionServer processing instances, data protection/management -> vector of threads?
 - Robot-program mode where all settings are determined by robot program over ntables
+- Automatically deduce nt-connection mode
 */
