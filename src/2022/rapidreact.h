@@ -201,6 +201,7 @@ protected:
 
 	protected:
 		static inline void thresholdWorker(BallFilter* that, cv::Mat& o_frame, const std::array<cv::Mat, 3>& channels) { that->threshold(o_frame, channels); }
+		inline void resetTargetIdx() { this->target_idx = -1; }
 
 		std::vector<CargoOutline> filtered;
 		std::thread worker;

@@ -123,16 +123,16 @@ void StripFinder<color>::process(cv::Mat& io_frame, int8_t mode) {
 				cv::line(io_frame, this->pose2D[0], this->pose2D[1], cv::Scalar(0, 255, 0));
 				cv::line(io_frame, this->pose2D[1], this->pose2D[2], cv::Scalar(0, 255, 0));
 				cv::line(io_frame, this->pose2D[1], this->pose2D[3], cv::Scalar(0, 255, 0));
-				for(size_t r = 0; r < this->target.rmat.rows; r++) {
-					for(size_t c = 0; c < this->target.rmat.cols; c++) {
-						cv::putText(
-							io_frame, 
-							std::to_string(this->target.rmat[r][c]*180/M_PI),
-							cv::Point(c*100, r*20 + 20),
-							cv::FONT_HERSHEY_DUPLEX, 0.5, cv::Scalar(255, 255, 0)
-						);
-					}
-				}
+				// for(size_t r = 0; r < this->target.rmat.rows; r++) {
+				// 	for(size_t c = 0; c < this->target.rmat.cols; c++) {
+				// 		cv::putText(
+				// 			io_frame, 
+				// 			std::to_string(this->target.rmat[r][c]*180/M_PI),
+				// 			cv::Point(c*100, r*20 + 20),
+				// 			cv::FONT_HERSHEY_DUPLEX, 0.5, cv::Scalar(255, 255, 0)
+				// 		);
+				// 	}
+				// }
 
 				break;
 			} else {
@@ -180,7 +180,7 @@ void CargoFinder::BallFilter<primary, alpha, beta, thresh_percent>::threshold(cv
 				this->outline_buffer.radius *= this->scale;
 				this->filtered.emplace_back(this->outline_buffer);
 				if(this->outline_buffer.radius > this->area_largest) {
-					this->target_idx = this->filtered.size()-1;
+					this->target_idx = this->filtered.size() - 1;
 					this->area_largest = this->outline_buffer.radius;
 				}
 				cv::circle(o_frame, this->outline_buffer.center, this->outline_buffer.radius, ::markup_map[~primary][0], 3);

@@ -108,9 +108,13 @@ CargoFinder::CargoFinder(VisionServer& server) :
 }
 
 void CargoFinder::process(cv::Mat& io_frame, int8_t mode) {
-	bool  do_red = this->table->GetBoolean("Process Red", true), 
+	bool do_red = this->table->GetBoolean("Process Red", true),
 		do_blue = this->table->GetBoolean("Process Blue", true),
 		show_bin = this->table->GetBoolean("Show Threshold", false);
+
+	this->red.resetTargetIdx();		// reset target idx so that if a color is disabled while in a "valid" state it doesn't stay like that
+	this->blue.resetTargetIdx();
+	this->normal.resetTargetIdx();
 
 	if(io_frame.size() != this->red.buffer.size()*(int)this->red.scale && do_red) { this->red.resizeBuffers(io_frame.size()); }
 	if(io_frame.size() != this->blue.buffer.size()*(int)this->blue.scale && do_blue) { this->blue.resizeBuffers(io_frame.size()); }
