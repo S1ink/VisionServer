@@ -7,12 +7,14 @@
 
 #include <uv.h>
 
+#include <cstdlib>
 #include <functional>
 #include <initializer_list>
 #include <memory>
+#include <utility>
 
-#include "wpi/ArrayRef.h"
 #include "wpi/Signal.h"
+#include "wpi/span.h"
 #include "wpi/uv/Buffer.h"
 #include "wpi/uv/Handle.h"
 #include "wpi/uv/Request.h"
@@ -125,7 +127,7 @@ class Stream : public Handle {
    * @param bufs The buffers to be written to the stream.
    * @param req write request
    */
-  void Write(ArrayRef<Buffer> bufs, const std::shared_ptr<WriteReq>& req);
+  void Write(span<const Buffer> bufs, const std::shared_ptr<WriteReq>& req);
 
   /**
    * Write data to the stream.
@@ -145,7 +147,7 @@ class Stream : public Handle {
    */
   void Write(std::initializer_list<Buffer> bufs,
              const std::shared_ptr<WriteReq>& req) {
-    Write(makeArrayRef(bufs.begin(), bufs.end()), req);
+    Write({bufs.begin(), bufs.end()}, req);
   }
 
   /**
@@ -161,8 +163,8 @@ class Stream : public Handle {
    * @param bufs The buffers to be written to the stream.
    * @param callback Callback function to call when the write completes
    */
-  void Write(ArrayRef<Buffer> bufs,
-             std::function<void(MutableArrayRef<Buffer>, Error)> callback);
+  void Write(span<const Buffer> bufs,
+             std::function<void(span<Buffer>, Error)> callback);
 
   /**
    * Write data to the stream.
@@ -178,8 +180,8 @@ class Stream : public Handle {
    * @param callback Callback function to call when the write completes
    */
   void Write(std::initializer_list<Buffer> bufs,
-             std::function<void(MutableArrayRef<Buffer>, Error)> callback) {
-    Write(makeArrayRef(bufs.begin(), bufs.end()), callback);
+             std::function<void(span<Buffer>, Error)> callback) {
+    Write({bufs.begin(), bufs.end()}, std::move(callback));
   }
 
   /**
@@ -192,7 +194,7 @@ class Stream : public Handle {
    * @param bufs The buffers to be written to the stream.
    * @return Number of bytes written.
    */
-  int TryWrite(ArrayRef<Buffer> bufs);
+  int TryWrite(span<const Buffer> bufs);
 
   /**
    * Queue a write request if it can be completed immediately.
@@ -205,7 +207,7 @@ class Stream : public Handle {
    * @return Number of bytes written.
    */
   int TryWrite(std::initializer_list<Buffer> bufs) {
-    return TryWrite(makeArrayRef(bufs.begin(), bufs.end()));
+    return TryWrite({bufs.begin(), bufs.end()});
   }
 
   /**
@@ -292,7 +294,7 @@ class StreamImpl : public Stream {
   }
 
  protected:
-  StreamImpl() : Stream{reinterpret_cast<uv_stream_t*>(new U)} {}
+  StreamImpl() : Stream{static_cast<uv_stream_t*>(std::malloc(sizeof(U)))} {}
 };
 
 }  // namespace wpi::uv

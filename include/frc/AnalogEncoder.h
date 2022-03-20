@@ -9,12 +9,11 @@
 #include <hal/SimDevice.h>
 #include <hal/Types.h>
 #include <units/angle.h>
+#include <wpi/sendable/Sendable.h>
+#include <wpi/sendable/SendableHelper.h>
 
 #include "frc/AnalogTrigger.h"
 #include "frc/Counter.h"
-#include "frc/ErrorBase.h"
-#include "frc/smartdashboard/Sendable.h"
-#include "frc/smartdashboard/SendableHelper.h"
 
 namespace frc {
 class AnalogInput;
@@ -22,9 +21,8 @@ class AnalogInput;
 /**
  * Class for supporting continuous analog encoders, such as the US Digital MA3.
  */
-class AnalogEncoder : public ErrorBase,
-                      public Sendable,
-                      public SendableHelper<AnalogEncoder> {
+class AnalogEncoder : public wpi::Sendable,
+                      public wpi::SendableHelper<AnalogEncoder> {
  public:
   /**
    * Construct a new AnalogEncoder attached to a specific AnalogIn channel.
@@ -74,15 +72,38 @@ class AnalogEncoder : public ErrorBase,
   units::turn_t Get() const;
 
   /**
+   * Get the absolute position of the analog encoder.
+   *
+   * <p>GetAbsolutePosition() - GetPositionOffset() will give an encoder
+   * absolute position relative to the last reset. This could potentially be
+   * negative, which needs to be accounted for.
+   *
+   * <p>This will not account for rollovers, and will always be just the raw
+   * absolute position.
+   *
+   * @return the absolute position
+   */
+  double GetAbsolutePosition() const;
+
+  /**
    * Get the offset of position relative to the last reset.
    *
-   * GetPositionInRotation() - GetPositionOffset() will give an encoder absolute
+   * GetAbsolutePosition() - GetPositionOffset() will give an encoder absolute
    * position relative to the last reset. This could potentially be negative,
    * which needs to be accounted for.
    *
    * @return the position offset
    */
   double GetPositionOffset() const;
+
+  /**
+   * Set the position offset.
+   *
+   * <p>This must be in the range of 0-1.
+   *
+   * @param offset the offset
+   */
+  void SetPositionOffset(double offset);
 
   /**
    * Set the distance per rotation of the encoder. This sets the multiplier used
@@ -119,7 +140,7 @@ class AnalogEncoder : public ErrorBase,
    */
   int GetChannel() const;
 
-  void InitSendable(SendableBuilder& builder) override;
+  void InitSendable(wpi::SendableBuilder& builder) override;
 
  private:
   void Init();
@@ -133,5 +154,6 @@ class AnalogEncoder : public ErrorBase,
 
   hal::SimDevice m_simDevice;
   hal::SimDouble m_simPosition;
+  hal::SimDouble m_simAbsolutePosition;
 };
 }  // namespace frc

@@ -5,9 +5,9 @@
 #pragma once
 
 #include <memory>
+#include <string_view>
 
 #include <networktables/NetworkTable.h>
-#include <wpi/StringRef.h>
 
 #include "frc/shuffleboard/ShuffleboardContainer.h"
 
@@ -17,14 +17,15 @@ class ShuffleboardRoot;
 
 /**
  * Represents a tab in the Shuffleboard dashboard. Widgets can be added to the
- * tab with {@link #add(Sendable)}, {@link #add(String, Object)}, and
- * {@link #add(String, Sendable)}. Widgets can also be added to layouts with
- * {@link #getLayout(String, String)}; layouts can be nested arbitrarily deep
- * (note that too many levels may make deeper components unusable).
+ * tab with Add(Sendable), Add(std::string_view, Object), and
+ * Add(String, Sendable). Widgets can also be added to layouts with
+ * GetLayout(std::string_view, std::string_view); layouts can be nested
+ * arbitrarily deep (note that too many levels may make deeper components
+ * unusable).
  */
 class ShuffleboardTab final : public ShuffleboardContainer {
  public:
-  ShuffleboardTab(ShuffleboardRoot& root, wpi::StringRef title);
+  ShuffleboardTab(ShuffleboardRoot& root, std::string_view title);
 
   ShuffleboardRoot& GetRoot();
 

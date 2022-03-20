@@ -44,14 +44,14 @@ class VisionRunnerBase {
    *
    * <p>This method is exposed to allow teams to add additional functionality or
    * have their own ways to run the pipeline. Most teams, however, should just
-   * use {@link #runForever} in its own thread using a std::thread.</p>
+   * use RunForever() in its own thread using a std::thread.</p>
    */
   void RunOnce();
 
   /**
-   * A convenience method that calls {@link #runOnce()} in an infinite loop.
-   * This must be run in a dedicated thread, and cannot be used in the main
-   * robot thread because it will freeze the robot program.
+   * A convenience method that calls runOnce() in an infinite loop. This must be
+   * run in a dedicated thread, and cannot be used in the main robot thread
+   * because it will freeze the robot program.
    *
    * <strong>Do not call this method directly from the main thread.</strong>
    */
@@ -81,7 +81,8 @@ class VisionRunnerBase {
 template <typename T>
 class VisionRunner : public VisionRunnerBase {
  public:
-  VisionRunner(cs::VideoSource videoSource, T* pipeline, std::function<void(T&)> listener);
+  VisionRunner(cs::VideoSource videoSource, T* pipeline,
+               std::function<void(T&)> listener);
   virtual ~VisionRunner() = default;
 
  protected:

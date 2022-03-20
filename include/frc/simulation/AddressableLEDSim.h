@@ -157,10 +157,11 @@ class AddressableLEDSim {
    *
    * @param callback the callback that will be called whenever the LED data is
    *                 changed
+   * @param initialNotify if true, the callback will be run on the initial value
    * @return the CallbackStore object associated with this callback
    */
   [[nodiscard]] std::unique_ptr<CallbackStore> RegisterDataCallback(
-      NotifyCallback callback, bool initialNotify);
+      ConstBufferCallback callback, bool initialNotify);
 
   /**
    * Get the LED data.

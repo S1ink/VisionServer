@@ -74,6 +74,7 @@ void Cargo::sort(CargoOutline outline) {
 		cv::Point2f(outline.center.x, outline.center.y+outline.radius)
 	};
 }
+#ifdef TENNIS_DEMO
 void Tennis::sort(CargoOutline outline) {
 	this->points = {
 		cv::Point2f(outline.center.x - outline.radius, outline.center.y),
@@ -82,6 +83,7 @@ void Tennis::sort(CargoOutline outline) {
 		cv::Point2f(outline.center.x, outline.center.y+outline.radius)
 	};
 }
+#endif
 
 CargoFinder::CargoFinder(VisionServer& server) :
 	VPipeline(server, "Cargo Pipeline"), red(server, *this), blue(server, *this)
@@ -114,12 +116,13 @@ void CargoFinder::process(cv::Mat& io_frame, int8_t mode) {
 
 	this->red.resetTargetIdx();		// reset target idx so that if a color is disabled while in a "valid" state it doesn't stay like that
 	this->blue.resetTargetIdx();
-	this->normal.resetTargetIdx();
 
 	if(io_frame.size() != this->red.buffer.size()*(int)this->red.scale && do_red) { this->red.resizeBuffers(io_frame.size()); }
 	if(io_frame.size() != this->blue.buffer.size()*(int)this->blue.scale && do_blue) { this->blue.resizeBuffers(io_frame.size()); }
 #ifdef TENNIS_DEMO
 	if(io_frame.size() != this->normal.buffer.size()*(int)this->normal.scale) { this->normal.resizeBuffers(io_frame.size()); }
+
+	this->normal.resetTargetIdx();
 #endif
 
 	cv::resize(io_frame, this->red.buffer, cv::Size(), 1.0/this->red.scale, 1.0/this->red.scale);

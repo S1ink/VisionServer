@@ -139,6 +139,7 @@ namespace HALUsageReporting {
     kResourceType_DutyCycle = 91,
     kResourceType_AddressableLEDs = 92,
     kResourceType_FusionVenom = 93,
+    kResourceType_PS4Controller = 94,
   };
   enum tInstances : int32_t {
     kLanguage_LabVIEW = 1,

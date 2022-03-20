@@ -8,21 +8,18 @@
 
 #include <atomic>
 #include <functional>
+#include <string_view>
 #include <thread>
 #include <type_traits>
 #include <utility>
 
 #include <hal/Types.h>
 #include <units/time.h>
-#include <wpi/Twine.h>
-#include <wpi/deprecated.h>
 #include <wpi/mutex.h>
-
-#include "frc/ErrorBase.h"
 
 namespace frc {
 
-class Notifier : public ErrorBase {
+class Notifier {
  public:
   /**
    * Create a Notifier for timer event notification.
@@ -63,7 +60,7 @@ class Notifier : public ErrorBase {
   /**
    * Free the resources for a timer event.
    */
-  ~Notifier() override;
+  ~Notifier();
 
   Notifier(Notifier&& rhs);
   Notifier& operator=(Notifier&& rhs);
@@ -73,7 +70,7 @@ class Notifier : public ErrorBase {
    *
    * @param name Name
    */
-  void SetName(const wpi::Twine& name);
+  void SetName(std::string_view name);
 
   /**
    * Change the handler function.
@@ -87,38 +84,9 @@ class Notifier : public ErrorBase {
    *
    * A timer event is queued for a single event after the specified delay.
    *
-   * @deprecated Use unit-safe StartSingle(units::second_t delay) method
-   * instead.
-   *
-   * @param delay Seconds to wait before the handler is called.
-   */
-  WPI_DEPRECATED("Use unit-safe StartSingle method instead.")
-  void StartSingle(double delay);
-
-  /**
-   * Register for single event notification.
-   *
-   * A timer event is queued for a single event after the specified delay.
-   *
    * @param delay Amount of time to wait before the handler is called.
    */
   void StartSingle(units::second_t delay);
-
-  /**
-   * Register for periodic event notification.
-   *
-   * A timer event is queued for periodic event notification. Each time the
-   * interrupt occurs, the event will be immediately requeued for the same time
-   * interval.
-   *
-   * @deprecated Use unit-safe StartPeriodic(units::second_t period) method
-   * instead
-   *
-   * @param period Period in seconds to call the handler starting one period
-   *               after the call to this method.
-   */
-  WPI_DEPRECATED("Use unit-safe StartPeriodic method instead.")
-  void StartPeriodic(double period);
 
   /**
    * Register for periodic event notification.
@@ -186,10 +154,10 @@ class Notifier : public ErrorBase {
   std::function<void()> m_handler;
 
   // The absolute expiration time
-  double m_expirationTime = 0;
+  units::second_t m_expirationTime = 0_s;
 
   // The relative time (either periodic or single)
-  double m_period = 0;
+  units::second_t m_period = 0_s;
 
   // True if this is a periodic event
   bool m_periodic = false;

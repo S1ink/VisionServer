@@ -41,6 +41,7 @@ DIR := /
 endif
 
 SRC_DIR := src
+CORE_SUBDIR := core
 OBJ_DIR := obj
 OUT_DIR := out
 HEADER_DIR := $(OUT_DIR)$(DIR)include
@@ -58,28 +59,28 @@ LIBSTATIC := $(OUT_DIR)/lib$(LNAME).a
 SRCS := $(call rwildcard,$(SRC_DIR)/,*.cpp *.c *.S *.s)
 OBJS := $(SRCS:$(SRC_DIR)/%=$(OBJ_DIR)/%.o)
 
-LIB_SRCS := $(call rwildcard,$(SRC_DIR)/api/,*.cpp *.c *.S *.s)
+LIB_SRCS := $(call rwildcard,$(SRC_DIR)/$(CORE_SUBDIR)/,*.cpp *.c *.S *.s)
 LIB_OBJS := $(LIB_SRCS:$(SRC_DIR)/%=$(OBJ_DIR)/%.o)
 ifeq ($(OS),windows)
-HEADERS := $(subst /,\,$(call rwildcard,$(SRC_DIR)/api/,*.h *.hpp *.inc))
+HEADERS := $(subst /,\,$(call rwildcard,$(SRC_DIR)/$(CORE_SUBDIR)/,*.h *.hpp *.inc))
 else
-HEADERS := $(call rwildcard,$(SRC_DIR)/api/,*.h *.hpp *.inc)
+HEADERS := $(call rwildcard,$(SRC_DIR)/$(CORE_SUBDIR)/,*.h *.hpp *.inc)
 endif
-COPY_HEADERS := $(HEADERS:$(SRC_DIR)\api%=$(HEADER_DIR)%)
+COPY_HEADERS := $(HEADERS:$(SRC_DIR)\$(CORE_SUBDIR)%=$(HEADER_DIR)%)
 
 CDEBUG := -g -Og -DDEBUG
 LDEBUG := -g
 CRELEASE := -O3 -DRELEASE
 LRELEASE :=
 
-CPPFLAGS := -pthread -Iinclude -Ireferences -Iinclude/opencv -MMD -MP
+CPPFLAGS := -pthread -Iinclude -Ireferences -Iinclude/opencv4 -MMD -MP
 CFLAGS := -Wall #-fpermissive
 ASMFLAGS := -mcpu=cortex-a72 -mfpu=neon-fp-armv8
 LDFLAGS := -pthread -Wall -Llib -Wl,--unresolved-symbols=ignore-in-shared-libs
-LDLIBS := -lm -lpigpio -lwpilibc -lwpiHal -lcameraserver -lntcore -lcscore -lopencv_dnn -lopencv_highgui -lopencv_ml \
-	-lopencv_objdetect -lopencv_shape -lopencv_stitching -lopencv_superres -lopencv_videostab -lopencv_calib3d \
-	-lopencv_videoio -lopencv_imgcodecs -lopencv_features2d -lopencv_video -lopencv_photo -lopencv_imgproc -lopencv_flann \
-	-lopencv_core -lwpiutil -latomic
+LDLIBS := -lm -lpigpio -lwpilibc -lwpiHal -lcameraserver -lntcore -lcscore -lopencv_gapi \
+	-lopencv_highgui -lopencv_ml -lopencv_objdetect -lopencv_photo -lopencv_stitching -lopencv_video \
+	-lopencv_calib3d -lopencv_features2d -lopencv_dnn -lopencv_flann -lopencv_videoio -lopencv_imgcodecs \
+	-lopencv_imgproc -lopencv_core -lwpiutil -latomic
 
 ifeq ($(mode),release)
 COPT := $(CRELEASE)
@@ -120,7 +121,7 @@ $(PROGRAM): $(OBJS) | $(OUT_DIR)
 $(LIBSTATIC): $(LIB_OBJS) | $(OUT_DIR)
 	$(AR) rcs $@ $(foreach file,$(^F),$(OBJ_DIR)/$(file))
 
-$(COPY_HEADERS): $(HEADER_DIR)% : $(SRC_DIR)\api% | $(HEADER_DIR)
+$(COPY_HEADERS): $(HEADER_DIR)% : $(SRC_DIR)\$(CORE_SUBDIR)% | $(HEADER_DIR)
 	$(CP) $< $@
 
 #create dirs if nonexistant

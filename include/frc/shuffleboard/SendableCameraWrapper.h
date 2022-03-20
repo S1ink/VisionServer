@@ -7,19 +7,24 @@
 #include <functional>
 #include <memory>
 #include <string>
+#include <string_view>
 
 #ifndef DYNAMIC_CAMERA_SERVER
 #include <cscore_oo.h>
+#include <fmt/format.h>
+#include <networktables/NetworkTable.h>
+#include <networktables/NetworkTableInstance.h>
 #else
 namespace cs {
 class VideoSource;
 }  // namespace cs
-typedef int CS_Handle;
-typedef CS_Handle CS_Source;
+using CS_Handle = int;        // NOLINT
+using CS_Source = CS_Handle;  // NOLINT
 #endif
 
-#include "frc/smartdashboard/Sendable.h"
-#include "frc/smartdashboard/SendableHelper.h"
+#include <wpi/sendable/Sendable.h>
+#include <wpi/sendable/SendableHelper.h>
+#include <wpi/span.h>
 
 namespace frc {
 
@@ -28,15 +33,16 @@ class SendableCameraWrapper;
 namespace detail {
 constexpr const char* kProtocol = "camera_server://";
 std::shared_ptr<SendableCameraWrapper>& GetSendableCameraWrapper(
-    CS_Source source);
-void AddToSendableRegistry(Sendable* sendable, std::string name);
+    std::string_view cameraName);
+void AddToSendableRegistry(wpi::Sendable* sendable, std::string_view name);
 }  // namespace detail
 
 /**
  * A wrapper to make video sources sendable and usable from Shuffleboard.
  */
-class SendableCameraWrapper : public Sendable,
-                              public SendableHelper<SendableCameraWrapper> {
+class SendableCameraWrapper
+    : public wpi::Sendable,
+      public wpi::SendableHelper<SendableCameraWrapper> {
  private:
   struct private_init {};
 
@@ -45,9 +51,9 @@ class SendableCameraWrapper : public Sendable,
    * Creates a new sendable wrapper. Private constructor to avoid direct
    * instantiation with multiple wrappers floating around for the same camera.
    *
-   * @param source the source to wrap
+   * @param cameraName the name of the camera to wrap
    */
-  SendableCameraWrapper(CS_Source source, const private_init&);
+  SendableCameraWrapper(std::string_view cameraName, const private_init&);
 
   /**
    * Gets a sendable wrapper object for the given video source, creating the
@@ -60,18 +66,19 @@ class SendableCameraWrapper : public Sendable,
   static SendableCameraWrapper& Wrap(const cs::VideoSource& source);
   static SendableCameraWrapper& Wrap(CS_Source source);
 
-  void InitSendable(SendableBuilder& builder) override;
+  static SendableCameraWrapper& Wrap(std::string_view cameraName,
+                                     wpi::span<const std::string> cameraUrls);
+
+  void InitSendable(wpi::SendableBuilder& builder) override;
 
  private:
   std::string m_uri;
 };
 
 #ifndef DYNAMIC_CAMERA_SERVER
-inline SendableCameraWrapper::SendableCameraWrapper(CS_Source source,
+inline SendableCameraWrapper::SendableCameraWrapper(std::string_view name,
                                                     const private_init&)
     : m_uri(detail::kProtocol) {
-  CS_Status status = 0;
-  auto name = cs::GetSourceName(source, &status);
   detail::AddToSendableRegistry(this, name);
   m_uri += name;
 }
@@ -82,10 +89,25 @@ inline SendableCameraWrapper& SendableCameraWrapper::Wrap(
 }
 
 inline SendableCameraWrapper& SendableCameraWrapper::Wrap(CS_Source source) {
-  auto& wrapper = detail::GetSendableCameraWrapper(source);
+  CS_Status status = 0;
+  auto name = cs::GetSourceName(source, &status);
+  auto& wrapper = detail::GetSendableCameraWrapper(name);
   if (!wrapper) {
-    wrapper = std::make_shared<SendableCameraWrapper>(source, private_init{});
+    wrapper = std::make_shared<SendableCameraWrapper>(name, private_init{});
   }
+  return *wrapper;
+}
+
+inline SendableCameraWrapper& SendableCameraWrapper::Wrap(
+    std::string_view cameraName, wpi::span<const std::string> cameraUrls) {
+  auto& wrapper = detail::GetSendableCameraWrapper(cameraName);
+  if (!wrapper) {
+    wrapper =
+        std::make_shared<SendableCameraWrapper>(cameraName, private_init{});
+  }
+  auto streams = fmt::format("/CameraPublisher/{}/streams", cameraName);
+  nt::NetworkTableInstance::GetDefault().GetEntry(streams).SetStringArray(
+      cameraUrls);
   return *wrapper;
 }
 #endif

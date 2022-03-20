@@ -9,17 +9,19 @@
 #include <functional>
 #include <limits>
 
-#include <units/time.h>
+#include <wpi/SymbolExports.h>
+#include <wpi/sendable/Sendable.h>
+#include <wpi/sendable/SendableBuilder.h>
+#include <wpi/sendable/SendableHelper.h>
 
 #include "frc/MathUtil.h"
 #include "frc/controller/PIDController.h"
-#include "frc/smartdashboard/Sendable.h"
-#include "frc/smartdashboard/SendableBuilder.h"
-#include "frc/smartdashboard/SendableHelper.h"
 #include "frc/trajectory/TrapezoidProfile.h"
+#include "units/time.h"
 
 namespace frc {
 namespace detail {
+WPILIB_DLLEXPORT
 void ReportProfiledPIDController();
 }  // namespace detail
 
@@ -29,8 +31,8 @@ void ReportProfiledPIDController();
  */
 template <class Distance>
 class ProfiledPIDController
-    : public Sendable,
-      public SendableHelper<ProfiledPIDController<Distance>> {
+    : public wpi::Sendable,
+      public wpi::SendableHelper<ProfiledPIDController<Distance>> {
  public:
   using Distance_t = units::unit_t<Distance>;
   using Velocity =
@@ -191,8 +193,8 @@ class ProfiledPIDController
    * @param maximumInput The maximum value expected from the input.
    */
   void EnableContinuousInput(Distance_t minimumInput, Distance_t maximumInput) {
-    m_controller.EnableContinuousInput(minimumInput.template to<double>(),
-                                       maximumInput.template to<double>());
+    m_controller.EnableContinuousInput(minimumInput.value(),
+                                       maximumInput.value());
     m_minimumInput = minimumInput;
     m_maximumInput = maximumInput;
   }
@@ -222,11 +224,11 @@ class ProfiledPIDController
    * @param positionTolerance Position error which is tolerable.
    * @param velocityTolerance Velocity error which is tolerable.
    */
-  void SetTolerance(
-      Distance_t positionTolerance,
-      Velocity_t velocityTolerance = std::numeric_limits<double>::infinity()) {
-    m_controller.SetTolerance(positionTolerance.template to<double>(),
-                              velocityTolerance.template to<double>());
+  void SetTolerance(Distance_t positionTolerance,
+                    Velocity_t velocityTolerance =
+                        Velocity_t(std::numeric_limits<double>::infinity())) {
+    m_controller.SetTolerance(positionTolerance.value(),
+                              velocityTolerance.value());
   }
 
   /**
@@ -253,10 +255,11 @@ class ProfiledPIDController
   double Calculate(Distance_t measurement) {
     if (m_controller.IsContinuousInputEnabled()) {
       // Get error which is smallest distance between goal and measurement
+      auto errorBound = (m_maximumInput - m_minimumInput) / 2.0;
       auto goalMinDistance = frc::InputModulus<Distance_t>(
-          m_goal.position - measurement, m_minimumInput, m_maximumInput);
+          m_goal.position - measurement, -errorBound, errorBound);
       auto setpointMinDistance = frc::InputModulus<Distance_t>(
-          m_setpoint.position - measurement, m_minimumInput, m_maximumInput);
+          m_setpoint.position - measurement, -errorBound, errorBound);
 
       // Recompute the profile goal with the smallest error, thus giving the
       // shortest path. The goal may be outside the input range after this
@@ -270,8 +273,8 @@ class ProfiledPIDController
 
     frc::TrapezoidProfile<Distance> profile{m_constraints, m_goal, m_setpoint};
     m_setpoint = profile.Calculate(GetPeriod());
-    return m_controller.Calculate(measurement.template to<double>(),
-                                  m_setpoint.position.template to<double>());
+    return m_controller.Calculate(measurement.value(),
+                                  m_setpoint.position.value());
   }
 
   /**
@@ -339,7 +342,7 @@ class ProfiledPIDController
     Reset(measuredPosition, Velocity_t(0));
   }
 
-  void InitSendable(frc::SendableBuilder& builder) override {
+  void InitSendable(wpi::SendableBuilder& builder) override {
     builder.SetSmartDashboardType("ProfiledPIDController");
     builder.AddDoubleProperty(
         "p", [this] { return GetP(); }, [this](double value) { SetP(value); });
@@ -348,7 +351,7 @@ class ProfiledPIDController
     builder.AddDoubleProperty(
         "d", [this] { return GetD(); }, [this](double value) { SetD(value); });
     builder.AddDoubleProperty(
-        "goal", [this] { return GetGoal().position.template to<double>(); },
+        "goal", [this] { return GetGoal().position.value(); },
         [this](double value) { SetGoal(Distance_t{value}); });
   }
 

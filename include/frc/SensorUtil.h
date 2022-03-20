@@ -19,14 +19,14 @@ class SensorUtil final {
    *
    * @return The number of the default solenoid module.
    */
-  static int GetDefaultSolenoidModule();
+  static int GetDefaultCTREPCMModule();
 
   /**
-   * Check that the solenoid module number is valid. module numbers are 0-based
+   * Get the number of the default solenoid module.
    *
-   * @return Solenoid module is valid and present
+   * @return The number of the default solenoid module.
    */
-  static bool CheckSolenoidModule(int moduleNumber);
+  static int GetDefaultREVPHModule();
 
   /**
    * Check that the digital channel number is valid.
@@ -78,36 +78,11 @@ class SensorUtil final {
    */
   static bool CheckAnalogOutputChannel(int channel);
 
-  /**
-   * Verify that the solenoid channel number is within limits.
-   *
-   * @return Solenoid channel is valid
-   */
-  static bool CheckSolenoidChannel(int channel);
-
-  /**
-   * Verify that the power distribution channel number is within limits.
-   *
-   * @return PDP channel is valid
-   */
-  static bool CheckPDPChannel(int channel);
-
-  /**
-   * Verify that the PDP module number is within limits. module numbers are
-   * 0-based
-   *
-   * @return PDP module is valid
-   */
-  static bool CheckPDPModule(int module);
-
   static const int kDigitalChannels;
   static const int kAnalogInputs;
   static const int kAnalogOutputs;
-  static const int kSolenoidChannels;
-  static const int kSolenoidModules;
   static const int kPwmChannels;
   static const int kRelayChannels;
-  static const int kPDPChannels;
 };
 
 }  // namespace frc

@@ -4,7 +4,8 @@
 
 #pragma once
 
-#include "frc2/Timer.h"
+#include <units/time.h>
+#include <wpi/deprecated.h>
 
 namespace frc {
 
@@ -18,23 +19,20 @@ namespace frc {
  *
  * @param seconds Length of time to pause, in seconds.
  */
-void Wait(double seconds);
+void Wait(units::second_t seconds);
 
 /**
  * @brief  Gives real-time clock system time with nanosecond resolution
  * @return The time, just in case you want the robot to start autonomous at 8pm
  *         on Saturday.
  */
-double GetTime();
+units::second_t GetTime();
 
 /**
- * Timer objects measure accumulated time in seconds.
+ * A timer class.
  *
- * The timer object functions like a stopwatch. It can be started, stopped, and
- * cleared. When the timer is running its value counts up in seconds. When
- * stopped, the timer holds the current value. The implementation simply records
- * the time when started and subtracts the current time whenever the value is
- * requested.
+ * Note that if the user calls frc::sim::RestartTiming(), they should also reset
+ * the timer so Get() won't return a negative duration.
  */
 class Timer {
  public:
@@ -48,10 +46,10 @@ class Timer {
 
   virtual ~Timer() = default;
 
-  Timer(const Timer& rhs) = default;
-  Timer& operator=(const Timer& rhs) = default;
-  Timer(Timer&& rhs) = default;
-  Timer& operator=(Timer&& rhs) = default;
+  Timer(const Timer&) = default;
+  Timer& operator=(const Timer&) = default;
+  Timer(Timer&&) = default;
+  Timer& operator=(Timer&&) = default;
 
   /**
    * Get the current time from the timer. If the clock is running it is derived
@@ -60,7 +58,7 @@ class Timer {
    *
    * @return Current time value for this timer in seconds
    */
-  double Get() const;
+  units::second_t Get() const;
 
   /**
    * Reset the timer by setting the time to 0.
@@ -74,7 +72,8 @@ class Timer {
    * Start the timer running.
    *
    * Just set the running flag to true indicating that all time requests should
-   * be relative to the system clock.
+   * be relative to the system clock. Note that this method is a no-op if the
+   * timer is already running.
    */
   void Start();
 
@@ -88,14 +87,34 @@ class Timer {
   void Stop();
 
   /**
+   * Check if the period specified has passed.
+   *
+   * @param period The period to check.
+   * @return       True if the period has passed.
+   */
+  bool HasElapsed(units::second_t period) const;
+
+  /**
    * Check if the period specified has passed and if it has, advance the start
    * time by that period. This is useful to decide if it's time to do periodic
    * work without drifting later by the time it took to get around to checking.
    *
-   * @param period The period to check for (in seconds).
+   * @param period The period to check for.
+   * @return       True if the period has passed.
+   * @deprecated Use AdvanceIfElapsed() instead.
+   */
+  WPI_DEPRECATED("Use AdvanceIfElapsed() instead.")
+  bool HasPeriodPassed(units::second_t period);
+
+  /**
+   * Check if the period specified has passed and if it has, advance the start
+   * time by that period. This is useful to decide if it's time to do periodic
+   * work without drifting later by the time it took to get around to checking.
+   *
+   * @param period The period to check for.
    * @return       True if the period has passed.
    */
-  bool HasPeriodPassed(double period);
+  bool AdvanceIfElapsed(units::second_t period);
 
   /**
    * Return the FPGA system clock time in seconds.
@@ -105,7 +124,7 @@ class Timer {
    *
    * @returns Robot running time in seconds.
    */
-  static double GetFPGATimestamp();
+  static units::second_t GetFPGATimestamp();
 
   /**
    * Return the approximate match time.
@@ -122,10 +141,12 @@ class Timer {
    *
    * @return Time remaining in current match period (auto or teleop)
    */
-  static double GetMatchTime();
+  static units::second_t GetMatchTime();
 
  private:
-  frc2::Timer m_timer;
+  units::second_t m_startTime = 0_s;
+  units::second_t m_accumulatedTime = 0_s;
+  bool m_running = false;
 };
 
 }  // namespace frc

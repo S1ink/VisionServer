@@ -6,6 +6,7 @@
 
 #include <functional>
 
+#include <wpi/SymbolExports.h>
 #include <wpi/array.h>
 
 #include "Eigen/Core"
@@ -31,30 +32,32 @@ namespace frc {
  * never call it, then this class will behave mostly like regular encoder
  * odometry.
  *
- * Our state-space system is:
+ * The state-space system used internally has the following states (x), inputs
+ * (u), and outputs (y):
  *
- * <strong> x = [[x, y, theta]]^T </strong> in the
- * field-coordinate system.
+ * <strong> x = [x, y, theta]ᵀ </strong> in the field coordinate system
+ * containing x position, y position, and heading.
  *
- * <strong> u = [[vx, vy, omega]]^T </strong> in the field-coordinate system.
+ * <strong> u = [v_x, v_y, omega]ᵀ </strong> containing x velocity, y velocity,
+ * and angular velocity in the field coordinate system.
  *
- * <strong> y = [[x, y, theta]]^T </strong> in field
- * coords from vision, or <strong> y = [[theta]]^T
- * </strong> from the gyro.
+ * <strong> y = [x, y, theta]ᵀ </strong> from vision containing x position, y
+ * position, and heading; or <strong> y = [theta]ᵀ </strong> containing gyro
+ * heading.
  */
-class MecanumDrivePoseEstimator {
+class WPILIB_DLLEXPORT MecanumDrivePoseEstimator {
  public:
   /**
    * Constructs a MecanumDrivePoseEstimator.
    *
    * @param gyroAngle                The current gyro angle.
-   * @param initialPoseMeters        The starting pose estimate.
+   * @param initialPose              The starting pose estimate.
    * @param kinematics               A correctly-configured kinematics object
    *                                 for your drivetrain.
    * @param stateStdDevs             Standard deviations of model states.
    *                                 Increase these numbers to trust your
    *                                 model's state estimates less. This matrix
-   *                                 is in the form [x, y, theta]^T, with units
+   *                                 is in the form [x, y, theta]ᵀ, with units
    *                                 in meters and radians.
    * @param localMeasurementStdDevs  Standard deviations of the encoder and gyro
    *                                 measurements. Increase these numbers to
@@ -65,7 +68,7 @@ class MecanumDrivePoseEstimator {
    *                                 measurements. Increase these numbers to
    *                                 trust global measurements from vision
    *                                 less. This matrix is in the form
-   *                                 [x, y, theta]^T, with units in meters and
+   *                                 [x, y, theta]ᵀ, with units in meters and
    *                                 radians.
    * @param nominalDt                The time in seconds between each robot
    *                                 loop.
@@ -87,7 +90,7 @@ class MecanumDrivePoseEstimator {
    *                                 measurements. Increase these numbers to
    *                                 trust global measurements from vision
    *                                 less. This matrix is in the form
-   *                                 [x, y, theta]^T, with units in meters and
+   *                                 [x, y, theta]ᵀ, with units in meters and
    *                                 radians.
    */
   void SetVisionMeasurementStdDevs(
@@ -101,8 +104,8 @@ class MecanumDrivePoseEstimator {
    * <p>The gyroscope angle does not need to be reset in the user's robot code.
    * The library automatically takes care of offsetting the gyro angle.
    *
-   * @param poseMeters The position on the field that your robot is at.
-   * @param gyroAngle  The angle reported by the gyroscope.
+   * @param pose      The position on the field that your robot is at.
+   * @param gyroAngle The angle reported by the gyroscope.
    */
   void ResetPosition(const Pose2d& pose, const Rotation2d& gyroAngle);
 
@@ -155,15 +158,15 @@ class MecanumDrivePoseEstimator {
    *                                 timestamp with an epoch since FPGA startup
    *                                 (i.e. the epoch of this timestamp is the
    *                                 same epoch as
-   *                                 frc2::Timer::GetFPGATimestamp(). This means
+   *                                 frc::Timer::GetFPGATimestamp(). This means
    *                                 that you should use
-   *                                 frc2::Timer::GetFPGATimestamp() as your
+   *                                 frc::Timer::GetFPGATimestamp() as your
    *                                 time source in this case.
    * @param visionMeasurementStdDevs Standard deviations of the vision
    *                                 measurements. Increase these numbers to
    *                                 trust global measurements from vision
    *                                 less. This matrix is in the form
-   *                                 [x, y, theta]^T, with units in meters and
+   *                                 [x, y, theta]ᵀ, with units in meters and
    *                                 radians.
    */
   void AddVisionMeasurement(
@@ -190,9 +193,9 @@ class MecanumDrivePoseEstimator {
    * information. This should be called every loop, and the correct loop period
    * must be passed into the constructor of this class.
    *
-   * @param currentTimeSeconds Time at which this method was called, in seconds.
-   * @param gyroAngle          The current gyroscope angle.
-   * @param wheelSpeeds        The current speeds of the mecanum drive wheels.
+   * @param currentTime Time at which this method was called, in seconds.
+   * @param gyroAngle   The current gyroscope angle.
+   * @param wheelSpeeds The current speeds of the mecanum drive wheels.
    * @return The estimated pose of the robot in meters.
    */
   Pose2d UpdateWithTime(units::second_t currentTime,
@@ -204,11 +207,11 @@ class MecanumDrivePoseEstimator {
   MecanumDriveKinematics m_kinematics;
   KalmanFilterLatencyCompensator<3, 3, 1, UnscentedKalmanFilter<3, 3, 1>>
       m_latencyCompensator;
-  std::function<void(const Eigen::Matrix<double, 3, 1>& u,
-                     const Eigen::Matrix<double, 3, 1>& y)>
+  std::function<void(const Eigen::Vector<double, 3>& u,
+                     const Eigen::Vector<double, 3>& y)>
       m_visionCorrect;
 
-  Eigen::Matrix3d m_visionDiscR;
+  Eigen::Matrix3d m_visionContR;
 
   units::second_t m_nominalDt;
   units::second_t m_prevTime = -1_s;
@@ -218,7 +221,7 @@ class MecanumDrivePoseEstimator {
 
   template <int Dim>
   static wpi::array<double, Dim> StdDevMatrixToArray(
-      const Eigen::Matrix<double, Dim, 1>& vector) {
+      const Eigen::Vector<double, Dim>& vector) {
     wpi::array<double, Dim> array;
     for (size_t i = 0; i < Dim; ++i) {
       array[i] = vector(i);

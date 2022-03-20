@@ -7,17 +7,15 @@
 #include <functional>
 #include <memory>
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include <networktables/NetworkTableEntry.h>
 #include <networktables/NetworkTableValue.h>
-#include <wpi/ArrayRef.h>
 #include <wpi/SmallSet.h>
 #include <wpi/StringMap.h>
-#include <wpi/Twine.h>
+#include <wpi/span.h>
 
-#include "frc/ErrorBase.h"
-#include "frc/WPIErrors.h"
 #include "frc/shuffleboard/BuiltInLayouts.h"
 #include "frc/shuffleboard/LayoutType.h"
 #include "frc/shuffleboard/ShuffleboardComponentBase.h"
@@ -28,20 +26,22 @@ namespace cs {
 class VideoSource;
 }  // namespace cs
 
+namespace wpi {
+class Sendable;
+}  // namespace wpi
+
 namespace frc {
 
 class ComplexWidget;
-class Sendable;
 class ShuffleboardLayout;
 class SimpleWidget;
 
 /**
  * Common interface for objects that can contain shuffleboard components.
  */
-class ShuffleboardContainer : public virtual ShuffleboardValue,
-                              public ErrorBase {
+class ShuffleboardContainer : public virtual ShuffleboardValue {
  public:
-  explicit ShuffleboardContainer(const wpi::Twine& title);
+  explicit ShuffleboardContainer(std::string_view title);
 
   ShuffleboardContainer(ShuffleboardContainer&& rhs) = default;
 
@@ -57,38 +57,36 @@ class ShuffleboardContainer : public virtual ShuffleboardValue,
    * Gets the layout with the given type and title, creating it if it does not
    * already exist at the time this method is called.
    *
-   * @param title      the title of the layout
-   * @param layoutType the type of the layout, eg "List" or "Grid"
+   * @param title the title of the layout
+   * @param type  the type of the layout, eg "List" or "Grid"
    * @return the layout
    */
-  ShuffleboardLayout& GetLayout(const wpi::Twine& title, BuiltInLayouts type);
+  ShuffleboardLayout& GetLayout(std::string_view title, BuiltInLayouts type);
 
   /**
    * Gets the layout with the given type and title, creating it if it does not
    * already exist at the time this method is called.
    *
-   * @param title      the title of the layout
-   * @param layoutType the type of the layout, eg "List" or "Grid"
+   * @param title the title of the layout
+   * @param type  the type of the layout, eg "List" or "Grid"
    * @return the layout
    */
-  ShuffleboardLayout& GetLayout(const wpi::Twine& title,
-                                const LayoutType& type);
+  ShuffleboardLayout& GetLayout(std::string_view title, const LayoutType& type);
 
   /**
    * Gets the layout with the given type and title, creating it if it does not
    * already exist at the time this method is called. Note: this method should
    * only be used to use a layout type that is not already built into
    * Shuffleboard. To use a layout built into Shuffleboard, use
-   * {@link #GetLayout(String, LayoutType)} and the layouts in {@link
-   * BuiltInLayouts}.
+   * GetLayout(std::string_view, const LayoutType&) and the layouts in
+   * BuiltInLayouts.
    *
    * @param title the title of the layout
    * @param type  the type of the layout, eg "List Layout" or "Grid Layout"
    * @return the layout
-   * @see #GetLayout(String, LayoutType)
+   * @see GetLayout(std::string_view, const LayoutType&)
    */
-  ShuffleboardLayout& GetLayout(const wpi::Twine& title,
-                                const wpi::Twine& type);
+  ShuffleboardLayout& GetLayout(std::string_view title, std::string_view type);
 
   /**
    * Gets the already-defined layout in this container with the given title.
@@ -105,7 +103,7 @@ class ShuffleboardContainer : public virtual ShuffleboardValue,
    * @return the layout with the given title
    * @throws if no layout has yet been defined with the given title
    */
-  ShuffleboardLayout& GetLayout(const wpi::Twine& title);
+  ShuffleboardLayout& GetLayout(std::string_view title);
 
   /**
    * Adds a widget to this container to display the given sendable.
@@ -116,7 +114,7 @@ class ShuffleboardContainer : public virtual ShuffleboardValue,
    * @throws IllegalArgumentException if a widget already exists in this
    * container with the given title
    */
-  ComplexWidget& Add(const wpi::Twine& title, Sendable& sendable);
+  ComplexWidget& Add(std::string_view title, wpi::Sendable& sendable);
 
   /**
    * Adds a widget to this container to display the given video stream.
@@ -127,7 +125,19 @@ class ShuffleboardContainer : public virtual ShuffleboardValue,
    * @throws IllegalArgumentException if a widget already exists in this
    * container with the given title
    */
-  ComplexWidget& Add(const wpi::Twine& title, const cs::VideoSource& video);
+  ComplexWidget& Add(std::string_view title, const cs::VideoSource& video);
+
+  /**
+   * Adds a widget to this container to display a video stream.
+   *
+   * @param title      the title of the widget
+   * @param cameraName the name of the streamed camera
+   * @param cameraUrls the URLs with which the dashboard can access the camera
+   * stream
+   * @return a widget to display the camera stream
+   */
+  ComplexWidget& AddCamera(std::string_view title, std::string_view cameraName,
+                           wpi::span<const std::string> cameraUrls);
 
   /**
    * Adds a widget to this container to display the given sendable.
@@ -138,7 +148,7 @@ class ShuffleboardContainer : public virtual ShuffleboardValue,
    * container with the given title, or if the sendable's name has not been
    * specified
    */
-  ComplexWidget& Add(Sendable& sendable);
+  ComplexWidget& Add(wpi::Sendable& sendable);
 
   /**
    * Adds a widget to this container to display the given video stream.
@@ -158,9 +168,10 @@ class ShuffleboardContainer : public virtual ShuffleboardValue,
    * @return a widget to display the sendable data
    * @throws IllegalArgumentException if a widget already exists in this
    *         container with the given title
-   * @see #addPersistent(String, Object) add(String title, Object defaultValue)
+   * @see AddPersistent(std::string_view, std::shared_ptr<nt::Value>)
+   *      Add(std::string_view title, std::shared_ptr<nt::Value> defaultValue)
    */
-  SimpleWidget& Add(const wpi::Twine& title,
+  SimpleWidget& Add(std::string_view title,
                     std::shared_ptr<nt::Value> defaultValue);
 
   /**
@@ -171,9 +182,10 @@ class ShuffleboardContainer : public virtual ShuffleboardValue,
    * @return a widget to display the sendable data
    * @throws IllegalArgumentException if a widget already exists in this
    *         container with the given title
-   * @see #addPersistent(String, Object) add(String title, Object defaultValue)
+   * @see AddPersistent(std::string_view, bool)
+   *      Add(std::string_view title, bool defaultValue)
    */
-  SimpleWidget& Add(const wpi::Twine& title, bool defaultValue);
+  SimpleWidget& Add(std::string_view title, bool defaultValue);
 
   /**
    * Adds a widget to this container to display the given data.
@@ -183,9 +195,10 @@ class ShuffleboardContainer : public virtual ShuffleboardValue,
    * @return a widget to display the sendable data
    * @throws IllegalArgumentException if a widget already exists in this
    *         container with the given title
-   * @see #addPersistent(String, Object) add(String title, Object defaultValue)
+   * @see AddPersistent(std::string_view, double)
+   *      Add(std::string_view title, double defaultValue)
    */
-  SimpleWidget& Add(const wpi::Twine& title, double defaultValue);
+  SimpleWidget& Add(std::string_view title, double defaultValue);
 
   /**
    * Adds a widget to this container to display the given data.
@@ -195,9 +208,10 @@ class ShuffleboardContainer : public virtual ShuffleboardValue,
    * @return a widget to display the sendable data
    * @throws IllegalArgumentException if a widget already exists in this
    *         container with the given title
-   * @see #addPersistent(String, Object) add(String title, Object defaultValue)
+   * @see AddPersistent(std::string_view, int)
+   *      Add(std::string_view title, int defaultValue)
    */
-  SimpleWidget& Add(const wpi::Twine& title, int defaultValue);
+  SimpleWidget& Add(std::string_view title, int defaultValue);
 
   /**
    * Adds a widget to this container to display the given data.
@@ -207,9 +221,10 @@ class ShuffleboardContainer : public virtual ShuffleboardValue,
    * @return a widget to display the sendable data
    * @throws IllegalArgumentException if a widget already exists in this
    *         container with the given title
-   * @see #addPersistent(String, Object) add(String title, Object defaultValue)
+   * @see AddPersistent(std::string_view, std::string_view)
+   *      Add(std::string_view title, std::string_view defaultValue)
    */
-  SimpleWidget& Add(const wpi::Twine& title, const wpi::Twine& defaultValue);
+  SimpleWidget& Add(std::string_view title, std::string_view defaultValue);
 
   /**
    * Adds a widget to this container to display the given data.
@@ -219,9 +234,10 @@ class ShuffleboardContainer : public virtual ShuffleboardValue,
    * @return a widget to display the sendable data
    * @throws IllegalArgumentException if a widget already exists in this
    *         container with the given title
-   * @see #addPersistent(String, Object) add(String title, Object defaultValue)
+   * @see AddPersistent(std::string_view, const char*)
+   *      Add(std::string_view title, const char* defaultValue)
    */
-  SimpleWidget& Add(const wpi::Twine& title, const char* defaultValue);
+  SimpleWidget& Add(std::string_view title, const char* defaultValue);
 
   /**
    * Adds a widget to this container to display the given data.
@@ -231,9 +247,10 @@ class ShuffleboardContainer : public virtual ShuffleboardValue,
    * @return a widget to display the sendable data
    * @throws IllegalArgumentException if a widget already exists in this
    *         container with the given title
-   * @see #addPersistent(String, Object) add(String title, Object defaultValue)
+   * @see AddPersistent(std::string_view, wpi::span<const bool>)
+   *      Add(std::string_view title, wpi::span<const bool> defaultValue)
    */
-  SimpleWidget& Add(const wpi::Twine& title, wpi::ArrayRef<bool> defaultValue);
+  SimpleWidget& Add(std::string_view title, wpi::span<const bool> defaultValue);
 
   /**
    * Adds a widget to this container to display the given data.
@@ -243,10 +260,11 @@ class ShuffleboardContainer : public virtual ShuffleboardValue,
    * @return a widget to display the sendable data
    * @throws IllegalArgumentException if a widget already exists in this
    *         container with the given title
-   * @see #addPersistent(String, Object) add(String title, Object defaultValue)
+   * @see AddPersistent(std::string_view, wpi::span<const double>)
+   *      Add(std::string_view title, wpi::span<const double> defaultValue)
    */
-  SimpleWidget& Add(const wpi::Twine& title,
-                    wpi::ArrayRef<double> defaultValue);
+  SimpleWidget& Add(std::string_view title,
+                    wpi::span<const double> defaultValue);
 
   /**
    * Adds a widget to this container to display the given data.
@@ -256,10 +274,11 @@ class ShuffleboardContainer : public virtual ShuffleboardValue,
    * @return a widget to display the sendable data
    * @throws IllegalArgumentException if a widget already exists in this
    *         container with the given title
-   * @see #addPersistent(String, Object) add(String title, Object defaultValue)
+   * @see AddPersistent(std::string_view, wpi::span<const std::string>)
+   *      Add(std::string_view title, wpi::span<const std::string> defaultValue)
    */
-  SimpleWidget& Add(const wpi::Twine& title,
-                    wpi::ArrayRef<std::string> defaultValue);
+  SimpleWidget& Add(std::string_view title,
+                    wpi::span<const std::string> defaultValue);
 
   /**
    * Adds a widget to this container. The widget will display the data provided
@@ -268,11 +287,11 @@ class ShuffleboardContainer : public virtual ShuffleboardValue,
    * supplier.
    *
    * @param title the title of the widget
-   * @param valueSupplier the supplier for values
+   * @param supplier the supplier for values
    * @return a widget to display data
    */
   SuppliedValueWidget<std::string>& AddString(
-      const wpi::Twine& title, std::function<std::string()> supplier);
+      std::string_view title, std::function<std::string()> supplier);
 
   /**
    * Adds a widget to this container. The widget will display the data provided
@@ -281,10 +300,10 @@ class ShuffleboardContainer : public virtual ShuffleboardValue,
    * supplier.
    *
    * @param title the title of the widget
-   * @param valueSupplier the supplier for values
+   * @param supplier the supplier for values
    * @return a widget to display data
    */
-  SuppliedValueWidget<double>& AddNumber(const wpi::Twine& title,
+  SuppliedValueWidget<double>& AddNumber(std::string_view title,
                                          std::function<double()> supplier);
 
   /**
@@ -294,10 +313,10 @@ class ShuffleboardContainer : public virtual ShuffleboardValue,
    * supplier.
    *
    * @param title the title of the widget
-   * @param valueSupplier the supplier for values
+   * @param supplier the supplier for values
    * @return a widget to display data
    */
-  SuppliedValueWidget<bool>& AddBoolean(const wpi::Twine& title,
+  SuppliedValueWidget<bool>& AddBoolean(std::string_view title,
                                         std::function<bool()> supplier);
 
   /**
@@ -307,11 +326,11 @@ class ShuffleboardContainer : public virtual ShuffleboardValue,
    * supplier.
    *
    * @param title the title of the widget
-   * @param valueSupplier the supplier for values
+   * @param supplier the supplier for values
    * @return a widget to display data
    */
   SuppliedValueWidget<std::vector<std::string>>& AddStringArray(
-      const wpi::Twine& title,
+      std::string_view title,
       std::function<std::vector<std::string>()> supplier);
 
   /**
@@ -321,11 +340,11 @@ class ShuffleboardContainer : public virtual ShuffleboardValue,
    * supplier.
    *
    * @param title the title of the widget
-   * @param valueSupplier the supplier for values
+   * @param supplier the supplier for values
    * @return a widget to display data
    */
   SuppliedValueWidget<std::vector<double>>& AddNumberArray(
-      const wpi::Twine& title, std::function<std::vector<double>()> supplier);
+      std::string_view title, std::function<std::vector<double>()> supplier);
 
   /**
    * Adds a widget to this container. The widget will display the data provided
@@ -334,11 +353,11 @@ class ShuffleboardContainer : public virtual ShuffleboardValue,
    * supplier.
    *
    * @param title the title of the widget
-   * @param valueSupplier the supplier for values
+   * @param supplier the supplier for values
    * @return a widget to display data
    */
   SuppliedValueWidget<std::vector<int>>& AddBooleanArray(
-      const wpi::Twine& title, std::function<std::vector<int>()> supplier);
+      std::string_view title, std::function<std::vector<int>()> supplier);
 
   /**
    * Adds a widget to this container. The widget will display the data provided
@@ -347,128 +366,136 @@ class ShuffleboardContainer : public virtual ShuffleboardValue,
    * supplier.
    *
    * @param title the title of the widget
-   * @param valueSupplier the supplier for values
+   * @param supplier the supplier for values
    * @return a widget to display data
    */
-  SuppliedValueWidget<wpi::StringRef>& AddRaw(
-      const wpi::Twine& title, std::function<wpi::StringRef()> supplier);
+  SuppliedValueWidget<std::string_view>& AddRaw(
+      std::string_view title, std::function<std::string_view()> supplier);
 
   /**
    * Adds a widget to this container to display a simple piece of data.
    *
-   * Unlike {@link #add(String, Object)}, the value in the widget will be saved
-   * on the robot and will be used when the robot program next starts rather
-   * than {@code defaultValue}.
+   * Unlike Add(std::string_view, std::shared_ptr<nt::Value>), the value in the
+   * widget will be saved on the robot and will be used when the robot program
+   * next starts rather than {@code defaultValue}.
    *
    * @param title the title of the widget
    * @param defaultValue the default value of the widget
    * @return a widget to display the sendable data
-   * @see #add(String, Object) add(String title, Object defaultValue)
+   * @see Add(stdd::string_view, std::shared_ptr<nt::Value>)
+   *      Add(std::string_view title, std::shared_ptr<nt::Value> defaultValue)
    */
-  SimpleWidget& AddPersistent(const wpi::Twine& title,
+  SimpleWidget& AddPersistent(std::string_view title,
                               std::shared_ptr<nt::Value> defaultValue);
 
   /**
    * Adds a widget to this container to display a simple piece of data.
    *
-   * Unlike {@link #add(String, Object)}, the value in the widget will be saved
+   * Unlike Add(std::string_view, bool), the value in the widget will be saved
    * on the robot and will be used when the robot program next starts rather
    * than {@code defaultValue}.
    *
    * @param title the title of the widget
    * @param defaultValue the default value of the widget
    * @return a widget to display the sendable data
-   * @see #add(String, Object) add(String title, Object defaultValue)
+   * @see Add(std::string_view, bool)
+   *      Add(std::string_view title, bool defaultValue)
    */
-  SimpleWidget& AddPersistent(const wpi::Twine& title, bool defaultValue);
+  SimpleWidget& AddPersistent(std::string_view title, bool defaultValue);
 
   /**
    * Adds a widget to this container to display a simple piece of data.
    *
-   * Unlike {@link #add(String, Object)}, the value in the widget will be saved
+   * Unlike Add(std::string_view, double), the value in the widget will be saved
    * on the robot and will be used when the robot program next starts rather
    * than {@code defaultValue}.
    *
    * @param title the title of the widget
    * @param defaultValue the default value of the widget
    * @return a widget to display the sendable data
-   * @see #add(String, Object) add(String title, Object defaultValue)
+   * @see Add(std::string_view, double)
+   *      Add(std::string_view title, double defaultValue)
    */
-  SimpleWidget& AddPersistent(const wpi::Twine& title, double defaultValue);
+  SimpleWidget& AddPersistent(std::string_view title, double defaultValue);
 
   /**
    * Adds a widget to this container to display a simple piece of data.
    *
-   * Unlike {@link #add(String, Object)}, the value in the widget will be saved
-   * on the robot and will be used when the robot program next starts rather
-   * than {@code defaultValue}.
+   * Unlike Add(std::string_view, int), the value in the widget will be saved on
+   * the robot and will be used when the robot program next starts rather than
+   * {@code defaultValue}.
    *
    * @param title the title of the widget
    * @param defaultValue the default value of the widget
    * @return a widget to display the sendable data
-   * @see #add(String, Object) add(String title, Object defaultValue)
+   * @see Add(std:string_view, int)
+   *      Add(std::string_view title, int defaultValue)
    */
-  SimpleWidget& AddPersistent(const wpi::Twine& title, int defaultValue);
+  SimpleWidget& AddPersistent(std::string_view title, int defaultValue);
 
   /**
    * Adds a widget to this container to display a simple piece of data.
    *
-   * Unlike {@link #add(String, Object)}, the value in the widget will be saved
-   * on the robot and will be used when the robot program next starts rather
-   * than {@code defaultValue}.
+   * Unlike Add(std::string_view, std::string_view), the value in the widget
+   * will be saved on the robot and will be used when the robot program next
+   * starts rather than {@code defaultValue}.
    *
    * @param title the title of the widget
    * @param defaultValue the default value of the widget
    * @return a widget to display the sendable data
-   * @see #add(String, Object) add(String title, Object defaultValue)
+   * @see Add(std::string_view, std::string_view)
+   *      Add(std::string_view title, std::string_view defaultValue)
    */
-  SimpleWidget& AddPersistent(const wpi::Twine& title,
-                              const wpi::Twine& defaultValue);
+  SimpleWidget& AddPersistent(std::string_view title,
+                              std::string_view defaultValue);
 
   /**
    * Adds a widget to this container to display a simple piece of data.
    *
-   * Unlike {@link #add(String, Object)}, the value in the widget will be saved
-   * on the robot and will be used when the robot program next starts rather
-   * than {@code defaultValue}.
+   * Unlike Add(std::string_view, wpi::span<const bool>), the value in the
+   * widget will be saved on the robot and will be used when the robot program
+   * next starts rather than {@code defaultValue}.
    *
    * @param title the title of the widget
    * @param defaultValue the default value of the widget
    * @return a widget to display the sendable data
-   * @see #add(String, Object) add(String title, Object defaultValue)
+   * @see Add(std::string_view, wpi::span<const bool>)
+   *      Add(std::string_view title, wpi::span<const bool> defaultValue)
    */
-  SimpleWidget& AddPersistent(const wpi::Twine& title,
-                              wpi::ArrayRef<bool> defaultValue);
+  SimpleWidget& AddPersistent(std::string_view title,
+                              wpi::span<const bool> defaultValue);
 
   /**
    * Adds a widget to this container to display a simple piece of data.
    *
-   * Unlike {@link #add(String, Object)}, the value in the widget will be saved
-   * on the robot and will be used when the robot program next starts rather
-   * than {@code defaultValue}.
+   * Unlike Add(std::string_view, wpi::span<const double>), the value in the
+   * widget will be saved on the robot and will be used when the robot program
+   * next starts rather than {@code defaultValue}.
    *
    * @param title the title of the widget
    * @param defaultValue the default value of the widget
    * @return a widget to display the sendable data
-   * @see #add(String, Object) add(String title, Object defaultValue)
+   * @see Add(std::string_view, wpi::span<const double>)
+   *      Add(std::string_view title, wpi::span<const double> defaultValue)
    */
-  SimpleWidget& AddPersistent(const wpi::Twine& title,
-                              wpi::ArrayRef<double> defaultValue);
+  SimpleWidget& AddPersistent(std::string_view title,
+                              wpi::span<const double> defaultValue);
 
   /**
    * Adds a widget to this container to display a simple piece of data.
    *
-   * Unlike {@link #add(String, Object)}, the value in the widget will be saved
-   * on the robot and will be used when the robot program next starts rather
-   * than {@code defaultValue}.
+   * Unlike Add(std::string_view, wpi::span<const std::string>), the value in
+   * the widget will be saved on the robot and will be used when the robot
+   * program next starts rather than {@code defaultValue}.
    *
    * @param title the title of the widget
    * @param defaultValue the default value of the widget
    * @return a widget to display the sendable data
-   * @see #add(String, Object) add(String title, Object defaultValue)
+   * @see Add(std::string_view, wpi::span<const std::string>)
+   *      Add(std::string_view title, wpi::span<const std::string> defaultValue)
    */
-  SimpleWidget& AddPersistent(const wpi::Twine& title,
-                              wpi::ArrayRef<std::string> defaultValue);
+  SimpleWidget& AddPersistent(std::string_view title,
+                              wpi::span<const std::string> defaultValue);
 
   void EnableIfActuator() override;
 
@@ -487,7 +514,7 @@ class ShuffleboardContainer : public virtual ShuffleboardValue,
    *
    * @return True if title isn't in use; false otherwise.
    */
-  void CheckTitle(const wpi::Twine& title);
+  void CheckTitle(std::string_view title);
 
   friend class SimpleWidget;
 };
@@ -508,7 +535,13 @@ inline frc::ComplexWidget& frc::ShuffleboardContainer::Add(
 }
 
 inline frc::ComplexWidget& frc::ShuffleboardContainer::Add(
-    const wpi::Twine& title, const cs::VideoSource& video) {
+    std::string_view title, const cs::VideoSource& video) {
   return Add(title, frc::SendableCameraWrapper::Wrap(video));
+}
+
+inline frc::ComplexWidget& frc::ShuffleboardContainer::AddCamera(
+    std::string_view title, std::string_view cameraName,
+    wpi::span<const std::string> cameraUrls) {
+  return Add(title, frc::SendableCameraWrapper::Wrap(cameraName, cameraUrls));
 }
 #endif

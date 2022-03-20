@@ -4,11 +4,11 @@
 #include "tools/src/sighandle.h"
 #include "tools/src/timing.h"
 
-#include "api/weightedsubtraction.h"
-#include "api/visioncamera.h"
-#include "api/visionserver.h"
-#include "api/processing.h"
-#include "api/vision.h"
+#include "core/weightedsubtraction.h"
+#include "core/visioncamera.h"
+#include "core/visionserver.h"
+#include "core/processing.h"
+#include "core/vision.h"
 
 #include "2021/testing.h"
 #include "2022/rapidreact.h"
@@ -29,7 +29,7 @@ int main(int argc, char* argv[]) {
 
 	VisionServer server(std::move(cameras));
 	//server.runVision<SquareTargetPNP, TargetSolver<Test6x6, WeightedSubtraction<VThreshold::LED::BLUE> >, TargetSolver<Test6x6, WeightedSubtraction<VThreshold::LED::GREEN> > >(25);
-	server.runVision<CargoFinder, StripFinder<VThreshold::LED::BLUE> >(25);
+	server.runVision<CargoFinder, StripFinder<VThreshold::LED::GREEN> >(25);
 }
 
 // LIST OF THINGS

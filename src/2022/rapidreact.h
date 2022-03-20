@@ -6,10 +6,10 @@
 #include <array>
 #include <thread>
 
-#include "../api/weightedsubtraction.h"
-#include "../api/visionserver.h"
-#include "../api/processing.h"
-#include "../api/target.h"
+#include "../core/weightedsubtraction.h"
+#include "../core/visionserver.h"
+#include "../core/processing.h"
+#include "../core/target.h"
 
 #include "../defines.h"
 
@@ -167,6 +167,7 @@ public:
 	void sort(CargoOutline outline);
 
 };
+#ifdef TENNIS_DEMO
 class Tennis : public Target<4> {
 public:
 	Tennis(size_t ball_idx) : Target<4>({
@@ -179,6 +180,7 @@ public:
 
 	void sort(CargoOutline outline);
 };
+#endif
 
 class CargoFinder : public VPipeline {
 public:

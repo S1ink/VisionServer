@@ -4,10 +4,10 @@
 
 #include <vector>
 
-#include "../api/weightedsubtraction.h"
-#include "../api/visionserver.h"
-#include "../api/processing.h"
-#include "../api/target.h"
+#include "../core/weightedsubtraction.h"
+#include "../core/visionserver.h"
+#include "../core/processing.h"
+#include "../core/target.h"
 //#include "vision.h"
 
 #include "../defines.h"
