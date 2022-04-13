@@ -1,8 +1,10 @@
 #include <vector>
+#include <string>
 
 #include "tools/src/resources.h"
 #include "tools/src/sighandle.h"
 #include "tools/src/timing.h"
+#include "tools/src/server/server.h"
 
 #include "core/weightedsubtraction.h"
 #include "core/visioncamera.h"
@@ -13,8 +15,14 @@
 #include "2021/testing.h"
 #include "2022/rapidreact.h"
 
+
 StopWatch runtime("Runtime", &std::cout, 0);
 void on_exit() { runtime.end(); }
+
+// std::string resourceLookup(std::string&& root, const std::string& item) {
+// 	std::cout << "RESOURCE LOOKUP: " << item << newline;
+// 	return item;
+// }
 
 int main(int argc, char* argv[]) {
 	runtime.setStart();
@@ -27,9 +35,19 @@ int main(int argc, char* argv[]) {
 	else if(readConfig(cameras)) {}
 	else { return EXIT_FAILURE; }
 
-	VisionServer server(std::move(cameras));
+	VisionServer vserver(std::move(cameras));
+	HttpServer hserver(
+		&std::cout,
+		"/home/pi",
+		HttpServer::findResource,
+		HttpServer::supplyResource,
+		nullptr,
+		Version::HTTP_1_1,
+		"81"	// the main WPILibPi page uses port 80
+	);
 	//server.runVision<SquareTargetPNP, TargetSolver<Test6x6, WeightedSubtraction<VThreshold::LED::BLUE> >, TargetSolver<Test6x6, WeightedSubtraction<VThreshold::LED::GREEN> > >(25);
-	server.runVision<CargoFinder, StripFinder<VThreshold::LED::GREEN> >(25);
+	vserver.runVisionThread<CargoFinder, StripFinder<VThreshold::LED::GREEN> >(25);
+	hserver.serve();
 }
 
 // LIST OF THINGS

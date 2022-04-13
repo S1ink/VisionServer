@@ -99,7 +99,7 @@ private:
 		cv::Point3f(18.90664264f, 103.f, 18.90664264f),		// @c=21	// perfectly 45*, unlike above
 		cv::Point3f(24.70271906f, 103.f, 10.23220126f),		// @c=31.5
 		cv::Point3f(26.73803044f, 103.f, 0.f),				// @c=42	// perfectly 90*, unlike above
-		cv::Point3f(24.70271906f, 103.f, -10.23220126f),		// @c=52.5
+		cv::Point3f(24.70271906f, 103.f, -10.23220126f),	// @c=52.5
 	};
 	// const std::array<float, 6> angles {	// in radians -> half of the angle between 0 and the point at the corresponding index ^
 	// 	0.f,

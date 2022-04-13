@@ -10,7 +10,7 @@
 template<class pipeline_t>
 bool VisionServer::runVisionThread(int8_t quality) {
 	if(!this->launched.joinable()) {
-		this->launched = std::move(std::thread(VisionServer::visionWorker<pipeline_t>, *this, quality));
+		this->launched = std::move(std::thread(VisionServer::visionWorker<pipeline_t>, std::ref(*this), quality));
 		return true;
 	}
 	return false;
@@ -18,7 +18,7 @@ bool VisionServer::runVisionThread(int8_t quality) {
 template<class pipeline_t1, class pipeline_t2>
 bool VisionServer::runVisionThread(int8_t quality) {
 	if(!this->launched.joinable()) {
-		this->launched = std::move(std::thread(VisionServer::visionWorker<pipeline_t1, pipeline_t2>, *this, quality));
+		this->launched = std::move(std::thread(VisionServer::visionWorker<pipeline_t1, pipeline_t2>, std::ref(*this), quality));
 		return true;
 	}
 	return false;
@@ -26,7 +26,7 @@ bool VisionServer::runVisionThread(int8_t quality) {
 template<class pipeline_t1, class pipeline_t2, class pipeline_t3>
 bool VisionServer::runVisionThread(int8_t quality) {
 	if(!this->launched.joinable()) {
-		this->launched = std::move(std::thread(VisionServer::visionWorker<pipeline_t1, pipeline_t2, pipeline_t3>, *this, quality));
+		this->launched = std::move(std::thread(VisionServer::visionWorker<pipeline_t1, pipeline_t2, pipeline_t3>, std::ref(*this), quality));
 		return true;
 	}
 	return false;
