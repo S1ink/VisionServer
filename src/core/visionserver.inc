@@ -7,6 +7,7 @@
 //#include "expirimental.h"
 //#include "pipelines.h"
 
+
 template<class pipeline_t>
 bool VisionServer::runVisionThread(int8_t quality) {
 	if(!this->launched.joinable()) {
@@ -34,7 +35,7 @@ bool VisionServer::runVisionThread(int8_t quality) {
 
 template<class pipeline_t>
 void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
-	static_assert(std::is_base_of<VPipeline, pipeline_t>::value, "Template argument (pipeline_t) must implement VPipeline");
+	static_assert(std::is_base_of<VPipeline, pipeline_t>::value, "Template argument (pipeline_t) must inherit from VPipeline");
 
 	server.stream.SetCompression(quality);
 	server.stream.SetDefaultCompression(quality);
@@ -81,8 +82,8 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 }
 template<class pipeline_t1, class pipeline_t2>
 void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
-	static_assert(std::is_base_of<VPipeline, pipeline_t1>::value, "Template argument (pipeline_t1) must implement VPipeline");
-	static_assert(std::is_base_of<VPipeline, pipeline_t2>::value, "Template argument (pipeline_t2) must implement VPipeline");
+	static_assert(std::is_base_of<VPipeline, pipeline_t1>::value, "Template argument (pipeline_t1) must inherit from VPipeline");
+	static_assert(std::is_base_of<VPipeline, pipeline_t2>::value, "Template argument (pipeline_t2) must inherit from VPipeline");
 	
 	server.stream.SetCompression(quality);
 	server.stream.SetDefaultCompression(quality);
@@ -146,9 +147,9 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 }
 template<class pipeline_t1, class pipeline_t2, class pipeline_t3>
 void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
-	static_assert(std::is_base_of<VPipeline, pipeline_t1>::value, "Template argument (pipeline_t1) must implement VPipeline");
-	static_assert(std::is_base_of<VPipeline, pipeline_t2>::value, "Template argument (pipeline_t2) must implement VPipeline");
-	static_assert(std::is_base_of<VPipeline, pipeline_t3>::value, "Template argument (pipeline_t3) must implement VPipeline");
+	static_assert(std::is_base_of<VPipeline, pipeline_t1>::value, "Template argument (pipeline_t1) must inherit from VPipeline");
+	static_assert(std::is_base_of<VPipeline, pipeline_t2>::value, "Template argument (pipeline_t2) must inherit from VPipeline");
+	static_assert(std::is_base_of<VPipeline, pipeline_t3>::value, "Template argument (pipeline_t3) must inherit from VPipeline");
 	
 	server.stream.SetCompression(quality);
 	server.stream.SetDefaultCompression(quality);

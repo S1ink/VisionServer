@@ -16,6 +16,7 @@
 #include "vision.h"
 #include "defines.h"
 
+
 class VisionServer;
 
 /**

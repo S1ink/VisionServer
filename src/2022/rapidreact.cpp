@@ -69,18 +69,18 @@ void UpperHub::solvePerspective(
 void Cargo::sort(CargoOutline outline) {
 	this->points = {
 		cv::Point2f(outline.center.x - outline.radius, outline.center.y),
-		cv::Point2f(outline.center.x, outline.center.y-outline.radius),
+		cv::Point2f(outline.center.x, outline.center.y - outline.radius),
 		cv::Point2f(outline.center.x + outline.radius, outline.center.y),
-		cv::Point2f(outline.center.x, outline.center.y+outline.radius)
+		cv::Point2f(outline.center.x, outline.center.y + outline.radius)
 	};
 }
 #ifdef TENNIS_DEMO
 void Tennis::sort(CargoOutline outline) {
 	this->points = {
 		cv::Point2f(outline.center.x - outline.radius, outline.center.y),
-		cv::Point2f(outline.center.x, outline.center.y-outline.radius),
+		cv::Point2f(outline.center.x, outline.center.y - outline.radius),
 		cv::Point2f(outline.center.x + outline.radius, outline.center.y),
-		cv::Point2f(outline.center.x, outline.center.y+outline.radius)
+		cv::Point2f(outline.center.x, outline.center.y + outline.radius)
 	};
 }
 #endif

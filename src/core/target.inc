@@ -7,6 +7,7 @@
 
 #include "vision.h"
 
+
 template<size_t corners>
 Target<corners>::Target(const std::array<cv::Point3f, corners>& world_pts) : 
 	world(world_pts), name("Unnamed " + std::to_string(corners) + "-pt target"),

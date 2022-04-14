@@ -19,10 +19,16 @@
 StopWatch runtime("Runtime", &std::cout, 0);
 void on_exit() { runtime.end(); }
 
-// std::string resourceLookup(std::string&& root, const std::string& item) {
-// 	std::cout << "RESOURCE LOOKUP: " << item << newline;
-// 	return item;
-// }
+class Formatter2 : public HttpServer::HttpFormatter {
+public:
+	Formatter2(HttpServer* s) : HttpFormatter(s) {}
+
+	void onServerStart() override {
+		std::cout << "OVERLOADED ONSTARTUP\n";
+	}
+
+
+};
 
 int main(int argc, char* argv[]) {
 	runtime.setStart();
@@ -39,15 +45,13 @@ int main(int argc, char* argv[]) {
 	HttpServer hserver(
 		&std::cout,
 		"/home/pi",
-		HttpServer::findResource,
-		HttpServer::supplyResource,
 		nullptr,
 		Version::HTTP_1_1,
 		"81"	// the main WPILibPi page uses port 80
 	);
 	//server.runVision<SquareTargetPNP, TargetSolver<Test6x6, WeightedSubtraction<VThreshold::LED::BLUE> >, TargetSolver<Test6x6, WeightedSubtraction<VThreshold::LED::GREEN> > >(25);
-	vserver.runVisionThread<CargoFinder, StripFinder<VThreshold::LED::GREEN> >(25);
-	hserver.serve();
+	hserver.serveThread<HttpServer::HttpHandler, Formatter2>();
+	vserver.runVision<CargoFinder, StripFinder<VThreshold::LED::GREEN> >(25);
 }
 
 // LIST OF THINGS
