@@ -11,6 +11,7 @@
 #include "core/visionserver.h"
 #include "core/processing.h"
 #include "core/vision.h"
+#include "core/httpnetworktables.h"
 
 #include "2021/testing.h"
 #include "2022/rapidreact.h"
@@ -19,16 +20,16 @@
 StopWatch runtime("Runtime", &std::cout, 0);
 void on_exit() { runtime.end(); }
 
-class Formatter2 : public HttpServer::HttpFormatter {
-public:
-	Formatter2(HttpServer* s) : HttpFormatter(s) {}
+// class Formatter2 : public HttpServer::HttpFormatter {
+// public:
+// 	Formatter2(HttpServer* s) : HttpFormatter(s) {}
 
-	void onServerStart() override {
-		std::cout << "OVERLOADED ONSTARTUP\n";
-	}
+// 	void onServerStart() override {
+// 		std::cout << "OVERLOADED ONSTARTUP\n";
+// 	}
 
 
-};
+// };
 
 int main(int argc, char* argv[]) {
 	runtime.setStart();
@@ -42,16 +43,22 @@ int main(int argc, char* argv[]) {
 	else { return EXIT_FAILURE; }
 
 	VisionServer vserver(std::move(cameras));
-	HttpServer hserver(
-		&std::cout,
-		"/home/pi",
-		nullptr,
-		Version::HTTP_1_1,
-		"81"	// the main WPILibPi page uses port 80
-	);
-	//server.runVision<SquareTargetPNP, TargetSolver<Test6x6, WeightedSubtraction<VThreshold::LED::BLUE> >, TargetSolver<Test6x6, WeightedSubtraction<VThreshold::LED::GREEN> > >(25);
-	hserver.serveThread<HttpServer::HttpHandler, Formatter2>();
-	vserver.runVision<CargoFinder, StripFinder<VThreshold::LED::GREEN> >(25);
+	// HttpServer hserver(
+	// 	&std::cout,
+	// 	"/home/pi",
+	// 	nullptr,
+	// 	Version::HTTP_1_1,
+	// 	"81"	// the main WPILibPi page uses port 80
+	// );
+	//vserver.runVision_S<CargoFinder, StripFinder<VThreshold::LED::BLUE> >(25);
+	vserver.runVision<
+		CargoFinder,
+		StripFinder<VThreshold::LED::BLUE>,
+		SquareTargetPNP,
+		TargetSolver<Test6x6, WeightedSubtraction<VThreshold::LED::BLUE> >,
+		BBoxDemo
+	>(25);
+	//hserver.serve<HttpNTables>();
 }
 
 // LIST OF THINGS

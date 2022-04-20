@@ -10,6 +10,7 @@
 #include <chrono>
 #include <atomic>
 #include <string>
+#include <memory>
 
 #include "tools/src/resources.h"
 #include "visioncamera.h"
@@ -201,38 +202,46 @@ public:
     bool stopVision();
 
     /**
-     * Run a streaming instance with no processing pipelines
+     * Run a streaming instance with no processing pipelines. Exactly the same as runVision<>() but does not push 
+	 * networktable values for changing pipeline indexes (and is one if-statement more efficent per frame).
      * @param quality The default streaming quality
     */
     inline void runVision(int8_t quality = 50) { VisionServer::visionWorker(*this, quality); }
     /**
-     * Runs a processing instance with 1 pipeline
+     * Runs a processing instance with 1 pipeline. The pipeline instance is stack allocated rather than 
+	 * heap allocated like with runVision<pipelines...>()
      * @param pipeline_t The typename of the pipeline class that will be used
      * @param quality The default streaming quality
     */
     template<class pipeline_t>
-    inline void runVision(int8_t quality = 50) { VisionServer::visionWorker<pipeline_t>(*this, quality); }
+    inline void runVision_S(int8_t quality = 50) { VisionServer::visionWorker<pipeline_t>(*this, quality); }
     /**
-     * Runs a processing instance with 2 pipelines (switchable via networktables)
+     * Runs a processing instance with 2 pipelines (switchable via networktables). Pipeline instances are 
+	 * stack allocated rather than heap allocated like with runVision<pipelines...>().
      * @param pipeline_t1 The typename of the first pipeline class that will be used
      * @param pipeline_t2 The typename of the second pipeline class that will be used
      * @param quality The default streaming quality
     */
     template<class pipeline_t1, class pipeline_t2>
-    inline void runVision(int8_t quality = 50) { VisionServer::visionWorker<pipeline_t1, pipeline_t2>(*this, quality); }
+    inline void runVision_S(int8_t quality = 50) { VisionServer::visionWorker<pipeline_t1, pipeline_t2>(*this, quality); }
     /**
-     * Runs a processing instance with 3 pipelines (switchable via networktables)
+     * Runs a processing instance with 3 pipelines (switchable via networktables). Pipeline instances are 
+	 * stack allocated rather than heap allocated like with runVision<pipelines...>().
      * @param pipeline_t1 The typename of the first pipeline class that will be used
      * @param pipeline_t2 The typename of the second pipeline class that will be used
      * @param pipeline_t3 The typename of the third pipeline class that will be used
      * @param quality The default streaming quality
     */
     template<class pipeline_t1, class pipeline_t2, class pipeline_t3>
-    inline void runVision(int8_t quality = 50) { VisionServer::visionWorker<pipeline_t1, pipeline_t2, pipeline_t3>(*this, quality); }
+    inline void runVision_S(int8_t quality = 50) { VisionServer::visionWorker<pipeline_t1, pipeline_t2, pipeline_t3>(*this, quality); }
+    /**
+     * Runs a processing instace with however many pipelines are supplied (although heap-allocation is used). Pipelines are switchable via networktables.
+     * @param pipelines The pipeline typenames, separated by commas
+     * @param quality The default streaming quality
+    */
+   	template<class... pipelines>
+	inline void runVision(int8_t quality = 50) { VisionServer::visionWorker<pipelines...>(*this, quality); }
 
-    // Nope, too confusing
-    // template<typename... pipelines_t>
-    // void runVision(int8_t quality = 50);
 
     /**
      * Runs a streaming thread with no processing pipelines
@@ -240,29 +249,36 @@ public:
     */
     bool runVisionThread(int8_t quality = 50);
     /**
-     * Runs a processing thread with 1 pipeline
+     * Runs a processing thread with 1 stack allocated pipeline.
      * @param pipeline_t The typename of the pipeline class that will be used
      * @param quality The default streaming quality
     */
     template<class pipeline_t>
-    bool runVisionThread(int8_t quality = 50);
+    bool runVisionThread_S(int8_t quality = 50);
     /**
-     * Runs a processing thread with 2 pipelines (switchable via networktables)
+     * Runs a processing thread with 2 stack allocated pipelines (switchable via networktables)
      * @param pipeline_t1 The typename of the first pipeline class that will be used
      * @param pipeline_t2 The typename of the second pipeline class that will be used
      * @param quality The default streaming quality
     */
     template<class pipeline_t1, class pipeline_t2>
-    bool runVisionThread(int8_t quality = 50);
+    bool runVisionThread_S(int8_t quality = 50);
     /**
-     * Runs a processing thread with 3 pipelines (switchable via networktables)
+     * Runs a processing thread with 3 stack allocated pipelines (switchable via networktables)
      * @param pipeline_t1 The typename of the first pipeline class that will be used
      * @param pipeline_t2 The typename of the second pipeline class that will be used
      * @param pipeline_t3 The typename of the third pipeline class that will be used
      * @param quality The default streaming quality
     */
     template<class pipeline_t1, class pipeline_t2, class pipeline_t3>
-    bool runVisionThread(int8_t quality = 50);
+    bool runVisionThread_S(int8_t quality = 50);
+	/**
+     * Runs a processing thread with however many pipelines are supplied (although heap-allocation is used). Pipelines are switchable via networktables.
+     * @param pipelines The pipeline typenames, separated by commas
+     * @param quality The default streaming quality
+    */
+	template<class... pipelines>
+	bool runVisionThread(int8_t quality = 50);
 
     /**
      * The root networktable for all VisionServer entries
@@ -272,19 +288,22 @@ public:
 protected:
     /**The underlying worker function called by both runVision() and runVisionThread()*/
     static void visionWorker(VisionServer& server, int8_t quality);
-    /**The underlying worker function called by both runVision<pipeline_t>() and runVisionThread<pipeline_t>()*/
+    /**The underlying worker function called by both runVision_S<pipeline_t>() and runVisionThread_S<pipeline_t>()*/
     template<class pipeline_t>
-    static void visionWorker(VisionServer& server, int8_t quality);
-    /**The underlying worker function called by both runVision<pipeline_t1, pipeline_t2>() and runVisionThread<pipeline_t1, pipeline_t2>()*/
+    static void visionWorker_S(VisionServer& server, int8_t quality);
+    /**The underlying worker function called by both runVision_S<pipeline_t1, pipeline_t2>() and runVisionThread_S<pipeline_t1, pipeline_t2>()*/
     template<class pipeline_t1, class pipeline_t2>
-    static void visionWorker(VisionServer& server, int8_t quality);
-    /**The underlying worker function called by both runVision<pipeline_t1, pipeline_t2, pipeline_t3>() and runVisionThread<pipeline_t1, pipeline_t2, pipeline_t3>()*/
+    static void visionWorker_S(VisionServer& server, int8_t quality);
+    /**The underlying worker function called by both runVision_S<pipeline_t1, pipeline_t2, pipeline_t3>() and runVisionThread_S<pipeline_t1, pipeline_t2, pipeline_t3>()*/
     template<class pipeline_t1, class pipeline_t2, class pipeline_t3>
+    static void visionWorker_S(VisionServer& server, int8_t quality);
+    /**The underlying worker function called by both runVison<pipelines...>() and runVisionThread<pipelines...>()*/
+    template<class... pipelines>
     static void visionWorker(VisionServer& server, int8_t quality);
 
-    // nope
-    // template<typename... pipelines>
-    // static void visionWorker(VisionServer& server, int8_t quality);
+    /**A tool for expanding pipeline variadic template params and emplacing instances into the supplied vector*/
+    template<class pipeline = void, class... pipelines>
+    static void pipeExpansion(std::vector<std::unique_ptr<VPipeline> >& pipes, VisionServer& server);
 
     /**
      * Called from VisionServer(const char*) to parse the json and create cameras - can be called again to update the cameras

@@ -2,14 +2,9 @@
 
 #include <type_traits>
 
-// make sure to recopy petra to src/ if we retry implementing this
-//#include <petra/include/petra/sequential_table.hpp>
-//#include "expirimental.h"
-//#include "pipelines.h"
-
 
 template<class pipeline_t>
-bool VisionServer::runVisionThread(int8_t quality) {
+bool VisionServer::runVisionThread_S(int8_t quality) {
 	if(!this->launched.joinable()) {
 		this->launched = std::move(std::thread(VisionServer::visionWorker<pipeline_t>, std::ref(*this), quality));
 		return true;
@@ -17,7 +12,7 @@ bool VisionServer::runVisionThread(int8_t quality) {
 	return false;
 }
 template<class pipeline_t1, class pipeline_t2>
-bool VisionServer::runVisionThread(int8_t quality) {
+bool VisionServer::runVisionThread_S(int8_t quality) {
 	if(!this->launched.joinable()) {
 		this->launched = std::move(std::thread(VisionServer::visionWorker<pipeline_t1, pipeline_t2>, std::ref(*this), quality));
 		return true;
@@ -25,16 +20,24 @@ bool VisionServer::runVisionThread(int8_t quality) {
 	return false;
 }
 template<class pipeline_t1, class pipeline_t2, class pipeline_t3>
-bool VisionServer::runVisionThread(int8_t quality) {
+bool VisionServer::runVisionThread_S(int8_t quality) {
 	if(!this->launched.joinable()) {
 		this->launched = std::move(std::thread(VisionServer::visionWorker<pipeline_t1, pipeline_t2, pipeline_t3>, std::ref(*this), quality));
 		return true;
 	}
 	return false;
 }
+template<class... pipelines>
+bool VisionServer::runVisionThread(int8_t quality) {
+	if(!this->launched.joinable()) {
+		this->launched = std::move(std::thread(VisionServer::visionWorker<pipelines...>, std::ref(*this), quality));
+		return true;
+	}
+	return false;
+}
 
 template<class pipeline_t>
-void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
+void VisionServer::visionWorker_S(VisionServer& server, int8_t quality) {
 	static_assert(std::is_base_of<VPipeline, pipeline_t>::value, "Template argument (pipeline_t) must inherit from VPipeline");
 
 	server.stream.SetCompression(quality);
@@ -75,13 +78,15 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 		}
 		server.updateStats();
 		server.output.PutFrame(frame);
+
+		nt::NetworkTableInstance::GetDefault().Flush();
 	}
 	server.vision->Delete("Show Statistics");
 	server.vision->Delete("Enable Processing");
 	server.runloop = true;
 }
 template<class pipeline_t1, class pipeline_t2>
-void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
+void VisionServer::visionWorker_S(VisionServer& server, int8_t quality) {
 	static_assert(std::is_base_of<VPipeline, pipeline_t1>::value, "Template argument (pipeline_t1) must inherit from VPipeline");
 	static_assert(std::is_base_of<VPipeline, pipeline_t2>::value, "Template argument (pipeline_t2) must inherit from VPipeline");
 	
@@ -138,6 +143,8 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 		}
 		server.updateStats();
 		server.output.PutFrame(frame);
+
+		nt::NetworkTableInstance::GetDefault().Flush();
 	}
 	server.vision->Delete("Pipeline Index");
 	server.vision->Delete("Piplines Available");
@@ -146,7 +153,7 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 	server.runloop = true;
 }
 template<class pipeline_t1, class pipeline_t2, class pipeline_t3>
-void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
+void VisionServer::visionWorker_S(VisionServer& server, int8_t quality) {
 	static_assert(std::is_base_of<VPipeline, pipeline_t1>::value, "Template argument (pipeline_t1) must inherit from VPipeline");
 	static_assert(std::is_base_of<VPipeline, pipeline_t2>::value, "Template argument (pipeline_t2) must inherit from VPipeline");
 	static_assert(std::is_base_of<VPipeline, pipeline_t3>::value, "Template argument (pipeline_t3) must inherit from VPipeline");
@@ -212,6 +219,8 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 		}
 		server.updateStats();
 		server.output.PutFrame(frame);
+
+		nt::NetworkTableInstance::GetDefault().Flush();
 	}
 	server.vision->Delete("Pipeline Index");
 	server.vision->Delete("Piplines Available");
@@ -220,56 +229,70 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 	server.runloop = true;
 }
 
-// NOPE, TOO CONFUSING (trust me I really tried)
-// template<typename... pipelines>
-// void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
-// 	PipelinePack<pipelines...> pack(server);
-// 	constexpr auto& pipeAt = petra::make_sequential_table<sizeof...(pipelines)>([&pack](auto&& x){
-// 		return PipelinePack<pipelines...>::getPipeline<x()>(pack);
-// 	});
+template<class... pipelines>
+void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 
-// 	server.stream.SetCompression(quality);
+	std::vector<std::unique_ptr<VPipeline> > pipes;
+	pipeExpansion<pipelines...>(pipes, server);
 
-// 	//DefaultPipeline pbase(server);
-	
-// 	server.table->PutNumber("Pipeline Index", 0);
-// 	server.table->PutNumber("Pipelines Available", 3);
-// 	server.table->PutBoolean("Show Statistics", false);
-// 	server.setupNtVflag();
+	server.stream.SetCompression(quality);
+	server.stream.SetDefaultCompression(quality);
+	server.vision->PutNumber("Pipeline Index", 0);
+	server.vision->PutNumber("Pipelines Available", pipes.size());
+	server.vision->PutBoolean("Show Statistics", false);
+	server.vision->PutBoolean("Enable Processing", true);
 
-// 	cv::Mat frame(server.getCurrentResolution(), CV_8UC3);
+	cv::Mat frame(server.getCurrentResolution(), CV_8UC3);
 
-// 	server.start = CHRONO::high_resolution_clock::now();
-// 	while(server.runloop) {
-// 		server.source.GrabFrame(frame);
-		
-// 		pipeAt(server.table->GetEntry("Pipeline Index").GetDouble(0)).process(frame, server.getNtVflag());
-// 		server.total_frames++;
+	server.start = CHRONO::high_resolution_clock::now();
+	while(server.runloop) {
+		server.source.GrabFrame(frame);
+		int idx = server.vision->GetBoolean("Enable Processing", true) * ((int)server.vision->GetEntry("Pipeline Index").GetDouble(-1) + 1);
+		if(idx > 0 && idx <= pipes.size()) {
+			server.beg = CHRONO::high_resolution_clock::now();
+			pipes[idx - 1]->process(frame);
+			server.end = CHRONO::high_resolution_clock::now();
+		} else {
+			server.beg = server.end = CHRONO::high_resolution_clock::now();
+		}
+		server.total_frames++;
 
-// 		server.total_time = CHRONO::duration<double>(server.end - server.start).count();
-// 		server.frame_time = CHRONO::duration<double>(server.end - server.beg).count();
-// 		server.loop_time = CHRONO::duration<double>(server.end - server.last).count();
-// 		server.last = server.end;
+		server.total_time = CHRONO::duration<double>(server.end - server.start).count();
+		server.frame_time = CHRONO::duration<double>(server.end - server.beg).count();
+		server.loop_time = CHRONO::duration<double>(server.end - server.last).count();
+		server.last = server.end;
 
-// 		server.active_target.update(server.loop_time);
+		server.active_target.update(server.loop_time);
 
-// 		server.fps = 1.f/server.loop_time;
-// 		if((int)server.total_time > (int)server.sec1_time) {
-// 			server.fps_1s = ((server.total_frames - server.sec1_frames) / (server.total_time - server.sec1_time));
-// 			server.sec1_time = server.total_time;
-// 			server.sec1_frames = server.total_frames;
-// 		}
+		server.fps = 1.f/server.loop_time;
+		if((int)server.total_time > (int)server.sec1_time) {
+			server.fps_1s = ((server.total_frames - server.sec1_frames) / (server.total_time - server.sec1_time));
+			server.sec1_time = server.total_time;
+			server.sec1_frames = server.total_frames;
+		}
 
-// 		if(server.table->GetEntry("Show Statistics").GetBoolean(false)) {
-// 			server.putStats(frame);
-// 		}
-// 		server.updateStats();
-// 		server.output.PutFrame(frame);
-// 	}
-// 	server.runloop = true;
-	
-// 	server.table->Delete("Pipeline Index");
-// 	server.table->Delete("Piplines Available");
-// 	server.table->Delete("Show Statistics");
-// 	server.deleteNtVflag();
-// }
+		if(server.vision->GetEntry("Show Statistics").GetBoolean(false)) {
+			server.putStats(frame);
+		}
+		server.updateStats();
+		server.output.PutFrame(frame);
+
+		nt::NetworkTableInstance::GetDefault().Flush();
+	}
+	server.vision->Delete("Pipeline Index");
+	server.vision->Delete("Piplines Available");
+	server.vision->Delete("Show Statistics");
+	server.vision->Delete("Enable Processing");
+	server.runloop = true;
+
+}
+
+template<class pipeline, class... pipelines>
+void VisionServer::pipeExpansion(std::vector<std::unique_ptr<VPipeline> >& pipes, VisionServer& server) {
+	if constexpr(!std::is_same<pipeline, void>::value) {
+		static_assert(std::is_base_of<VPipeline, pipeline>::value, "Template argument (pipeline) must inherit from VPipeline");
+
+		pipes.emplace_back(std::make_unique<pipeline>(server));
+		pipeExpansion<pipelines...>(pipes, server);
+	}
+}
