@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
 	// 	Version::HTTP_1_1,
 	// 	"81"	// the main WPILibPi page uses port 80
 	// );
-	//vserver.runVision_S<CargoFinder, StripFinder<VThreshold::LED::BLUE> >(25);
+	//vserver.runVision_S<CargoFinder, StripFinder<VThreshold::LED::GREEN> >(25);	// this currently does not call the right worker
 	vserver.runVision<
 		CargoFinder,
 		StripFinder<VThreshold::LED::BLUE>,

@@ -6,7 +6,7 @@
 template<class pipeline_t>
 bool VisionServer::runVisionThread_S(int8_t quality) {
 	if(!this->launched.joinable()) {
-		this->launched = std::move(std::thread(VisionServer::visionWorker<pipeline_t>, std::ref(*this), quality));
+		this->launched = std::move(std::thread(VisionServer::visionWorker_S<pipeline_t>, std::ref(*this), quality));
 		return true;
 	}
 	return false;
@@ -14,7 +14,7 @@ bool VisionServer::runVisionThread_S(int8_t quality) {
 template<class pipeline_t1, class pipeline_t2>
 bool VisionServer::runVisionThread_S(int8_t quality) {
 	if(!this->launched.joinable()) {
-		this->launched = std::move(std::thread(VisionServer::visionWorker<pipeline_t1, pipeline_t2>, std::ref(*this), quality));
+		this->launched = std::move(std::thread(VisionServer::visionWorker_S<pipeline_t1, pipeline_t2>, std::ref(*this), quality));
 		return true;
 	}
 	return false;
@@ -22,7 +22,7 @@ bool VisionServer::runVisionThread_S(int8_t quality) {
 template<class pipeline_t1, class pipeline_t2, class pipeline_t3>
 bool VisionServer::runVisionThread_S(int8_t quality) {
 	if(!this->launched.joinable()) {
-		this->launched = std::move(std::thread(VisionServer::visionWorker<pipeline_t1, pipeline_t2, pipeline_t3>, std::ref(*this), quality));
+		this->launched = std::move(std::thread(VisionServer::visionWorker_S<pipeline_t1, pipeline_t2, pipeline_t3>, std::ref(*this), quality));
 		return true;
 	}
 	return false;
@@ -50,10 +50,10 @@ void VisionServer::visionWorker_S(VisionServer& server, int8_t quality) {
 
 	server.start = CHRONO::high_resolution_clock::now();
 	while(server.runloop) {
-		server.source.GrabFrame(frame);
+		server.getFrame(frame);
 
 		server.beg = CHRONO::high_resolution_clock::now();
-		if(server.vision->GetBoolean("Enable Processing", true)) {
+		if(server.vision->GetBoolean("Enable Processing", true) && !frame.empty()) {
 			pipeline.process(frame);
 		}
 		server.end = CHRONO::high_resolution_clock::now();
@@ -73,7 +73,7 @@ void VisionServer::visionWorker_S(VisionServer& server, int8_t quality) {
 			server.sec1_frames = server.total_frames;
 		}
 
-		if(server.vision->GetEntry("Show Statistics").GetBoolean(false)) {
+		if(server.vision->GetEntry("Show Statistics").GetBoolean(false) && !frame.empty()) {
 			server.putStats(frame);
 		}
 		server.updateStats();
@@ -103,8 +103,11 @@ void VisionServer::visionWorker_S(VisionServer& server, int8_t quality) {
 
 	server.start = CHRONO::high_resolution_clock::now();
 	while(server.runloop) {
-		server.source.GrabFrame(frame);
-		switch(server.vision->GetBoolean("Enable Processing", true) * ((int8_t)server.vision->GetEntry("Pipeline Index").GetDouble(-1) + 1)) {
+		server.getFrame(frame);
+		switch(
+			(server.vision->GetBoolean("Enable Processing", true) && !frame.empty()) * 
+				((int8_t)server.vision->GetEntry("Pipeline Index").GetDouble(-1) + 1)
+		) {
 			case 1 : {
 				server.beg = CHRONO::high_resolution_clock::now();
 				p1.process(frame);
@@ -138,7 +141,7 @@ void VisionServer::visionWorker_S(VisionServer& server, int8_t quality) {
 			server.sec1_frames = server.total_frames;
 		}
 
-		if(server.vision->GetEntry("Show Statistics").GetBoolean(false)) {
+		if(server.vision->GetEntry("Show Statistics").GetBoolean(false) && !frame.empty()) {
 			server.putStats(frame);
 		}
 		server.updateStats();
@@ -172,8 +175,11 @@ void VisionServer::visionWorker_S(VisionServer& server, int8_t quality) {
 
 	server.start = CHRONO::high_resolution_clock::now();
 	while(server.runloop) {
-		server.source.GrabFrame(frame);
-		switch(server.vision->GetBoolean("Enable Processing", true) * ((int8_t)server.vision->GetEntry("Pipeline Index").GetDouble(-1) + 1)) {
+		server.getFrame(frame);
+		switch(
+			(server.vision->GetBoolean("Enable Processing", true) && !frame.empty()) * 
+				((int8_t)server.vision->GetEntry("Pipeline Index").GetDouble(-1) + 1)
+		) {
 			case 1 : {
 				server.beg = CHRONO::high_resolution_clock::now();
 				p1.process(frame);
@@ -246,7 +252,8 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 
 	server.start = CHRONO::high_resolution_clock::now();
 	while(server.runloop) {
-		server.source.GrabFrame(frame);
+		server.getFrame(frame);
+
 		int idx = server.vision->GetBoolean("Enable Processing", true) * ((int)server.vision->GetEntry("Pipeline Index").GetDouble(-1) + 1);
 		if(idx > 0 && idx <= pipes.size()) {
 			server.beg = CHRONO::high_resolution_clock::now();

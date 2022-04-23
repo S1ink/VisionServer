@@ -209,4 +209,6 @@ private:
 
 	int8_t brightness{50}, exposure{-1};
 	int16_t whitebalance{-1};
+
+
 };

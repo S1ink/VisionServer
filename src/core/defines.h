@@ -1,1 +1,1 @@
-#define REMOVE_DISCONNECTED_CAMERAS		// remove this to always use all cameras defined in the json, whether or not they actually exist
+//#define REMOVE_DISCONNECTED_CAMERAS		// remove this to always use all cameras defined in the json, whether or not they actually exist

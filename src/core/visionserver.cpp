@@ -316,6 +316,13 @@ const cv::Mat_<float>& VisionServer::getCameraMatrix() const {
 const cv::Mat_<float>& VisionServer::getDistortion() const {
 	return this->distortion;
 }
+void VisionServer::getFrame(cv::Mat& framebuff) {
+	if(this->getCurrentCamera().IsConnected()) {
+		this->source.GrabFrame(framebuff);
+	} else {
+		framebuff = cv::Mat::zeros(cv::Size(320, 240), CV_8UC3);
+	}
+}
 
 void VisionServer::updateTarget(const std::string& target) {
 	this->active_target.setTarget(target);

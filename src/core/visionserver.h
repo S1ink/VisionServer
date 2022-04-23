@@ -196,8 +196,14 @@ public:
     const cv::Mat_<float>& getDistortion() const;
 
     /**
+     * Get a frame from the current camera. Returns an blank array if the current camera is disconnected.
+     * @param framebuff the image matrix buffer
+    */
+    void getFrame(cv::Mat& framebuff);
+
+    /**
      * Joins any processing threads that are currently running
-     * @return Returns if there was a thread running that was joined
+     * @return Returns true if there was a thread running that was joined
     */
     bool stopVision();
 
@@ -214,7 +220,7 @@ public:
      * @param quality The default streaming quality
     */
     template<class pipeline_t>
-    inline void runVision_S(int8_t quality = 50) { VisionServer::visionWorker<pipeline_t>(*this, quality); }
+    inline void runVision_S(int8_t quality = 50) { VisionServer::visionWorker_S<pipeline_t>(*this, quality); }
     /**
      * Runs a processing instance with 2 pipelines (switchable via networktables). Pipeline instances are 
 	 * stack allocated rather than heap allocated like with runVision<pipelines...>().
@@ -223,7 +229,7 @@ public:
      * @param quality The default streaming quality
     */
     template<class pipeline_t1, class pipeline_t2>
-    inline void runVision_S(int8_t quality = 50) { VisionServer::visionWorker<pipeline_t1, pipeline_t2>(*this, quality); }
+    inline void runVision_S(int8_t quality = 50) { VisionServer::visionWorker_S<pipeline_t1, pipeline_t2>(*this, quality); }
     /**
      * Runs a processing instance with 3 pipelines (switchable via networktables). Pipeline instances are 
 	 * stack allocated rather than heap allocated like with runVision<pipelines...>().
@@ -233,7 +239,7 @@ public:
      * @param quality The default streaming quality
     */
     template<class pipeline_t1, class pipeline_t2, class pipeline_t3>
-    inline void runVision_S(int8_t quality = 50) { VisionServer::visionWorker<pipeline_t1, pipeline_t2, pipeline_t3>(*this, quality); }
+    inline void runVision_S(int8_t quality = 50) { VisionServer::visionWorker_S<pipeline_t1, pipeline_t2, pipeline_t3>(*this, quality); }
     /**
      * Runs a processing instace with however many pipelines are supplied (although heap-allocation is used). Pipelines are switchable via networktables.
      * @param pipelines The pipeline typenames, separated by commas
