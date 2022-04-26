@@ -3,6 +3,7 @@
 #include "vision.h"
 #include "mem.h"
 
+
 template<VThreshold::LED color>
 const std::array<std::array<uint8_t, 2>, 3> WeightedSubtraction<color>::weighted_array = {
 	std::array<uint8_t, 2>{(uint8_t)LED::GREEN, (uint8_t)LED::RED},

@@ -109,7 +109,7 @@ CargoFinder::CargoFinder(VisionServer& server) :
 	);
 }
 
-void CargoFinder::process(cv::Mat& io_frame, int8_t mode) {
+void CargoFinder::process(cv::Mat& io_frame) {
 	bool do_red = this->table->GetBoolean("Process Red", true),
 		do_blue = this->table->GetBoolean("Process Blue", true),
 		show_bin = this->table->GetBoolean("Show Threshold", false);

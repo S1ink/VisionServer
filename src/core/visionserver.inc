@@ -3,6 +3,12 @@
 #include <type_traits>
 
 
+inline void VPipeline::updateTarget(const std::string& target) { this->env->updateTarget(target); }
+inline const VisionCamera& VPipeline::getCurrentCamera() const { return this->env->getCurrentCamera(); }
+inline const cv::Mat_<float>& VPipeline::getCameraMatrix() const { return this->getCurrentCamera().getCameraMatrix(); }
+inline const cv::Mat_<float>& VPipeline::getCameraDistortion() const { return this->getCurrentCamera().getDistortionCoefs(); }
+
+
 template<class pipeline_t>
 bool VisionServer::runVisionThread_S(int8_t quality) {
 	if(!this->launched.joinable()) {
@@ -50,10 +56,10 @@ void VisionServer::visionWorker_S(VisionServer& server, int8_t quality) {
 
 	server.start = CHRONO::high_resolution_clock::now();
 	while(server.runloop) {
-		server.getFrame(frame);
+		server.getCurrentCamera().getFrame(frame);
 
 		server.beg = CHRONO::high_resolution_clock::now();
-		if(server.vision->GetBoolean("Enable Processing", true) && !frame.empty()) {
+		if(server.vision->GetBoolean("Enable Processing", true)) {
 			pipeline.process(frame);
 		}
 		server.end = CHRONO::high_resolution_clock::now();
@@ -73,7 +79,7 @@ void VisionServer::visionWorker_S(VisionServer& server, int8_t quality) {
 			server.sec1_frames = server.total_frames;
 		}
 
-		if(server.vision->GetEntry("Show Statistics").GetBoolean(false) && !frame.empty()) {
+		if(server.vision->GetEntry("Show Statistics").GetBoolean(false)) {
 			server.putStats(frame);
 		}
 		server.updateStats();
@@ -103,9 +109,9 @@ void VisionServer::visionWorker_S(VisionServer& server, int8_t quality) {
 
 	server.start = CHRONO::high_resolution_clock::now();
 	while(server.runloop) {
-		server.getFrame(frame);
+		server.getCurrentCamera().getFrame(frame);
 		switch(
-			(server.vision->GetBoolean("Enable Processing", true) && !frame.empty()) * 
+			(server.vision->GetBoolean("Enable Processing", true)) * 
 				((int8_t)server.vision->GetEntry("Pipeline Index").GetDouble(-1) + 1)
 		) {
 			case 1 : {
@@ -141,7 +147,7 @@ void VisionServer::visionWorker_S(VisionServer& server, int8_t quality) {
 			server.sec1_frames = server.total_frames;
 		}
 
-		if(server.vision->GetEntry("Show Statistics").GetBoolean(false) && !frame.empty()) {
+		if(server.vision->GetEntry("Show Statistics").GetBoolean(false)) {
 			server.putStats(frame);
 		}
 		server.updateStats();
@@ -175,9 +181,9 @@ void VisionServer::visionWorker_S(VisionServer& server, int8_t quality) {
 
 	server.start = CHRONO::high_resolution_clock::now();
 	while(server.runloop) {
-		server.getFrame(frame);
+		server.getCurrentCamera().getFrame(frame);
 		switch(
-			(server.vision->GetBoolean("Enable Processing", true) && !frame.empty()) * 
+			server.vision->GetBoolean("Enable Processing", true) * 
 				((int8_t)server.vision->GetEntry("Pipeline Index").GetDouble(-1) + 1)
 		) {
 			case 1 : {
@@ -252,7 +258,7 @@ void VisionServer::visionWorker(VisionServer& server, int8_t quality) {
 
 	server.start = CHRONO::high_resolution_clock::now();
 	while(server.runloop) {
-		server.getFrame(frame);
+		server.getCurrentCamera().getFrame(frame);
 
 		int idx = server.vision->GetBoolean("Enable Processing", true) * ((int)server.vision->GetEntry("Pipeline Index").GetDouble(-1) + 1);
 		if(idx > 0 && idx <= pipes.size()) {

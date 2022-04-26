@@ -16,6 +16,7 @@
 #include "visioncamera.h"
 #include "defines.h"
 
+
 // helper functions that extend cameraserver and opencv functionality
 
 CE_STR _default = "/boot/frc.json";

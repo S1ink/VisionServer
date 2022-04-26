@@ -14,22 +14,8 @@
 #include "../defines.h"
 
 
-// template<typename _Tp>
-// class Tile_ : public cv::Rect_<_Tp> {
-// public:
-// 	using Rect_::Rect_;
-
-// 	inline cv::Point2f getCenter() const { return ::findCenter<float, _Tp>({this->tl(), this->br()}); }
-// 	inline float getAspectRatio() const { return this->width/(float)this->height; }
-
-// };
-// typedef Tile_<int> Tile2i;
-// typedef Tile_<float> Tile2f;
-// typedef Tile_<double> Tile2d;
-// typedef Tile2i Tile;
-
 /**
- * Models 3-6 of the closest 5(or 4) vision strips on the Upper Hub
+ * Models the closest 4-6 vision strips on the Upper Hub
  * 
  * - The diameter is 4ft,5.375in (427/8 or 53.375 inches) -> radius is 427/16 or 26.6875 inches
  * - Each strip is 5in, with 5.5in separation (along the circumfrance) -> also 2in high
@@ -118,7 +104,7 @@ public:
 	StripFinder(VisionServer& server);
 	StripFinder(const StripFinder& other) = delete;
 
-	void process(cv::Mat& io_frame, int8_t mode = 0) override;
+	void process(cv::Mat& io_frame) override;
 
 private:
 	std::vector<cv::Rect> in_range;
@@ -187,7 +173,7 @@ public:
 	CargoFinder(VisionServer& server);
 	CargoFinder(const CargoFinder& other) = delete;
 
-	void process(cv::Mat& io_frame, int8_t mode = 0) override;
+	void process(cv::Mat& io_frame) override;
 
 protected:
 	template<VThreshold::LED primary, uint8_t alpha, uint8_t beta, uint8_t thresh_percent>

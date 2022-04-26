@@ -5,15 +5,19 @@
 #include "tools/src/resources.h"
 
 VisionCamera::VisionCamera(CS_Source handle) : 
-	VideoCamera(handle)/*, type((cs::VideoSource::Kind)CS_GetSourceKind(handle, &this->m_status))*/ {}
+	VideoCamera(handle), source(this->getVideo())
+{}
 VisionCamera::VisionCamera(const cs::VideoSource& source, const wpi::json& config) : 
-	VideoCamera(source.GetHandle())/*, type((cs::VideoSource::Kind)CS_GetSourceKind(source.GetHandle(), nullptr))*/, config(config) {}
+	VideoCamera(source.GetHandle()), config(config), source(this->getVideo())
+{}
 VisionCamera::VisionCamera(const cs::UsbCamera& source, const wpi::json& config) : 
-	VideoCamera(source.GetHandle())/*, type(cs::VideoSource::Kind::kUsb)*/, config(config) {}
+	VideoCamera(source.GetHandle()), config(config), source(this->getVideo())
+{}
 VisionCamera::VisionCamera(const cs::HttpCamera& source, const wpi::json& config) :
-	VideoCamera(source.GetHandle())/*, type(cs::VideoSource::Kind::kHttp)*/, config(config) {}
-VisionCamera::VisionCamera(const wpi::json& source_config, const wpi::json& calibration) :	// add and/or find a way to determine device type from config json
-	/*type(cs::VideoSource::Kind::kUsb),*/ config(source_config), calibration(calibration)
+	VideoCamera(source.GetHandle()), config(config), source(this->getVideo())
+{}
+VisionCamera::VisionCamera(const wpi::json& source_config, const wpi::json& calibration) :
+    config(source_config), calibration(calibration), source(this->getVideo())
 {
 	cs::UsbCamera cam;
 	try {cam = cs::UsbCamera(source_config.at("name").get<std::string>(), source_config.at("path").get<std::string>());}
@@ -24,9 +28,11 @@ VisionCamera::VisionCamera(const wpi::json& source_config, const wpi::json& cali
 	cam.SetConnectionStrategy(cs::VideoSource::kConnectionKeepOpen);
 	// print confirmation
 	swap(*this, cam);	// this should work
+    this->getJsonCameraMatrix(this->camera_matrix);
+    this->getJsonDistortionCoefs(this->distortion);
 }
-VisionCamera::VisionCamera(const wpi::json& source_config) :	// add and/or find a way to determine device type from config json
-	/*type(cs::VideoSource::Kind::kUsb),*/ config(source_config)
+VisionCamera::VisionCamera(const wpi::json& source_config) :
+    config(source_config), source(this->getVideo())
 {
 	cs::UsbCamera cam;
 	try {cam = cs::UsbCamera(source_config.at("name").get<std::string>(), source_config.at("path").get<std::string>());}
@@ -88,7 +94,7 @@ wpi::json VisionCamera::getStreamJson() const {
 	return wpi::json();
 }
 
-bool VisionCamera::getCameraMatrix(cv::Mat_<double>& array) const {
+bool VisionCamera::getJsonCameraMatrix(cv::Mat_<double>& array) const {
     if(this->calibration.is_object()) {
         try{
             wpi::json matx = this->calibration.at("camera_matrix");
@@ -104,7 +110,7 @@ bool VisionCamera::getCameraMatrix(cv::Mat_<double>& array) const {
     }
     return false;
 }
-bool VisionCamera::getCameraMatrix(cv::Mat_<float>& array) const {
+bool VisionCamera::getJsonCameraMatrix(cv::Mat_<float>& array) const {
     if(this->calibration.is_object()) {
         try{
             wpi::json matx = this->calibration.at("camera_matrix");
@@ -120,7 +126,7 @@ bool VisionCamera::getCameraMatrix(cv::Mat_<float>& array) const {
     }
     return false;
 }
-bool VisionCamera::getDistortion(cv::Mat_<double>& array) const {
+bool VisionCamera::getJsonDistortionCoefs(cv::Mat_<double>& array) const {
     if(this->calibration.is_object()) {
         try{
             wpi::json matx = this->calibration.at("distortion");
@@ -134,7 +140,7 @@ bool VisionCamera::getDistortion(cv::Mat_<double>& array) const {
     }
     return false;
 }
-bool VisionCamera::getDistortion(cv::Mat_<float>& array) const {
+bool VisionCamera::getJsonDistortionCoefs(cv::Mat_<float>& array) const {
     if(this->calibration.is_object()) {
         try{
             wpi::json matx = this->calibration.at("distortion");
@@ -147,6 +153,23 @@ bool VisionCamera::getDistortion(cv::Mat_<float>& array) const {
         return true;
     }
     return false;
+}
+
+uint64_t VisionCamera::getFrame(cv::Mat& o_frame, double timeout) const {
+	if(this->IsConnected()) {
+		return this->source.GrabFrame(o_frame, timeout);
+	} else {
+		o_frame = cv::Mat::zeros(this->getResolution(), CV_8UC3);
+		return 0;
+	}
+}
+uint64_t VisionCamera::getFrameNoTmO(cv::Mat& o_frame) const {
+	if(this->IsConnected()) {
+		return this->source.GrabFrameNoTimeout(o_frame);
+	} else {
+		o_frame = cv::Mat::zeros(this->getResolution(), CV_8UC3);
+		return 0;
+	}
 }
 
 cs::CvSink VisionCamera::getVideo() const {
@@ -170,7 +193,7 @@ int VisionCamera::getPixels() const {
     cs::VideoMode mode = this->GetVideoMode();
     return (mode.width*mode.height);
 }
-int VisionCamera::getSetFPS() const {
+int VisionCamera::getConfigFPS() const {
     return this->GetVideoMode().fps;
 }
 cv::Size VisionCamera::getResolution() const {

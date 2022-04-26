@@ -1,12 +1,14 @@
 #pragma once
 
-#include <networktables/NetworkTable.h>
+#include <array>
+
 #include <opencv2/opencv.hpp>
 
-#include <array>
+#include <networktables/NetworkTable.h>
 
 #include "visionserver.h"
 #include "processing.h"
+
 
 template<VThreshold::LED color>	// 'Weighted Subtraction Threshold' thresholding subpipeline
 class WeightedSubtraction : public VThreshold {
