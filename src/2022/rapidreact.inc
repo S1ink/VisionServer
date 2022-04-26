@@ -53,7 +53,7 @@ StripFinder<color>::StripFinder(VisionServer& server) :
 }
 
 template<VThreshold::LED color>
-void StripFinder<color>::process(cv::Mat& io_frame, int8_t mode) {
+void StripFinder<color>::process(cv::Mat& io_frame) {
 
 	this->findContours(this->threshold(io_frame));
 	if(this->table->GetBoolean("Show Thresholded", false)) {

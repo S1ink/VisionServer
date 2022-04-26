@@ -1,11 +1,12 @@
 #pragma once
 
+#include <opencv2/opencv.hpp>
+
 #include <networktables/NetworkTableInstance.h>
 #include <networktables/NetworkTable.h>
 #include <cameraserver/CameraServer.h>
 #include <wpi/json.h>
 
-#include <opencv2/opencv.hpp>
 
 /**
  * Adds extra functionality and ease of use on top of cs::VideoCaemra (base of cs::HTTPCamera and cs::UsbCamera)
@@ -79,35 +80,58 @@ public:
 	wpi::json getStreamJson() const;
 
 	/**
-	 * Get the camera's matrix array (doubles)
+	 * Get the camera's matrix array (doubles) - parsed from json
 	 * @param array An output array that will be set to the camera's matrix values - size is 3x3 (double)
 	 * @return Whether or not the array could be successfully filled
 	*/
-	bool getCameraMatrix(cv::Mat_<double>& array) const;
+	bool getJsonCameraMatrix(cv::Mat_<double>& array) const;
 	/**
-	 * Get the camera's matrix array (floats)
+	 * Get the camera's matrix array (floats) - parsed from json
 	 * @param array An output array that will be set to the camera's matrix values - size is 3x3 (float)
 	 * @return Whether or not the array could be successfully filled
 	*/
-	bool getCameraMatrix(cv::Mat_<float>& array) const;
+	bool getJsonCameraMatrix(cv::Mat_<float>& array) const;
 	/**
-	 * Get the camera's distortion coefficients (doubles)
+	 * Get the camera's distortion coefficients (doubles) - parsed from json
 	 * @param array An output array that will be set to the camera's distortion coefficients - size is 5x1 (double)
 	 * @return Whether or not the array coulb be successfully filled
 	*/
-	bool getDistortion(cv::Mat_<double>& array) const;
+	bool getJsonDistortionCoefs(cv::Mat_<double>& array) const;
 	/**
-	 * Get the camera's distortion coefficients (floats)
+	 * Get the camera's distortion coefficients (floats) - parsed from json
 	 * @param array An output array that will be set to the camera's distortion coefficients - size is 5x1 (float)
-	 * @return Whether or not the array coulb be successfully filled
+	 * @return Whether or not the array could be successfully filled
 	*/
-	bool getDistortion(cv::Mat_<float>& array) const;
+	bool getJsonDistortionCoefs(cv::Mat_<float>& array) const;
+	/**
+	 * Get the internally stored camera matrix
+	 * @return a const reference to the internal matrix
+	*/
+	inline const cv::Mat_<float>& getCameraMatrix() const { return this->camera_matrix; }
+	/**
+	 * Get the internally stored distortion coefficient matrix
+	 * @return a const reference to the internal matrix
+	*/
+	inline const cv::Mat_<float>& getDistortionCoefs() const { return this->distortion; }
 
 	/**
-	 * Creates a cs::CvSink for the camera and updates stream configuration if it has any
-	 * @return A cs::CvSink object connected to the current camera
+	 * Wraps cs::CvSink::GrabFrame() for the internal sink. If the camera is not physically connected, the buffer is set to a blank frame
+	 * @param o_frame the output framebuffer
+	 * @param timeout maximum time that the thread with block until returning with an empty frame
+	 * @return the frametime, in 1 microsecond increments (see wpi::Now())
 	*/
-	cs::CvSink getVideo() const;
+	uint64_t getFrame(cv::Mat& o_frame, double timeout = 0.225) const;
+	/**
+	 * Wraps cs::CvSink::GrabFrameNoTimeout() for the internal sink. If the camera is not phystically connected, the buffer is set to a blank frame
+	 * @param o_frame the output framebuffer
+	 * @return the frametime, in 1 microsecond increments (see wpi::Now())
+	*/
+	uint64_t getFrameNoTmO(cv::Mat& o_frame) const;
+	/**
+	 * Get the internal CvSink for aquiring frames from the camera
+	 * @return a const reference to the internal sink
+	*/
+	inline const cs::CvSink& getSink() const { return this->source; }
 	/**
 	 * Creates a cs::CvSource with correct options as to be used for the camera
 	 * @return A cs::CvSource object that could be used to stream frames from the camera. This object is not connected to the source feed of the camera in anyway unless passed frames are passed manually
@@ -133,7 +157,7 @@ public:
 	 * Get the current fps the camera is set to capture at
 	 * @return The fps
 	*/
-	int getSetFPS() const;
+	int getConfigFPS() const;
 	/**
 	 * Get the width and height of a camera frame in cv::Size format
 	 * @return The resolution of a camera frame in a cv::Size object
@@ -188,6 +212,11 @@ public:
 
 protected:
 	/**
+	 * Creates a cs::CvSink for the camera and updates stream configuration if it has any
+	 * @return A cs::CvSink object connected to the current camera
+	*/
+	cs::CvSink getVideo() const;
+	/**
 	 * Publish an adjustable networktable entry for the camera's brightness
 	*/
 	void setBrightnessAdjustable();
@@ -201,8 +230,9 @@ protected:
 	void setExposureAdjustable();
 
 private:
-	//cs::VideoSource::Kind type;	// does this even do anything?
 	wpi::json config, calibration;
+	cs::CvSink source;
+	cv::Mat_<float> camera_matrix{cv::Mat_<float>(3, 3)}, distortion{cv::Mat_<float>(1, 5)};
 
 	/**The camera's networktable - default value is '(root)/Cameras/NAME/' */
 	std::shared_ptr<nt::NetworkTable> camera{nt::NetworkTableInstance::GetDefault().GetTable("Cameras")->GetSubTable(this->GetName())};

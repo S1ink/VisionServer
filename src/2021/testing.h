@@ -31,7 +31,7 @@ public:
 	BBoxDemo(VisionServer& server);
 	BBoxDemo(const BBoxDemo& other) = delete;
 
-	void process(cv::Mat& io_frame, int8_t mode = 0) override;
+	void process(cv::Mat& io_frame) override;
 
 private:
 	cv::Rect boundingbox;
@@ -42,7 +42,7 @@ public:
 	SquareTargetPNP(VisionServer& server);
 	SquareTargetPNP(const SquareTargetPNP& other) = delete;
 
-	void process(cv::Mat& io_frame, int8_t mode = 0) override;
+	void process(cv::Mat& io_frame) override;
 
 private:
 	std::vector<cv::Point> target_points;

@@ -62,25 +62,35 @@ public:
      * Get the pipeline name
      * @return The name of the pipeline
     */
-    const std::string& getName() const;
+    inline const std::string& getName() const { return this->name; }
     /**
      * Get the underlying networktable for the pipeline
      * @return A const shared pointer to the pipeline's networktable
     */
-    const std::shared_ptr<nt::NetworkTable> getTable() const;
+    inline const std::shared_ptr<nt::NetworkTable> getTable() const { return this->table; }
     /**
      * Get the VisionServer instance that the pipeline was created with
      * @return A const pointer to the VisionServer isntance
     */
-    const VisionServer* getEnv() const;
+    inline const VisionServer* getEnv() const { return this->env; }
 
     /**
      * Processing function to be overloaded by each pipeline
      * @param io_frame The frame that is recieved from a camera and is sent to the stream after processing finishes
      * @param mode Indicates modes (settings from VisionServer networktable) to be implemented during processing - currently not used
     */
-    virtual void process(cv::Mat& io_frame, int8_t mode = 0) = 0;
+    virtual void process(cv::Mat& io_frame) = 0;
 
+    /**
+     * Update the current target by passing it's name
+     * @param target The target's name - can be gotten by calling 'getName()' on a target
+    */
+    void updateTarget(const std::string& target);
+    /**
+     * Get access to the current camera source
+     * @return The camera as a VisionCamera
+    */
+    const VisionCamera& getCurrentCamera() const;
     /**
      * Get the current camera's matrix array from the VisionServer instance (to be used by classes that extend this)
      * @return The camera matrix - size is 3x3 (float)
@@ -91,16 +101,6 @@ public:
      * @return The distortion coefficients - size if 5x1 (float)
     */
     const cv::Mat_<float>& getCameraDistortion() const;
-    /**
-     * Update the current target by passing it's name
-     * @param target The target's name - can be gotten by calling 'getName()' on a target
-    */
-    void updateTarget(const std::string& target);
-    /**
-     * Get access to the current camera source
-     * @return The camera as a VisionCamera
-    */
-    VisionCamera& getCurrentCamera();
 
 protected:
     /**The pipeline's name*/
@@ -124,7 +124,7 @@ public:
     DefaultPipeline& operator=(const DefaultPipeline&) = delete;
     //DefaultPipeline& operator=(DefaultPipeline&&);
 
-    void process(cv::Mat& io_frame, int8_t mode = 0) override {}
+    void process(cv::Mat& io_frame) override {}
 
 };
 
@@ -156,12 +156,12 @@ public:
      * Get the number of cameras avaiable
      * @return The number of avaiable camera indexes, starting at 0
     */
-    size_t validIndexes() const;
+    inline size_t validIndexes() const { return this->cameras.size(); }
     /**
      * Get the current camera index
      * @return The index of the current camera
     */
-    size_t getCurrentIndex() const;
+    inline size_t getCurrentIndex() const { return this->vision->GetEntry("Camera Index").GetDouble(0); }
     /**
      * Set a specific camera index as a source for the output stream (and processing)
      * @param idx The index of the camera, starting at 0 and <= validIndexes()
@@ -171,7 +171,7 @@ public:
      * Get the frame size of the current camera
      * @return The dimensions of the output frame in a cv::Size object
     */
-    cv::Size getCurrentResolution() const;
+    inline cv::Size getCurrentResolution() const { return this->selected ? this->selected->getResolution() : cv::Size(); }
     /**
      * Set the default compression of the Mjpeg stream output
      * @param quality compression quality, ranging from 0-100 (100 being the highest quality), and -1 for auto
@@ -182,24 +182,13 @@ public:
      * Get a const reference to the internally stored camera vector
      * @return Returns a const reference to the internal vector of VisionCameras
     */
-    const std::vector<VisionCamera>& getCameras();
+    inline const std::vector<VisionCamera>& getCameras() const { return this->cameras; }
 
     /**
-     * Get the camera matrix for the currently selected camera
-     * @return A cv::Mat(of floats) array representing the current camera's matrix - the size is 3x3
+     * Get a const reference to the currently selected camera's object. Use this to aquire frames and calibration matrices.
+     * @return a const reference to the currently selected VisionCamera object
     */
-    const cv::Mat_<float>& getCameraMatrix() const;
-    /**
-     * Get the distortion coefficients for the currently selected camera
-     * @return A cv::Mat(of floats) array representing the current camera's distortion coefficients - the size is 5x1
-    */
-    const cv::Mat_<float>& getDistortion() const;
-
-    /**
-     * Get a frame from the current camera. Returns an blank array if the current camera is disconnected.
-     * @param framebuff the image matrix buffer
-    */
-    void getFrame(cv::Mat& framebuff);
+    inline const VisionCamera& getCurrentCamera() const { return *this->selected; }
 
     /**
      * Joins any processing threads that are currently running
@@ -331,19 +320,16 @@ protected:
      * Gives pipelines access to updating the current target
      * @param target The name of the target that is actively being tracked
     */
-    void updateTarget(const std::string& target);
+    inline void updateTarget(const std::string& target) { this->active_target.setTarget(target); }
     /**
      * Gives pipelines access to changing camera settings for the current source
      * @return The current camera
     */
-    VisionCamera& getCurrentCamera();
 
     std::vector<VisionCamera> cameras;
-    cs::CvSink source;
+    const VisionCamera* selected;
     cs::CvSource output;
     cs::MjpegServer stream;
-
-    cv::Mat_<float> camera_matrix{cv::Mat_<float>(3, 3)}, distortion{cv::Mat_<float>(1, 5)};
 
     std::atomic_bool runloop{true};
     std::thread launched;
@@ -381,7 +367,7 @@ private:
 
     private:
         const std::shared_ptr<nt::NetworkTable> ttable;
-        CHRONO::high_resolution_clock::time_point last; 
+        CHRONO::high_resolution_clock::time_point last;
 
     } active_target{vision};
 

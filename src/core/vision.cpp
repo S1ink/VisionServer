@@ -3,6 +3,7 @@
 #include <wpi/raw_ostream.h>
 #include <wpi/raw_istream.h>
 
+
 bool readConfig(std::vector<VisionCamera>& cameras, const char* file) {
 
 	std::error_code ec;
@@ -122,17 +123,17 @@ bool readConfig(std::vector<VisionCamera>& cameras, const char* file) {
 }
 
 cs::CvSink switchedCameraVision(const std::vector<VisionCamera>& cameras, std::shared_ptr<nt::NetworkTable> table) {
-	if(!table->ContainsKey("Vision Camera Index")) {
-		table->PutNumber("Vision Camera Index", 0);
+	if(!table->ContainsKey("Camera Index")) {
+		table->PutNumber("Camera Index", 0);
 	}
-	if(!table->ContainsKey("Vision Cameras Available")) {
-		table->PutNumber("Vision Cameras Available", cameras.size());
+	if(!table->ContainsKey("Cameras Available")) {
+		table->PutNumber("Cameras Available", cameras.size());
 	}
 	static cs::CvSink source;
 	if(cameras.size() > 0) {
-		source = cameras[0].getVideo();
+		source = cameras[0].getSink();
 	}
-	table->GetEntry("Vision Camera Index").AddListener(
+	table->GetEntry("Camera Index").AddListener(
 		[&cameras](const nt::EntryNotification& event) {
 			if(event.value->IsDouble()) {
 				size_t idx = event.value->GetDouble();

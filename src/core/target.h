@@ -1,16 +1,17 @@
 #pragma once
 
-#include <networktables/NetworkTable.h>
-
-#include <opencv2/opencv.hpp>
-
 #include <vector>
 #include <array>
 #include <string>
 #include <type_traits>
 
+#include <opencv2/opencv.hpp>
+
+#include <networktables/NetworkTable.h>
+
 #include "visionserver.h"
 #include "processing.h"
+
 
 template<size_t corners>
 class Target {
@@ -91,7 +92,7 @@ public:
 	TargetSolver& operator=(const TargetSolver&) = delete;
 	//TargetSolver& operator=(TargetSolver&&);
 
-	void process(cv::Mat& io_frame, int8_t mode = 0) override;
+	void process(cv::Mat& io_frame) override;
 
 private:
 	std::vector<cv::Point> target_points;

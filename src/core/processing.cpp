@@ -1,5 +1,6 @@
 #include "processing.h"
 
+
 size_t Contours::findContours(const cv::Mat& binary_frame, int mode, int method) {
 	this->contours.clear();
 	cv::findContours(binary_frame, this->contours, mode, method);

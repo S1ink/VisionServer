@@ -1,12 +1,13 @@
 #pragma once
 
-#include <networktables/NetworkTable.h>
+#include <vector>
 
 #include <opencv2/opencv.hpp>
 
-#include <vector>
+#include <networktables/NetworkTable.h>
 
 #include "visionserver.h"
+
 
 class VThreshold {	// Vision Thresholding base interface
 public:

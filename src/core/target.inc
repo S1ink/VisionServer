@@ -89,7 +89,7 @@ TargetSolver<target_t, threshold_t>::~TargetSolver() {
 }
 
 template<class target_t, class threshold_t>
-void TargetSolver<target_t, threshold_t>::process(cv::Mat& io_frame, int8_t mode) {
+void TargetSolver<target_t, threshold_t>::process(cv::Mat& io_frame) {
 
 	this->findLargest(this->threshold(io_frame));
 	if(this->table->GetBoolean("Show Thresholded", false)) {
