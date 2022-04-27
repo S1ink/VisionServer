@@ -44,7 +44,13 @@ cs::CvSink switchedCameraVision(
  * @param vm The cs::VideoMode object to get resolution from
  * @return The resolutuion in cv::Size format
 */
-static inline cv::Size getResolution(cs::VideoMode vm) { return cv::Size(vm.height, vm.width); }
+inline cv::Size getResolution(cs::VideoMode vm) { return cv::Size(vm.height, vm.width); }
+
+/**
+ * Extracts videomode properties from a config json - 0-values returned if config is invalid
+ * @return The VideoMode object
+*/
+cs::VideoMode getJsonVideoMode(const wpi::json& config);
 
 /**
  * Adds a networktable entry to the provided networktable with a listener that will update the variable to match the networktable entry

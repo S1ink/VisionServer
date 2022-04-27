@@ -233,6 +233,7 @@ private:
 	wpi::json config, calibration;
 	cs::CvSink source;
 	cv::Mat_<float> camera_matrix{cv::Mat_<float>(3, 3)}, distortion{cv::Mat_<float>(1, 5)};
+	cs::VideoMode properties;
 
 	/**The camera's networktable - default value is '(root)/Cameras/NAME/' */
 	std::shared_ptr<nt::NetworkTable> camera{nt::NetworkTableInstance::GetDefault().GetTable("Cameras")->GetSubTable(this->GetName())};

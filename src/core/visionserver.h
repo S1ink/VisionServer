@@ -110,6 +110,7 @@ protected:
     /**A pointer to the surrounding VisionServer instance*/
     VisionServer* env;
 
+
 };
 /**
  * A default pipeline implentation that does no processing but still overloads process(), and thus can be used in a processing instance
@@ -125,6 +126,7 @@ public:
     //DefaultPipeline& operator=(DefaultPipeline&&);
 
     void process(cv::Mat& io_frame) override {}
+
 
 };
 
