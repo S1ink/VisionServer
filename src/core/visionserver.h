@@ -323,10 +323,8 @@ protected:
      * @param target The name of the target that is actively being tracked
     */
     inline void updateTarget(const std::string& target) { this->active_target.setTarget(target); }
-    /**
-     * Gives pipelines access to changing camera settings for the current source
-     * @return The current camera
-    */
+
+   	inline cs::CvSource& getOutput() { return this->output; }
 
     std::vector<VisionCamera> cameras;
     const VisionCamera* selected;
