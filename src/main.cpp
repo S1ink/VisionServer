@@ -12,6 +12,7 @@
 #include "core/processing.h"
 #include "core/vision.h"
 #include "core/httpnetworktables.h"
+#include "core/visionserver2.h"
 
 #include "2021/testing.h"
 #include "2022/rapidreact.h"
@@ -20,40 +21,9 @@
 StopWatch runtime("Runtime", &std::cout, 0);
 void on_exit() { runtime.end(); }
 
-template<class derived = void>	// each different pipeline type has it's own instance count
-class VPipeline2 {
+class TestPipeline : public VPipeline2<TestPipeline> {
 public:
-	inline VPipeline2(const std::string& name) : 
-		name(name + std::to_string(instances + 1))/*, table(VisionServer::getTable().getSubTable(this->name))*/
-	{ instances++; }
-
-	inline static size_t getInstances() { return instances; }
-	inline const std::string& getName() { return this->name; }
-
-private:
-	std::string name;
-	const std::shared_ptr<nt::NetworkTable> table;
-
-	//inline static std::atomic<uint32_t> instances{0};
-	inline static uint32_t instances{0};
-
-
-};
-
-template<class derived = void>
-class T1 : public VPipeline2<T1<derived> > {
-public:
-	typedef VPipeline2<T1<derived> >	Super;
-	inline T1() : Super("T1") { std::cout << "T1: " << this->getInstances() << newline; }
-	inline T1(const std::string& n) : Super(n) {}
-
-
-};
-template<class derived = void>
-class T2 : public T1<T2<derived> > {
-public:
-	typedef T1<T2<derived> >	Super;
-	inline T2() : Super("T2") { std::cout << "T2: " << this->getInstances() << newline; }
+	TestPipeline() : VPipeline2("Test Pipeline") {}
 
 
 };
@@ -69,16 +39,10 @@ int main(int argc, char* argv[]) {
 	else if(readConfig(cameras)) {}
 	else { return EXIT_FAILURE; }
 
-	T1 one;
-	std::cout << one.getName() << newline;
-	T2 two;
-	std::cout << two.getName() << newline;
-	T2 three;
-	std::cout << three.getName() << newline;
-	std::cout << "\nT1: " << T1<>::getInstances() << ", T2: " << T2<>::getInstances() << "\n\n";
-	std::cout << VPipeline2<>::getInstances() << newline;
-	VPipeline2 v("test");
-	std::cout << VPipeline2<>::getInstances() << newline;
+	VisionServer2::addCameras(std::move(cameras));
+	VisionServer2::addPipelines<TestPipeline, TestPipeline>();
+	VisionServer2::addStreams(2);
+	VisionServer2::run();
 
 	//VisionServer vserver(std::move(cameras));
 	// HttpServer hserver(
@@ -97,7 +61,6 @@ int main(int argc, char* argv[]) {
 	// 	BBoxDemo
 	// >(25);
 	//hserver.serve<HttpNTables>();
-	//testCapture(vserver);
 }
 
 // LIST OF THINGS

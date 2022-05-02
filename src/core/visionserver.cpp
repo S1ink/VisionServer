@@ -250,7 +250,7 @@ void VisionServer::putStats(cv::Mat& io_frame) {
 	);
 	cv::putText(
 		io_frame, "FPS(1S): " + std::to_string(this->fps_1s), 
-		cv::Point(5, 44), 
+		cv::Point(5, 45), 
 		cv::FONT_HERSHEY_DUPLEX, 0.65, cv::Scalar(0, 255, 0), 1, cv::LINE_AA
 	);
 	cv::putText(
