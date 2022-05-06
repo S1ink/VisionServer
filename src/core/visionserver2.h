@@ -9,6 +9,7 @@
 #include <opencv2/opencv.hpp>
 
 #include <networktables/NetworkTable.h>
+#include <cameraserver/CameraServer.h>
 
 #include "visioncamera.h"
 
@@ -24,29 +25,34 @@ public:
 	}
 
 
-	class BasePipe {
+	class BasePipe : public cs::CvSource {
 		friend class VisionServer2;
 	public:
 		inline static const std::shared_ptr<nt::NetworkTable> pipe_table{VisionServer2::ntable->GetSubTable("Pipelines")};
 
-		inline BasePipe(const char* name) :
-			name(name), table(pipe_table->GetSubTable(this->name)) {/* start enable/disable callback for more efficent threading */}
+	protected:
+		inline BasePipe(const char* name) :	/* start enable/disable callback for more efficent threading */
+			CvSource(name, cs::VideoMode()), name(name),
+			input(this->name), table(pipe_table->GetSubTable(this->name)) {}
 		inline BasePipe(const std::string& name) :
-			name(name), table(pipe_table->GetSubTable(this->name)) {}
+			CvSource(name, cs::VideoMode()), name(name),
+			input(this->name), table(pipe_table->GetSubTable(this->name)) {}
 		inline BasePipe(std::string&& name) :
-			name(name), table(pipe_table->GetSubTable(this->name)) {}
+			CvSource(name, cs::VideoMode()), name(name),
+			input(this->name), table(pipe_table->GetSubTable(this->name)) {}
 		BasePipe() = delete;
 
 
 		inline const std::string& getName() const { return this->name; }
 		inline const std::shared_ptr<nt::NetworkTable> getTable() const { return this->table; }
-		inline void sendOutputTo(cs::VideoSink& sink) const { sink.SetSource(this->output); }
 
 		virtual void process(cv::Mat& io_frame) = 0;
 
+		void setCamera(const VisionCamera&);
+
 	private:
 		std::string name;
-		cs::CvSource output;
+		cs::CvSink input;
 		const std::shared_ptr<nt::NetworkTable> table;
 
 
@@ -71,8 +77,9 @@ public:
 	static const std::vector<std::unique_ptr<BasePipe> >& getPipelines();
 	static size_t numPipelines();
 
+	static void addStream();
+	static void addStream(std::string_view);
 	static void addStream(std::string_view, int port);
-	static void addStream(cs::MjpegServer&& = cs::MjpegServer());
 	static void addStreams(size_t = 2);
 	//static const std::vector<OutputStream>& getStreams();
 	static size_t numStreams();
@@ -81,6 +88,8 @@ public:
 	static bool runThread(uint16_t rps = 50);
 	static bool isRunning();
 	static bool stop();
+
+	static void test();
 
 
 protected:
@@ -108,25 +117,26 @@ private:
 	std::thread head;
 	std::atomic<bool> is_running{false};
 
-	struct FrameMutex {
-	public:
-		inline FrameMutex(cv::Mat&& mat) : buffer(mat) {}
-		inline FrameMutex(cv::Size s, int t) : buffer(s, t) {}
+	// struct FrameMutex {
+	// public:
+	// 	inline FrameMutex(cv::Mat&& mat) : buffer(mat) {}
+	// 	inline FrameMutex(cv::Size s, int t) : buffer(s, t) {}
 
-		bool update(const VisionCamera& cam, double timeo);
-		void transfer(cv::Mat&);
-		void clone(cv::Mat&);
+	// 	bool update(const VisionCamera& cam, double timeo);
+	// 	void transfer(cv::Mat&);
+	// 	void clone(cv::Mat&);
 
-		inline int test() { return this->buffer.cols; }
+	// 	inline int test() { return this->buffer.cols; }
 
-	private:
-		std::unique_lock<std::mutex> access;
-		cv::Mat buffer;
+	// private:
+	// 	std::unique_lock<std::mutex> access;
+	// 	cv::Mat buffer;
 
-	};
-	std::vector<FrameMutex> framebuffer;
+	// };
+	// std::vector<FrameMutex> framebuffer;
 
 	struct OutputStream {
+		friend class VisionServer2;
 	public:
 		inline static const std::shared_ptr<nt::NetworkTable> streams_table = ntable->GetSubTable("Streams");
 

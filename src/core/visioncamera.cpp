@@ -43,7 +43,7 @@ VisionCamera::VisionCamera(const wpi::json& source_config, const wpi::json& cali
     if(this->properties) { this->properties = ::getJsonVideoMode(config); }
 }
 VisionCamera::VisionCamera(const wpi::json& source_config) :
-    config(source_config), source(this->getVideo())
+    config(source_config)
 {
 	cs::UsbCamera cam;
 	try {cam = cs::UsbCamera(source_config.at("name").get<std::string>(), source_config.at("path").get<std::string>());}
