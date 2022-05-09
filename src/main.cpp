@@ -6,10 +6,10 @@
 #include "tools/src/timing.h"
 #include "tools/src/server/server.h"
 
-#include "core/weightedsubtraction.h"
+//#include "core/weightedsubtraction.h"
 #include "core/visioncamera.h"
 //#include "core/visionserver.h"
-#include "core/processing.h"
+//#include "core/processing.h"
 #include "core/vision.h"
 #include "core/httpnetworktables.h"
 #include "core/visionserver2.h"
@@ -21,9 +21,15 @@
 StopWatch runtime("Runtime", &std::cout, 0);
 void on_exit() { runtime.end(); }
 
-class TestPipeline : public VPipeline2<TestPipeline> {
+class TestPipeline : public vs2::VPipeline<TestPipeline> {
 public:
-	TestPipeline() : VPipeline2("Test Pipeline") {}
+	TestPipeline() : VPipeline("Test Pipeline") {}
+
+
+};
+class TestPipeline2 : public vs2::VPipeline<TestPipeline2> {
+public:
+	TestPipeline2() : VPipeline("Test Pipeline[2]") {}
 
 
 };
@@ -39,39 +45,14 @@ int main(int argc, char* argv[]) {
 	else if(readConfig(cameras)) {}
 	else { return EXIT_FAILURE; }
 
-	VisionServer2::addCameras(std::move(cameras));
-	VisionServer2::addPipelines<TestPipeline, TestPipeline>();
-	VisionServer2::addStreams(2);
-	VisionServer2::run(30);
-	VisionServer2::test();
-
-	// const VisionCamera* camera = &VisionServer2::getCameras().at(1);
-
-	// cs::MjpegServer out("server 1", 1181);
-	// cs::MjpegServer out2("server 2", 1182);
-	// cs::CvSink src("cv_1");
-	// cs::CvSink src2("cv_2");
-	// src.SetSource(*camera);
-	// src2.SetSource(*camera);
-	// cs::CvSource s("CvSource 1", cs::VideoMode());
-	// cs::CvSource s2("CvSource 2", cs::VideoMode());
-	// //src2.SetSource(s);
-	// out.SetSource(s);
-	// out2.SetSource(s2);
-	// cv::Mat 
-	// 	frame = cv::Mat::zeros(VisionServer2::getCameras().at(1).getResolution(), CV_8UC3),
-	// 	frame2 = cv::Mat::zeros(VisionServer2::getCameras().at(1).getResolution(), CV_8UC3)
-	// ;
-
-	// s.SetVideoMode(camera->GetVideoMode());
-	// s2.SetVideoMode(camera->GetVideoMode());
-
-	// for(;;) {
-	// 	src.GrabFrame(frame);
-	// 	s.PutFrame(frame);
-	// 	src2.GrabFrame(frame2);
-	// 	s2.PutFrame(frame2);
-	// }
+	vs2::VisionServer::addCameras(std::move(cameras));
+	vs2::VisionServer::addPipelines<TestPipeline, TestPipeline>();
+	vs2::VisionServer::addStream("name");
+	vs2::VisionServer::addStream("fjkldsjflkdsj");
+	vs2::VisionServer::addStream("jflkdsjl", 20000);
+	//VisionServer2::addStreams(2);
+	vs2::VisionServer::run(60);
+	atexit(vs2::VisionServer::stopExit);
 
 	//VisionServer vserver(std::move(cameras));
 	// HttpServer hserver(

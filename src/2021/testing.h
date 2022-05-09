@@ -1,13 +1,13 @@
 #pragma once
 
-#include <opencv2/opencv.hpp>
-
 #include <vector>
 
-#include "../core/weightedsubtraction.h"
-#include "../core/visionserver.h"
-#include "../core/processing.h"
-#include "../core/target.h"
+#include <opencv2/opencv.hpp>
+
+#include "../core/vs-1.x-archive/weightedsubtraction.h"
+#include "../core/vs-1.x-archive/visionserver.h"
+#include "../core/vs-1.x-archive/processing.h"
+#include "../core/vs-1.x-archive/target.h"
 //#include "vision.h"
 
 #include "../defines.h"

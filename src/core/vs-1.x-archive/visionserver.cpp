@@ -7,7 +7,7 @@
 
 #include "tools/src/unix/stats.h"
 //#include "pipelines.h"
-#include "vision.h"
+#include "../vision.h"
 
 
 VPipeline::VPipeline(VisionServer& server) : 

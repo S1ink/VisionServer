@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <math.h>
 
-#include "vision.h"
+#include "../vision.h"
 
 
 template<size_t corners>

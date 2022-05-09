@@ -11,7 +11,7 @@
 /**
  * Adds extra functionality and ease of use on top of cs::VideoCaemra (base of cs::HTTPCamera and cs::UsbCamera)
 */
-class VisionCamera : public cs::VideoCamera {
+class VisionCamera final: public cs::VideoCamera {
 public:
 	//VisionCamera() = default;
 	/**

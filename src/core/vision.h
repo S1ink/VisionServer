@@ -1,23 +1,25 @@
 #pragma once
 
-#include <networktables/NetworkTableInstance.h>
-#include <networktables/NetworkTable.h>
-#include <cameraserver/CameraServer.h>
-#include <wpi/StringExtras.h>
-
-#include <opencv2/core/types.hpp>
-
 #include <type_traits>
 #include <algorithm>
 #include <vector>
 #include <array>
+
+#include <opencv2/core/types.hpp>
+
+#include <networktables/NetworkTableInstance.h>
+#include <networktables/NetworkTable.h>
+#include <cameraserver/CameraServer.h>
+#include <wpi/StringExtras.h>
 
 #include "tools/src/resources.h"
 #include "visioncamera.h"
 #include "defines.h"
 
 
-// helper functions that extend cameraserver and opencv functionality
+/**
+ * This file contains vision-related helper functions used throughout the framework
+*/
 
 CE_STR _default = "/boot/frc.json";
 /**
@@ -207,6 +209,10 @@ const auto extend_array = operator+=<num_t, s>;	// an alias
 template<typename num_t>
 const auto extend_vector = operator+=<num_t>;
 
-extern const std::array<std::array<cv::Scalar, 3>, 3> markup_map;
+inline static const std::array<std::array<cv::Scalar, 3>, 3> markup_map{
+    std::array<cv::Scalar, 3>{cv::Scalar(255, 0, 0), cv::Scalar(255, 127, 0), cv::Scalar(255, 255, 0)},	//blue
+	std::array<cv::Scalar, 3>{cv::Scalar(0, 255, 0), cv::Scalar(0, 255, 127), cv::Scalar(0, 255, 255)},	//green
+	std::array<cv::Scalar, 3>{cv::Scalar(0, 0, 255), cv::Scalar(127, 0, 255), cv::Scalar(255, 0, 255)},	//red
+};
 
 #include "vision.inc"

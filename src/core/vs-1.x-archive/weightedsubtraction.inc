@@ -1,7 +1,7 @@
 #include "weightedsubtraction.h"
 
-#include "vision.h"
-#include "mem.h"
+#include "../vision.h"
+#include "../mem.h"
 
 
 template<VThreshold::LED color>

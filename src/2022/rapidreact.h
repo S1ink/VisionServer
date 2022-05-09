@@ -6,10 +6,10 @@
 #include <array>
 #include <thread>
 
-#include "../core/weightedsubtraction.h"
-#include "../core/visionserver.h"
-#include "../core/processing.h"
-#include "../core/target.h"
+#include "../core/vs-1.x-archive/weightedsubtraction.h"
+#include "../core/vs-1.x-archive/visionserver.h"
+#include "../core/vs-1.x-archive/processing.h"
+#include "../core/vs-1.x-archive/target.h"
 
 #include "../defines.h"
 
