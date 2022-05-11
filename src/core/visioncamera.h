@@ -198,7 +198,7 @@ public:
 
 	/**
 	 * Set the root networktable in which the camera's own networktable should reside
-	 * @param table The root table (ex. "Cameras")
+	 * @param table The root table (the camera resides in ~table~/Cameras)
 	*/
 	void setNetworkBase(std::shared_ptr<nt::NetworkTable> table);
 	/**

@@ -9,6 +9,8 @@
 
 #include <networktables/NetworkTable.h>
 
+#include "tools/src/types.h"
+
 #include "visionserver.h"
 #include "processing.h"
 
@@ -61,22 +63,6 @@ private:
 // 	Target2(const std::array<cv::Point3f, pts_odd>& world_1, const std::array<cv::Point3f, pts_even>& world_2, const std::string& name);
 
 // };
-
-
-
-// template <template <typename...> class C, typename...Ts>
-// std::true_type is_base_of_template_impl(const C<Ts...>*);
-// template <template <typename...> class C>
-// std::false_type is_base_of_template_impl(...);
-// template <typename T, template <typename...> class C>
-// using is_base_of_template = decltype(is_base_of_template_impl<C>(std::declval<T*>()));	// assert inheritance of template class
-
-template <template <size_t> class C, size_t S>
-std::true_type is_base_of_num_template_impl(const C<S>*);
-template <template <size_t...> class C>
-std::false_type is_base_of_num_template_impl(...);
-template <typename T, template <size_t> class C>
-using is_base_of_num_template = decltype(is_base_of_num_template_impl<C>(std::declval<T*>()));	// assert inheritance of size templated class
 
 
 

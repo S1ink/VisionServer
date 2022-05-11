@@ -10,6 +10,7 @@
 
 #include <networktables/NetworkTable.h>
 
+#include "tools/src/types.h"
 #include "visionserver2.h"
 
 
@@ -18,54 +19,52 @@ namespace vs2 {
 template<size_t points>
 class Target {
 public:
+	inline static const std::shared_ptr<nt::NetworkTable> target_table{VisionServer::base_table->GetSubTable("Targets")};
+
 	Target() = delete;
-	Target(const std::array<cv::Point3f, points>& world, const char* name);
-	Target(const std::array<cv::Point3f, points>& world, const std::string& name);
-	Target(const std::array<cv::Point3f, points>& world, std::string&& name);
+	inline Target(std::array<cv::Point3f, points>&& world, const char* name) :
+		world(std::move(world)), name(name), table(target_table->GetSubTable(this->name)) {}
+	inline Target(std::array<cv::Point3f, points>&& world, const std::string& name) :
+		world(std::move(world)), name(name), table(target_table->GetSubTable(this->name)) {}
+	inline Target(std::array<cv::Point3f, points>&& world, std::string&& name) :
+		world(std::move(world)), name(std::move(name)), table(target_table->GetSubTable(this->name)) {}
 	virtual ~Target();
 
 	const std::array<cv::Point3f, points> world;
 	static inline const size_t size{points};
 
-	void solvePerspective(
+	inline const std::string& getName() const { return this->name; }
+	inline const std::array<cv::Point2f, points>& getBuffer() const { return this->point_buff; }
+
+	virtual void solvePerspective (
 		cv::Mat_<float>& tvec, cv::Mat_<float>& rvec,
 		cv::InputArray camera_matrix, cv::InputArray camera_coeffs,
 		int flags = 0, bool ext_guess = false
-	);
+	) const;
 
 protected:
+	void rescaleBuffer(double scale);	// all points are multiplied by scale, so to downscale by (ex. 4), pass in (ex. 0.25)
+	virtual void update2D(const std::vector<cv::Point>& pts) = 0;	// a method for updating the buffer from a contour, implementations should also sort the points.
+
 	const std::string name;
 	const std::shared_ptr<nt::NetworkTable> table;
 
-	std::array<cv::Point3f, points> point_buff;
+	std::array<cv::Point2f, points> point_buff;
 
 
 };
-template<size_t points, class derived>
-class UniqueTarget : Target<points> {
+/** The same target base class but with instance counting (appended to name on creation) */
+template<size_t points, class derived = void>
+class UniqueTarget : public Instanced<UniqueTarget<points, derived> >, public Target<points> {
 	typedef struct UniqueTarget<points, derived>	This_t;
 public:
 	UniqueTarget() = delete;
-	inline UniqueTarget(const std::array<cv::Point3f, points>& world, const char* name) : Target(world, name) {}
-	inline UniqueTarget(const std::array<cv::Point3f, points>& world, const std::string& name) : Target(world, name) {}
-	inline UniqueTarget(const std::array<cv::Point3f, points>& world, std::string&& name) : Target(world, name) {}
-	inline virtual ~UniqueTarget() { This_t::deleted.push(this->instance); }
-
-private:
-	inline static uint32_t assign() {
-		if(This_t::deleted.empty()) {
-			This_t::highest++;
-			return This_t::highest;
-		} else {
-			uint32_t ret = This_t::deleted.front();
-			This_t::deleted.pop();
-			return ret;
-		}
-	}
-
-	inline static std::atomic<uint32_t> highest{0};
-	inline static std::queue<uint32_t> deleted;
-	const uint32_t instance;
+	inline UniqueTarget(std::array<cv::Point3f, points>&& world, const char* name) :
+		Instanced<This_t>(), Target<points>(world, name + std::to_string(this->getInst())) {}
+	inline UniqueTarget(std::array<cv::Point3f, points>&& world, const std::string& name) :
+		Instanced<This_t>(), Target<points>(world, name + std::to_string(this->getInst())) {}
+	inline UniqueTarget(std::array<cv::Point3f, points>&& world, std::string&& name) :
+		Instanced<This_t>(), Target<points>(world, name + std::to_string(this->getInst())) {}
 
 
 };
@@ -110,5 +109,35 @@ public:
 };
 
 
+
+} // namespace vs2
+
+
+
+// extensions.inc	>>>
+
+namespace vs2 {
+
+template<size_t points>
+void Target<points>::solvePerspective(
+	cv::Mat_<float>& tvec, cv::Mat_<float>& rvec, 
+	cv::InputArray camera_matrix, cv::InputArray camera_coeffs, 
+	int flags, bool ext_guess
+) const {
+	cv::solvePnP(this->world, this->points, camera_matrix, camera_coeffs, rvec, tvec, ext_guess, flags);
+
+	this->table->PutNumber("x", tvec[0][0]);
+	this->table->PutNumber("y", tvec[1][0]);
+	this->table->PutNumber("z", tvec[2][0]);
+	this->table->PutNumber("distance", sqrt(pow(tvec[0][0], 2) + pow(tvec[1][0], 2) + pow(tvec[2][0], 2)));
+	this->table->PutNumber("up-down", atan2(tvec[1][0], tvec[2][0])*-180/M_PI);
+	this->table->PutNumber("left-right", atan2(tvec[0][0], tvec[2][0])*180/M_PI);
+}
+template<size_t points>
+void Target<points>::rescaleBuffer(double scale) {
+	for(size_t i = 0; i < points; i++) {
+		this->point_buff.at(i) *= scale;
+	}
+}
 
 }

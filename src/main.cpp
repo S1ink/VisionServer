@@ -4,6 +4,7 @@
 #include "tools/src/resources.h"
 #include "tools/src/sighandle.h"
 #include "tools/src/timing.h"
+#include "tools/src/types.h"
 #include "tools/src/server/server.h"
 
 //#include "core/weightedsubtraction.h"
@@ -46,7 +47,7 @@ int main(int argc, char* argv[]) {
 	else { return EXIT_FAILURE; }
 
 	vs2::VisionServer::addCameras(std::move(cameras));
-	vs2::VisionServer::addPipelines<TestPipeline, TestPipeline>();
+	vs2::VisionServer::addPipelines<TestPipeline, TestPipeline2>();
 	vs2::VisionServer::addStream("name");
 	vs2::VisionServer::addStream("fjkldsjflkdsj");
 	vs2::VisionServer::addStream("jflkdsjl", 20000);

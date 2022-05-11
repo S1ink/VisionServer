@@ -191,6 +191,7 @@ template<typename num_t>
 void reorderClockWise(std::vector<cv::Point_<num_t> >& points);
 template<typename num_t>
 void reorderCClockWise(std::vector<cv::Point_<num_t> >& points);
+// reorder sorting with point-buffer params
 
 template<typename num_t, size_t s>
 std::array<cv::Point3_<num_t>, s> operator+(const std::array<cv::Point_<num_t>, s>& base, num_t depth);

@@ -11,6 +11,7 @@
 #include <networktables/NetworkTable.h>
 #include <cameraserver/CameraServer.h>
 
+#include "tools/src/types.h"
 #include "visioncamera.h"
 
 
@@ -20,7 +21,7 @@ class VisionServer final {
 	struct OutputStream;
 public:
 	inline static const std::shared_ptr<nt::NetworkTable>
-		ntable{nt::NetworkTableInstance::GetDefault().GetTable("Vision Server")};
+		base_table{nt::NetworkTableInstance::GetDefault().GetTable("Vision Server")};
 
 	inline static VisionServer& getInstance() {
 		static VisionServer instance;
@@ -31,7 +32,7 @@ public:
 	class BasePipe : public cs::CvSource {
 		friend class VisionServer;
 	public:
-		inline static const std::shared_ptr<nt::NetworkTable> pipe_table{VisionServer::ntable->GetSubTable("Pipelines")};
+		inline static const std::shared_ptr<nt::NetworkTable> pipe_table{VisionServer::base_table->GetSubTable("Pipelines")};
 
 		inline const std::string& getName() const { return this->name; }
 		inline const std::shared_ptr<nt::NetworkTable> getTable() const { return this->table; }
@@ -119,7 +120,7 @@ private:
 	struct OutputStream {
 		friend class VisionServer;
 	public:
-		inline static const std::shared_ptr<nt::NetworkTable> streams_table = ntable->GetSubTable("Streams");
+		inline static const std::shared_ptr<nt::NetworkTable> streams_table = base_table->GetSubTable("Streams");
 
 		inline OutputStream(std::string_view n) : OutputStream(frc::CameraServer::AddServer(n)) {}
 		inline OutputStream(std::string_view n, int p) : OutputStream(frc::CameraServer::AddServer(n, p)) {}
@@ -138,39 +139,22 @@ private:
 
 
 template<class derived>	// CRTP for instance counting -> all derived classes should inherit a passthrough template if they are expected to be extended as well
-class VPipeline : public VisionServer::BasePipe {
-	typedef struct VPipeline<derived>		This_t;		// "this type"
-	//static_assert(std::is_base_of<This_t, derived>::value, "[template] Class is not derived from VPipeline<Class> - CRTP is necessary.");
-
-public:
-	inline static uint32_t getInstances() { return This_t::instances; }
-	template<class derived_t>
-	inline static uint32_t getTypeInstances() {
-		static_assert(std::is_base_of<VPipeline<derived_t>, derived_t>::value, "[template] Class is not derived from VPipeline<Class> - CRTP is necessary.");
-		return VPipeline<derived_t>::getInstances();
-	}
-
+class VPipeline : public Instanced<VPipeline<derived> >, public VisionServer::BasePipe {
+	typedef struct VPipeline<derived>	This_t;
 protected:
 	VPipeline() = delete;
 	VPipeline(const VPipeline&) = delete;
 	inline VPipeline(const char* name) : 
-		BasePipe(name + std::to_string(This_t::instances + 1)), instance(This_t::instances + 1)
-			{ This_t::instances++; }
+		Instanced<This_t>(), BasePipe(name + std::to_string(this->instance)) {}
 	inline VPipeline(const std::string& name) :
-		BasePipe(name + std::to_string(This_t::instances + 1)), instance(This_t::instances + 1)
-			{ This_t::instances++; }
+		Instanced<This_t>(), BasePipe(name + std::to_string(this->instance)) {}
 	inline VPipeline(std::string&& name) :
-		BasePipe(name + std::to_string(This_t::instances + 1)), instance(This_t::instances + 1)
-			{ This_t::instances++; }
-	inline virtual ~VPipeline() { This_t::instances--; }
+		Instanced<This_t>(), BasePipe(name + std::to_string(this->instance)) {}
+	inline virtual ~VPipeline() = default;
 
 
 	virtual void process(cv::Mat& io_frame) override;
 
-
-private:
-	inline static std::atomic<uint32_t> instances{0};
-	const uint32_t instance;
 
 
 };

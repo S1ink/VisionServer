@@ -19,7 +19,7 @@ VisionServer::~VisionServer() {
 void VisionServer::addCamera(VisionCamera&& c) {
 	if(!inst().is_running) {
 		inst().cameras.emplace_back(std::move(c));
-		inst().cameras.back().setNetworkBase(VisionServer::ntable);
+		inst().cameras.back().setNetworkBase(VisionServer::base_table);
 		inst().cameras.back().setNetworkAdjustable();
 	}
 }
@@ -33,7 +33,7 @@ void VisionServer::addCameras(std::vector<VisionCamera>&& cms) {
 		);
 		cms.clear();
 		for(int i = ((int)inst().cameras.size()) - num; i < inst().cameras.size(); i++) {
-			inst().cameras.at(i).setNetworkBase(VisionServer::ntable);
+			inst().cameras.at(i).setNetworkBase(VisionServer::base_table);
 			inst().cameras.at(i).setNetworkAdjustable();
 		}
 	}
@@ -43,7 +43,7 @@ void VisionServer::setCameras(std::vector<VisionCamera>&& cms) {
 		inst().cameras = std::move(cms);
 		cms.clear();
 		for(size_t i = 0; i < inst().cameras.size(); i++) {
-			inst().cameras.at(i).setNetworkBase(VisionServer::ntable);
+			inst().cameras.at(i).setNetworkBase(VisionServer::base_table);
 			inst().cameras.at(i).setNetworkAdjustable();
 		}
 	}
