@@ -1,6 +1,10 @@
 #include <vector>
 #include <string>
 
+#include <tensorflow/lite/interpreter.h>
+#include <tensorflow/lite/interpreter_builder.h>
+#include <tensorflow/lite/model_builder.h>
+
 #include "tools/src/resources.h"
 #include "tools/src/sighandle.h"
 #include "tools/src/timing.h"
@@ -45,6 +49,12 @@ int main(int argc, char* argv[]) {
 	if(argc > 1 && readConfig(cameras, argv[1])) {}
 	else if(readConfig(cameras)) {}
 	else { return EXIT_FAILURE; }
+
+	std::chrono::high_resolution_clock::time_point now = std::chrono::high_resolution_clock::now();
+	std::unique_ptr<tflite::FlatBufferModel> model = tflite::FlatBufferModel::BuildFromFile("model.tflite");
+	std::cout << "Loaded TFLITE model in: " << std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - now).count() << " seconds.\n";
+	//tflite::InterpreterBuilder builder(*model, "operator?");
+
 
 	vs2::VisionServer::addCameras(std::move(cameras));
 	vs2::VisionServer::addPipelines<TestPipeline, TestPipeline2>();
