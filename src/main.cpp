@@ -4,6 +4,8 @@
 #include <tensorflow/lite/interpreter.h>
 #include <tensorflow/lite/interpreter_builder.h>
 #include <tensorflow/lite/model_builder.h>
+#include <tensorflow/lite/kernels/register.h>
+#include <tensorflow/lite/examples/label_image/get_top_n.h>
 
 #include "tools/src/resources.h"
 #include "tools/src/sighandle.h"
@@ -21,6 +23,7 @@
 
 #include "2021/testing.h"
 #include "2022/rapidreact.h"
+#include "2022/model_runner.h"
 
 
 StopWatch runtime("Runtime", &std::cout, 0);
@@ -50,17 +53,105 @@ int main(int argc, char* argv[]) {
 	else if(readConfig(cameras)) {}
 	else { return EXIT_FAILURE; }
 
-	std::chrono::high_resolution_clock::time_point now = std::chrono::high_resolution_clock::now();
-	std::unique_ptr<tflite::FlatBufferModel> model = tflite::FlatBufferModel::BuildFromFile("model.tflite");
-	std::cout << "Loaded TFLITE model in: " << std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - now).count() << " seconds.\n";
-	//tflite::InterpreterBuilder builder(*model, "operator?");
+	// std::chrono::high_resolution_clock::time_point now = std::chrono::high_resolution_clock::now();
+	// std::unique_ptr<tflite::FlatBufferModel> model = tflite::FlatBufferModel::BuildFromFile("unoptimized.tflite");
+
+	// tflite::ops::builtin::BuiltinOpResolver resolver;
+	// std::unique_ptr<tflite::Interpreter> interpreter;
+	// tflite::InterpreterBuilder builder(*model, resolver);
+	// builder.SetNumThreads(3);
+	// builder(&interpreter);
+	// interpreter->AllocateTensors();
+	// std::cout << "Loaded TFLITE model in: " << std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - now).count() << " seconds.\n";
+
+	// std::cout <<
+	// 	"Model Info: {" <<
+	// 		"\n\tInputs: " << interpreter->inputs().size() <<
+	// 		"\n\tOutputs: " << interpreter->outputs().size();
+	// for(size_t i = 0; i < interpreter->inputs().size(); i++) {
+	// 	std::cout << "\n\tInput[" << i << "]: " << interpreter->GetInputName(i) << " ~ " << interpreter->inputs()[i];
+	// }
+	// for(size_t i = 0; i < interpreter->outputs().size(); i++) {
+	// 	std::cout << "\n\tOutput[" << i << "]: " << interpreter->GetOutputName(i) << " ~ " << interpreter->outputs()[i];
+	// }
+	// // std::cout << "\n}\nTensors:";
+	// // for(size_t i = 0; i < interpreter->tensors_size(); i++) {
+	// // 	std::cout << "\n\t[" << i << "]: " << interpreter->tensor(i)->bytes << ", " << interpreter->tensor(i)->params.scale;
+	// // }
+	// // std::cout << std::endl;
+	// std::cout << "\n}" << std::endl;
+
+	// int32_t input = interpreter->inputs()[0];
+	// TfLiteIntArray* dims = interpreter->tensor(input)->dims;
+	// int32_t
+	// 	wanted_height = dims->data[1],
+	// 	wanted_width = dims->data[2],
+	// 	wanted_channels = dims->data[3]
+	// ;
+
+	// std::cout << "Model Input Specs: {" << wanted_width << 'x' << wanted_height << ", C" << wanted_channels << "}\n";
+
+	// VisionCamera& cam = cameras.at(1);
+	// cs::MjpegServer out("Stream", 1181);
+	// cs::CvSink src("cv_1");
+	// src.SetSource(cam);
+	// cs::CvSource s("Source", cs::VideoMode());
+	// out.SetSource(s);
+	// s.SetVideoMode(cam.GetVideoMode());
+
+	// cv::Size wanted_size(wanted_width, wanted_height);
+	// cv::Mat
+	// 	frame = cv::Mat::zeros(cam.getResolution(), CV_8UC3),
+	// 	input_buff(wanted_size, CV_8UC(wanted_channels), interpreter->typed_tensor<uint8_t>(input))
+	// ;
+	// std::vector<std::pair<float, int32_t> > top_results;
+
+	// for(;;) {
+	// 	src.GrabFrame(frame);
+
+	// 	cv::resize(frame, input_buff, wanted_size);
+	// 	interpreter->Invoke();
+	// 	std::cout << "Result produced.\n";
+	// 	for(size_t i = 0; i < interpreter->outputs().size(); i++) {
+	// 		std::cout << "{ ";
+	// 		TfLiteTensor* tensor = interpreter->tensor(interpreter->outputs()[i]);
+	// 		// switch(tensor->type) {
+	// 		// 	case kTfLiteFloat32: {
+	// 		// 		std::cout << "~float~ ";
+	// 		// 		break;
+	// 		// 	}
+	// 		// 	case kTfLiteInt8: {
+	// 		// 		std::cout << "~int~ ";
+	// 		// 		break;
+	// 		// 	}
+	// 		// 	case kTfLiteUInt8: {
+	// 		// 		std::cout << "~uint~ ";
+	// 		// 		break;
+	// 		// 	}
+	// 		// 	default: {
+	// 		// 		std::cout << tensor->type;
+	// 		// 	}
+	// 		// }
+	// 		float* dat = interpreter->typed_output_tensor<float>(i);
+	// 		if(tensor && dat) {
+	// 			for(int i = 0; i < tensor->dims->data[tensor->dims->size - 1]; i++) {
+	// 				std::cout << dat[i] << ", ";
+	// 			}
+	// 		} else {
+	// 			std::cout << (tensor == nullptr) << " : " << (dat == nullptr);
+	// 		}
+	// 		std::cout << " }\n";
+	// 	}
+	// 	std::cout << std::endl;
+
+	// 	s.PutFrame(frame);
+	// }
 
 
 	vs2::VisionServer::addCameras(std::move(cameras));
-	vs2::VisionServer::addPipelines<TestPipeline, TestPipeline2>();
-	vs2::VisionServer::addStream("name");
-	vs2::VisionServer::addStream("fjkldsjflkdsj");
-	vs2::VisionServer::addStream("jflkdsjl", 20000);
+	vs2::VisionServer::addPipelines<ModelRunner>();
+	vs2::VisionServer::addStream("dummy");
+	vs2::VisionServer::addStream("stream");
 	//VisionServer2::addStreams(2);
 	vs2::VisionServer::run(60);
 	atexit(vs2::VisionServer::stopExit);

@@ -157,6 +157,14 @@ inline cv::Size_<num_t> operator + (const cv::Size_<num_t>& a, const cv::Point_<
 	return cv::Point_<num_t>(a.width+b.x, a.height+b.y);
 }
 
+template<typename inum1_t, typename inum2_t, typename onum_t>
+inline cv::Size_<onum_t> operator / (const cv::Size_<inum1_t>& a, const cv::Size_<inum2_t>& b) {
+	static_assert(std::is_arithmetic<inum1_t>::value, "Template parameter (inum1_t) must be arithemetic type");
+	static_assert(std::is_arithmetic<inum2_t>::value, "Template parameter (inum2_t) must be arithemetic type");
+	static_assert(std::is_arithmetic<onum_t>::value, "Template parameter (onum_t) must be arithemetic type");
+	return cv::Size_<onum_t>((onum_t)a.width / b.width, (onum_t)a.height / b.height);
+}
+
 template<typename num_t>
 void operator -= (const cv::Point_<num_t>& a, const cv::Size_<num_t>& b);
 template<typename num_t>
