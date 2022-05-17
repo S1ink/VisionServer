@@ -15,14 +15,14 @@
 #include "tools/src/resources.h"
 
 
-/** Runs a TensorFlow Lite machine-learning model and outputs bouding boxes */
+/** Runs a {Axon-generated} TensorFlow Lite machine-learning model and outputs bouding boxes */
 class ModelRunner : public vs2::VPipeline<ModelRunner> {
 public:
-	inline static const char* default_model = "unoptimized.tflite";
-	inline static const char* edge_model = "model.tflite";
-	inline static const char* default_labels = "map.pbtxt";
-
-	static void loadLabels(const std::string& fn, std::vector<std::string>& labels);
+	inline static const char
+		*default_model = "unoptimized.tflite",
+		*edge_model = "model.tflite",
+		*default_labels = "map.pbtxt"
+	;
 
 	ModelRunner(size_t threads = std::thread::hardware_concurrency() / 2);
 	ModelRunner(const char* model, const char* map, size_t threads = std::thread::hardware_concurrency() / 2);
@@ -30,24 +30,31 @@ public:
 	virtual void process(cv::Mat& io_frame) override;
 
 
+	static void loadLabels(const std::string& fn, std::vector<std::string>& labels);
+
 protected:
-	const std::unique_ptr<tflite::FlatBufferModel> model;
-	const std::unique_ptr<tflite::Interpreter> network_impl;
+	std::unique_ptr<tflite::FlatBufferModel> model;
+	std::unique_ptr<tflite::Interpreter> network;
 	const tflite::ops::builtin::BuiltinOpResolver resolver;
-	tflite::InterpreterBuilder builder;
 
 	std::vector<std::string> labels;
 
 	cv::Mat tensor_buff;
-	cv::Size2f rescale;
 	cv::Size input_size;
-	uint32_t
-		input_tensor_idx,
-		bbox_tensor_idx,
-		lab_tensor_idx,
-		per_tensor_idx,
-		size_tensor_idx
+	TfLiteTensor
+		*input_tensor,		// the image input (300x300x3C)
+		*coords_tensor,		// the bounding box coord output
+		*labels_tensor,		// the label id output
+		*confidence_tensor,	// the confidence output
+		*size_tensor		// num of detections output
 	;
+
+	enum class OutputTensors {
+		BOX_COORDS = 0,
+		LABEL_IDX = 1,
+		CONFIDENCE = 2,
+		NUM_OUTPUTS = 3
+	};
 
 
 };

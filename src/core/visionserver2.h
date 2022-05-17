@@ -32,7 +32,8 @@ public:
 	class BasePipe : public cs::CvSource {
 		friend class VisionServer;
 	public:
-		inline static const std::shared_ptr<nt::NetworkTable> pipe_table{VisionServer::base_table->GetSubTable("Pipelines")};
+		inline static const std::shared_ptr<nt::NetworkTable>
+			pipe_table{VisionServer::base_table->GetSubTable("Pipelines")};
 
 		inline const std::string& getName() const { return this->name; }
 		inline const std::shared_ptr<nt::NetworkTable> getTable() const { return this->table; }
@@ -120,10 +121,13 @@ private:
 	struct OutputStream {
 		friend class VisionServer;
 	public:
-		inline static const std::shared_ptr<nt::NetworkTable> streams_table = base_table->GetSubTable("Streams");
+		inline static const std::shared_ptr<nt::NetworkTable>
+			streams_table = base_table->GetSubTable("Streams");
 
-		inline OutputStream(std::string_view n) : OutputStream(frc::CameraServer::AddServer(n)) {}
-		inline OutputStream(std::string_view n, int p) : OutputStream(frc::CameraServer::AddServer(n, p)) {}
+		inline OutputStream(std::string_view n) :
+			OutputStream(frc::CameraServer::AddServer(n)) {}
+		inline OutputStream(std::string_view n, int p) :
+			OutputStream(frc::CameraServer::AddServer(n, p)) {}
 		OutputStream(cs::MjpegServer&& s);	// setup ntable values
 		~OutputStream() = default;	// remove ntable values
 
@@ -154,7 +158,6 @@ protected:
 
 
 	virtual void process(cv::Mat& io_frame) override;
-
 
 
 };
