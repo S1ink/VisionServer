@@ -6,33 +6,41 @@
 #include "../core/vision.h"
 
 
-void ModelRunner::loadLabels(const std::string& fn, std::vector<std::string>& labels) {
+void ModelRunner::loadSpecificLabels(const std::string& fn, std::vector<std::string>& labels) {
 	labels.clear();
 	std::ifstream file(fn);
 	std::string line;
 	int32_t start, end;
-	while(std::getline(file, line, '\n')) {
-		start = end = -1;
-        for (size_t i = 0; i < line.size(); i++) {
-            if (line.at(i) == '"') {
-                if (start < 0) {
-                    start = i + 1;
-                }
-                else {
-                    end = i;
-                    i = line.size();	// break
-                }
-            }
-        }
-        if (start >= 0 && end >= 0) {
-            labels.emplace_back(std::move(line.substr(start, end - start)));
-        }
+	std::getline(file, line, '\n');
+	if(line == "item {") {
+		while(std::getline(file, line, '\n')) {
+			start = end = -1;
+			for (size_t i = 0; i < line.size(); i++) {
+				if (line.at(i) == '"') {
+					if (start < 0) {
+						start = i + 1;
+					}
+					else {
+						end = i;
+						i = line.size();	// break
+					}
+				}
+			}
+			if (start >= 0 && end >= 0) {
+				labels.emplace_back(std::move(line.substr(start, end - start)));
+			}
+		}
+	} else {
+		labels.push_back(line);
+		while(std::getline(file, line, '\n')) {
+			labels.push_back(line);
+		}
 	}
 	file.close();
 }
 
 ModelRunner::ModelRunner(size_t threads) :
-	ModelRunner(default_model, default_labels, threads)
+	ModelRunner(edgeTpusAvailable() ? edgetpu_model : default_model, default_labels, threads)
 {}
 ModelRunner::ModelRunner(const char* model, const char* map, size_t threads) :
 	VPipeline("TfLite Model Runner ")
@@ -41,10 +49,19 @@ ModelRunner::ModelRunner(const char* model, const char* map, size_t threads) :
 	if(!model) {
 		// model did not load...
 	}
-	// deal with edge-tpu models...
-	tflite::InterpreterBuilder builder(*this->model, this->resolver);
-	builder.SetNumThreads(threads);	// return status
-	builder(&this->network);		// return status
+	if(edgeTpusAvailable()) {
+		std::cout << "Edge TPU detected - loading optimized model." << std::endl;
+		this->resolver.AddCustom(edgetpu::kCustomOp, edgetpu::RegisterCustomOp());
+		tflite::InterpreterBuilder builder(*this->model, this->resolver);
+		builder.SetNumThreads(threads);	// return status
+		builder(&this->network);		// return status
+		this->network->SetExternalContext(kTfLiteEdgeTpuContext, this->edgetpu_context.get());
+	} else {
+		std::cout << "No TPU accelerators detected - loading normal model." << std::endl;
+		tflite::InterpreterBuilder builder(*this->model, this->resolver);
+		builder.SetNumThreads(threads);	// return status
+		builder(&this->network);		// return status
+	}
 	this->network->AllocateTensors();
 	if(this->network->inputs().size() != 1) {
 		// model not compatible...?
@@ -66,7 +83,7 @@ ModelRunner::ModelRunner(const char* model, const char* map, size_t threads) :
 	this->labels_tensor = this->network->output_tensor((size_t)OutputTensors::LABEL_IDX);
 	this->confidence_tensor = this->network->output_tensor((size_t)OutputTensors::CONFIDENCE);
 	this->size_tensor = this->network->output_tensor((size_t)OutputTensors::NUM_OUTPUTS);
-	loadLabels(map, this->labels);
+	loadSpecificLabels(map, this->labels);
 }
 
 void ModelRunner::process(cv::Mat& io_frame) {

@@ -1,12 +1,6 @@
 #include <vector>
 #include <string>
 
-#include <tensorflow/lite/interpreter.h>
-#include <tensorflow/lite/interpreter_builder.h>
-#include <tensorflow/lite/model_builder.h>
-#include <tensorflow/lite/kernels/register.h>
-#include <tensorflow/lite/examples/label_image/get_top_n.h>
-
 #include "tools/src/resources.h"
 #include "tools/src/sighandle.h"
 #include "tools/src/timing.h"

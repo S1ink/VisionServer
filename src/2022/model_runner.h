@@ -8,6 +8,7 @@
 #include <tensorflow/lite/interpreter_builder.h>
 #include <tensorflow/lite/model_builder.h>
 #include <tensorflow/lite/kernels/register.h>
+#include <edgetpu.h>
 #include <opencv2/opencv.hpp>
 
 #include "../core/visionserver2.h"
@@ -20,7 +21,7 @@ class ModelRunner : public vs2::VPipeline<ModelRunner> {
 public:
 	inline static const char
 		*default_model = "unoptimized.tflite",
-		*edge_model = "model.tflite",
+		*edgetpu_model = "model.tflite",
 		*default_labels = "map.pbtxt"
 	;
 
@@ -30,12 +31,14 @@ public:
 	virtual void process(cv::Mat& io_frame) override;
 
 
-	static void loadLabels(const std::string& fn, std::vector<std::string>& labels);
+	static void loadSpecificLabels(const std::string& fn, std::vector<std::string>& labels);
+	static inline size_t edgeTpusAvailable() { return edgetpu::EdgeTpuManager::GetSingleton()->EnumerateEdgeTpu().size(); }
 
 protected:
 	std::unique_ptr<tflite::FlatBufferModel> model;
+	std::shared_ptr<edgetpu::EdgeTpuContext> edgetpu_context;
 	std::unique_ptr<tflite::Interpreter> network;
-	const tflite::ops::builtin::BuiltinOpResolver resolver;
+	tflite::ops::builtin::BuiltinOpResolver resolver;
 
 	std::vector<std::string> labels;
 
