@@ -45,11 +45,11 @@ protected:
 	cv::Mat tensor_buff;
 	cv::Size input_size;
 	TfLiteTensor
-		*input_tensor,		// the image input (300x300x3C)
-		*coords_tensor,		// the bounding box coord output
-		*labels_tensor,		// the label id output
-		*confidence_tensor,	// the confidence output
-		*size_tensor		// num of detections output
+		*input_tensor,		// the image input (300x300x3C, 8-bit RGB)
+		*coords_tensor,		// the bounding box coord output (1xNx4)
+		*labels_tensor,		// the label id output (1xN)
+		*confidence_tensor,	// the confidence output (1xN)
+		*size_tensor		// num of detections output (1)
 	;
 
 	enum class OutputTensors {

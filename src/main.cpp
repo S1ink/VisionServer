@@ -35,7 +35,8 @@ int main(int argc, char* argv[]) {
 	else { return EXIT_FAILURE; }
 
 	vs2::VisionServer::addCameras(std::move(cameras));
-	vs2::VisionServer::addPipelines<ModelRunner>();
+	ModelRunner m("unoptimized.tflite", "map.pbtxt", 4);
+	vs2::VisionServer::addPipeline(&m);
 	vs2::VisionServer::addStream("dummy");
 	vs2::VisionServer::addStream("stream");
 	//VisionServer2::addStreams(2);

@@ -5,6 +5,7 @@
 #include <thread>
 #include <mutex>
 #include <chrono>
+#include <initializer_list>
 
 #include <opencv2/opencv.hpp>
 
@@ -23,7 +24,22 @@ public:
 	inline static const std::shared_ptr<nt::NetworkTable>
 		base_table{nt::NetworkTableInstance::GetDefault().GetTable("Vision Server")};
 
+	// use more responsible lifetime management
+	// inline static void Init() {
+	// 	if(!_inst) {
+	// 		static VisionServer instance;
+	// 		_inst = &instance;
+	// 	}
+	// }
+	// inline static void ShutDown() {
+
+	// }
+
 	inline static VisionServer& getInstance() {
+		// if(!_inst) {
+		// 	Init();
+		// }
+		// return *_inst;
 		static VisionServer instance;
 		return instance;
 	}
@@ -71,11 +87,16 @@ public:
 
 	template<class pipeline>
 	static void addPipeline();
+	static void addPipeline(BasePipe*);
 	template<class... pipelines>
 	static void addPipelines();
+	static void addPipelines(std::vector<BasePipe*>&&);
+	static void addPipelines(std::initializer_list<BasePipe*>);
 	template<class... pipelines>
 	static void setPipelines();
-	static const std::vector<std::unique_ptr<BasePipe> >& getPipelines();
+	static void setPipelines(std::vector<BasePipe*>&&);
+	static void setPipelines(std::initializer_list<BasePipe*>);
+	static const std::vector<BasePipe*>& getPipelines();
 	static size_t numPipelines();
 
 	static void addStream();
@@ -100,7 +121,7 @@ protected:
 	static void pipelineRunner(BasePipe*, uint16_t rps);
 
 	template<class pipeline = void, class... pipelines>
-	static void pipeExpander(std::vector<std::unique_ptr<BasePipe> >&);
+	static size_t pipeExpander(std::vector<std::unique_ptr<BasePipe> >&);
 
 
 private:
@@ -111,9 +132,12 @@ private:
 	void operator=(const VisionServer&) = delete;
 	void operator=(VisionServer&&) = delete;
 
+	//inline static VisionServer* _inst{nullptr};
+
 	std::vector<VisionCamera> cameras;
-	std::vector<std::unique_ptr<BasePipe> > pipelines;
+	std::vector<BasePipe*> pipelines;
 	std::vector<OutputStream> streams;
+	std::vector<std::unique_ptr<BasePipe> > heap_allocated;
 
 	std::thread head;
 	std::atomic<bool> is_running{false};
@@ -158,6 +182,25 @@ protected:
 
 
 	virtual void process(cv::Mat& io_frame) override;
+
+
+};
+
+template<class... pipelines>
+class SequentialPipeline : public VPipeline<SequentialPipeline<pipelines...> > {
+	typedef struct SequentialPipeline<pipelines...>		This_t;
+public:
+	inline SequentialPipeline() :
+		VPipeline<This_t>("SequentialPipeline: " + InitPipelines<pipelines...>(this->pipelines))
+	{}
+
+
+	virtual void process(cv::Mat& io_frame) override;
+
+protected:
+	static std::string InitPipelines(std::vector<std::unique_ptr<VisionServer::BasePipe> >&);
+
+	std::vector<std::unique_ptr<VisionServer::BasePipe> > pipelines;
 
 
 };

@@ -1,5 +1,6 @@
 {
     "files.associations": {
+        "*.inc": "cpp",
         "chrono": "cpp",
         "functional": "cpp",
         "xtr1common": "cpp",
@@ -84,7 +85,11 @@
         "memory_resource": "cpp",
         "string_view": "cpp",
         "cinttypes": "cpp",
-        "*.inc": "cpp"
+        "codecvt": "cpp",
+        "csetjmp": "cpp",
+        "unordered_set": "cpp",
+        "future": "cpp",
+        "variant": "cpp"
     },
     "cmake.configureOnOpen": false
 }

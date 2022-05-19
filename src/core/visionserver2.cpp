@@ -48,6 +48,35 @@ void VisionServer::setCameras(std::vector<VisionCamera>&& cms) {
 		}
 	}
 }
+void VisionServer::addPipeline(BasePipe* p) {
+	if(!inst().is_running) {
+		inst().pipelines.push_back(p);
+	}
+}
+void VisionServer::addPipelines(std::vector<BasePipe*>&& ps) {
+	if(!inst().is_running) {
+		inst().pipelines.insert(inst().pipelines.end(), ps.begin(), ps.end());
+	}
+}
+void VisionServer::addPipelines(std::initializer_list<BasePipe*> ps) {
+	if(!inst().is_running) {
+		inst().pipelines.insert(inst().pipelines.end(), ps.begin(), ps.end());
+	}
+}
+void VisionServer::setPipelines(std::vector<BasePipe*>&& ps) {
+	if(!inst().is_running) {
+		inst().pipelines.clear();
+		inst().heap_allocated.clear();
+		inst().pipelines = std::move(ps);
+	}
+}
+void VisionServer::setPipelines(std::initializer_list<BasePipe*> ps) {
+	if(!inst().is_running) {
+		inst().pipelines.clear();
+		inst().heap_allocated.clear();
+		inst().pipelines = ps;
+	}
+}
 void VisionServer::addStream() {
 	if(!inst().is_running) {
 		inst().streams.emplace_back(frc::CameraServer::AddServer("Stream " + std::to_string(inst().streams.size() + 1)));
@@ -94,7 +123,7 @@ void VisionServer::pipelineRunner(BasePipe* pipe, uint16_t rps) {
 			if(idx > 0 && idx <= inst().cameras.size()) {
 				pipe->setCamera(inst().cameras.at(idx - 1));
 			} else if(idx < 0 && idx >= -((int)inst().pipelines.size())) {	// this does not work
-				pipe->input.SetSource(*(inst().pipelines.at((-idx) - 1).get()));
+				pipe->input.SetSource(*(inst().pipelines.at((-idx) - 1)));
 			}
 		}
 		if(pipe->table->GetEntry("Enable Processing").GetBoolean(false) && 
@@ -193,7 +222,7 @@ VisionServer::OutputStream::OutputStream(cs::MjpegServer&& s) :
 				if(idx < 0 && idx >= -(int)inst().cameras.size()) {
 					this->server.SetSource(inst().cameras.at((-idx) - 1));
 				} else if(idx > 0 && idx <= (int)inst().pipelines.size()) {
-					this->server.SetSource(*(inst().pipelines.at(idx - 1).get()));
+					this->server.SetSource(*(inst().pipelines.at(idx - 1)));
 				}
 			}
 		},
@@ -209,7 +238,7 @@ bool VisionServer::run(uint16_t rps) {
 
 		std::vector<std::thread> runners;
 		for(size_t i = 0; i < inst().pipelines.size(); i++) {
-			runners.emplace_back(std::thread(pipelineRunner, inst().pipelines.at(i).get(), rps));
+			runners.emplace_back(std::thread(pipelineRunner, inst().pipelines.at(i), rps));
 		}
 
 		std::chrono::high_resolution_clock::time_point tbuff;
@@ -260,9 +289,9 @@ void VisionServer::test() {
 		inst().streams.size() > 0
 	) {
 		inst().is_running = true;
-		inst().pipelines.at(0).get()->input.SetSource(inst().cameras.at(1));
-		inst().streams.at(0).server.SetSource(*inst().pipelines.at(0).get());
-		VisionServer::pipelineRunner(inst().pipelines.at(0).get(), 30);
+		inst().pipelines.at(0)->input.SetSource(inst().cameras.at(1));
+		inst().streams.at(0).server.SetSource(*inst().pipelines.at(0));
+		VisionServer::pipelineRunner(inst().pipelines.at(0), 30);
 		inst().streams.at(0).server.SetSource(inst().cameras.at(1));
 		for(;;) {
 			std::this_thread::sleep_for(std::chrono::seconds(5));
