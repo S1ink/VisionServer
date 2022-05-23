@@ -19,7 +19,8 @@ namespace vs2 {
 template<size_t points>
 class Target {
 public:
-	inline static const std::shared_ptr<nt::NetworkTable> target_table{VisionServer::base_table->GetSubTable("Targets")};
+	inline static const std::shared_ptr<nt::NetworkTable>
+		target_table{VisionServer::base_table->GetSubTable("Targets")};
 
 	Target() = delete;
 	inline Target(std::array<cv::Point3f, points>&& world, const char* name) :

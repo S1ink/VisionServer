@@ -24,22 +24,10 @@ public:
 	inline static const std::shared_ptr<nt::NetworkTable>
 		base_table{nt::NetworkTableInstance::GetDefault().GetTable("Vision Server")};
 
-	// use more responsible lifetime management
-	// inline static void Init() {
-	// 	if(!_inst) {
-	// 		static VisionServer instance;
-	// 		_inst = &instance;
-	// 	}
-	// }
-	// inline static void ShutDown() {
-
-	// }
-
+	inline static void Init() {
+		getInstance();
+	}
 	inline static VisionServer& getInstance() {
-		// if(!_inst) {
-		// 	Init();
-		// }
-		// return *_inst;
 		static VisionServer instance;
 		return instance;
 	}
@@ -54,6 +42,8 @@ public:
 		inline const std::string& getName() const { return this->name; }
 		inline const std::shared_ptr<nt::NetworkTable> getTable() const { return this->table; }
 
+		virtual void process(cv::Mat& io_frame) = 0;
+
 	protected:
 		inline BasePipe(const char* name) :	/* start enable/disable callback for more efficent threading */
 			CvSource(name, cs::VideoMode()), name(name),
@@ -67,7 +57,6 @@ public:
 		BasePipe() = delete;
 
 
-		virtual void process(cv::Mat& io_frame) = 0;
 		void setCamera(const VisionCamera&);
 
 	private:
@@ -106,6 +95,8 @@ public:
 	static const std::vector<OutputStream>& getStreams();
 	static size_t numStreams();
 
+	static void compensate();
+
 	static bool run(uint16_t rps = 50);
 	static bool runThread(uint16_t rps = 50);
 	static bool isRunning();
@@ -115,14 +106,13 @@ public:
 	static void test();
 
 
+	template<class pipeline = void, class... pipelines>
+	static size_t pipeExpander(std::vector<std::unique_ptr<BasePipe> >&);
+
 protected:
 	inline static VisionServer& inst() { return getInstance(); }
 
 	static void pipelineRunner(BasePipe*, uint16_t rps);
-
-	template<class pipeline = void, class... pipelines>
-	static size_t pipeExpander(std::vector<std::unique_ptr<BasePipe> >&);
-
 
 private:
 	VisionServer();
@@ -186,24 +176,35 @@ protected:
 
 };
 
-template<class... pipelines>
-class SequentialPipeline : public VPipeline<SequentialPipeline<pipelines...> > {
-	typedef struct SequentialPipeline<pipelines...>		This_t;
+template<class... pipelines_t>
+class SequentialPipeline : public VPipeline<SequentialPipeline<pipelines_t...> > {
+	typedef struct SequentialPipeline<pipelines_t...>		This_t;
 public:
 	inline SequentialPipeline() :
-		VPipeline<This_t>("SequentialPipeline: " + InitPipelines<pipelines...>(this->pipelines))
-	{}
+		VPipeline<This_t>("SequentialPipeline<" + Construct(this->heap_ptrs) + "> ")
+	{
+		for(size_t i = 0; i < this->heap_ptrs.size(); i++) {
+			this->pipelines.push_back(this->heap_ptrs.at(i).get());
+		}
+	}
+
+	void addPipeline(VisionServer::BasePipe*);
+	void addPipelines(std::vector<VisionServer::BasePipe*>&&);
+	void addPipelines(std::initializer_list<VisionServer::BasePipe*>);
 
 
 	virtual void process(cv::Mat& io_frame) override;
 
 protected:
-	static std::string InitPipelines(std::vector<std::unique_ptr<VisionServer::BasePipe> >&);
+	static std::string Construct(std::vector<std::unique_ptr<VisionServer::BasePipe> >&);
 
-	std::vector<std::unique_ptr<VisionServer::BasePipe> > pipelines;
+	std::vector<VisionServer::BasePipe*> pipelines;
+	std::vector<std::unique_ptr<VisionServer::BasePipe> > heap_ptrs;
 
 
 };
+typedef SequentialPipeline<>	SeqPipeline;
+
 
 }	// namespace vs2
 

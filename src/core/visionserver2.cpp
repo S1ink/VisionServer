@@ -191,7 +191,7 @@ void VisionServer::pipelineRunner(BasePipe* pipe, uint16_t rps) {
 		stats->PutNumber("Output time(ms): ", out_time * 1000);
 
 		std::this_thread::sleep_for(
-			std::chrono::nanoseconds((uint64_t)(max_ftime * 1000000000)) - (
+			std::chrono::nanoseconds((uint64_t)(max_ftime * 1E9)) - (
 				std::chrono::high_resolution_clock::now() - beg_frame
 			)
 		);
@@ -212,8 +212,9 @@ VisionServer::OutputStream::OutputStream(cs::MjpegServer&& s) :
 {
 	//frc::CameraServer::AddServer(this->server);
 	this->table->PutNumber("Source Index", -1);
-	// add compression and other settings w/ callbacks...?
 	this->table->PutNumber("Port", this->server.GetPort());
+	// add compression and other settings w/ callbacks...?
+
 	this->table->GetEntry("Source Index").AddListener(	// negative -> cameras, positive -> pipelines, 0 -> nothing
 		[this](const nt::EntryNotification& event) {
 			if(event.value->IsDouble() && inst().is_running) {
@@ -226,8 +227,30 @@ VisionServer::OutputStream::OutputStream(cs::MjpegServer&& s) :
 				}
 			}
 		},
-		NT_NOTIFY_IMMEDIATE | NT_NOTIFY_NEW | NT_NOTIFY_UPDATE
+		NT_NOTIFY_IMMEDIATE | NT_NOTIFY_UPDATE
 	);
+}
+
+void VisionServer::compensate() {
+	int16_t active = -1;
+	for(size_t i = 0; i < inst().cameras.size(); i++) {
+		if(inst().cameras.at(i).IsConnected()) {
+			active = i;
+			break;
+		}
+	}
+	if(active + 1) {
+		size_t i = 0;
+		for(; i < inst().pipelines.size(); i++) {
+			inst().pipelines.at(i)->setCamera(inst().cameras.at(active));
+		}
+		if(i) {
+			for(size_t j = 0; j < inst().streams.size(); j++) {
+				//std::cout << "Compensated stream input\n";
+				inst().streams.at(j).server.SetSource(*inst().pipelines.at(0));
+			}
+		}
+	}
 }
 
 
@@ -242,7 +265,7 @@ bool VisionServer::run(uint16_t rps) {
 		}
 
 		std::chrono::high_resolution_clock::time_point tbuff;
-		float max_millis = 1000.f / rps;
+		uint64_t max_nanos = 1E9 / rps;
 
 		while(inst().is_running) {	// main loop
 			tbuff = std::chrono::high_resolution_clock::now();
@@ -251,9 +274,7 @@ bool VisionServer::run(uint16_t rps) {
 			// do work...
 
 			std::this_thread::sleep_for(
-				std::chrono::nanoseconds((uint64_t)(max_millis * 1000000)) - (
-					std::chrono::high_resolution_clock::now() - tbuff
-				)
+				std::chrono::nanoseconds(max_nanos) - (std::chrono::high_resolution_clock::now() - tbuff)
 			);
 		}
 

@@ -46,7 +46,7 @@ ModelRunner::ModelRunner(const char* model, const char* map, size_t threads) :
 	VPipeline("TfLite Model Runner ")
 {
 	this->model = tflite::FlatBufferModel::BuildFromFile(model);
-	if(!model) {
+	if(!this->model) {
 		// model did not load...
 	}
 	if(edgeTpusAvailable()) {
@@ -55,6 +55,7 @@ ModelRunner::ModelRunner(const char* model, const char* map, size_t threads) :
 		tflite::InterpreterBuilder builder(*this->model, this->resolver);
 		builder.SetNumThreads(threads);	// return status
 		builder(&this->network);		// return status
+		this->edgetpu_context = edgetpu::EdgeTpuManager::GetSingleton()->OpenDevice();
 		this->network->SetExternalContext(kTfLiteEdgeTpuContext, this->edgetpu_context.get());
 	} else {
 		std::cout << "No TPU accelerators detected - loading normal model." << std::endl;
@@ -62,7 +63,7 @@ ModelRunner::ModelRunner(const char* model, const char* map, size_t threads) :
 		builder.SetNumThreads(threads);	// return status
 		builder(&this->network);		// return status
 	}
-	this->network->AllocateTensors();
+	this->network->AllocateTensors();	// return status
 	if(this->network->inputs().size() != 1) {
 		// model not compatible...?
 	}

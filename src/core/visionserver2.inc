@@ -1,6 +1,7 @@
 #include "visionserver2.h"
 
 #include <type_traits>
+#include <sstream>
 
 
 //using namespace vs2;
@@ -26,8 +27,8 @@ void VisionServer::addPipeline() {
 template<class... pipelines_t>
 void VisionServer::addPipelines() {
 	if(!inst().is_running) {
-		inst().heap_allocated.reserve(inst().heap_allocated.size() + sizeof(pipelines_t...));
-		inst().pipelines.reserve(inst().pipelines.size() + sizeof(pipelines_t...));
+		inst().heap_allocated.reserve(inst().heap_allocated.size() + sizeof...(pipelines_t));
+		inst().pipelines.reserve(inst().pipelines.size() + sizeof...(pipelines_t));
 		size_t alloc = VisionServer::pipeExpander<pipelines_t...>(inst().heap_allocated);
 		for(size_t i = alloc; i >= 0; --i) {
 			inst().pipelines.push_back(inst().heap_allocated.at(inst().heap_allocated.size() - i - 1).get());
@@ -38,9 +39,9 @@ template<class... pipelines_t>
 void VisionServer::setPipelines() {
 	if(!inst().is_running) {
 		inst().heap_allocated.clear();
-		inst().heap_allocated.reserve(sizeof(pipelines_t...));
+		inst().heap_allocated.reserve(sizeof...(pipelines_t));
 		inst().pipelines.clear();
-		inst().pipelines.reserve(sizeof(pipelines_t...));
+		inst().pipelines.reserve(sizeof...(pipelines_t));
 		VisionServer::pipeExpander<pipelines_t...>(inst().heap_allocated);
 		for(size_t i = 0; i < inst().heap_allocated.size(); i++) {
 			inst().pipelines.push_back(inst().heap_allocated.at(i).get());
@@ -63,18 +64,33 @@ size_t VisionServer::pipeExpander(std::vector<std::unique_ptr<BasePipe> >& pipes
 template<class derived>
 void VPipeline<derived>::process(cv::Mat&) {}
 
-template<class... pipelines>
-inline std::string SequentialPipeline<pipelines...>::InitPipelines(std::vector<std::unique_ptr<VisionServer::BasePipe> >& pipes) {
-	VisionServer::pipeExpander<pipelines...>(pipes);
-	std::string fullname = "{ ";
-	for(size_t i = 0; i < pipes.size(); i++) {
-		fullname += pipes.at(i)->getName() + " ";
+template<class... pipelines_t>
+inline std::string SequentialPipeline<pipelines_t...>::Construct(std::vector<std::unique_ptr<VisionServer::BasePipe> >& pipes) {
+	if(VisionServer::pipeExpander<pipelines_t...>(pipes) < 1) {
+		return "void";
+	} else {
+		std::stringstream ret(pipes.at(0)->getName());
+		for(size_t i = 1; i < pipes.size(); i++) {
+			ret << ", " << pipes.at(i)->getName();
+		}
+		return ret.str();
 	}
-	fullname += "}";
-	return fullname;
+	
 }
-template<class... pipelines>
-void SequentialPipeline<pipelines...>::process(cv::Mat& io_frame) {
+template<class... pipelines_t>
+void SequentialPipeline<pipelines_t...>::addPipeline(VisionServer::BasePipe* p) {
+	this->pipelines.push_back(p);
+}
+template<class... pipelines_t>
+void SequentialPipeline<pipelines_t...>::addPipelines(std::vector<VisionServer::BasePipe*>&& ps) {
+	this->pipelines.insert(this->pipelines.end(), ps.begin(), ps.end());
+}
+template<class... pipelines_t>
+void SequentialPipeline<pipelines_t...>::addPipelines(std::initializer_list<VisionServer::BasePipe*> ps) {
+	this->pipelines.insert(this->pipelines.end(), ps.begin(), ps.end());
+}
+template<class... pipelines_t>
+void SequentialPipeline<pipelines_t...>::process(cv::Mat& io_frame) {
 	for(size_t i = 0; i < this->pipelines.size(); i++) {
 		this->pipelines.at(i)->process(io_frame);
 	}
