@@ -95,15 +95,15 @@ public:
 	static const std::vector<OutputStream>& getStreams();
 	static size_t numStreams();
 
-	static void compensate();
+	static void compensate();	// attempts to attach all pipelines to the first available camera, and all outputs to the first available source
 
 	static bool run(uint16_t rps = 50);
+	static bool runSingle(uint16_t rps = 50);	// runs in vs1 mode
 	static bool runThread(uint16_t rps = 50);
+	static bool runSingleThread(uint16_t rps = 50);
 	static bool isRunning();
 	static bool stop();
 	static inline void stopExit() { stop(); }
-
-	static void test();
 
 
 	template<class pipeline = void, class... pipelines>
@@ -132,7 +132,7 @@ private:
 	std::thread head;
 	std::atomic<bool> is_running{false};
 
-	struct OutputStream {
+	struct OutputStream : public cs::MjpegServer {
 		friend class VisionServer;
 	public:
 		inline static const std::shared_ptr<nt::NetworkTable>
@@ -143,11 +143,13 @@ private:
 		inline OutputStream(std::string_view n, int p) :
 			OutputStream(frc::CameraServer::AddServer(n, p)) {}
 		OutputStream(cs::MjpegServer&& s);	// setup ntable values
-		~OutputStream() = default;	// remove ntable values
+		~OutputStream();
+
+		inline void setSourceIdx(int i) { this->table->GetEntry("Source Index").SetDouble(i); }
 
 	private:
-		cs::MjpegServer server;
 		const std::shared_ptr<nt::NetworkTable> table;
+		NT_EntryListener listener;
 
 	};
 

@@ -17,16 +17,12 @@
 #include "tools/src/types.h"
 #include "tools/src/server/server.h"
 
-//#include "core/weightedsubtraction.h"
 #include "core/visioncamera.h"
-//#include "core/visionserver.h"
-//#include "core/processing.h"
 #include "core/vision.h"
-#include "core/httpnetworktables.h"
+//#include "core/httpnetworktables.h"
 #include "core/visionserver2.h"
 
-#include "2021/testing.h"
-#include "2022/rapidreact.h"
+//#include "2022/rapidreact.h"
 #include "2022/model_runner.h"
 
 
@@ -169,11 +165,12 @@ int main(int argc, char* argv[]) {
 
 	vs2::VisionServer::Init();
 	vs2::VisionServer::addCameras(std::move(cameras));
-	//ModelRunner m("unoptimized.tflite", "map.pbtxt", 4);
-	vs2::SequentialPipeline<> s;
-	PoseNet p(4);
-	s.addPipeline(&p);
-	vs2::VisionServer::addPipeline(&s);
+	//vs2::SequentialPipeline<> s;
+	ModelRunner m(4);
+	// PoseNet p(4);
+	// s.addPipeline(&p);
+	// s.addPipeline(&m);
+	vs2::VisionServer::addPipeline(&m);
 	vs2::VisionServer::addStream("dummy");
 	vs2::VisionServer::addStream("stream");
 	//VisionServer2::addStreams(2);

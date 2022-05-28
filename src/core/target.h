@@ -12,7 +12,7 @@
 #include "visionserver2.h"
 
 
-using namespace vs2;
+namespace vs2 {
 
 /**
  * Basic ntables target representation
@@ -31,9 +31,18 @@ public:
 	inline const std::string& getName() const { return this->name; }
 
 protected:
-	void setPos(double x, double y, double z);
-	void setDist(double d);
-	void setAngle(double ud, double lr);
+	inline void setPos(double x, double y, double z) {
+		this->table->PutNumber("x", x);
+		this->table->PutNumber("y", y);
+		this->table->PutNumber("z", z);
+	}
+	inline void setAngle(double ud, double lr) {
+		this->table->PutNumber("up-down", ud);
+		this->table->PutNumber("left-right", lr);
+	}
+	inline void setDist(double d) {
+		this->table->PutNumber("distance", d);
+	}
 
 	const std::string name;
 	const std::shared_ptr<nt::NetworkTable> table;
@@ -56,31 +65,33 @@ public:
 
 };
 
-/**
- * A target that is generated from OpenCV pipelines (and solved using solvePnP)
-*/
-template<size_t points>
-class CvTarget : public Target {
-public:
-	const std::array<cv::Point3f, points> world;
-	static inline const size_t size{points};
+// /**
+//  * A target that is generated from OpenCV pipelines (and solved using solvePnP)
+// */
+// template<size_t points>
+// class CvTarget : public Target {
+// public:
+// 	const std::array<cv::Point3f, points> world;
+// 	static inline const size_t size{points};
 
-	CvTarget() = delete;
-	inline CvTarget(std::array<cv::Point3f, points>&& world, const std::string& name) :
-		Target(name), world(world) {}
-	inline CvTarget(std::array<cv::Point3f, points>&& world, std::string&& name) :
-		Target(std::move(name)), world(world) {}
-	CvTarget(const CvTarget&) = delete;
-	CvTarget(CvTarget&&) = delete;
+// 	CvTarget() = delete;
+// 	inline CvTarget(std::array<cv::Point3f, points>&& world, const std::string& name) :
+// 		Target(name), world(world) {}
+// 	inline CvTarget(std::array<cv::Point3f, points>&& world, std::string&& name) :
+// 		Target(std::move(name)), world(world) {}
+// 	CvTarget(const CvTarget&) = delete;
+// 	CvTarget(CvTarget&&) = delete;
 
-protected:
-	std::array<cv::Point2f, points> point_buff;
+// protected:
+// 	std::array<cv::Point2f, points> point_buff;
 
 
-};
-/**
- * A target that is generated from TensorFlow pipelines
-*/
-class TfTarget : public Target {
+// };
+// /**
+//  * A target that is generated from TensorFlow pipelines
+// */
+// class TfTarget : public Target {
 
-};
+// };
+
+}	// namespace vs2

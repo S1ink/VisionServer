@@ -13,10 +13,12 @@
 #include <memory>
 
 #include "tools/src/resources.h"
-#include "../visioncamera.h"
-#include "../vision.h"
-#include "../defines.h"
+#include "../core/visioncamera.h"
+#include "../core/vision.h"
+#include "../core/defines.h"
 
+
+namespace vs1 {
 
 class VisionServer;
 
@@ -372,5 +374,7 @@ private:
     } active_target{vision};
 
 };
+
+}   // namespace vs1
 
 #include "visionserver.inc"

@@ -5,8 +5,10 @@
 #include <algorithm>
 #include <math.h>
 
-#include "../vision.h"
+#include "../core/vision.h"
 
+
+namespace vs1 {
 
 template<size_t corners>
 Target<corners>::Target(const std::array<cv::Point3f, corners>& world_pts) : 
@@ -133,3 +135,5 @@ void TargetSolver<target_t, threshold_t>::process(cv::Mat& io_frame) {
 	}
 	// no targets detected
 }
+
+}	// namespace vs1

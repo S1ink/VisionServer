@@ -3,6 +3,8 @@
 #include <type_traits>
 
 
+namespace vs1 {
+
 inline void VPipeline::updateTarget(const std::string& target) { this->env->updateTarget(target); }
 inline const VisionCamera& VPipeline::getCurrentCamera() const { return this->env->getCurrentCamera(); }
 inline const cv::Mat_<float>& VPipeline::getCameraMatrix() const { return this->getCurrentCamera().getCameraMatrix(); }
@@ -309,3 +311,5 @@ void VisionServer::pipeExpansion(std::vector<std::unique_ptr<VPipeline> >& pipes
 		pipeExpansion<pipelines...>(pipes, server);
 	}
 }
+
+}	// namespace vs1

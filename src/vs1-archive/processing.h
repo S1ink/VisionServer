@@ -9,6 +9,8 @@
 #include "visionserver.h"
 
 
+namespace vs1 {
+
 class VThreshold {	// Vision Thresholding base interface
 public:
 	VThreshold(VisionServer&, std::shared_ptr<nt::NetworkTable>) {}
@@ -60,3 +62,5 @@ protected:
 	int16_t target_idx{-1};		// DONT CHANGE THIS TO SIZE_T YOU IDIOT!!!
 
 };
+
+}	// namespace vs1

@@ -10,10 +10,11 @@
 #include <networktables/NetworkTable.h>
 
 #include "tools/src/types.h"
-
 #include "visionserver.h"
 #include "processing.h"
 
+
+namespace vs1 {
 
 template<size_t corners>
 class Target {
@@ -90,5 +91,7 @@ private:
 	cv::Mat_<float> rvec = cv::Mat_<float>(1, 3), tvec = rvec/*, rmat = cv::Mat_<float>(3, 3)*/;
 
 };
+
+}	// namespace vs1;
 
 #include "target.inc"

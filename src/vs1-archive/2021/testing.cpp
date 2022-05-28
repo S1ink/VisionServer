@@ -1,5 +1,8 @@
 #include "testing.h"
 
+
+using namespace vs1;
+
 BBoxDemo::BBoxDemo(VisionServer& server) : 
 	VPipeline(server, "BoundingBox Demo Pipeline"), WeightedSubtraction(server, this->table) 
 {

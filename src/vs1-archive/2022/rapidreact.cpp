@@ -2,6 +2,9 @@
 
 #include <algorithm>
 
+
+using namespace vs1;
+
 void UpperHub::sort() {
 	std::sort(
 		this->points.begin(),

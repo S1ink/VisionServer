@@ -1,8 +1,10 @@
 #include "weightedsubtraction.h"
 
-#include "../vision.h"
-#include "../mem.h"
+#include "../core/vision.h"
+#include "../core/mem.h"
 
+
+namespace vs1 {
 
 template<VThreshold::LED color>
 const std::array<std::array<uint8_t, 2>, 3> WeightedSubtraction<color>::weighted_array = {
@@ -73,3 +75,5 @@ template<VThreshold::LED color>
 void WeightedSubtraction<color>::setWeight(double w) {
 	this->weight = w;
 }
+
+}	// namespace vs1

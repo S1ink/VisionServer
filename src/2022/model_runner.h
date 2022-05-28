@@ -11,9 +11,8 @@
 #include <edgetpu.h>
 #include <opencv2/opencv.hpp>
 
-#include "../core/visionserver2.h"
-
 #include "tools/src/resources.h"
+#include "../core/visionserver2.h"
 
 
 /** Runs a {Axon-generated} TensorFlow Lite machine-learning model and outputs bouding boxes */

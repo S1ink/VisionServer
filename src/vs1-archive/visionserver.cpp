@@ -6,9 +6,10 @@
 #include <wpi/raw_ostream.h>
 
 #include "tools/src/unix/stats.h"
-//#include "pipelines.h"
-#include "../vision.h"
+#include "../core/vision.h"
 
+
+using namespace vs1;
 
 VPipeline::VPipeline(VisionServer& server) : 
 	name("Unnamed Pipeline"), table(server.vision->GetSubTable("Pipelines")->GetSubTable(this->name)), env(&server) {}

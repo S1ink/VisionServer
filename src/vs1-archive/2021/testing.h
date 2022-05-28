@@ -4,16 +4,13 @@
 
 #include <opencv2/opencv.hpp>
 
-#include "../core/vs-1.x-archive/weightedsubtraction.h"
-#include "../core/vs-1.x-archive/visionserver.h"
-#include "../core/vs-1.x-archive/processing.h"
-#include "../core/vs-1.x-archive/target.h"
-//#include "vision.h"
-
-#include "../defines.h"
+#include "../weightedsubtraction.h"
+#include "../visionserver.h"
+#include "../processing.h"
+#include "../target.h"
 
 
-class Test6x6 : public Target<4> {
+class Test6x6 : public vs1::Target<4> {
 public:
 	Test6x6() : Target<4>({		// world points in clockwise order
 		cv::Point3f(0.25f, 0.25f, 0.f), 	//top-right
@@ -26,9 +23,9 @@ public:
 
 
 
-class BBoxDemo : public VPipeline, public WeightedSubtraction<VThreshold::LED::BLUE>, public Contours {
+class BBoxDemo : public vs1::VPipeline, public vs1::WeightedSubtraction<vs1::VThreshold::LED::BLUE>, public vs1::Contours {
 public:
-	BBoxDemo(VisionServer& server);
+	BBoxDemo(vs1::VisionServer& server);
 	BBoxDemo(const BBoxDemo& other) = delete;
 
 	void process(cv::Mat& io_frame) override;
@@ -37,9 +34,9 @@ private:
 	cv::Rect boundingbox;
 
 };
-class SquareTargetPNP : public VPipeline, public WeightedSubtraction<VThreshold::LED::BLUE>, public Contours {
+class SquareTargetPNP : public vs1::VPipeline, public vs1::WeightedSubtraction<vs1::VThreshold::LED::BLUE>, public vs1::Contours {
 public:
-	SquareTargetPNP(VisionServer& server);
+	SquareTargetPNP(vs1::VisionServer& server);
 	SquareTargetPNP(const SquareTargetPNP& other) = delete;
 
 	void process(cv::Mat& io_frame) override;

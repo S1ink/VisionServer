@@ -45,14 +45,14 @@ void UpperHub::sort(const std::vector<cv::Point_<num_t> >& contour) {
 	this->matchWorld();
 }
 
-template<VThreshold::LED color>
-StripFinder<color>::StripFinder(VisionServer& server) :
-	VPipeline(server, "Upper-Hub Pipeline"), WeightedSubtraction<color>(server, this->table)
+template<vs1::VThreshold::LED color>
+StripFinder<color>::StripFinder(vs1::VisionServer& server) :
+	vs1::VPipeline(server, "Upper-Hub Pipeline"), vs1::WeightedSubtraction<color>(server, this->table)
 {
 	this->table->PutBoolean("Show Thresholded", false);
 }
 
-template<VThreshold::LED color>
+template<vs1::VThreshold::LED color>
 void StripFinder<color>::process(cv::Mat& io_frame) {
 
 	this->findContours(this->threshold(io_frame));
@@ -145,16 +145,16 @@ void StripFinder<color>::process(cv::Mat& io_frame) {
 
 }
 
-template<VThreshold::LED primary, uint8_t alpha, uint8_t beta, uint8_t thresh_percent>
-CargoFinder::BallFilter<primary, alpha, beta, thresh_percent>::BallFilter(VisionServer& server, CargoFinder& env) :
-	WeightedSubtraction<primary>(server), env(&env)
+template<vs1::VThreshold::LED primary, uint8_t alpha, uint8_t beta, uint8_t thresh_percent>
+CargoFinder::BallFilter<primary, alpha, beta, thresh_percent>::BallFilter(vs1::VisionServer& server, CargoFinder& env) :
+	vs1::WeightedSubtraction<primary>(server), env(&env)
 {
 	this->alpha = alpha/100.0;
 	this->beta = beta/100.0;
 	this->gamma = thresh_percent/100.0;
 }
 
-template<VThreshold::LED primary, uint8_t alpha, uint8_t beta, uint8_t thresh_percent>
+template<vs1::VThreshold::LED primary, uint8_t alpha, uint8_t beta, uint8_t thresh_percent>
 void CargoFinder::BallFilter<primary, alpha, beta, thresh_percent>::threshold(cv::Mat& o_frame, const std::array<cv::Mat, 3>& channels) {
 	cv::addWeighted(channels[this->weighted_array[~primary][0]], this->alpha, channels[this->weighted_array[~primary][1]], this->beta, 0.0, this->binary);
 	cv::subtract(channels[~primary], this->binary, this->binary);
@@ -175,7 +175,7 @@ void CargoFinder::BallFilter<primary, alpha, beta, thresh_percent>::threshold(cv
 			cv::minEnclosingCircle(this->contours[i], this->outline_buffer.center, this->outline_buffer.radius);
 			cv::convexHull(this->contours[i], this->point_buffer);
 			if(cv::contourArea(this->point_buffer)/(CV_PI*pow(this->outline_buffer.radius, 2)) > 0.8) {
-				this->outline_buffer.color = (primary == VThreshold::LED::BLUE ? CargoColor::BLUE : (primary == VThreshold::LED::RED ? CargoColor::RED : CargoColor::NONE));
+				this->outline_buffer.color = (primary == vs1::VThreshold::LED::BLUE ? CargoColor::BLUE : (primary == vs1::VThreshold::LED::RED ? CargoColor::RED : CargoColor::NONE));
 				this->outline_buffer.center *= (int)this->scale;
 				this->outline_buffer.radius *= this->scale;
 				this->filtered.emplace_back(this->outline_buffer);
@@ -193,7 +193,7 @@ void CargoFinder::BallFilter<primary, alpha, beta, thresh_percent>::threshold(cv
 	}
 
 }
-template<VThreshold::LED primary, uint8_t alpha, uint8_t beta, uint8_t thresh_percent>
+template<vs1::VThreshold::LED primary, uint8_t alpha, uint8_t beta, uint8_t thresh_percent>
 bool CargoFinder::BallFilter<primary, alpha, beta, thresh_percent>::launchThresholding(cv::Mat& o_frame, const std::array<cv::Mat, 3>& channels) { 
 	if(!this->worker.joinable()) {
 		this->worker = std::thread(thresholdWorker, this, std::ref(o_frame), std::cref(channels));
@@ -201,7 +201,7 @@ bool CargoFinder::BallFilter<primary, alpha, beta, thresh_percent>::launchThresh
 	} 
 	return false;
 }
-template<VThreshold::LED primary, uint8_t alpha, uint8_t beta, uint8_t thresh_percent>
+template<vs1::VThreshold::LED primary, uint8_t alpha, uint8_t beta, uint8_t thresh_percent>
 bool CargoFinder::BallFilter<primary, alpha, beta, thresh_percent>::join() {
 	if(this->worker.joinable()) {
 		this->worker.join();

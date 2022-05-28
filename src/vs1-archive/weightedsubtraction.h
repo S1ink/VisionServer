@@ -10,6 +10,8 @@
 #include "processing.h"
 
 
+namespace vs1 {
+
 template<VThreshold::LED color>	// 'Weighted Subtraction Threshold' thresholding subpipeline
 class WeightedSubtraction : public VThreshold {
 public:
@@ -43,5 +45,7 @@ protected:
 	size_t scale{1};
 
 };
+
+}	// namespace vs1
 
 #include "weightedsubtraction.inc"
