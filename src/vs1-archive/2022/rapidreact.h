@@ -10,6 +10,7 @@
 #include "../visionserver.h"
 #include "../processing.h"
 #include "../target.h"
+#include "../../core/vision.h"
 
 
 /**

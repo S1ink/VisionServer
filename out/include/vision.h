@@ -1,22 +1,25 @@
 #pragma once
 
-#include <networktables/NetworkTableInstance.h>
-#include <networktables/NetworkTable.h>
-#include <cameraserver/CameraServer.h>
-#include <wpi/StringExtras.h>
-
-#include <opencv2/core/types.hpp>
-
 #include <type_traits>
 #include <algorithm>
 #include <vector>
 #include <array>
 
+#include <opencv2/core/types.hpp>
+
+#include <networktables/NetworkTableInstance.h>
+#include <networktables/NetworkTable.h>
+#include <cameraserver/CameraServer.h>
+#include <wpi/StringExtras.h>
+
 #include "tools/src/resources.h"
 #include "visioncamera.h"
 #include "defines.h"
 
-// helper functions that extend cameraserver and opencv functionality
+
+/**
+ * This file contains vision-related helper functions used throughout the framework
+*/
 
 CE_STR _default = "/boot/frc.json";
 /**
@@ -43,7 +46,13 @@ cs::CvSink switchedCameraVision(
  * @param vm The cs::VideoMode object to get resolution from
  * @return The resolutuion in cv::Size format
 */
-static inline cv::Size getResolution(cs::VideoMode vm) { return cv::Size(vm.height, vm.width); }
+inline cv::Size getResolution(cs::VideoMode vm) { return cv::Size(vm.height, vm.width); }
+
+/**
+ * Extracts videomode properties from a config json - 0-values returned if config is invalid
+ * @return The VideoMode object
+*/
+cs::VideoMode getJsonVideoMode(const wpi::json& config);
 
 /**
  * Adds a networktable entry to the provided networktable with a listener that will update the variable to match the networktable entry
@@ -148,6 +157,14 @@ inline cv::Size_<num_t> operator + (const cv::Size_<num_t>& a, const cv::Point_<
 	return cv::Point_<num_t>(a.width+b.x, a.height+b.y);
 }
 
+template<typename inum1_t, typename inum2_t, typename onum_t>
+inline cv::Size_<onum_t> operator / (const cv::Size_<inum1_t>& a, const cv::Size_<inum2_t>& b) {
+	static_assert(std::is_arithmetic<inum1_t>::value, "Template parameter (inum1_t) must be arithemetic type");
+	static_assert(std::is_arithmetic<inum2_t>::value, "Template parameter (inum2_t) must be arithemetic type");
+	static_assert(std::is_arithmetic<onum_t>::value, "Template parameter (onum_t) must be arithemetic type");
+	return cv::Size_<onum_t>((onum_t)a.width / b.width, (onum_t)a.height / b.height);
+}
+
 template<typename num_t>
 void operator -= (const cv::Point_<num_t>& a, const cv::Size_<num_t>& b);
 template<typename num_t>
@@ -182,6 +199,7 @@ template<typename num_t>
 void reorderClockWise(std::vector<cv::Point_<num_t> >& points);
 template<typename num_t>
 void reorderCClockWise(std::vector<cv::Point_<num_t> >& points);
+// reorder sorting with point-buffer params
 
 template<typename num_t, size_t s>
 std::array<cv::Point3_<num_t>, s> operator+(const std::array<cv::Point_<num_t>, s>& base, num_t depth);
@@ -200,6 +218,10 @@ const auto extend_array = operator+=<num_t, s>;	// an alias
 template<typename num_t>
 const auto extend_vector = operator+=<num_t>;
 
-extern const std::array<std::array<cv::Scalar, 3>, 3> markup_map;
+inline static const std::array<std::array<cv::Scalar, 3>, 3> markup_map{
+    std::array<cv::Scalar, 3>{cv::Scalar(255, 0, 0), cv::Scalar(255, 127, 0), cv::Scalar(255, 255, 0)},	//blue
+	std::array<cv::Scalar, 3>{cv::Scalar(0, 255, 0), cv::Scalar(0, 255, 127), cv::Scalar(0, 255, 255)},	//green
+	std::array<cv::Scalar, 3>{cv::Scalar(0, 0, 255), cv::Scalar(127, 0, 255), cv::Scalar(255, 0, 255)},	//red
+};
 
 #include "vision.inc"

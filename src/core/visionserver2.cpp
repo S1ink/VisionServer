@@ -6,6 +6,20 @@ using namespace vs2;
 void VisionServer::BasePipe::setCamera(const VisionCamera& cam) {
 	this->SetVideoMode(cam.GetVideoMode());
 	this->input.SetSource(cam);
+	this->src_matrix = &cam.getCameraMatrix();
+	this->src_distort = &cam.getDistortionCoefs();
+}
+void VisionServer::BasePipe::setPipeline(const BasePipe& pipe) {
+	this->SetVideoMode(pipe.GetVideoMode());
+	this->input.SetSource(pipe);
+	this->src_matrix = pipe.src_matrix;
+	this->src_distort = pipe.src_distort;
+}
+void VisionServer::BasePipe::setSource(const cs::VideoSource& src) {
+	this->SetVideoMode(src.GetVideoMode());
+	this->input.SetSource(src);
+	this->src_matrix = &VisionCamera::default_matrix;
+	this->src_distort = &VisionCamera::default_distort;
 }
 
 
@@ -96,18 +110,39 @@ void VisionServer::addStream() {
 }
 void VisionServer::addStream(std::string_view name) {
 	if(!inst().is_running) {
-		inst().streams.emplace_back(frc::CameraServer::AddServer(name));
+		inst().streams.emplace_back(name);
 	}
 }
 void VisionServer::addStream(std::string_view name, int port) {
 	if(!inst().is_running) {
-		inst().streams.emplace_back(frc::CameraServer::AddServer(name, port));
+		inst().streams.emplace_back(name, port);
 	}
 }
 void VisionServer::addStreams(size_t n) {
 	if(!inst().is_running) {
 		for(size_t i = 0; i < n; i++) {
 			inst().streams.emplace_back(frc::CameraServer::AddServer("Stream " + std::to_string(inst().streams.size() + 1)));
+		}
+	}
+}
+void VisionServer::addStreams(std::initializer_list<std::string_view> strms) {
+	if(!inst().is_running) {
+		for(auto itr = strms.begin(); itr != strms.end(); itr++) {
+			inst().streams.emplace_back(*itr);
+		}
+	}
+}
+void VisionServer::addStreams(std::initializer_list<std::pair<std::string_view, int> > strms) {
+	if(!inst().is_running) {
+		for(auto itr = strms.begin(); itr != strms.end(); itr++) {
+			inst().streams.emplace_back(itr->first, itr->second);
+		}
+	}
+}
+void VisionServer::addStreams(std::vector<cs::MjpegServer>&& strms) {
+	if(!inst().is_running) {
+		for(size_t i = 0; i < strms.size(); i++) {
+			inst().streams.emplace_back(std::move(strms.at(i)));
 		}
 	}
 }
@@ -133,8 +168,8 @@ void VisionServer::pipelineRunner(BasePipe* pipe, uint16_t rps) {
 			idx = n;
 			if(idx > 0 && idx <= inst().cameras.size()) {
 				pipe->setCamera(inst().cameras.at(idx - 1));
-			} else if(idx < 0 && idx >= -((int)inst().pipelines.size())) {	// this does not work
-				pipe->input.SetSource(*(inst().pipelines.at((-idx) - 1)));
+			} else if(idx < 0 && idx >= -((int)inst().pipelines.size())) {
+				pipe->setPipeline(*(inst().pipelines.at((-idx) - 1)));
 			}
 		}
 		if(pipe->table->GetEntry("Enable Processing").GetBoolean(false) && 
@@ -336,6 +371,9 @@ bool VisionServer::runSingle(uint16_t rps) {
 			int n = VisionServer::base_table->GetEntry("Pipeline Index").GetDouble(0);
 			if(n != p_idx + 1 && n > 0 && n <= inst().pipelines.size()) {
 				p_idx = n - 1;
+				for(size_t i = 0; i < inst().streams.size(); i++) {
+					inst().streams[i].setSourceIdx(n);
+				}
 			}
 			n = VisionServer::base_table->GetEntry("Camera Index").GetDouble(0);
 			if(n != c_idx) {

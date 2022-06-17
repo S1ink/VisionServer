@@ -13,6 +13,11 @@
 */
 class VisionCamera final: public cs::VideoCamera {
 public:
+	inline static cv::Mat_<float>
+		default_matrix{cv::Mat_<float>::zeros(3, 3)},
+		default_distort{cv::Mat_<float>::zeros(1, 5)}
+	;
+
 	//VisionCamera() = default;
 	/**
 	 * Construct from a raw cscore source handle
@@ -232,7 +237,7 @@ protected:
 private:
 	wpi::json config, calibration;
 	cs::CvSink source;
-	cv::Mat_<float> camera_matrix{cv::Mat_<float>(3, 3)}, distortion{cv::Mat_<float>(1, 5)};
+	cv::Mat_<float> camera_matrix{default_matrix}, distortion{default_distort};
 	cs::VideoMode properties;
 
 	/**The camera's networktable - default value is '(root)/Cameras/NAME/' */
