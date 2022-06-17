@@ -1,11 +1,6 @@
-[submodule "references/neon_vision"]
-	path = references/neon_vision
-	url = https://github.com/JaciBrunning/neon_vision/
-
-[submodule "references/tools"]
-	path = references/tools
-	url = https://github.com/S1ink/Cpp-Tools/
-
-[submodule "robot-impl/submodule"]
-	path = robot-impl/submodule
-	url = https://github.com/S1ink/VisionServer-Robot/
+[submodule "lib-vs/additions/cpp-tools"]
+	path = lib-vs/additions/cpp-tools
+	url = https://github.com/S1ink/Cpp-Tools
+[submodule "roborio-vs"]
+	path = roborio-vs
+	url = https://github.com/S1ink/VisionServer-Robot
