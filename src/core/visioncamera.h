@@ -11,8 +11,13 @@
 /**
  * Adds extra functionality and ease of use on top of cs::VideoCaemra (base of cs::HTTPCamera and cs::UsbCamera)
 */
-class VisionCamera : public cs::VideoCamera {
+class VisionCamera final: public cs::VideoCamera {
 public:
+	inline static cv::Mat_<float>
+		default_matrix{cv::Mat_<float>::zeros(3, 3)},
+		default_distort{cv::Mat_<float>::zeros(1, 5)}
+	;
+
 	//VisionCamera() = default;
 	/**
 	 * Construct from a raw cscore source handle
@@ -198,7 +203,7 @@ public:
 
 	/**
 	 * Set the root networktable in which the camera's own networktable should reside
-	 * @param table The root table (ex. "Cameras")
+	 * @param table The root table (the camera resides in ~table~/Cameras)
 	*/
 	void setNetworkBase(std::shared_ptr<nt::NetworkTable> table);
 	/**
@@ -232,7 +237,8 @@ protected:
 private:
 	wpi::json config, calibration;
 	cs::CvSink source;
-	cv::Mat_<float> camera_matrix{cv::Mat_<float>(3, 3)}, distortion{cv::Mat_<float>(1, 5)};
+	cv::Mat_<float> camera_matrix{default_matrix}, distortion{default_distort};
+	cs::VideoMode properties;
 
 	/**The camera's networktable - default value is '(root)/Cameras/NAME/' */
 	std::shared_ptr<nt::NetworkTable> camera{nt::NetworkTableInstance::GetDefault().GetTable("Cameras")->GetSubTable(this->GetName())};

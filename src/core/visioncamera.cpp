@@ -3,21 +3,29 @@
 #include <wpi/raw_ostream.h>
 
 #include "tools/src/resources.h"
+#include "vision.h"
+
 
 VisionCamera::VisionCamera(CS_Source handle) : 
-	VideoCamera(handle), source(this->getVideo())
+	VideoCamera(handle), source(this->getVideo()), properties(this->GetVideoMode())
 {}
 VisionCamera::VisionCamera(const cs::VideoSource& source, const wpi::json& config) : 
-	VideoCamera(source.GetHandle()), config(config), source(this->getVideo())
-{}
+	VideoCamera(source.GetHandle()), config(config), source(this->getVideo()), properties(this->GetVideoMode())
+{
+    if(this->properties) { this->properties = ::getJsonVideoMode(config); }
+}
 VisionCamera::VisionCamera(const cs::UsbCamera& source, const wpi::json& config) : 
-	VideoCamera(source.GetHandle()), config(config), source(this->getVideo())
-{}
+	VideoCamera(source.GetHandle()), config(config), source(this->getVideo()), properties(this->GetVideoMode())
+{
+    if(this->properties) { this->properties = ::getJsonVideoMode(config); }
+}
 VisionCamera::VisionCamera(const cs::HttpCamera& source, const wpi::json& config) :
-	VideoCamera(source.GetHandle()), config(config), source(this->getVideo())
-{}
+	VideoCamera(source.GetHandle()), config(config), source(this->getVideo()), properties(this->GetVideoMode())
+{
+    if(this->properties) { this->properties = ::getJsonVideoMode(config); }
+}
 VisionCamera::VisionCamera(const wpi::json& source_config, const wpi::json& calibration) :
-    config(source_config), calibration(calibration), source(this->getVideo())
+    config(source_config), calibration(calibration)
 {
 	cs::UsbCamera cam;
 	try {cam = cs::UsbCamera(source_config.at("name").get<std::string>(), source_config.at("path").get<std::string>());}
@@ -30,9 +38,12 @@ VisionCamera::VisionCamera(const wpi::json& source_config, const wpi::json& cali
 	swap(*this, cam);	// this should work
     this->getJsonCameraMatrix(this->camera_matrix);
     this->getJsonDistortionCoefs(this->distortion);
+    this->source = this->getVideo();
+    this->properties = this->GetVideoMode();
+    if(this->properties) { this->properties = ::getJsonVideoMode(config); }
 }
 VisionCamera::VisionCamera(const wpi::json& source_config) :
-    config(source_config), source(this->getVideo())
+    config(source_config)
 {
 	cs::UsbCamera cam;
 	try {cam = cs::UsbCamera(source_config.at("name").get<std::string>(), source_config.at("path").get<std::string>());}
@@ -43,6 +54,9 @@ VisionCamera::VisionCamera(const wpi::json& source_config) :
 	cam.SetConnectionStrategy(cs::VideoSource::kConnectionKeepOpen);
 	// print confirmation
 	swap(*this, cam);	// this should work
+    this->source = this->getVideo();
+    this->properties = this->GetVideoMode();
+    if(!this->properties) { this->properties = ::getJsonVideoMode(config); }
 }
 // VisionCamera::VisionCamera(const VisionCamera& other) : 
 //     VideoCamera(other.GetHandle())/*, type(other.type)*/, config(other.config), calibration(other.calibration), 
@@ -184,20 +198,20 @@ cs::CvSource VisionCamera::generateServer() const {
 }
 
 int VisionCamera::getWidth() const {
-    return this->GetVideoMode().width;
+    return this->properties.width;
 }
 int VisionCamera::getHeight() const {
-    return this->GetVideoMode().height;
+    return this->properties.height;
 }
 int VisionCamera::getPixels() const {
-    cs::VideoMode mode = this->GetVideoMode();
+    cs::VideoMode mode = this->properties;
     return (mode.width*mode.height);
 }
 int VisionCamera::getConfigFPS() const {
-    return this->GetVideoMode().fps;
+    return this->properties.fps;
 }
 cv::Size VisionCamera::getResolution() const {
-    return cv::Size(this->GetVideoMode().height, this->GetVideoMode().width);
+    return cv::Size(this->properties.width, properties.height);
 }
 
 int8_t VisionCamera::getBrightness() const {
