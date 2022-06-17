@@ -1,0 +1,33 @@
+#include <vector>
+
+#include "tools/src/resources.h"
+#include "tools/src/sighandle.h"
+#include "tools/src/timing.h"
+
+#include "../weightedsubtraction.h"
+#include "../visioncamera.h"
+#include "../visionserver.h"
+#include "../processing.h"
+#include "../vision.h"
+
+#include "testing.h"
+
+StopWatch runtime("Runtime", &std::cout, 0);
+void on_exit() {
+	runtime.end();
+}
+
+int main(int argc, char* argv[]) {
+	runtime.setStart();
+	SigHandle::get();
+	atexit(on_exit);
+
+	std::vector<VisionCamera> cameras;
+
+	if(argc > 1 && readConfig(cameras, argv[1])) {}
+	else if(readConfig(cameras)) {}
+	else { return EXIT_FAILURE; }
+
+	VisionServer server(std::move(cameras));
+	server.runVision<BBoxDemo, SquareTargetPNP, TargetSolver<Test6x6, WeightedSubtraction<VThreshold::LED::BLUE> > >(25);
+}
