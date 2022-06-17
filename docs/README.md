@@ -1,5 +1,7 @@
 [![doxygen github pages](https://github.com/FRC3407/VisionServer/actions/workflows/doxygen-pages.yml/badge.svg?branch=main)](https://github.com/FRC3407/VisionServer/actions/workflows/doxygen-pages.yml) [![pages-build-deployment](https://github.com/FRC3407/VisionServer/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/FRC3407/VisionServer/actions/workflows/pages/pages-build-deployment)
 # VisionServer
+  *This README is out of date - to be updated soon for VS2.0.*
+
 __VisionServer was originally a test project for learning how to implement vision on an FRC robot (raspberry pi coprocessor), but now has morphed into an api for multiple types of vision workflows. The base api currently features:__
   - Loading camera configurations and calibrations from a json (ex. /boot/frc.json on wpilibpi)
   - Handling any number of cameras (generated from json) and switching the output stream between each of the sources (networktable setting)

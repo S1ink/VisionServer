@@ -1,0 +1,2 @@
+This directory houses legacy code from VS1 that is no longer being developed. The code can be compiled into a user project
+if needed (it is not part of the library), and stands to preserve the original test/competition application code from 2021/2022.

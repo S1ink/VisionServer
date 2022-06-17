@@ -4,9 +4,9 @@
             "name": "CC-ARM-DESKTOP-8GI6FFU",   // my desktop computer
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/include",
-                "${workspaceFolder}/references",
-                "${workspaceFolder}/include/opencv4"
+                "${workspaceFolder}/lib-vs/include",
+                "${workspaceFolder}/lib-vs/additions",
+                "${workspaceFolder}/lib-vs/include/opencv4"
             ],
             "defines": [
                 "UNICODE",
@@ -23,9 +23,9 @@
             "name": "CC-ARM-DESKTOP-R6IKQEI",   // my laptop
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/include",
-                "${workspaceFolder}/references",
-                "${workspaceFolder}/include/opencv4"
+                "${workspaceFolder}/lib-vs/include",
+                "${workspaceFolder}/lib-vs/additions",
+                "${workspaceFolder}/lib-vs/include/opencv4"
             ],
             "defines": [
                 "UNICODE",
@@ -42,9 +42,9 @@
             "name": "CC-ARM-ROBOTICS-1",   // OG robotics desktop 
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/include",
-                "${workspaceFolder}/references",
-                "${workspaceFolder}/include/opencv4"
+                "${workspaceFolder}/lib-vs/include",
+                "${workspaceFolder}/lib-vs/additions",
+                "${workspaceFolder}/lib-vs/include/opencv4"
             ],
             "defines": [
                 "UNICODE",
