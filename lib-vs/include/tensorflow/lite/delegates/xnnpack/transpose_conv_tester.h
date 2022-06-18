@@ -23,7 +23,6 @@ limitations under the License.
 
 #include <gtest/gtest.h>
 #include "tensorflow/lite/c/builtin_op_data.h"
-#include "tensorflow/lite/delegates/xnnpack/xnnpack_delegate.h"
 #include "tensorflow/lite/schema/schema_generated.h"
 
 namespace tflite {
@@ -174,12 +173,6 @@ class TransposeConvTester {
 
   inline TransposeConvTester& NoBias() { return WithBias(false); }
 
-  inline TransposeConvTester& WeightsCache(
-      TfLiteXNNPackDelegateWeightsCache* weights_cache) {
-    weights_cache_ = weights_cache;
-    return *this;
-  }
-
   void Test(TfLiteDelegate* delegate) const;
 
  private:
@@ -228,7 +221,6 @@ class TransposeConvTester {
   bool int8_weights_ = false;
   bool int8_channel_wise_weights_ = false;
   bool sparse_weights_ = false;
-  TfLiteXNNPackDelegateWeightsCache* weights_cache_ = nullptr;
 };
 
 }  // namespace xnnpack

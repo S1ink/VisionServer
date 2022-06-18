@@ -62,15 +62,14 @@ class SimpleDelegateKernelInterface {
 };
 
 // Pure Interface that clients should implement.
-// The Interface represents a delegate's capabilities and provides a factory
-// for SimpleDelegateKernelInterface.
+// The Interface represents a delegate capabilities and provide factory
+// for SimpleDelegateKernelInterface
 //
 // Clients should implement the following methods:
 // - IsNodeSupportedByDelegate
 // - Initialize
-// - Name
+// - name
 // - CreateDelegateKernelInterface
-// - DelegateOptions
 class SimpleDelegateInterface {
  public:
   // Options for configuring a delegate.

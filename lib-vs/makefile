@@ -29,13 +29,11 @@ STD := c++17
 ifeq ($(OS),Windows_NT)
 CXX := $(CROSS_PREFIX)$(CXX)
 AR := $(CROSS_PREFIX)$(AR)
-OS := windows
 RM-R := del /s /Q
 CP := copy
 DIR := \\
 
 else #native
-OS := native
 RM-R := rm -r
 CP := cp
 DIR := /
@@ -62,7 +60,7 @@ SRCS := $(call rwildcard,$(SRC_DIR)/,*.cpp *.c *.S *.s)
 STATIC_OBJS := $(SRCS:$(SRC_DIR)/%=$(OBJ_DIR)/%.o)
 SHARED_OBJS := $(SRCS:$(SRC_DIR)/%=$(OBJ_DIR)/%.pic.o)
 
-ifeq ($(OS),windows)
+ifeq ($(OS),Windows_NT)
 HEADERS := $(subst /,\,$(call rwildcard,$(SRC_DIR)/,*.h *.hpp *.inc))
 else
 HEADERS := $(call rwildcard,$(SRC_DIR)/,*.h *.hpp *.inc)

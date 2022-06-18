@@ -40,7 +40,6 @@ class BuiltinOpResolverWithoutDefaultDelegates : public BuiltinOpResolver {
  public:
   BuiltinOpResolverWithoutDefaultDelegates() : BuiltinOpResolver() {
     delegate_creators_.clear();
-    opaque_delegate_creators_.clear();
   }
 };
 

@@ -515,8 +515,11 @@ class SingleOpModel {
 
   void BuildInterpreter(std::vector<std::vector<int>> input_shapes);
 
-  // Executes inference and return status code.
-  TfLiteStatus Invoke();
+  // Executes inference, asserting success.
+  void Invoke();
+
+  // Executes inference *without* asserting success.
+  TfLiteStatus InvokeUnchecked();
 
   void PopulateStringTensor(int index, const std::vector<string>& content) {
     auto tensor = interpreter_->tensor(index);
@@ -701,7 +704,6 @@ class SingleOpModel {
         buffers_.push_back(CreateBuffer(builder_, builder_.CreateVector({})));
       }
 
-      builder_.ForceVectorAlignment(data.size(), sizeof(T), 16);
       // Add data as a Buffer to buffers list.
       buffer_id = buffers_.size();
       auto data_buffer =
