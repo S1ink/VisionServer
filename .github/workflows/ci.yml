@@ -1,0 +1,24 @@
+name: CI
+on:
+  push:
+    paths:
+      - 'lib-vs/**'
+  workflow_dispatch:
+
+jobs:
+  build-lib:
+    name: "Build LibVS"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get ARM Cross Compiler
+        run: sudo apt-get install gcc-arm-linux-gnueabihf
+      - name: Checkout Self
+        uses: actions/checkout@main
+      - name: Build
+        run: |
+          cd lib-vs
+          make clean
+          make shared CROSS_PREFIX=arm-linux-gnueabihf-
+          make static CROSS_PREFIX=arm-linux-gnueabihf-
+          cd out
+          ls -l

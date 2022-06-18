@@ -2,19 +2,20 @@ name: doxygen-github-pages
 
 on:
   push:
-    branches: [ main ]
+    paths:
+      - 'lib-vs/**'
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   doxygenize:
-    name: "Run Doxygen"
+    name: Run Doxygen
     runs-on: ubuntu-latest
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-      - uses: langroodi/doxygenize@v1.5
+      - uses: actions/checkout@main
+      - uses: langroodi/doxygenize@master
         with:
           # Generated HTML documents output folder
           htmloutput: ./docs/doxygen/
@@ -22,3 +23,4 @@ jobs:
           ghpagesbranch: main
           # GitHub Pages directory path
           ghpagesdir: ./docs/doxygen/
+          darkmode: true

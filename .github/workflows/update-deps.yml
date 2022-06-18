@@ -1,0 +1,224 @@
+name: Update Dependencies
+on:
+  workflow_dispatch:
+
+jobs:
+
+  fetch-latest-tf-release:
+    runs-on: ubuntu-latest
+    outputs:
+      tf-tag: ${{ steps.tf-latest-tag.outputs.tag }}
+      tf-commit: ${{ steps.tf-latest-commit.outputs.commit }}
+      tf-sha256: ${{ steps.tf-latest-hash.outputs.sha256 }}
+#       wpilibpi-tag: ${{ steps.wpilibpi-latest-tag.outputs.tag }}
+#       pigpio-tag: ${{ steps.pigpio-latest-tag.outputs.tag }}
+    steps:
+      - run: echo '::echo::on'
+      - name: Get latest TF release tag
+        id: tf-latest-tag
+        run: echo "::set-output name=tag::$(curl -s https://api.github.com/repos/tensorflow/tensorflow/releases/latest | jq '.tag_name' | sed 's/\"//g')"
+      - name: Get latest TF commit
+        id: tf-latest-commit
+        run: echo "::set-output name=commit::$(git ls-remote https://github.com/tensorflow/tensorflow refs/tags/${{ steps.tf-latest-tag.outputs.tag }} | awk '{print $1}')"
+      - name: Get latest TF hash code
+        id: tf-latest-hash
+        run: echo "::set-output name=sha256::$(curl -L "https://github.com/tensorflow/tensorflow/archive/${{ steps.tf-latest-commit.outputs.commit }}.tar.gz" | sha256sum | awk '{print $1}')"
+#       - name: Get latest WPILibPi tag
+#         id: wpilibpi-latest-tag
+#         run: echo "::set-output name=tag::$(curl -s https://api.github.com/repos/wpilibsuite/WPILibPi/releases/latest | jq '.tag_name' | sed 's/\"//g')"
+#       - name: Get latest pigpio tag
+#         id: pigpio-latest-tag
+#         run: echo "::set-output name=tag::$(curl -s https://api.github.com/repos/joan2937/pigpio/releases/latest | jq '.tag_name' | sed 's/\"//g')"
+      - name: Confirm Info
+        run: |
+          echo ${{ steps.tf-latest-tag.outputs.tag }}
+          echo ${{ steps.tf-latest-commit.outputs.commit }}
+          echo ${{ steps.tf-latest-hash.outputs.sha256 }}
+#          echo ${{ steps.wpilibpi-latest-tag.outputs.tag }}
+#          echo ${{ steps.pigpio-latest-tag.outputs.tag }}
+
+  build-tflite:
+    runs-on: ubuntu-latest
+    needs: fetch-latest-tf-release
+    steps:
+      - run: echo '::echo::on'
+      - name: Checkout Tensorflow
+        uses: actions/checkout@main
+        with:
+          repository: tensorflow/tensorflow
+          ref: ${{ needs.fetch-latest-tf-release.outputs.tf-tag }}
+      - name: Get Deps
+        run: |
+          npm install @bazel/bazelisk
+          pip install numpy
+          sudo apt-get install zip
+      - name: Get Flatbuffers and Abseil
+        run: |
+          mkdir {absl,flatbuffers}
+          wget -O absl.tar.gz https://github.com/abseil/abseil-cpp/archive/$(grep 'ABSL_COMMIT = ".*"' third_party/absl/workspace.bzl | cut -d \" -f2).tar.gz
+          tar -xzf absl.tar.gz -C absl --strip-components=1
+          wget -O flatbuffers.tar.gz $(grep 'urls = tf_mirror_urls(".*"' third_party/flatbuffers/workspace.bzl | cut -d \" -f2)
+          tar -xzf flatbuffers.tar.gz -C flatbuffers --strip-components=1
+          ls -l -R
+      - name: Build
+        run: |
+          bazel build --config=elinux_armhf -c opt //tensorflow/lite:libtensorflowlite.so
+      - name: Copy and Zip Artifacts
+        run: |
+          mkdir artifacts
+          find ./tensorflow -name '*.h' | cpio -pdm ./artifacts
+          cd absl
+          find ./absl -name '*.h' | cpio -pdm ../artifacts
+          cd ../
+          cp -R ./flatbuffers/include/flatbuffers ./artifacts
+          cp bazel-bin/tensorflow/lite/libtensorflowlite.so artifacts
+          zip -r artifacts.zip artifacts
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with: 
+          name: build-tflite
+          path: artifacts.zip
+          
+  build-edgetpu:
+    runs-on: ubuntu-latest
+    needs: fetch-latest-tf-release
+    steps:
+      - run: echo '::echo::on'
+      - name: Checkout Libedgetpu
+        uses: actions/checkout@main
+        with:
+          repository: google-coral/libedgetpu
+      - name: Configure Build
+        run: |
+          sed -i 's/TENSORFLOW_COMMIT = ".*/TENSORFLOW_COMMIT = "${{ needs.fetch-latest-tf-release.outputs.tf-commit }}"/' ./workspace.bzl
+          sed -i 's/TENSORFLOW_SHA256 = ".*/TENSORFLOW_SHA256 = "${{ needs.fetch-latest-tf-release.outputs.tf-sha256 }}"/' ./workspace.bzl
+          sed -i 's/$(STRIPPED_SUFFIX)//' ./Makefile
+          cat ./workspace.bzl
+          cat ./Makefile
+          mkdir -p artifacts/{direct,throttled}
+      - name: Build and Prep Artifacts
+        run: |
+         DOCKER_CPUS="armv7a" DOCKER_IMAGE="debian:stretch" DOCKER_TARGETS=libedgetpu make docker-build
+         cp out/direct/armv7a/libedgetpu.so.1.0 artifacts/direct/libedgetpu.so
+         cp out/throttled/armv7a/libedgetpu.so.1.0 artifacts/throttled/libedgetpu.so
+         cp tflite/public/edgetpu.h artifacts
+         sudo apt-get install zip
+         zip -r artifacts.zip artifacts
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@main
+        with:
+          name: build-edgetpu
+          path: artifacts.zip
+
+  extract-wpilibpi:
+    runs-on: ubuntu-latest
+    outputs:
+      latest-tag: ${{ steps.wpilibpi-latest-tag.outputs.tag }}
+    steps:
+      - run: echo '::echo::on'
+      - name: Get latest WPILibPi release tag
+        id: wpilibpi-latest-tag
+        run: echo "::set-output name=tag::$(curl -s https://api.github.com/repos/wpilibsuite/WPILibPi/releases/latest | jq '.tag_name' | sed 's/\"//g')"
+      - name: Extract Latest WPILibPi
+        run: |
+          wget https://github.com/wpilibsuite/WPILibPi/releases/download/${{ steps.wpilibpi-latest-tag.outputs.tag }}/cpp-multiCameraServer.zip
+          sudo apt-get install unzip
+          sudo apt-get install zip
+          mkdir {out,artifacts}
+          unzip cpp-multiCameraServer.zip -d out
+          cp -R out/cpp-multiCameraServer/{lib,include} artifacts
+          zip -r artifacts.zip artifacts
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@main
+        with:
+          name: extract-wpilibpi
+          path: artifacts.zip
+  
+  build-pigpio:
+    runs-on: ubuntu-latest
+    outputs:
+      latest-tag: ${{ steps.pigpio-latest-tag.outputs.tag }}
+    steps:
+      - run: echo '::echo::on'
+      - name: Get latest pigpio release tag
+        id: pigpio-latest-tag
+        run: echo "::set-output name=tag::$(curl -s https://api.github.com/repos/joan2937/pigpio/releases/latest | jq '.tag_name' | sed 's/\"//g')"
+      - name: Checkout Pigpio
+        uses: actions/checkout@main
+        with:
+          repository: joan2937/pigpio
+          ref: ${{ steps.pigpio-latest-tag.outputs.tag }}
+      - name: Get Cross Compiler
+        run: sudo apt-get install gcc-arm-linux-gnueabihf
+      - name: Build and Copy
+        run: |
+         arm-linux-gnueabihf-gcc --version
+         make lib CROSS_PREFIX=arm-linux-gnueabihf-
+         mkdir artifacts
+         cp libpigpio.so artifacts
+         cp pigpio.h artifacts
+         sudo apt-get install zip
+         zip -r artifacts.zip artifacts
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@main
+        with:
+          name: build-pigpio
+          path: artifacts.zip
+
+  combine-and-deploy:
+    runs-on: ubuntu-latest
+    needs: [fetch-latest-tf-release,build-tflite,build-edgetpu,extract-wpilibpi,build-pigpio]
+    steps:
+      - uses: actions/download-artifact@main
+      - run: |
+          sudo apt-get install unzip
+          sudo apt-get install zip
+          ls -l
+          mkdir {output,wpilibpi,tflite,edgetpu,pigpio}
+          unzip extract-wpilibpi -d wpilibpi
+          unzip build-pigpio -d pigpio
+          unzip build-edgetpu -d edgetpu
+          unzip build-tflite -d tflite
+          cp -R wpilibpi/{include,lib} output
+          cp pigpio/pigpio.h output/include
+          cp pigpio/libpigpio.so output/lib
+          cp edgetpu/edgetpu.h output/include
+          mkdir output/lib/edgetpu
+          cp -R edgetpu/{direct,throttled} output/lib/edgetpu
+          cp edgetpu/direct/libedgetpu.so output/lib
+          cp tflite/libtensorflowlite.so output/lib
+          cp -R tflite/tensorflow output/include
+          cp -R tflite/absl output/include
+          cp -R tflite/flatbuffers output/include
+          cd output
+          ls -l -R
+          cd $GITHUB_WORKSPACE
+          zip -r deps.zip output
+          mkdir main
+      - uses: actions/checkout@main
+        with:
+          path: main
+          submodules: recursive
+      - run: |
+          rm -r main/lib-vs/{lib,include}
+          cp -R output/{include,lib} main/lib-vs
+      - uses: peter-evans/create-pull-request@main
+        with:
+          path: main
+          branch: update-deps
+          delete-branch: true
+          commit-message: Update Dependencies for LibVS
+          title: Merge new deps
+          body: |
+            Updated Dependency Versions:
+            - TensorFlow[Lite] && EdgeTPU: ${{ needs.fetch-latest-tf-release.outputs.tf-tag }}
+            - WPILibPi: ${{ needs.extract-wpilibpi.outputs.latest-tag }}
+            - Pigpio: ${{ needs.build-pigpio.outputs.latest-tag }}
+            *Auto-generated by [create-pull-request][1]*
+
+            [1]: https://github.com/peter-evans/create-pull-request
+          labels: automated-action
+      - uses: actions/upload-artifact@main
+        with:
+          name: all-deps
+          path: deps.zip

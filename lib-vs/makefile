@@ -98,7 +98,7 @@ static: $(LIB_STATIC) clean-headers $(COPY_HEADERS)
 clean-headers: $(HEADER_DIR)
 	$(RM-R) $(HEADER_DIR)
 
-rebuild: build | clean
+rebuild: shared | clean
 
 clean:
 	$(RM-R) $(OBJ_DIR)
