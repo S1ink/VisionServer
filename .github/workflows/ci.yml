@@ -26,4 +26,4 @@ jobs:
           make shared CROSS_PREFIX=arm-linux-gnueabihf-
           make static CROSS_PREFIX=arm-linux-gnueabihf-
           cd out
-          ls -l
+          ls -l -R

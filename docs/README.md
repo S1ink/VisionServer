@@ -1,35 +1,60 @@
-[![doxygen github pages](https://github.com/FRC3407/VisionServer/actions/workflows/doxygen-pages.yml/badge.svg?branch=main)](https://github.com/FRC3407/VisionServer/actions/workflows/doxygen-pages.yml) [![pages-build-deployment](https://github.com/FRC3407/VisionServer/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/FRC3407/VisionServer/actions/workflows/pages/pages-build-deployment)
-# VisionServer
-  *This README is out of date - to be updated soon for VS2.0.*
+[![CI](https://github.com/FRC3407/VisionServer/actions/workflows/ci.yml/badge.svg)](https://github.com/FRC3407/VisionServer/actions/workflows/ci.yml) [![Build Docs](https://github.com/FRC3407/VisionServer/actions/workflows/doxygen-pages.yml/badge.svg?branch=main)](https://github.com/FRC3407/VisionServer/actions/workflows/doxygen-pages.yml)
 
-__VisionServer was originally a test project for learning how to implement vision on an FRC robot (raspberry pi coprocessor), but now has morphed into an api for multiple types of vision workflows. The base api currently features:__
-  - Loading camera configurations and calibrations from a json (ex. /boot/frc.json on wpilibpi)
-  - Handling any number of cameras (generated from json) and switching the output stream between each of the sources (networktable setting)
-  - Brightness, exposure, and whitebalance control for each camera during runtime through networktables
-  - Setting compression of the output stream (currently a compile-time only value -> this seems to be a wpilib problem)
-  - An extendable pipeline interface for creating vision pipelines (and default pipeline that acts as a video passthrough)
-  - Automatic networktables subtable creation for each pipeline, allowing any number of settings to be available for each
-  - Switching between up to 3 pipelines during runtime through networktables
-  - Thresholding and contour helper classes that can be implemented into pipelines
-  - A target class that takes in the number of corners and world points of a target (can represent any target), implements solvePnP to find rotation and translation vectors, and updates networktables values accordingly (uses camera calibration values of current camera, which are from the json)
-  - A sample "Target Solving" pipeline that takes in a target and thresholding class and can implement solvePnP for any mixture of the two
-  - A networktable value representing which target is currently detected, with an automatic timeout for when none are (multiple targets could be implemented in a single pipeline)
-  - Various statistics such as framerate, frametime, processing time, CPU usage and temperature, etc. available over networktables
-  - Toggleable statistics on the output stream
-  - Running a processing instance in a separate thread -> theoretically this would mean you could run multiple instances although this is not officially implemented yet
+# [FRC 3407] VisionServer
+## Project Overview
+ - This project originally existed as a testing environment for vision processing code that would be run on an FRC robot (Raspberry Pi coprocessor).
+ - C++ was chosen as the primary development language, and a more generalized program framework was created, titled 'VisionServer'.
+ - VisionServer[v1.*] was released as a framework which could be reimplemented by modifying the main source file(s) and recompiling the entire project. These releases were utilized during 2021 testing and the 2022 Rapid React season; provided features for both ease of use [on a robot] and advanced vision processing techniques.
+ - VisionServer[v2.*+] now comes with a redesigned program (library) structure that focuses on concurrency and multithreading. The project is also now implemented as a library that allows easier integration in external projects, and can functionally be used as a git submodule. This repo contains automations for updating the necessary dependencies (wpilib, opencv, tflite), which makes creating a vision program simpler and more accessible.
 
-__User extendable features include:__
-  - Custom pipelines
-  - Custom targets
-  - Custom thresholding techniques
+__Highlighted Features:__
+- Load and run unlimited* vision processing pipelines - although obviously limited by hardware specs
+- Run each pipeline in its own thread for concurrent operation, or one at a time in singlethreaded mode
+- Extendable pipeline class for easily running custom pipelines
+- Parse ntable and camera settings from frc.json (WPILibPi config file) or any other provided json in order to auto-initialize cameras (and calibration data)
+- Setup any number of output streams (amount limited by cscore) and dynamically assign input sources during runtime.
+- Chain pipeline outputs dynamically during runtime (although this is very non-performant)
+- SequentialPipeline class for running any number of pipelines sequentially - this accomplishes the same as above but is much more performant
+- Camera feeds can be processed by multiple pipelines concurrently without losing frames
+- Automatic networktable integration for pipelines, output streams, and main settings for dynamic runtime control (and robot communication)
+- Target class for sending target information to a robot over networktables
+- TfLite libraries included, along with base pipeline classes to support training and using [WPILib] Axon object detection models
+- EdgeTPU library included for running hardware accelerated TfLite models
 
-  (Or just edit the api source and do anything you want!)
-  
-__Additionally, source code for interfaceing with VisionServer from a robot-side program is included for both Java and C++ under [_robot-impl_](robot-impl).__
+__Simple Example Program using VisionServer:__
+```cpp
+#include <vector>
+#include <core/visioncamera.h>
+#include <core/visionserver2.h>
+#include <core/vision.h>
+#include <core/tfmodel.h>
 
-# Getting Started
-__A guide for downloading and setting up the project can be found [here](SETUP.md). Additionally, a precompiled library (and headers) of the api along with a demo program can be found in the latest [release](https://github.com/FRC3407/VisionServer/releases). If you use the library in your own project, make sure to link in the libraries for OpenCV and Wpilib correctly (these are found in [lib/](../lib/) and [include/](../include/), link options can be found in the [makefile](../makefile)).__
-  - *Note that the demo program is configured to track pure blue (the color or the led I am testing with), and target solving requires camera configuration values to be present within the source json (see the included [json](../frc.json)).*
+using namespace vs2;
 
-# Documentation
-__Doxygen-generated documentation for the api can be found [here](https://frc3407.github.io/VisionServer/doxygen/html/).__
+int main() {
+    std::vector<VisionCamera> cameras;
+    readConfig(cameras);            // default config is /boot/frc.json
+
+    VisionServer::Init();           // verbosely initialize VS rather than allow lazy-loading
+    VisionServer::addCameras(std::move(cameras));
+    VisionServer::addStream("output stream");
+    AxonRunner<> a("model.tflite", TfModel::Optimization::EDGETPU, "map.pbtxt", 4);
+    VisionServer::addPipeline(&a);  // or VisionServer::addPipeline< AxonRunner<> >(); for [default-constructed] dynamically allocated pipeline
+    VisionServer::run(50);          // the target (and maximum) fps
+
+    atexit(VisionServer::stopExit);  // stop the server when the program ends
+    return 0;
+}
+```
+
+## Get Started
+- __[Setup guide](SETUP.md) for installing the cross-compiler and setting up a dev environment__
+- __*Coming soon* - a guide for integrating with a wpilib robot project__
+- __*Coming soon* - a guide for deploying to a raspberry pi and configuring WPILibPi__
+- __[Source code](robotrio-vs) for communicating with VS over networktables (robot program) - this is not up to date with VS2, and currently implements the VS1 ntables pattern__
+
+## Documentation
+- __Doxygen-generated documentation is currently not working but can be found [here](https://frc3407.github.io/VisionServer/doxygen/html/).__
+
+## More on Vision Processing
+- __Some [helpful resources](REFERENCES.md) used in the making of this project__
