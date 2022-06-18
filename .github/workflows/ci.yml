@@ -3,6 +3,9 @@ on:
   push:
     paths:
       - 'lib-vs/**'
+  pull-request:
+    paths:
+      - 'lib-vs/**'
   workflow_dispatch:
 
 jobs:

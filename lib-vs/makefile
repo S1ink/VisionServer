@@ -110,19 +110,20 @@ COPT := $(CDEBUG)
 LOPT := $(LDEBUG)
 endif
 
-.PHONY: shared static clean-headers rebuild clean
+.PHONY: shared static rebuild rebuild-static clean #clean-headers
 
-shared: $(LIB_SHARED) clean-headers $(COPY_HEADERS)
-static: $(LIB_STATIC) clean-headers $(COPY_HEADERS)
-
-clean-headers: $(HEADER_DIR)
-	$(RM-R) $(HEADER_DIR)
+shared: $(LIB_SHARED) $(COPY_HEADERS)
+static: $(LIB_STATIC) $(COPY_HEADERS)
 
 rebuild: shared | clean
+rebuild-static: static | clean
 
 clean:
 	$(RM-R) $(OBJ_DIR)
 	$(RM-R) $(OUT_DIR)
+
+# clean-headers: $(HEADER_DIR)
+# 	$(RM-R) $(HEADER_DIR)
 
 
 #compile for each source

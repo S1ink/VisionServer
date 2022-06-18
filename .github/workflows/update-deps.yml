@@ -218,6 +218,9 @@ jobs:
 
             [1]: https://github.com/peter-evans/create-pull-request
           labels: automated-action
+          add-paths: |
+            lib-vs/include/**
+            lib-vs/lib/**
       - uses: actions/upload-artifact@main
         with:
           name: all-deps
