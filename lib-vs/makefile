@@ -21,22 +21,39 @@ rwildcard = $(foreach d,$(wildcard $(addsuffix *,$(1))),$(call rwildcard,$(d)/,$
 
 OPT ?= release
 
-CROSS_PREFIX ?= arm-raspbian10-linux-gnueabihf-
+CROSS_PREFIX := arm-raspbian10-linux-gnueabihf-
 CXX := g++
 AR := ar
 STD := c++17
 
 ifeq ($(OS),Windows_NT)
-CXX := $(CROSS_PREFIX)$(CXX)
-AR := $(CROSS_PREFIX)$(AR)
-RM-R := del /s /Q
-CP := copy
-DIR := \\
+	UNAME := Windows
+	CXX := $(CROSS_PREFIX)$(CXX)
+	AR := $(CROSS_PREFIX)$(AR)
+	RM-R := del /s /Q
+	CP := copy
+	DIR := \\
 
 else #native
-RM-R := rm -r
-CP := cp
-DIR := /
+	RM-R := rm -r
+	CP := cp
+	DIR := /
+	UNAME := $(shell uname -s)
+	ifeq ($(UNAME),Darwin)
+		CXX := $(CROSS_PREFIX)$(CXX)
+		AR := $(CROSS_PREFIX)$(AR)
+	endif
+	ifeq ($(UNAME),Linux)
+		ifeq ($(shell uname -p),x86_64)
+			CXX := $(CROSS_PREFIX)$(CXX)
+			AR := $(CROSS_PREFIX)$(AR)
+		endif
+		ifneq ($(filter %86,$(shell uname -p)),)
+			CXX := $(CROSS_PREFIX)$(CXX)
+			AR := $(CROSS_PREFIX)$(AR)
+		endif
+	endif
+
 endif
 
 SRC_DIR := src$(DIR)core

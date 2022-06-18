@@ -24,4 +24,3 @@ jobs:
           make static CROSS_PREFIX=arm-linux-gnueabihf-
           cd out
           ls -l
-#          sed -i 's/CROSS_PREFIX := .*/CROSS_PREFIX := arm-linux-gnueabihf-/' makefile

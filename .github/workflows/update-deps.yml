@@ -179,7 +179,7 @@ jobs:
           unzip build-pigpio/artifacts.zip -d pigpio
           unzip build-edgetpu/artifacts.zip -d edgetpu
           unzip build-tflite/artifacts.zip -d tflite
-          cp -R wpilibpi/{include,lib} output
+          cp -R wpilibpi/artifacts/{include,lib} output
           cp pigpio/artifacts/pigpio.h output/include
           cp pigpio/artifacts/libpigpio.so output/lib
           cp edgetpu/artifacts/edgetpu.h output/include
