@@ -1,4 +1,4 @@
-name: doxygen-github-pages
+name: Build Doxygen
 
 on:
   push:

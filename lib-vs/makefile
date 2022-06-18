@@ -21,7 +21,7 @@ rwildcard = $(foreach d,$(wildcard $(addsuffix *,$(1))),$(call rwildcard,$(d)/,$
 
 OPT ?= release
 
-CROSS_PREFIX := arm-raspbian10-linux-gnueabihf-
+CROSS_PREFIX ?= arm-raspbian10-linux-gnueabihf-
 CXX := g++
 AR := ar
 STD := c++17
@@ -68,19 +68,22 @@ endif
 COPY_HEADERS := $(HEADERS:$(SRC_DIR)%=$(HEADER_DIR)%)
 
 
-CDEBUG := -g -Og -DDEBUG
+CDEBUG := -g -Og -D__DEBUG__
 LDEBUG := -g
-CRELEASE := -O3 -DRELEASE
+CRELEASE := -O3 -D__RELEASE__
 LRELEASE :=
 
 CPPFLAGS := -pthread -Iinclude -Iadditions -Iinclude/opencv4 -MMD -MP
 CFLAGS := -Wall -fpermissive
 ASMFLAGS := -mcpu=cortex-a72 -mfpu=neon-fp-armv8
 LDFLAGS := -pthread -Wall -Llib -Wl,--unresolved-symbols=ignore-in-shared-libs
-LDLIBS := -lm -lpigpio -ledgetpu -ltensorflowlite -lwpilibc -lwpiHal -lcameraserver -lntcore -lcscore -lopencv_gapi \
-	-lopencv_highgui -lopencv_ml -lopencv_objdetect -lopencv_photo -lopencv_stitching -lopencv_video \
-	-lopencv_calib3d -lopencv_features2d -lopencv_dnn -lopencv_flann -lopencv_videoio -lopencv_imgcodecs \
-	-lopencv_imgproc -lopencv_core -lwpiutil -latomic
+LDLIBS := \
+	-lm -lpigpio -ledgetpu -ltensorflowlite -lwpilibc -lwpiHal \
+	-lcameraserver -lntcore -lcscore -lopencv_gapi -lopencv_highgui \
+	-lopencv_ml -lopencv_objdetect -lopencv_photo -lopencv_stitching \
+	-lopencv_video -lopencv_calib3d -lopencv_features2d -lopencv_dnn \
+	-lopencv_flann -lopencv_videoio -lopencv_imgcodecs -lopencv_imgproc \
+	-lopencv_core -lwpiutil -latomic
 
 ifeq ($(OPT),release)
 COPT := $(CRELEASE)

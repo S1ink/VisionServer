@@ -19,6 +19,7 @@ jobs:
       - name: Build
         run: |
           cd lib-vs
+#          sed -i 's/CROSS_PREFIX := .*/CROSS_PREFIX := arm-linux-gnueabihf-/' makefile
           make clean
           make shared CROSS_PREFIX=arm-linux-gnueabihf-
           make static CROSS_PREFIX=arm-linux-gnueabihf-
