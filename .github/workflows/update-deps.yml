@@ -175,21 +175,21 @@ jobs:
           sudo apt-get install zip
           ls -l
           mkdir {output,wpilibpi,tflite,edgetpu,pigpio}
-          unzip extract-wpilibpi -d wpilibpi
-          unzip build-pigpio -d pigpio
-          unzip build-edgetpu -d edgetpu
-          unzip build-tflite -d tflite
+          unzip extract-wpilibpi/artifacts.zip -d wpilibpi
+          unzip build-pigpio/artifacts.zip -d pigpio
+          unzip build-edgetpu/artifacts.zip -d edgetpu
+          unzip build-tflite/artifacts.zip -d tflite
           cp -R wpilibpi/{include,lib} output
-          cp pigpio/pigpio.h output/include
-          cp pigpio/libpigpio.so output/lib
-          cp edgetpu/edgetpu.h output/include
+          cp pigpio/artifacts/pigpio.h output/include
+          cp pigpio/artifacts/libpigpio.so output/lib
+          cp edgetpu/artifacts/edgetpu.h output/include
           mkdir output/lib/edgetpu
-          cp -R edgetpu/{direct,throttled} output/lib/edgetpu
-          cp edgetpu/direct/libedgetpu.so output/lib
-          cp tflite/libtensorflowlite.so output/lib
-          cp -R tflite/tensorflow output/include
-          cp -R tflite/absl output/include
-          cp -R tflite/flatbuffers output/include
+          cp -R edgetpu/artifacts/{direct,throttled} output/lib/edgetpu
+          cp edgetpu/artifacts/direct/libedgetpu.so output/lib
+          cp tflite/artifacts/libtensorflowlite.so output/lib
+          cp -R tflite/artifacts/tensorflow output/include
+          cp -R tflite/artifacts/absl output/include
+          cp -R tflite/artifacts/flatbuffers output/include
           cd output
           ls -l -R
           cd $GITHUB_WORKSPACE
