@@ -12,7 +12,7 @@
 #include <string>
 #include <memory>
 
-#include "tools/src/resources.h"
+#include "cpp-tools/src/resources.h"
 #include "visioncamera.h"
 #include "vision.h"
 

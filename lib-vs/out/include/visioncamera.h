@@ -136,12 +136,7 @@ public:
 	 * Get the internal CvSink for aquiring frames from the camera
 	 * @return a const reference to the internal sink
 	*/
-	inline const cs::CvSink& getSink() const { return this->source; }
-	/**
-	 * Creates a cs::CvSource with correct options as to be used for the camera
-	 * @return A cs::CvSource object that could be used to stream frames from the camera. This object is not connected to the source feed of the camera in anyway unless passed frames are passed manually
-	*/
-	cs::CvSource generateServer() const;
+	inline const cs::CvSink& getSink() const { return this->raw; }
 
 	/**
 	 * Get the width of a frame output by the camera
@@ -217,11 +212,6 @@ public:
 
 protected:
 	/**
-	 * Creates a cs::CvSink for the camera and updates stream configuration if it has any
-	 * @return A cs::CvSink object connected to the current camera
-	*/
-	cs::CvSink getVideo() const;
-	/**
 	 * Publish an adjustable networktable entry for the camera's brightness
 	*/
 	void setBrightnessAdjustable();
@@ -236,7 +226,7 @@ protected:
 
 private:
 	wpi::json config, calibration;
-	cs::CvSink source;
+	cs::CvSink raw;
 	cv::Mat_<float> camera_matrix{default_matrix}, distortion{default_distort};
 	cs::VideoMode properties;
 

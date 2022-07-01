@@ -7,22 +7,27 @@
 
 
 VisionCamera::VisionCamera(CS_Source handle) : 
-	VideoCamera(handle), source(this->getVideo()), properties(this->GetVideoMode())
-{}
+	VideoCamera(handle), raw(this->GetName() + "_cvraw"), properties(this->GetVideoMode())
+{
+    this->raw.SetSource(*this);
+}
 VisionCamera::VisionCamera(const cs::VideoSource& source, const wpi::json& config) : 
-	VideoCamera(source.GetHandle()), config(config), source(this->getVideo()), properties(this->GetVideoMode())
+	VideoCamera(source.GetHandle()), config(config), raw(this->GetName() + "_cvraw"), properties(this->GetVideoMode())
 {
     if(this->properties) { this->properties = ::getJsonVideoMode(config); }
+    this->raw.SetSource(*this);
 }
 VisionCamera::VisionCamera(const cs::UsbCamera& source, const wpi::json& config) : 
-	VideoCamera(source.GetHandle()), config(config), source(this->getVideo()), properties(this->GetVideoMode())
+	VideoCamera(source.GetHandle()), config(config), raw(this->GetName() + "_cvraw"), properties(this->GetVideoMode())
 {
     if(this->properties) { this->properties = ::getJsonVideoMode(config); }
+    this->raw.SetSource(*this);
 }
 VisionCamera::VisionCamera(const cs::HttpCamera& source, const wpi::json& config) :
-	VideoCamera(source.GetHandle()), config(config), source(this->getVideo()), properties(this->GetVideoMode())
+	VideoCamera(source.GetHandle()), config(config), raw(this->GetName() + "_cvraw"), properties(this->GetVideoMode())
 {
     if(this->properties) { this->properties = ::getJsonVideoMode(config); }
+    this->raw.SetSource(*this);
 }
 VisionCamera::VisionCamera(const wpi::json& source_config, const wpi::json& calibration) :
     config(source_config), calibration(calibration)
@@ -38,7 +43,8 @@ VisionCamera::VisionCamera(const wpi::json& source_config, const wpi::json& cali
 	swap(*this, cam);	// this should work
     this->getJsonCameraMatrix(this->camera_matrix);
     this->getJsonDistortionCoefs(this->distortion);
-    this->source = this->getVideo();
+    this->raw = cs::CvSink(this->GetName() + "_cvraw");
+    this->raw.SetSource(*this);
     this->properties = this->GetVideoMode();
     if(this->properties) { this->properties = ::getJsonVideoMode(config); }
 }
@@ -54,7 +60,8 @@ VisionCamera::VisionCamera(const wpi::json& source_config) :
 	cam.SetConnectionStrategy(cs::VideoSource::kConnectionKeepOpen);
 	// print confirmation
 	swap(*this, cam);	// this should work
-    this->source = this->getVideo();
+    this->raw = cs::CvSink(this->GetName() + "_cvraw");
+    this->raw.SetSource(*this);
     this->properties = this->GetVideoMode();
     if(!this->properties) { this->properties = ::getJsonVideoMode(config); }
 }
@@ -171,7 +178,7 @@ bool VisionCamera::getJsonDistortionCoefs(cv::Mat_<float>& array) const {
 
 uint64_t VisionCamera::getFrame(cv::Mat& o_frame, double timeout) const {
 	if(this->IsConnected()) {
-		return this->source.GrabFrame(o_frame, timeout);
+		return this->raw.GrabFrame(o_frame, timeout);
 	} else {
 		o_frame = cv::Mat::zeros(this->getResolution(), CV_8UC3);
 		return 0;
@@ -179,22 +186,11 @@ uint64_t VisionCamera::getFrame(cv::Mat& o_frame, double timeout) const {
 }
 uint64_t VisionCamera::getFrameNoTmO(cv::Mat& o_frame) const {
 	if(this->IsConnected()) {
-		return this->source.GrabFrameNoTimeout(o_frame);
+		return this->raw.GrabFrameNoTimeout(o_frame);
 	} else {
 		o_frame = cv::Mat::zeros(this->getResolution(), CV_8UC3);
 		return 0;
 	}
-}
-
-cs::CvSink VisionCamera::getVideo() const {
-	cs::CvSink video = frc::CameraServer::GetVideo(*this);
-	if(this->config.count("stream") > 0) {
-		video.SetConfigJson(this->config.at("stream"));
-	}
-	return video;
-}
-cs::CvSource VisionCamera::generateServer() const {
-	return frc::CameraServer::PutVideo(("Camera stream: " + this->GetName()), this->getWidth(), this->getHeight());
 }
 
 int VisionCamera::getWidth() const {

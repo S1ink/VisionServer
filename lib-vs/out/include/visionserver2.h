@@ -10,7 +10,6 @@
 #include <opencv2/opencv.hpp>
 
 #include <networktables/NetworkTable.h>
-#include <cameraserver/CameraServer.h>
 
 #include "cpp-tools/src/types.h"
 #include "visioncamera.h"
@@ -21,8 +20,8 @@ namespace vs2 {
 class VisionServer final {
 	struct OutputStream;
 public:
-	inline static const std::shared_ptr<nt::NetworkTable>
-		base_table{nt::NetworkTableInstance::GetDefault().GetTable("Vision Server")};
+	// inline static const std::shared_ptr<nt::NetworkTable>
+	// 	base_table{nt::NetworkTableInstance::GetDefault().GetTable("Vision Server")};
 
 	inline static void Init() {
 		getInstance();
@@ -31,13 +30,17 @@ public:
 		static VisionServer instance;
 		return instance;
 	}
+	inline static std::shared_ptr<nt::NetworkTable> getTable() { return inst().base; }
+	inline static std::shared_ptr<nt::NetworkTable> pipesTable() { return inst().pipes; }
+	inline static std::shared_ptr<nt::NetworkTable> streamsTable() { return inst().outputs; }
+	inline static std::shared_ptr<nt::NetworkTable> targetsTable() { return inst().targets; }
 
 
 	class BasePipe : public cs::CvSource {
 		friend class VisionServer;
 	public:
-		inline static const std::shared_ptr<nt::NetworkTable>
-			pipe_table{VisionServer::base_table->GetSubTable("Pipelines")};
+		// inline static const std::shared_ptr<nt::NetworkTable>
+		// 	pipe_table{VisionServer::base_table->GetSubTable("Pipelines")};
 
 		inline const std::string& getName() const { return this->name; }
 		inline const std::shared_ptr<nt::NetworkTable> getTable() const { return this->table; }
@@ -47,13 +50,13 @@ public:
 	protected:
 		inline BasePipe(const char* name) :	/* start enable/disable callback for more efficent threading */
 			CvSource(name, cs::VideoMode()), name(name),
-			input(this->name), table(pipe_table->GetSubTable(this->name)) {}
+			input(this->name), table(pipesTable()->GetSubTable(this->name)) {}
 		inline BasePipe(const std::string& name) :
 			CvSource(name, cs::VideoMode()), name(name),
-			input(this->name), table(pipe_table->GetSubTable(this->name)) {}
+			input(this->name), table(pipesTable()->GetSubTable(this->name)) {}
 		inline BasePipe(std::string&& name) :
 			CvSource(name, cs::VideoMode()), name(name),
-			input(this->name), table(pipe_table->GetSubTable(this->name)) {}
+			input(this->name), table(pipesTable()->GetSubTable(this->name)) {}
 		BasePipe() = delete;
 
 
@@ -100,10 +103,12 @@ public:
 	static void addStream();
 	static void addStream(std::string_view);
 	static void addStream(std::string_view, int port);
+	static void addStream(const cs::MjpegServer&);
+	static void addStream(cs::MjpegServer&&);
 	static void addStreams(size_t = 2);
 	static void addStreams(std::initializer_list<std::string_view>);
 	static void addStreams(std::initializer_list<std::pair<std::string_view, int> >);
-	static void addStreams(std::vector<cs::MjpegServer>&&);
+	static void addStreams(const std::vector<cs::MjpegServer>&);
 	static const std::vector<OutputStream>& getStreams();
 	static size_t numStreams();
 
@@ -141,27 +146,40 @@ private:
 	std::vector<OutputStream> streams;
 	std::vector<std::unique_ptr<BasePipe> > heap_allocated;
 
+	std::shared_ptr<nt::NetworkTable>
+		base, pipes, outputs, targets
+	;
+
 	std::thread head;
 	std::atomic<bool> is_running{false};
 
 	struct OutputStream : public cs::MjpegServer {
 		friend class VisionServer;
 	public:
-		inline static const std::shared_ptr<nt::NetworkTable>
-			streams_table = base_table->GetSubTable("Streams");
+		// inline static std::shared_ptr<nt::NetworkTable> streamsTable() {
+		// 	static std::shared_ptr<nt::NetworkTable> st{VisionServer::base_table->GetSubTable("Streams")};
+		// 	return st;
+		// }
 
 		inline OutputStream(std::string_view n) :
 			OutputStream(frc::CameraServer::AddServer(n)) {}
 		inline OutputStream(std::string_view n, int p) :
 			OutputStream(frc::CameraServer::AddServer(n, p)) {}
 		OutputStream(cs::MjpegServer&& s);	// setup ntable values
+		inline OutputStream(const OutputStream& o) : table(o.table), local_idx(o.local_idx.load()) {}
 		~OutputStream();
 
-		inline void setSourceIdx(int i) { this->table->GetEntry("Source Index").SetDouble(i); }
+		void setSourceIdx(int i);
+		inline void setPipelineIdx(uint16_t i) { this->setSourceIdx(i); }
+		inline void setCameraIdx(uint16_t i) { this->setSourceIdx(-(int)i); }
+
+	protected:
+		void updateNt();
 
 	private:
+		// try storing MjpegServer instead of extending?
 		const std::shared_ptr<nt::NetworkTable> table;
-		NT_EntryListener listener;
+		std::atomic_int local_idx{0};
 
 	};
 

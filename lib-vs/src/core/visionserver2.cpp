@@ -23,23 +23,29 @@ void VisionServer::BasePipe::setSource(const cs::VideoSource& src) {
 }
 
 
-VisionServer::VisionServer() {
-	base_table->PutNumber("Cameras Available", 0);
-	base_table->PutNumber("Pipelines Available", 0);
-	base_table->PutString("Status", "Offline");
+VisionServer::VisionServer() :
+	base(nt::NetworkTableInstance::GetDefault().GetTable("VisionServer")),
+	pipes(nt::NetworkTableInstance::GetDefault().GetTable("VisionServer")->GetSubTable("Pipelines")),
+	outputs(nt::NetworkTableInstance::GetDefault().GetTable("VisionServer")->GetSubTable("Streams")),
+	targets(nt::NetworkTableInstance::GetDefault().GetTable("VisionServer")->GetSubTable("Targets"))
+{
+	std::cout << "Init VisionServer" << std::endl;
+	this->base->PutNumber("Cameras Available", 0);
+	this->base->PutNumber("Pipelines Available", 0);
+	this->base->PutString("Status", "Offline");
 }
 VisionServer::~VisionServer() {
-	base_table->Delete("Cameras Available");
-	base_table->Delete("Pipelines Available");
-	base_table->Delete("Status");
+	this->base->Delete("Cameras Available");
+	this->base->Delete("Pipelines Available");
+	this->base->Delete("Status");
 }
 
 void VisionServer::addCamera(VisionCamera&& c) {
 	if(!inst().is_running) {
 		inst().cameras.emplace_back(std::move(c));
-		inst().cameras.back().setNetworkBase(VisionServer::base_table);
+		inst().cameras.back().setNetworkBase(VisionServer::getTable());
 		inst().cameras.back().setNetworkAdjustable();
-		VisionServer::base_table->GetEntry("Cameras Available").SetDouble(inst().cameras.size());
+		VisionServer::getTable()->GetEntry("Cameras Available").SetDouble(inst().cameras.size());
 	}
 }
 void VisionServer::addCameras(std::vector<VisionCamera>&& cms) {
@@ -52,10 +58,10 @@ void VisionServer::addCameras(std::vector<VisionCamera>&& cms) {
 		);
 		cms.clear();
 		for(int i = ((int)inst().cameras.size()) - num; i < inst().cameras.size(); i++) {
-			inst().cameras.at(i).setNetworkBase(VisionServer::base_table);
+			inst().cameras.at(i).setNetworkBase(VisionServer::getTable());
 			inst().cameras.at(i).setNetworkAdjustable();
 		}
-		VisionServer::base_table->GetEntry("Cameras Available").SetDouble(inst().cameras.size());
+		VisionServer::getTable()->GetEntry("Cameras Available").SetDouble(inst().cameras.size());
 	}
 }
 void VisionServer::setCameras(std::vector<VisionCamera>&& cms) {
@@ -63,28 +69,28 @@ void VisionServer::setCameras(std::vector<VisionCamera>&& cms) {
 		inst().cameras = std::move(cms);
 		cms.clear();
 		for(size_t i = 0; i < inst().cameras.size(); i++) {
-			inst().cameras.at(i).setNetworkBase(VisionServer::base_table);
+			inst().cameras.at(i).setNetworkBase(VisionServer::getTable());
 			inst().cameras.at(i).setNetworkAdjustable();
 		}
-		VisionServer::base_table->GetEntry("Cameras Available").SetDouble(inst().cameras.size());
+		VisionServer::getTable()->GetEntry("Cameras Available").SetDouble(inst().cameras.size());
 	}
 }
 void VisionServer::addPipeline(BasePipe* p) {
 	if(!inst().is_running) {
 		inst().pipelines.push_back(p);
-		VisionServer::base_table->GetEntry("Pipelines Available").SetDouble(inst().pipelines.size());
+		VisionServer::getTable()->GetEntry("Pipelines Available").SetDouble(inst().pipelines.size());
 	}
 }
 void VisionServer::addPipelines(std::vector<BasePipe*>&& ps) {
 	if(!inst().is_running) {
 		inst().pipelines.insert(inst().pipelines.end(), ps.begin(), ps.end());
-		VisionServer::base_table->GetEntry("Pipelines Available").SetDouble(inst().pipelines.size());
+		VisionServer::getTable()->GetEntry("Pipelines Available").SetDouble(inst().pipelines.size());
 	}
 }
 void VisionServer::addPipelines(std::initializer_list<BasePipe*> ps) {
 	if(!inst().is_running) {
 		inst().pipelines.insert(inst().pipelines.end(), ps.begin(), ps.end());
-		VisionServer::base_table->GetEntry("Pipelines Available").SetDouble(inst().pipelines.size());
+		VisionServer::getTable()->GetEntry("Pipelines Available").SetDouble(inst().pipelines.size());
 	}
 }
 void VisionServer::setPipelines(std::vector<BasePipe*>&& ps) {
@@ -92,7 +98,7 @@ void VisionServer::setPipelines(std::vector<BasePipe*>&& ps) {
 		inst().pipelines.clear();
 		inst().heap_allocated.clear();
 		inst().pipelines = std::move(ps);
-		VisionServer::base_table->GetEntry("Pipelines Available").SetDouble(inst().pipelines.size());
+		VisionServer::getTable()->GetEntry("Pipelines Available").SetDouble(inst().pipelines.size());
 	}
 }
 void VisionServer::setPipelines(std::initializer_list<BasePipe*> ps) {
@@ -100,12 +106,12 @@ void VisionServer::setPipelines(std::initializer_list<BasePipe*> ps) {
 		inst().pipelines.clear();
 		inst().heap_allocated.clear();
 		inst().pipelines = ps;
-		VisionServer::base_table->GetEntry("Pipelines Available").SetDouble(inst().pipelines.size());
+		VisionServer::getTable()->GetEntry("Pipelines Available").SetDouble(inst().pipelines.size());
 	}
 }
 void VisionServer::addStream() {
 	if(!inst().is_running) {
-		inst().streams.emplace_back(frc::CameraServer::AddServer("Stream " + std::to_string(inst().streams.size() + 1)));
+		inst().streams.emplace_back("Stream " + std::to_string(inst().streams.size() + 1));
 	}
 }
 void VisionServer::addStream(std::string_view name) {
@@ -118,10 +124,20 @@ void VisionServer::addStream(std::string_view name, int port) {
 		inst().streams.emplace_back(name, port);
 	}
 }
+void VisionServer::addStream(const cs::MjpegServer& s) {
+	if(!inst().is_running) {
+		inst().streams.emplace_back(cs::MjpegServer(s));
+	}
+}
+void VisionServer::addStream(cs::MjpegServer&& s) {
+	if(!inst().is_running) {
+		inst().streams.emplace_back(std::move(s));
+	}
+}
 void VisionServer::addStreams(size_t n) {
 	if(!inst().is_running) {
 		for(size_t i = 0; i < n; i++) {
-			inst().streams.emplace_back(frc::CameraServer::AddServer("Stream " + std::to_string(inst().streams.size() + 1)));
+			inst().streams.emplace_back("Stream " + std::to_string(inst().streams.size() + 1));
 		}
 	}
 }
@@ -139,10 +155,10 @@ void VisionServer::addStreams(std::initializer_list<std::pair<std::string_view, 
 		}
 	}
 }
-void VisionServer::addStreams(std::vector<cs::MjpegServer>&& strms) {
+void VisionServer::addStreams(const std::vector<cs::MjpegServer>& strms) {
 	if(!inst().is_running) {
 		for(size_t i = 0; i < strms.size(); i++) {
-			inst().streams.emplace_back(std::move(strms.at(i)));
+			inst().streams.push_back(cs::MjpegServer(strms.at(i)));
 		}
 	}
 }
@@ -254,55 +270,80 @@ void VisionServer::pipelineRunner(BasePipe* pipe, uint16_t rps) {
 
 
 VisionServer::OutputStream::OutputStream(cs::MjpegServer&& s) :
-	MjpegServer(std::move(s)), table(streams_table->GetSubTable(this->GetName()))
+	MjpegServer(std::move(s)), table(streamsTable()->GetSubTable(this->GetName()))
 {
-	//frc::CameraServer::AddServer(this->server);
-	this->table->PutNumber("Source Index", -1);
+	this->table->PutNumber("Source Index", this->local_idx);
 	this->table->PutNumber("Port", this->GetPort());
-	// add compression and other settings w/ callbacks...?
+	std::cout << "OutputStream created: " << this->GetName()  << " - " << this->GetPort() << std::endl;
 
-	this->listener = this->table->GetEntry("Source Index").AddListener(	// negative -> cameras, positive -> pipelines, 0 -> nothing
-		[this](const nt::EntryNotification& event) {
-			if(event.value->IsDouble() && inst().is_running) {
-				int idx = event.value->GetDouble();
-				//std::cout << "Changing [" << this->server.GetName() << "] to source: " << idx << '\n';
-				if(idx < 0 && idx >= -(int)inst().cameras.size()) {
-					this->SetSource(inst().cameras.at((-idx) - 1));
-				} else if(idx > 0 && idx <= (int)inst().pipelines.size()) {
-					this->SetSource(*(inst().pipelines.at(idx - 1)));
-				}
-			}
-		},
-		NT_NOTIFY_IMMEDIATE | NT_NOTIFY_NEW | NT_NOTIFY_UPDATE
-	);
+	// this->listener = this->table->GetEntry("Source Index").AddListener(	// negative -> cameras, positive -> pipelines, 0 -> nothing
+	// 	[&](const nt::EntryNotification& event) {
+	// 		if(event.value->IsDouble()) {
+	// 			int idx = event.value->GetDouble();
+	// 			std::cout << "Changing [" << this->GetName() << "] to source: " << idx << std::endl;
+	// 			if(idx < 0 && idx >= -(int)inst().cameras.size()) {
+	// 				this->SetSource(inst().cameras.at((-idx) - 1));
+	// 			} else if(idx > 0 && idx <= (int)inst().pipelines.size()) {
+	// 				this->SetSource(*(inst().pipelines.at(idx - 1)));
+	// 			}
+	// 		}
+	// 	},
+	// 	NT_NOTIFY_IMMEDIATE | NT_NOTIFY_UPDATE | NT_NOTIFY_LOCAL
+	// );
 }
 VisionServer::OutputStream::~OutputStream() {
-	nt::RemoveEntryListener(this->listener);
+	//nt::RemoveEntryListener(this->listener);
 	this->table->Delete("Source Index");
 	this->table->Delete("Port");
 }
+void VisionServer::OutputStream::setSourceIdx(int i) {
+	if(this->local_idx != i) {
+		if(i < 0 && i >= -(int)inst().cameras.size()) {
+			this->SetSource(inst().cameras.at((-i) - 1));
+		} else if(i > 0 && i <= (int)inst().pipelines.size()) {
+			this->SetSource(*(inst().pipelines.at(i - 1)));
+		}
+		this->table->GetEntry("Source Index").SetDouble(this->local_idx = i);
+	}
+}
+void VisionServer::OutputStream::updateNt() {
+	int nt = this->table->GetEntry("Source Index").GetDouble(0);
+	if(nt != this->local_idx) {
+		this->local_idx = nt;
+		if(nt < 0 && nt >= -(int)inst().cameras.size()) {
+			this->SetSource(inst().cameras.at((-nt) - 1));
+		} else if(nt > 0 && nt <= (int)inst().pipelines.size()) {
+			this->SetSource(*(inst().pipelines.at(nt - 1)));
+		}
+	}
+}
 
 void VisionServer::compensate() {
+	VisionServer& _inst = inst();
 	int16_t active = -1;
-	for(size_t i = 0; i < inst().cameras.size(); i++) {
-		if(inst().cameras.at(i).IsConnected()) {
+	for(size_t i = 0; i < _inst.cameras.size(); i++) {
+		if(_inst.cameras.at(i).IsConnected()) {
 			active = i;
 			break;
 		}
 	}
 	if(active + 1) {
 		size_t i = 0;
-		for(; i < inst().pipelines.size(); i++) {
-			inst().pipelines.at(i)->setCamera(inst().cameras.at(active));
+		for(; i < _inst.pipelines.size(); i++) {
+			std::cout << "Compensation - connected 1st camera to: " << _inst.pipelines[i]->getName() << std::endl;
+			_inst.pipelines.at(i)->setCamera(_inst.cameras.at(active));
 		}
 		if(i) {
-			for(size_t j = 0; j < inst().streams.size(); j++) {
-				//std::cout << "Compensated stream input\n";
-				inst().streams.at(j).setSourceIdx(1);
+			for(size_t j = 0; j < _inst.streams.size(); j++) {
+				std::cout << "Compensation - connected 1st pipeline to: " << _inst.streams[j].GetName() << std::endl;
+				//_inst.streams.at(j).SetSource(*_inst.pipelines[1]);
+				_inst.streams.at(j).setPipelineIdx(1);
 			}
 		} else {
-			for(size_t j = 0; j < inst().streams.size(); j++) {
-				inst().streams.at(j).setSourceIdx(-(active + 1));
+			for(size_t j = 0; j < _inst.streams.size(); j++) {
+				std::cout << "Compensation - connected 1st camera to: " << _inst.streams[i].GetName() << std::endl;
+				//_inst.streams.at(j).SetSource(_inst.cameras[active]);
+				_inst.streams.at(j).setCameraIdx(active + 1);
 			}
 		}
 	} else {
@@ -321,8 +362,8 @@ bool VisionServer::run(uint16_t rps) {
 			runners.emplace_back(std::thread(pipelineRunner, inst().pipelines.at(i), rps));
 		}
 
-		VisionServer::base_table->GetEntry("Status").SetString("Running Multithreaded");
-		VisionServer::base_table->PutNumber("Target FPS", rps);
+		VisionServer::getTable()->GetEntry("Status").SetString("Running Multithreaded");
+		VisionServer::getTable()->PutNumber("Target FPS", rps);
 
 		std::chrono::high_resolution_clock::time_point tbuff;
 		uint64_t max_nanos = 1E9 / rps;
@@ -331,7 +372,9 @@ bool VisionServer::run(uint16_t rps) {
 			tbuff = std::chrono::high_resolution_clock::now();
 			// update system stats?
 			nt::NetworkTableInstance::GetDefault().Flush();
-			// do work...
+			for(size_t i = 0; i < inst().streams.size(); i++) {
+				inst().streams[i].updateNt();
+			}
 
 			std::this_thread::sleep_for(
 				std::chrono::nanoseconds(max_nanos) - (std::chrono::high_resolution_clock::now() - tbuff)
@@ -341,8 +384,8 @@ bool VisionServer::run(uint16_t rps) {
 		for(size_t i = 0; i < runners.size(); i++) {
 			runners.at(i).join();
 		}
-		VisionServer::base_table->GetEntry("Status").SetString("Offline");
-		VisionServer::base_table->Delete("Target FPS");
+		VisionServer::getTable()->GetEntry("Status").SetString("Offline");
+		VisionServer::getTable()->Delete("Target FPS");
 		return true;
 	}
 	return false;
@@ -351,14 +394,14 @@ bool VisionServer::runSingle(uint16_t rps) {
 	if(!inst().is_running) {
 		inst().is_running = true;
 
-		VisionServer::base_table->GetEntry("Status").SetString("Running Singlethreaded");
-		VisionServer::base_table->PutBoolean("Enable Processing", true);
-		VisionServer::base_table->PutNumber("Camera Index", 1);
-		VisionServer::base_table->PutNumber("Pipeline Index", 1);
-		VisionServer::base_table->PutNumber("Statistics Verbosity", 0);
-		VisionServer::base_table->PutNumber("Target FPS", rps);
+		VisionServer::getTable()->GetEntry("Status").SetString("Running Singlethreaded");
+		VisionServer::getTable()->PutBoolean("Enable Processing", true);
+		VisionServer::getTable()->PutNumber("Camera Index", 1);
+		VisionServer::getTable()->PutNumber("Pipeline Index", 1);
+		VisionServer::getTable()->PutNumber("Statistics Verbosity", 0);
+		VisionServer::getTable()->PutNumber("Target FPS", rps);
 
-		std::shared_ptr<nt::NetworkTable> stats = VisionServer::base_table->GetSubTable("stats");
+		std::shared_ptr<nt::NetworkTable> stats = VisionServer::getTable()->GetSubTable("stats");
 
 		int c_idx = 1, p_idx = 1;
 		float max_ftime = 1.f / rps, util_percent = 0.f, fps = 0.f;
@@ -368,27 +411,30 @@ bool VisionServer::runSingle(uint16_t rps) {
 
 		while(inst().is_running) {
 			beg_frame = std::chrono::high_resolution_clock::now();
-			int n = VisionServer::base_table->GetEntry("Pipeline Index").GetDouble(0);
+			int n = VisionServer::getTable()->GetEntry("Pipeline Index").GetDouble(0);
 			if(n != p_idx + 1 && n > 0 && n <= inst().pipelines.size()) {
 				p_idx = n - 1;
 				for(size_t i = 0; i < inst().streams.size(); i++) {
 					inst().streams[i].setSourceIdx(n);
 				}
 			}
-			n = VisionServer::base_table->GetEntry("Camera Index").GetDouble(0);
+			n = VisionServer::getTable()->GetEntry("Camera Index").GetDouble(0);
 			if(n != c_idx) {
 				c_idx = n;
 				if(c_idx > 0 && c_idx <= inst().cameras.size()) {
 					inst().pipelines[p_idx]->setCamera(inst().cameras[c_idx]);
 				}
 			}
-			if(VisionServer::base_table->GetEntry("Enable Processing").GetBoolean(false) &&
+			for(size_t i = 0; i < inst().streams.size(); i++) {
+				inst().streams[i].updateNt();
+			}
+			if(VisionServer::getTable()->GetEntry("Enable Processing").GetBoolean(false) &&
 				inst().pipelines[p_idx]->input.GrabFrame(frame)
 			) {
 				beg_proc = std::chrono::high_resolution_clock::now();
 				inst().pipelines[p_idx]->process(frame);
 				end_proc = std::chrono::high_resolution_clock::now();
-				int verbosity = VisionServer::base_table->GetEntry("Statistics Verbosity").GetDouble(0);
+				int verbosity = VisionServer::getTable()->GetEntry("Statistics Verbosity").GetDouble(0);
 				if(verbosity > 0) {
 					cv::putText(
 						frame, std::to_string(fps),
@@ -456,12 +502,12 @@ bool VisionServer::runSingle(uint16_t rps) {
 
 			last = beg_frame;
 		}
-		VisionServer::base_table->GetEntry("Status").SetString("Offline");
-		VisionServer::base_table->Delete("Enable Processing");
-		VisionServer::base_table->Delete("Camera Index");
-		VisionServer::base_table->Delete("Pipeline Index");
-		VisionServer::base_table->Delete("Statistics Verbosity");
-		VisionServer::base_table->Delete("Target FPS");
+		VisionServer::getTable()->GetEntry("Status").SetString("Offline");
+		VisionServer::getTable()->Delete("Enable Processing");
+		VisionServer::getTable()->Delete("Camera Index");
+		VisionServer::getTable()->Delete("Pipeline Index");
+		VisionServer::getTable()->Delete("Statistics Verbosity");
+		VisionServer::getTable()->Delete("Target FPS");
 
 		return true;
 	}

@@ -141,13 +141,13 @@ obj/tfmodel.cpp.pic.o: src\core/tfmodel.cpp src\core/tfmodel.h \
  include/ntcore_cpp.h include/networktables/NetworkTableValue.h \
  include/networktables/NetworkTableEntry.inc \
  include/networktables/TableEntryListener.h \
- include/networktables/TableListener.h \
+ include/networktables/TableListener.h additions/cpp-tools/src/types.h \
+ src\core/visioncamera.h include/networktables/NetworkTableInstance.h \
+ include/networktables/NetworkTableInstance.inc \
  include/cameraserver/CameraServer.h include/wpi/deprecated.h \
  include/cscore.h include/cscore_c.h include/cscore_cpp.h \
  include/cscore_oo.h include/cscore_oo.inc include/cscore_cv.h \
- include/cameraserver/CameraServer.inc additions/cpp-tools/src/types.h \
- src\core/visioncamera.h include/networktables/NetworkTableInstance.h \
- include/networktables/NetworkTableInstance.inc include/wpi/json.h \
+ include/cameraserver/CameraServer.inc include/wpi/json.h \
  src\core/visionserver2.inc src\core/tfmodel.inc
 
 src\core/tfmodel.h:
@@ -482,6 +482,14 @@ include/networktables/TableEntryListener.h:
 
 include/networktables/TableListener.h:
 
+additions/cpp-tools/src/types.h:
+
+src\core/visioncamera.h:
+
+include/networktables/NetworkTableInstance.h:
+
+include/networktables/NetworkTableInstance.inc:
+
 include/cameraserver/CameraServer.h:
 
 include/wpi/deprecated.h:
@@ -499,14 +507,6 @@ include/cscore_oo.inc:
 include/cscore_cv.h:
 
 include/cameraserver/CameraServer.inc:
-
-additions/cpp-tools/src/types.h:
-
-src\core/visioncamera.h:
-
-include/networktables/NetworkTableInstance.h:
-
-include/networktables/NetworkTableInstance.inc:
 
 include/wpi/json.h:
 

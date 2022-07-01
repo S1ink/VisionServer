@@ -19,12 +19,12 @@ namespace vs2 {
 */
 class Target {
 public:
-	inline static const std::shared_ptr<nt::NetworkTable>
-		target_table{VisionServer::base_table->GetSubTable("Targets")};
+	// inline static const std::shared_ptr<nt::NetworkTable>
+	// 	target_table{VisionServer::getTable()->GetSubTable("Targets")};
 
 	Target() = delete;
-	inline Target(const std::string& n) : name(n), table(target_table->GetSubTable(this->name)) {}
-	inline Target(std::string&& n) : name(std::move(n)), table(target_table->GetSubTable(this->name)) {}
+	inline Target(const std::string& n) : name(n), table(VisionServer::targetsTable()->GetSubTable(this->name)) {}
+	inline Target(std::string&& n) : name(std::move(n)), table(VisionServer::targetsTable()->GetSubTable(this->name)) {}
 	Target(const Target&) = default;
 	Target(Target&&) = default;
 

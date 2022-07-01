@@ -9,7 +9,7 @@
 
 #include <networktables/NetworkTable.h>
 
-#include "tools/src/types.h"
+#include "cpp-tools/src/types.h"
 #include "visionserver.h"
 #include "processing.h"
 

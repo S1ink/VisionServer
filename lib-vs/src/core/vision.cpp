@@ -119,6 +119,7 @@ bool readConfig(std::vector<VisionCamera>& cameras, const char* file) {
     //     }
     // }
 
+    wpi::outs().flush();
     return true;
 }
 

@@ -12,7 +12,7 @@
 #include <cameraserver/CameraServer.h>
 #include <wpi/StringExtras.h>
 
-#include "tools/src/resources.h"
+#include "cpp-tools/src/resources.h"
 #include "visioncamera.h"
 
 
