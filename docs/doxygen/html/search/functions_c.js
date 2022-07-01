@@ -1,7 +1,0 @@
-var searchData=
-[
-  ['target_0',['Target',['../classTarget.html#ae8d1f12d8d1344d116c706cf37512595',1,'Target::Target(const std::array&lt; cv::Point3f, corners &gt; &amp;world_pts)'],['../classTarget.html#a709968e6a82261d54727ac9a78285223',1,'Target::Target(const std::array&lt; cv::Point3f, corners &gt; &amp;world_pts, const char *name)'],['../classTarget.html#ad23bc57145ef3b2e767e9482236bd26e',1,'Target::Target(const std::array&lt; cv::Point3f, corners &gt; &amp;world_pts, const std::string &amp;name)']]],
-  ['targetinfo_1',['TargetInfo',['../classVisionServer_1_1TargetInfo.html#a36e115ff22a6370bd0bf29172220454e',1,'VisionServer::TargetInfo::TargetInfo(const std::shared_ptr&lt; nt::NetworkTable &gt; table)'],['../classVisionServer_1_1TargetInfo.html#a33bced9c834afff9e1bc747cfb963955',1,'VisionServer::TargetInfo::TargetInfo(const TargetInfo &amp;)=delete'],['../classVisionServer_1_1TargetInfo.html#a028a5783dcff6fc16a576062be96277b',1,'VisionServer::TargetInfo::TargetInfo(TargetInfo &amp;&amp;)=default']]],
-  ['targetsolver_2',['TargetSolver',['../classTargetSolver.html#a75fc7671dc4e55d4cb64f826989446dd',1,'TargetSolver::TargetSolver(VisionServer &amp;server)'],['../classTargetSolver.html#a6ab265f0a087a2f79e23ac586a98a0fc',1,'TargetSolver::TargetSolver(const TargetSolver &amp;)=delete']]],
-  ['threshold_3',['threshold',['../classVThreshold.html#a7e99d001504eee29ce8ce2e060282c67',1,'VThreshold::threshold()'],['../classWeightedSubtraction.html#af127d5b6aca67b7aa9da0d6235bfa93d',1,'WeightedSubtraction::threshold()']]]
-];
