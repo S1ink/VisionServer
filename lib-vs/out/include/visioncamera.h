@@ -200,7 +200,7 @@ public:
 	 * Set the root networktable in which the camera's own networktable should reside
 	 * @param table The root table (the camera resides in ~table~/Cameras)
 	*/
-	void setNetworkBase(std::shared_ptr<nt::NetworkTable> table);
+	void setNetworkBase(const std::shared_ptr<nt::NetworkTable>& table);
 	/**
 	 * Publish networktables-adjustable settings for exposure, brightness, and whitebalance under the camera's networktable
 	*/

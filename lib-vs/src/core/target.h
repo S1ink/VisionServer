@@ -5,10 +5,10 @@
 #include <string>
 
 #include <opencv2/opencv.hpp>
-
 #include <networktables/NetworkTable.h>
 
 #include "cpp-tools/src/types.h"
+
 #include "visionserver2.h"
 
 
@@ -19,12 +19,14 @@ namespace vs2 {
 */
 class Target {
 public:
-	// inline static const std::shared_ptr<nt::NetworkTable>
-	// 	target_table{VisionServer::getTable()->GetSubTable("Targets")};
+	inline static const std::shared_ptr<nt::NetworkTable>& ntable() {
+		static std::shared_ptr<nt::NetworkTable> targets{VisionServer::ntable()->GetSubTable("Targets")};
+		return targets;
+	}
 
 	Target() = delete;
-	inline Target(const std::string& n) : name(n), table(VisionServer::targetsTable()->GetSubTable(this->name)) {}
-	inline Target(std::string&& n) : name(std::move(n)), table(VisionServer::targetsTable()->GetSubTable(this->name)) {}
+	inline Target(const std::string& n) : name(n), table(Target::ntable()->GetSubTable(this->name)) {}
+	inline Target(std::string&& n) : name(std::move(n)), table(Target::ntable()->GetSubTable(this->name)) {}
 	Target(const Target&) = default;
 	Target(Target&&) = default;
 

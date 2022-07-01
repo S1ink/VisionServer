@@ -4,7 +4,6 @@
 #include <sstream>
 
 
-//using namespace vs2;
 namespace vs2 {
 
 inline const std::vector<VisionCamera>& VisionServer::getCameras() { return inst().cameras; }
@@ -16,37 +15,46 @@ inline size_t VisionServer::numStreams() { return inst().streams.size(); }
 inline bool VisionServer::isRunning() { return inst().is_running; }
 
 template<class pipeline>
-void VisionServer::addPipeline() {
+bool VisionServer::addPipeline() {
 	static_assert(std::is_base_of<VisionServer::BasePipe, pipeline>::value, "Template argument (pipeline) must inherit from BasePipe");
 	static_assert(std::is_default_constructible<pipeline>::value, "Template arguement (pipeline) must be default constructible");
-	if(!inst().is_running) {
-		inst().heap_allocated.emplace_back(std::make_unique<pipeline>());
-		inst().pipelines.push_back(inst().heap_allocated.back().get());
+	if(!VisionServer::isRunning()) {
+		VisionServer& _inst = getInstance();
+		_inst.heap_allocated.emplace_back(std::make_unique<pipeline>());
+		_inst.pipelines.push_back(_inst.heap_allocated.back().get());
+		return true;
 	}
+	return false;
 }
 template<class... pipelines_t>
-void VisionServer::addPipelines() {
-	if(!inst().is_running) {
-		inst().heap_allocated.reserve(inst().heap_allocated.size() + sizeof...(pipelines_t));
-		inst().pipelines.reserve(inst().pipelines.size() + sizeof...(pipelines_t));
+bool VisionServer::addPipelines() {
+	if(!VisionServer::isRunning()) {
+		VisionServer& _inst = getInstance();
+		_inst.heap_allocated.reserve(_inst.heap_allocated.size() + sizeof...(pipelines_t));
+		_inst.pipelines.reserve(_inst.pipelines.size() + sizeof...(pipelines_t));
 		size_t alloc = VisionServer::pipeExpander<pipelines_t...>(inst().heap_allocated);
 		for(size_t i = alloc; i >= 0; --i) {
-			inst().pipelines.push_back(inst().heap_allocated.at(inst().heap_allocated.size() - i - 1).get());
+			_inst.pipelines.push_back(_inst.heap_allocated.at(_inst.heap_allocated.size() - i - 1).get());
 		}
+		return true;
 	}
+	return false;
 }
 template<class... pipelines_t>
-void VisionServer::setPipelines() {
-	if(!inst().is_running) {
-		inst().heap_allocated.clear();
-		inst().heap_allocated.reserve(sizeof...(pipelines_t));
-		inst().pipelines.clear();
-		inst().pipelines.reserve(sizeof...(pipelines_t));
-		VisionServer::pipeExpander<pipelines_t...>(inst().heap_allocated);
-		for(size_t i = 0; i < inst().heap_allocated.size(); i++) {
-			inst().pipelines.push_back(inst().heap_allocated.at(i).get());
+bool VisionServer::setPipelines() {
+	if(!VisionServer::isRunning()) {
+		VisionServer& _inst = getInstance();
+		_inst.heap_allocated.clear();
+		_inst.heap_allocated.reserve(sizeof...(pipelines_t));
+		_inst.pipelines.clear();
+		_inst.pipelines.reserve(sizeof...(pipelines_t));
+		VisionServer::pipeExpander<pipelines_t...>(_inst.heap_allocated);
+		for(size_t i = 0; i < _inst.heap_allocated.size(); i++) {
+			_inst.pipelines.push_back(_inst.heap_allocated.at(i).get());
 		}
+		return true;
 	}
+	return false;
 }
 
 template<class pipeline, class... pipelines>
@@ -96,4 +104,4 @@ void SequentialPipeline<pipelines_t...>::process(cv::Mat& io_frame) {
 	}
 }
 
-}
+}	// namespace vs2;

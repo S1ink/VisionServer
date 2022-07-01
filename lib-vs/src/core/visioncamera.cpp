@@ -233,7 +233,7 @@ void VisionCamera::setExposure(int8_t val) {
     this->exposure = (val > 100 ? 100 : val);
 }
 
-void VisionCamera::setNetworkBase(std::shared_ptr<nt::NetworkTable> table) {
+void VisionCamera::setNetworkBase(const std::shared_ptr<nt::NetworkTable>& table) {
     this->camera = table->GetSubTable("Cameras")->GetSubTable(this->GetName());
 }
 void VisionCamera::setNetworkAdjustable() {
