@@ -2,7 +2,7 @@
 
 
 template<class derived_t>
-AxonRunner<derived_t>::AxonRunner(std::initializer_list<std::pair<const char*, Optimization> > options, const char* map, size_t th) :
+AxonRunner_<derived_t>::AxonRunner_(std::initializer_list<std::pair<const char*, Optimization> > options, const char* map, size_t th) :
 	vs2::VPipeline<This_t>("Axon Runner "), TfModel(options, th)
 {
 	::loadObjectLabels(map, this->obj_labels);
@@ -15,7 +15,7 @@ AxonRunner<derived_t>::AxonRunner(std::initializer_list<std::pair<const char*, O
 }
 
 template<class derived_t>
-void AxonRunner<derived_t>::process(cv::Mat& io_frame) {
+void AxonRunner_<derived_t>::process(cv::Mat& io_frame) {
 	if(this->isValidBuffer()) {
 		cv::resize(io_frame, this->input_tensor, this->input_size);
 		this->model->Invoke();
@@ -43,7 +43,7 @@ void AxonRunner<derived_t>::process(cv::Mat& io_frame) {
 }
 
 template<class derived_t>
-MoveNet<derived_t>::MoveNet(std::initializer_list<std::pair<const char*, Optimization> > ops, size_t th) :
+MoveNet_<derived_t>::MoveNet_(std::initializer_list<std::pair<const char*, Optimization> > ops, size_t th) :
 	vs2::VPipeline<This_t>("MoveNet Runner "), TfModel(ops, th)
 {
 	if(this->model->outputs().size() == 1) {
@@ -52,7 +52,7 @@ MoveNet<derived_t>::MoveNet(std::initializer_list<std::pair<const char*, Optimiz
 }
 
 template<class derived_t>
-void MoveNet<derived_t>::process(cv::Mat& io_frame) {
+void MoveNet_<derived_t>::process(cv::Mat& io_frame) {
 	if(this->isValidBuffer() && this->isValidOutput()) {
 		cv::resize(io_frame, this->input_tensor, this->input_size);
 		this->model->Invoke();
