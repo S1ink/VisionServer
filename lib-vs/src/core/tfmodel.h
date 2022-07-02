@@ -75,7 +75,7 @@ struct AxonRunner_B {
 /** Runs an Axon-generated or similar object classification tflite model within a vision pipeline */
 template<class derived_t = void>
 class AxonRunner_ : public vs2::VPipeline<AxonRunner_<derived_t> >, public TfModel, public AxonRunner_B {
-	typedef struct AxonRunner<derived_t>	This_t;
+	typedef struct AxonRunner_<derived_t>	This_t;
 public:
 	inline AxonRunner_(size_t th = default_threading) :
 		AxonRunner_({{default_model, Optimization::DEFAULT}, {edgetpu_model, Optimization::EDGETPU}}, default_labels, th) {}
