@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@main
         with:
           submodules: recursive
-      - uses: langroodi/doxygenize@master
+      - uses: langroodi/doxygenize@v1.6
         with:
           doxygenconf: ./docs/Doxyfile
           # Generated HTML documents output folder
