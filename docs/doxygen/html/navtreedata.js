@@ -25,7 +25,6 @@
 var NAVTREE =
 [
   [ "VisionServer", "index.html", [
-    [ "About", "index.html", null ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [
@@ -70,8 +69,7 @@ var NAVTREEINDEX =
 "classInstanced.html#af2b8ce031de3f490c8309df0dc129b4f",
 "classlstream.html#a0eccd2c29a3fc60bf8d7009339ea45de",
 "classvs2_1_1VisionServer_1_1BasePipe.html#a4cea8657d80be13d15f94e72e4025233",
-"server_8inc_source.html",
-"visionserver2_8inc_source.html"
+"sighandle_8h.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
