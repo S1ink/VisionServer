@@ -24,9 +24,9 @@ jobs:
         with:
           doxygenconf: ./docs/Doxyfile
           # Generated HTML documents output folder
-          htmloutput: ./docs/doxygen/
+          htmloutput: ./docs/doxygen/html/
           # GitHub Pages branch name
           ghpagesbranch: main
           # GitHub Pages directory path
-          ghpagesdir: ./docs/doxygen/
+          ghpagesdir: ./docs/doxygen/html/
           darkmode: true

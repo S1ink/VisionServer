@@ -830,10 +830,6 @@ FILE_PATTERNS          = *.c \
                          *.h++ \
                          *.cs \
                          *.inc \
-                         *.m \
-                         *.markdown \
-                         *.md \
-                         *.mm \
                          *.py \
                          *.pyw \
                          *.asm \
