@@ -18,8 +18,6 @@ jobs:
       - uses: actions/checkout@main
         with:
           submodules: recursive
-      - run: |
-          mkdir ./docs/doxygen/search
       - uses: langroodi/doxygenize@master
         with:
           doxygenconf: ./docs/Doxyfile
