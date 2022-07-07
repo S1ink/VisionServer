@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['httpserver_0',['HttpServer',['../classHttpServer_1_1HttpFormatter.html#a7ef68af4cc3915e661d6bb0255d265d2',1,'HttpServer::HttpFormatter::HttpServer()'],['../classHttpServer_1_1HttpHandler.html#a7ef68af4cc3915e661d6bb0255d265d2',1,'HttpServer::HttpHandler::HttpServer()']]]
+  ['visionserver_0',['VisionServer',['../classvs2_1_1VisionServer_1_1BasePipe.html#a2bf0a434b47409407c38d03266f3a5be',1,'vs2::VisionServer::BasePipe::VisionServer()'],['../structvs2_1_1VisionServer_1_1OutputStream.html#a2bf0a434b47409407c38d03266f3a5be',1,'vs2::VisionServer::OutputStream::VisionServer()']]]
 ];

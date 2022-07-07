@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['lstream_0',['lstream',['../classlstream.html',1,'']]]
+  ['uniquetarget_0',['UniqueTarget',['../classvs2_1_1UniqueTarget.html',1,'vs2']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['daytime_0',['DayTime',['../structDayTime.html',1,'']]]
+  ['outputstream_0',['OutputStream',['../structvs2_1_1VisionServer_1_1OutputStream.html',1,'vs2::VisionServer']]]
 ];

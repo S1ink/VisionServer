@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['uniquetarget_0',['UniqueTarget',['../classvs2_1_1UniqueTarget.html#a7156fb0a800dbf7180c00bb942810ff6',1,'vs2::UniqueTarget::UniqueTarget()=delete'],['../classvs2_1_1UniqueTarget.html#a6e6884d0a4d3925212a5b8ca04502767',1,'vs2::UniqueTarget::UniqueTarget(const std::string &amp;n)'],['../classvs2_1_1UniqueTarget.html#adc74568b1b69ddf30aba92965996a22b',1,'vs2::UniqueTarget::UniqueTarget(std::string &amp;&amp;n)'],['../classvs2_1_1UniqueTarget.html#ae8b816eede847fcc1833d1ad4e78d2dd',1,'vs2::UniqueTarget::UniqueTarget(const UniqueTarget &amp;)=default'],['../classvs2_1_1UniqueTarget.html#af74d82a8e7990f42d4ec62707a529c07',1,'vs2::UniqueTarget::UniqueTarget(UniqueTarget &amp;&amp;)=default']]],
-  ['untildaytime_1',['untilDayTime',['../additions_2cpp-tools_2src_2timing_8cpp.html#a1849876994bad925e9e0e93c033fc30c',1,'untilDayTime(const DayTime &amp;tme):&#160;timing.cpp'],['../timing_8h.html#a1849876994bad925e9e0e93c033fc30c',1,'untilDayTime(const DayTime &amp;tme):&#160;timing.cpp']]],
-  ['update_2',['update',['../classResponse.html#a62e5a6ba2b1fbebb8295ae61b5233b75',1,'Response::update(Code responsecode, const std::vector&lt; Segment &gt; &amp;headers, const std::string &amp;body=std::string())'],['../classResponse.html#a704b4961a4bf035ec084b04ef1873e1c',1,'Response::update(Code responsecode, HeaderList &amp;headers, const std::string &amp;body=std::string())'],['../classHttpServer_1_1HttpFormatter.html#a33275c162d5b09f6859504240965f75b',1,'HttpServer::HttpFormatter::update()'],['../structDayTime.html#a14c8a39b624e51f608987b4df48d51fa',1,'DayTime::update()']]]
+  ['_7eoutputstream_0',['~OutputStream',['../structvs2_1_1VisionServer_1_1OutputStream.html#aa865fa4f64cfbfed9c3d06c41df18321',1,'vs2::VisionServer::OutputStream']]],
+  ['_7evisioncamera_1',['~VisionCamera',['../classVisionCamera.html#a0b0299c824c9bc93cc87cde6ea9f182f',1,'VisionCamera']]],
+  ['_7evisionserver_2',['~VisionServer',['../classvs2_1_1VisionServer.html#aa267a0951f35b166a2d471845abae2ae',1,'vs2::VisionServer']]],
+  ['_7evpipeline_3',['~VPipeline',['../classvs2_1_1VPipeline.html#a0c6b82148f6e86aaef258e12cef25564',1,'vs2::VPipeline']]]
 ];

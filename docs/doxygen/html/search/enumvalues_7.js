@@ -1,9 +1,12 @@
 var searchData=
 [
-  ['head_0',['HEAD',['../http_8h.html#a2a3c0067e44c5ef3210a256d06c16b0fae15e216fc1c639f787b1231ecdfa1bf8',1,'http.h']]],
-  ['http_5f1_5f0_1',['HTTP_1_0',['../http_8h.html#a2256f5bba1c1c69a92b933aa501df470a1d02efaf46c41999ba900c92b1e39df1',1,'http.h']]],
-  ['http_5f1_5f1_2',['HTTP_1_1',['../http_8h.html#a2256f5bba1c1c69a92b933aa501df470a5f1f9932b84e67c4a4b7e91c03335077',1,'http.h']]],
-  ['http_5f2_5f0_3',['HTTP_2_0',['../http_8h.html#a2256f5bba1c1c69a92b933aa501df470a2fc9daa01c5f9c2d4d84b7e2ed4a91df',1,'http.h']]],
-  ['http_5fversion_5fnot_5fsupported_4',['HTTP_VERSION_NOT_SUPPORTED',['../http_8h.html#af31477bc48f67856bedb0fa8e5b5281daede7ad622f9c071f0cf49c5e3fd8877b',1,'http.h']]],
-  ['hup_5',['HUP',['../classSigHandle.html#ae1c501ca35a1e871b58f6a442b1fdcbea74a45a4d1d79e0fac18db369b215fec1',1,'SigHandle']]]
+  ['r_5fankle_0',['R_ANKLE',['../structMoveNet__B.html#af66c0377354bf28cd99163983b7e7eccabd0a1bc972da9e5d5326a2f2adf92be9',1,'MoveNet_B']]],
+  ['r_5fear_1',['R_EAR',['../structMoveNet__B.html#af66c0377354bf28cd99163983b7e7ecca7951783513479ba82e37b10a1001800e',1,'MoveNet_B']]],
+  ['r_5felbow_2',['R_ELBOW',['../structMoveNet__B.html#af66c0377354bf28cd99163983b7e7ecca16aadfc1eb20237947a2192fd2f7ec83',1,'MoveNet_B']]],
+  ['r_5feye_3',['R_EYE',['../structMoveNet__B.html#af66c0377354bf28cd99163983b7e7ecca5c90bed48c4b4bee1e8eb72641de625f',1,'MoveNet_B']]],
+  ['r_5fhip_4',['R_HIP',['../structMoveNet__B.html#af66c0377354bf28cd99163983b7e7eccadea32f9e77bc36542888bb585b269878',1,'MoveNet_B']]],
+  ['r_5fknee_5',['R_KNEE',['../structMoveNet__B.html#af66c0377354bf28cd99163983b7e7eccac3b7c2ed8c1bf024fc287746d81820e1',1,'MoveNet_B']]],
+  ['r_5fshoulder_6',['R_SHOULDER',['../structMoveNet__B.html#af66c0377354bf28cd99163983b7e7ecca3cc118994b117f06677e3ac5c554be19',1,'MoveNet_B']]],
+  ['r_5fwrist_7',['R_WRIST',['../structMoveNet__B.html#af66c0377354bf28cd99163983b7e7eccab6e86b20d40432d01d6ccc65386579bc',1,'MoveNet_B']]],
+  ['red_8',['RED',['../namespacevs2.html#ae52486a5b23f75ab18b4b6617ebf10abaa2d9547b5d3dd9f05984475f7c926da0',1,'vs2']]]
 ];

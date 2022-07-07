@@ -17,6 +17,8 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -27,6 +29,7 @@
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VisionServer
    </div>
+   <div id="projectbrief">FRC Vision Library</div>
   </td>
  </tr>
  </tbody>
@@ -97,9 +100,25 @@ $(document).ready(function(){initNavTree('vision_8h.html',''); initResizable(); 
 <code>#include &lt;networktables/NetworkTable.h&gt;</code><br />
 <code>#include &lt;cameraserver/CameraServer.h&gt;</code><br />
 <code>#include &lt;wpi/StringExtras.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="resources_8h_source.html">cpp-tools/src/resources.h</a>&quot;</code><br />
+<code>#include &quot;cpp-tools/src/resources.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="visioncamera_8h_source.html">visioncamera.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="vision_8inc_source.html">vision.inc</a>&quot;</code><br />
+</div><div class="textblock"><div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-0-trigger" src="closed.png" alt="+"/> Include dependency graph for vision.h:</div>
+<div id="dynsection-0-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-0-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="vision_8h__incl.svg" width="1264" height="202"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</div><div class="textblock"><div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-1-trigger" src="closed.png" alt="+"/> This graph shows which files directly or indirectly include this file:</div>
+<div id="dynsection-1-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-1-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="vision_8h__dep__incl.svg" width="599" height="112"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
 </div>
 <p><a href="vision_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -232,7 +251,7 @@ Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a218465907e06aff6d59145fb7e09f46d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="resources_8h.html#a878c2a16e7eea953f26f50ae87c4066e">CE_STR</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vision_8h.html#a218465907e06aff6d59145fb7e09f46d">_default</a> = &quot;/boot/frc.json&quot;</td></tr>
+<tr class="memitem:a218465907e06aff6d59145fb7e09f46d"><td class="memItemLeft" align="right" valign="top">CE_STR&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vision_8h.html#a218465907e06aff6d59145fb7e09f46d">_default</a> = &quot;/boot/frc.json&quot;</td></tr>
 <tr class="separator:a218465907e06aff6d59145fb7e09f46d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abec58e4a7ba126123a58e90b78401f8b"><td class="memTemplParams" colspan="2">template&lt;typename num_t , size_t s&gt; </td></tr>
 <tr class="memitem:abec58e4a7ba126123a58e90b78401f8b"><td class="memTemplItemLeft" align="right" valign="top">const auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="vision_8h.html#abec58e4a7ba126123a58e90b78401f8b">extend_array</a> = operator+=&lt;num_t, s&gt;</td></tr>
@@ -279,8 +298,6 @@ Variables</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>false if there was an error </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="vision_8cpp_source.html#l00007">7</a> of file <a class="el" href="vision_8cpp_source.html">vision.cpp</a>.</p>
-
-<p class="reference">References <a class="el" href="resources_8h.html#a1d129544a36690a862060d526ccd24fc">newline</a>.</p>
 
 </div>
 </div>
@@ -375,8 +392,6 @@ Variables</h2></td></tr>
 <p >Extracts videomode properties from a config json - 0-values returned if config is invalid </p><dl class="section return"><dt>Returns</dt><dd>The VideoMode object </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="vision_8cpp_source.html#l00152">152</a> of file <a class="el" href="vision_8cpp_source.html">vision.cpp</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="classVisionCamera.html#a70825aa4f78879cb60f0cb6b24263fca">VisionCamera::VisionCamera()</a>.</p>
 
 </div>
 </div>
@@ -1706,7 +1721,7 @@ template&lt;typename num_t &gt; </div>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="resources_8h.html#a878c2a16e7eea953f26f50ae87c4066e">CE_STR</a> _default = &quot;/boot/frc.json&quot;</td>
+          <td class="memname">CE_STR _default = &quot;/boot/frc.json&quot;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1787,7 +1802,7 @@ template&lt;typename num_t &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_30d9ea9a8d9df1a989aa8aa8f59da391.html">lib-vs</a></li><li class="navelem"><a class="el" href="dir_4505e8eed2522850e8dd12da3b28dc54.html">src</a></li><li class="navelem"><a class="el" href="dir_16b7c41ca322cf05371f268760117ee9.html">core</a></li><li class="navelem"><a class="el" href="vision_8h.html">vision.h</a></li>
-    <li class="footer">Generated on Thu Jul 7 2022 19:44:41 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Thu Jul 7 2022 21:38:10 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>

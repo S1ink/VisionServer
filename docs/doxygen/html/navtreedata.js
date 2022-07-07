@@ -25,6 +25,7 @@
 var NAVTREE =
 [
   [ "VisionServer", "index.html", [
+    [ "[FRC 3407] VisionServer", "index.html#autotoc_md0", null ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [
@@ -41,7 +42,7 @@ var NAVTREE =
       [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
       [ "Class Members", "functions.html", [
         [ "All", "functions.html", "functions_dup" ],
-        [ "Functions", "functions_func.html", "functions_func" ],
+        [ "Functions", "functions_func.html", null ],
         [ "Variables", "functions_vars.html", null ],
         [ "Typedefs", "functions_type.html", null ],
         [ "Enumerations", "functions_enum.html", null ],
@@ -54,10 +55,7 @@ var NAVTREE =
         [ "All", "globals.html", null ],
         [ "Functions", "globals_func.html", null ],
         [ "Variables", "globals_vars.html", null ],
-        [ "Typedefs", "globals_type.html", null ],
-        [ "Enumerations", "globals_enum.html", null ],
-        [ "Enumerator", "globals_eval.html", null ],
-        [ "Macros", "globals_defs.html", null ]
+        [ "Typedefs", "globals_type.html", null ]
       ] ]
     ] ]
   ] ]
@@ -65,11 +63,9 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"additions_2cpp-tools_2src_2basic_8cpp.html",
-"classInstanced.html#af2b8ce031de3f490c8309df0dc129b4f",
-"classlstream.html#a0eccd2c29a3fc60bf8d7009339ea45de",
-"classvs2_1_1VisionServer_1_1BasePipe.html#a4cea8657d80be13d15f94e72e4025233",
-"sighandle_8h.html"
+"annotated.html",
+"classvs2_1_1VisionServer.html#a9339059f3c961d3713e4f81f012c6347",
+"timing_8cpp.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

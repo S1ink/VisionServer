@@ -1,8 +1,6 @@
 var searchData=
 [
-  ['nextdaytime_0',['nextDayTime',['../additions_2cpp-tools_2src_2timing_8cpp.html#aa2b5e770ba3b6114c18be32041839222',1,'nextDayTime(const DayTime &amp;tme):&#160;timing.cpp'],['../timing_8h.html#aa2b5e770ba3b6114c18be32041839222',1,'nextDayTime(const DayTime &amp;tme):&#160;timing.cpp']]],
-  ['ntable_1',['ntable',['../classvs2_1_1Target.html#a19a75ed68f143e2737ccd8e998763a24',1,'vs2::Target::ntable()'],['../classvs2_1_1VisionServer.html#a5fe9f6ff7d1b1f73944aa3db02d91733',1,'vs2::VisionServer::ntable()'],['../classvs2_1_1VisionServer_1_1BasePipe.html#ac70f81ec5be2b051b84ddd69e698bc1a',1,'vs2::VisionServer::BasePipe::ntable()'],['../structvs2_1_1VisionServer_1_1OutputStream.html#a2053f91d3c9edc245a19f1a4d56b7f04',1,'vs2::VisionServer::OutputStream::ntable()']]],
-  ['numcameras_2',['numCameras',['../classvs2_1_1VisionServer.html#a338abdd72b7dc89309802de2b9e4f73b',1,'vs2::VisionServer']]],
-  ['numpipelines_3',['numPipelines',['../classvs2_1_1VisionServer.html#a36f2bd2879914a08b9e2cd38b55c7ab3',1,'vs2::VisionServer']]],
-  ['numstreams_4',['numStreams',['../classvs2_1_1VisionServer.html#a73a00d23097ac59d44e1d7cd591de3b1',1,'vs2::VisionServer']]]
+  ['pipeexpander_0',['pipeExpander',['../classvs2_1_1VisionServer.html#a8e26143e8a1d008468deccab31c834c1',1,'vs2::VisionServer']]],
+  ['pipelinerunner_1',['pipelineRunner',['../classvs2_1_1VisionServer.html#a69618987d6ca973cc54cfc92be0d1cc9',1,'vs2::VisionServer']]],
+  ['process_2',['process',['../classAxonRunner__.html#a40e54c2cdc4faec4a9880b9e0d5382ff',1,'AxonRunner_::process()'],['../classMoveNet__.html#a7369e0cf185d3d684611e2a8ec5fc9ee',1,'MoveNet_::process()'],['../classvs2_1_1VisionServer_1_1BasePipe.html#aa462d1fb6b7a690e5193da1967141552',1,'vs2::VisionServer::BasePipe::process()'],['../classvs2_1_1VPipeline.html#a37e81bacafc55319d496e089508a2a8a',1,'vs2::VPipeline::process()'],['../classvs2_1_1SequentialPipeline.html#a25846f09ca2c35cafce2f7aa34496043',1,'vs2::SequentialPipeline::process()']]]
 ];

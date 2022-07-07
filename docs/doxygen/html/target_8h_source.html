@@ -17,6 +17,8 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -27,6 +29,7 @@
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VisionServer
    </div>
+   <div id="projectbrief">FRC Vision Library</div>
   </td>
  </tr>
  </tbody>
@@ -94,7 +97,7 @@ $(document).ready(function(){initNavTree('target_8h_source.html',''); initResiza
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;opencv2/opencv.hpp&gt;</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;networktables/NetworkTable.h&gt;</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;<a class="code" href="types_8h.html">cpp-tools/src/types.h</a>&quot;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;cpp-tools/src/types.h&quot;</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="visionserver2_8h.html">visionserver2.h</a>&quot;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
@@ -136,12 +139,12 @@ $(document).ready(function(){initNavTree('target_8h_source.html',''); initResiza
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>};</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> derived = <span class="keywordtype">void</span>&gt;</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="classvs2_1_1UniqueTarget.html">   58</a></span><span class="keyword">class </span><a class="code hl_class" href="classvs2_1_1UniqueTarget.html">UniqueTarget</a> : <span class="keyword">public</span> <a class="code hl_class" href="classInstanced.html">Instanced</a>&lt;UniqueTarget&lt;derived&gt; &gt;, <span class="keyword">public</span> <a class="code hl_class" href="classvs2_1_1Target.html">Target</a> {</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="classvs2_1_1UniqueTarget.html">   58</a></span><span class="keyword">class </span><a class="code hl_class" href="classvs2_1_1UniqueTarget.html">UniqueTarget</a> : <span class="keyword">public</span> Instanced&lt;UniqueTarget&lt;derived&gt; &gt;, <span class="keyword">public</span> <a class="code hl_class" href="classvs2_1_1Target.html">Target</a> {</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno"><a class="line" href="classvs2_1_1UniqueTarget.html#a6f76015d5c52853ac0f27c02f114dc49">   59</a></span>    <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_class" href="classvs2_1_1UniqueTarget.html">UniqueTarget</a>&lt;derived&gt;    <a class="code hl_class" href="classvs2_1_1UniqueTarget.html">This_t</a>;</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="keyword">public</span>:</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="classvs2_1_1UniqueTarget.html#a7156fb0a800dbf7180c00bb942810ff6">   61</a></span>    <a class="code hl_function" href="classvs2_1_1UniqueTarget.html#a7156fb0a800dbf7180c00bb942810ff6">UniqueTarget</a>() = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="classvs2_1_1UniqueTarget.html#a6e6884d0a4d3925212a5b8ca04502767">   62</a></span>    <span class="keyword">inline</span> <a class="code hl_function" href="classvs2_1_1UniqueTarget.html#a6e6884d0a4d3925212a5b8ca04502767">UniqueTarget</a>(<span class="keyword">const</span> std::string&amp; n) : <a class="code hl_class" href="classInstanced.html">Instanced</a>&lt;<a class="code hl_class" href="classvs2_1_1UniqueTarget.html">This_t</a>&gt;(), <a class="code hl_class" href="classvs2_1_1Target.html">Target</a>(n + std::to_string(this-&gt;<a class="code hl_function" href="classInstanced.html#af2b8ce031de3f490c8309df0dc129b4f">getInst</a>())) {}</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="classvs2_1_1UniqueTarget.html#adc74568b1b69ddf30aba92965996a22b">   63</a></span>    <span class="keyword">inline</span> <a class="code hl_function" href="classvs2_1_1UniqueTarget.html#adc74568b1b69ddf30aba92965996a22b">UniqueTarget</a>(std::string&amp;&amp; n) : <a class="code hl_class" href="classInstanced.html">Instanced</a>&lt;<a class="code hl_class" href="classvs2_1_1UniqueTarget.html">This_t</a>&gt;(), <a class="code hl_class" href="classvs2_1_1Target.html">Target</a>(n + std::to_string(this-&gt;<a class="code hl_function" href="classInstanced.html#af2b8ce031de3f490c8309df0dc129b4f">getInst</a>())) {}</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="classvs2_1_1UniqueTarget.html#a6e6884d0a4d3925212a5b8ca04502767">   62</a></span>    <span class="keyword">inline</span> <a class="code hl_function" href="classvs2_1_1UniqueTarget.html#a6e6884d0a4d3925212a5b8ca04502767">UniqueTarget</a>(<span class="keyword">const</span> std::string&amp; n) : Instanced&lt;<a class="code hl_class" href="classvs2_1_1UniqueTarget.html">This_t</a>&gt;(), <a class="code hl_class" href="classvs2_1_1Target.html">Target</a>(n + std::to_string(this-&gt;getInst())) {}</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="classvs2_1_1UniqueTarget.html#adc74568b1b69ddf30aba92965996a22b">   63</a></span>    <span class="keyword">inline</span> <a class="code hl_function" href="classvs2_1_1UniqueTarget.html#adc74568b1b69ddf30aba92965996a22b">UniqueTarget</a>(std::string&amp;&amp; n) : Instanced&lt;<a class="code hl_class" href="classvs2_1_1UniqueTarget.html">This_t</a>&gt;(), <a class="code hl_class" href="classvs2_1_1Target.html">Target</a>(n + std::to_string(this-&gt;getInst())) {}</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="classvs2_1_1UniqueTarget.html#ae8b816eede847fcc1833d1ad4e78d2dd">   64</a></span>    <a class="code hl_function" href="classvs2_1_1UniqueTarget.html#ae8b816eede847fcc1833d1ad4e78d2dd">UniqueTarget</a>(<span class="keyword">const</span> <a class="code hl_class" href="classvs2_1_1UniqueTarget.html">UniqueTarget</a>&amp;) = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="classvs2_1_1UniqueTarget.html#af74d82a8e7990f42d4ec62707a529c07">   65</a></span>    <a class="code hl_function" href="classvs2_1_1UniqueTarget.html#af74d82a8e7990f42d4ec62707a529c07">UniqueTarget</a>(<a class="code hl_class" href="classvs2_1_1UniqueTarget.html">UniqueTarget</a>&amp;&amp;) = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
@@ -178,8 +181,6 @@ $(document).ready(function(){initNavTree('target_8h_source.html',''); initResiza
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="comment">// };</span></div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>}   <span class="comment">// namespace vs2</span></div>
-<div class="ttc" id="aclassInstanced_html"><div class="ttname"><a href="classInstanced.html">Instanced</a></div><div class="ttdef"><b>Definition:</b> <a href="types_8h_source.html#l00025">types.h:25</a></div></div>
-<div class="ttc" id="aclassInstanced_html_af2b8ce031de3f490c8309df0dc129b4f"><div class="ttname"><a href="classInstanced.html#af2b8ce031de3f490c8309df0dc129b4f">Instanced&lt; UniqueTarget&lt; void &gt; &gt;::getInst</a></div><div class="ttdeci">uint32_t getInst() const</div><div class="ttdef"><b>Definition:</b> <a href="types_8h_source.html#l00040">types.h:40</a></div></div>
 <div class="ttc" id="aclassvs2_1_1Target_html"><div class="ttname"><a href="classvs2_1_1Target.html">vs2::Target</a></div><div class="ttdef"><b>Definition:</b> <a href="target_8h_source.html#l00020">target.h:20</a></div></div>
 <div class="ttc" id="aclassvs2_1_1Target_html_a0712222a11021323785d007734566ffc"><div class="ttname"><a href="classvs2_1_1Target.html#a0712222a11021323785d007734566ffc">vs2::Target::name</a></div><div class="ttdeci">const std::string name</div><div class="ttdef"><b>Definition:</b> <a href="target_8h_source.html#l00049">target.h:49</a></div></div>
 <div class="ttc" id="aclassvs2_1_1Target_html_a14fb605bfe948fefb14b2df3ee802365"><div class="ttname"><a href="classvs2_1_1Target.html#a14fb605bfe948fefb14b2df3ee802365">vs2::Target::setPos</a></div><div class="ttdeci">void setPos(double x, double y, double z)</div><div class="ttdef"><b>Definition:</b> <a href="target_8h_source.html#l00036">target.h:36</a></div></div>
@@ -201,7 +202,6 @@ $(document).ready(function(){initNavTree('target_8h_source.html',''); initResiza
 <div class="ttc" id="aclassvs2_1_1UniqueTarget_html_af74d82a8e7990f42d4ec62707a529c07"><div class="ttname"><a href="classvs2_1_1UniqueTarget.html#af74d82a8e7990f42d4ec62707a529c07">vs2::UniqueTarget::UniqueTarget</a></div><div class="ttdeci">UniqueTarget(UniqueTarget &amp;&amp;)=default</div></div>
 <div class="ttc" id="aclassvs2_1_1VisionServer_html_a5fe9f6ff7d1b1f73944aa3db02d91733"><div class="ttname"><a href="classvs2_1_1VisionServer.html#a5fe9f6ff7d1b1f73944aa3db02d91733">vs2::VisionServer::ntable</a></div><div class="ttdeci">static const std::shared_ptr&lt; nt::NetworkTable &gt; &amp; ntable()</div><div class="ttdef"><b>Definition:</b> <a href="visionserver2_8h_source.html#l00022">visionserver2.h:22</a></div></div>
 <div class="ttc" id="anamespacevs2_html"><div class="ttname"><a href="namespacevs2.html">vs2</a></div><div class="ttdef"><b>Definition:</b> <a href="extensions_8h_source.html#l00009">extensions.h:9</a></div></div>
-<div class="ttc" id="atypes_8h_html"><div class="ttname"><a href="types_8h.html">types.h</a></div></div>
 <div class="ttc" id="avisionserver2_8h_html"><div class="ttname"><a href="visionserver2_8h.html">visionserver2.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
@@ -209,7 +209,7 @@ $(document).ready(function(){initNavTree('target_8h_source.html',''); initResiza
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_30d9ea9a8d9df1a989aa8aa8f59da391.html">lib-vs</a></li><li class="navelem"><a class="el" href="dir_4505e8eed2522850e8dd12da3b28dc54.html">src</a></li><li class="navelem"><a class="el" href="dir_16b7c41ca322cf05371f268760117ee9.html">core</a></li><li class="navelem"><a class="el" href="target_8h.html">target.h</a></li>
-    <li class="footer">Generated on Thu Jul 7 2022 19:44:41 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Thu Jul 7 2022 21:38:10 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>

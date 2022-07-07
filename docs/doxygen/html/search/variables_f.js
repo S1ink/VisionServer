@@ -1,19 +1,5 @@
 var searchData=
 [
-  ['s_5fdir_0',['s_dir',['../resources_8h.html#a94dce64efb4e85d093782c520d4281ed',1,'resources.h']]],
-  ['scope_1',['scope',['../classStopWatch.html#a7aa529344daf5778a117fc3ff26bfb37',1,'StopWatch']]],
-  ['sec_2',['sec',['../structDayTime.html#a5b63e347f85482d1b7063924b33bedf2',1,'DayTime']]],
-  ['settings_3',['settings',['../classStopWatch.html#ac6680ea37bfd2b0d57348949cb85e02a',1,'StopWatch']]],
-  ['sig_5fhandle_4',['sig_handle',['../sighandle_8h.html#a330f48fb4b2a97c0136787666b41a844',1,'sig_handle():&#160;sighandle.cpp'],['../additions_2cpp-tools_2src_2sighandle_8cpp.html#a330f48fb4b2a97c0136787666b41a844',1,'sig_handle():&#160;sighandle.cpp']]],
-  ['sigmap_5',['sigmap',['../classSigHandle.html#a84759198ebcf50071369acf4cd26ff86',1,'SigHandle']]],
-  ['sigout_6',['sigout',['../additions_2cpp-tools_2src_2sighandle_8cpp.html#a04dc8d33b6d8c9d6e77db998bbfcf0db',1,'sighandle.cpp']]],
-  ['size_7',['size',['../classInstance.html#a893bb5cc4aadf1060f9313ff3b1f4070',1,'Instance']]],
-  ['sockmain_8',['sockmain',['../classBaseServer.html#a8f01edb6475e8095a64771f88210679b',1,'BaseServer']]],
-  ['socktype_9',['socktype',['../classBaseServer.html#aba90bb319bbe4359a444d06aef7861c5',1,'BaseServer']]],
-  ['space_10',['space',['../resources_8h.html#a78c8d46cc3f052c887cb57e31befd2ae',1,'resources.h']]],
-  ['src_5fdistort_11',['src_distort',['../classvs2_1_1VisionServer_1_1BasePipe.html#a41b3c29ec19cdd47eadbe4536b8029ff',1,'vs2::VisionServer::BasePipe']]],
-  ['src_5fmatrix_12',['src_matrix',['../classvs2_1_1VisionServer_1_1BasePipe.html#abf133790db4dd8b7633d05fa71a2412f',1,'vs2::VisionServer::BasePipe']]],
-  ['stream_13',['stream',['../classolstream.html#a903b2c921a36249b4d5d30805f4aaef8',1,'olstream']]],
-  ['streams_14',['streams',['../classvs2_1_1VisionServer.html#af563be0c9e56f172b1e741198af52fd3',1,'vs2::VisionServer']]],
-  ['stringmap_15',['stringmap',['../structMethods.html#a63c4b28dc852ee6dd085d2af2c05db27',1,'Methods::stringmap()'],['../structCodes.html#a3d8ee1883bef79f44b25409fd59d2032',1,'Codes::stringmap()'],['../structVersions.html#a0c9d3031df7d99a9af98cd332aa5b2b8',1,'Versions::stringmap()']]]
+  ['weights_5fmap_0',['weights_map',['../namespacevs2.html#a554f7e144ecdbeaa30f98f916d10aab3',1,'vs2']]],
+  ['whitebalance_1',['whitebalance',['../classVisionCamera.html#aa021cbf1a25a7507ccb48446a01a01a5',1,'VisionCamera']]]
 ];

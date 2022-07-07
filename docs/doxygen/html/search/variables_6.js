@@ -1,9 +1,7 @@
 var searchData=
 [
-  ['head_0',['head',['../classvs2_1_1VisionServer.html#a1ce0e916f80ccab91cf6d2b27a2d664d',1,'vs2::VisionServer']]],
-  ['headers_1',['headers',['../classHeaderList.html#af71f4576ae916e82cb04a631b9c9846c',1,'HeaderList::headers()'],['../classRequest.html#aed49ed361402a724298d3e9da8a2c17e',1,'Request::headers()'],['../classResponse.html#afbfe3aa0357058c301bc86d5c3232014',1,'Response::headers()']]],
-  ['heap_5fallocated_2',['heap_allocated',['../classvs2_1_1VisionServer.html#a6ef490e1cd10cc6d895e8a93283e2b8f',1,'vs2::VisionServer']]],
-  ['heap_5fptrs_3',['heap_ptrs',['../classvs2_1_1SequentialPipeline.html#ac5a6453ddff21c682089b7ddcce943f9',1,'vs2::SequentialPipeline']]],
-  ['highest_4',['highest',['../classInstanced.html#a811feba9367e7046b8a02add1d71292d',1,'Instanced']]],
-  ['hr_5',['hr',['../structDayTime.html#a76aab141ee59be61d8840051a7281db7',1,'DayTime']]]
+  ['input_0',['input',['../classvs2_1_1VisionServer_1_1BasePipe.html#ac9c2a68223bd6b3bc9193dd1333a5d7e',1,'vs2::VisionServer::BasePipe']]],
+  ['input_5fsize_1',['input_size',['../classTfModel.html#a1f8ea97713a881ce68aa52c9d49a34e6',1,'TfModel']]],
+  ['input_5ftensor_2',['input_tensor',['../classTfModel.html#aca2040f45adb1bae60f95138d7788cbe',1,'TfModel']]],
+  ['is_5frunning_3',['is_running',['../classvs2_1_1VisionServer.html#abb511184beffcced3579ab9f342391db',1,'vs2::VisionServer']]]
 ];
