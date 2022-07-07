@@ -3,6 +3,7 @@ name: Build Doxygen
 on:
   push:
     paths:
+      - 'docs/Doxyfile'
       - 'lib-vs/**'
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -15,8 +16,11 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@main
+        with:
+          submodules: recursive
       - uses: langroodi/doxygenize@master
         with:
+          doxygenconf: ./docs/Doxyfile
           # Generated HTML documents output folder
           htmloutput: ./docs/doxygen/
           # GitHub Pages branch name
