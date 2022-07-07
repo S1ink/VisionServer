@@ -1,0 +1,28 @@
+var classRequest =
+[
+    [ "Request", "classRequest.html#afaf8d8928de7ffff8a3767589489bd33", null ],
+    [ "Request", "classRequest.html#aec51e2455d017ebf14c7ddc4de6e17ee", null ],
+    [ "Request", "classRequest.html#a59ce60dc67df2831bb5bf0d3e9cb2171", null ],
+    [ "Request", "classRequest.html#ac7526633e7c1d539a59237ed8999f487", null ],
+    [ "Request", "classRequest.html#aa3d7dc7949336c08c75cc69c460cf30d", null ],
+    [ "~Request", "classRequest.html#aa5d184d7174192fbd3f88c1a1ae63e77", null ],
+    [ "parse", "classRequest.html#a078462f65fccc36c1bf597e1e90b0453", null ],
+    [ "getSerialized", "classRequest.html#ae5d9f10ea8641a566d963b59f2fa6320", null ],
+    [ "intVersion", "classRequest.html#aec7dd11b196e23b8a13049f05a1a3a99", null ],
+    [ "intMethod", "classRequest.html#a46c47ae4a155587a49b7b897a2ad75fa", null ],
+    [ "intResource", "classRequest.html#a3815fea51c4c6972ea6c26c9d3448c91", null ],
+    [ "intHeaders", "classRequest.html#a8f90ef444db5a249e161420ae0e490dd", null ],
+    [ "intBody", "classRequest.html#a2aa7175784458e9ee4cf293e4ff08636", null ],
+    [ "getVersion", "classRequest.html#ad2cf764a66341fe6c5a806b4a5959e75", null ],
+    [ "getMethod", "classRequest.html#a69c12fefe3576793042c7aaf33d3edb1", null ],
+    [ "getResource", "classRequest.html#a260e3c167d9f9e4668e7ea2e3863fdd9", null ],
+    [ "getHeaders", "classRequest.html#adfebe4319753f68f1aef079d594f66ea", null ],
+    [ "getBody", "classRequest.html#ad88074d323ab7bef3182a5108b8ba387", null ],
+    [ "getSerialized", "classRequest.html#ac9e68c1ba096c30039ea6010176f7693", null ],
+    [ "getSerialized", "classRequest.html#adcd1a847c006b09d47e8065f73cbce33", null ],
+    [ "method", "classRequest.html#a80f8119ccaddedad2ab14a47aabb2fe3", null ],
+    [ "resource", "classRequest.html#afe8b089a86b780b949960cdafa244dc0", null ],
+    [ "version", "classRequest.html#a7e639d2aba4ae532d8ebebb161e492f6", null ],
+    [ "headers", "classRequest.html#aed49ed361402a724298d3e9da8a2c17e", null ],
+    [ "body", "classRequest.html#ac1fb9c057c617b04af48798c3843b68a", null ]
+];

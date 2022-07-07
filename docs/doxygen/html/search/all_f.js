@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['p_5froutinethread_0',['p_routineThread',['../threading_8h.html#a4afbd6917a8a242a78645eb63b10be58',1,'threading.h']]],
+  ['parse_1',['parse',['../classArgsHandler.html#a54d219b3a323831db4eaa1c9082373d4',1,'ArgsHandler::parse()'],['../classRequest.html#a078462f65fccc36c1bf597e1e90b0453',1,'Request::parse()']]],
+  ['partial_5fcontent_2',['PARTIAL_CONTENT',['../http_8h.html#af31477bc48f67856bedb0fa8e5b5281dad906a5a1be7a9fc5d8546e34d1608a1e',1,'http.h']]],
+  ['patch_3',['PATCH',['../http_8h.html#a2a3c0067e44c5ef3210a256d06c16b0fa63bc9a3997d66d835d9f3ec29451407d',1,'http.h']]],
+  ['payment_5frequired_4',['PAYMENT_REQUIRED',['../http_8h.html#af31477bc48f67856bedb0fa8e5b5281da6713760be5f3d289ab8f42e837c126de',1,'http.h']]],
+  ['pdir_5',['Pdir',['../classPdir.html',1,'Pdir'],['../classPdir.html#a0d772558d5095f89d865a1be5ac1dfea',1,'Pdir::Pdir(const Pdir &amp;)=delete'],['../classPdir.html#ab29fbf6ad12723eea34a50cb488db768',1,'Pdir::Pdir()']]],
+  ['pipe_6',['PIPE',['../classSigHandle.html#ae1c501ca35a1e871b58f6a442b1fdcbea6e2dc574a6f6213a0bdee18a31b714fd',1,'SigHandle']]],
+  ['pipeexpander_7',['pipeExpander',['../classvs2_1_1VisionServer.html#a8e26143e8a1d008468deccab31c834c1',1,'vs2::VisionServer']]],
+  ['pipelinerunner_8',['pipelineRunner',['../classvs2_1_1VisionServer.html#a69618987d6ca973cc54cfc92be0d1cc9',1,'vs2::VisionServer']]],
+  ['pipelines_9',['pipelines',['../classvs2_1_1VisionServer.html#ac1aa320a1eeb74d7b16e3a947326b7f1',1,'vs2::VisionServer::pipelines()'],['../classvs2_1_1SequentialPipeline.html#af16a4f2928a56866404b21e6035e6537',1,'vs2::SequentialPipeline::pipelines()']]],
+  ['points_10',['points',['../classMoveNet__.html#a1b20185400d2f0afc8c96d282199ee42',1,'MoveNet_']]],
+  ['port_11',['port',['../classBaseServer.html#ab53134572dd0543b5e0762c26d257050',1,'BaseServer']]],
+  ['post_12',['POST',['../http_8h.html#a2a3c0067e44c5ef3210a256d06c16b0faa02439ec229d8be0e74b0c1602392310',1,'http.h']]],
+  ['prepserver_13',['prepServer',['../classHttpServer.html#add39e7274131026c882ff29031987a72',1,'HttpServer']]],
+  ['print_14',['print',['../classStopWatch.html#a11cecbd5155cbd4076816ce24c43a337',1,'StopWatch::print()'],['../classStopWatch.html#a358a50d2a63fd266e4d04fa0b9da17fc',1,'StopWatch::print(olstream &amp;&amp;out)']]],
+  ['printexit_15',['printExit',['../classSigHandle.html#a531081e04ff5904e151a6235574df396',1,'SigHandle']]],
+  ['printignore_16',['printIgnore',['../classSigHandle.html#a01ef26ce91637218ba69c06c9625a6ec',1,'SigHandle']]],
+  ['process_17',['process',['../classvs2_1_1VisionServer_1_1BasePipe.html#aa462d1fb6b7a690e5193da1967141552',1,'vs2::VisionServer::BasePipe::process()'],['../classvs2_1_1VPipeline.html#a37e81bacafc55319d496e089508a2a8a',1,'vs2::VPipeline::process()'],['../classvs2_1_1SequentialPipeline.html#a25846f09ca2c35cafce2f7aa34496043',1,'vs2::SequentialPipeline::process()'],['../classMoveNet__.html#a7369e0cf185d3d684611e2a8ec5fc9ee',1,'MoveNet_::process()'],['../classAxonRunner__.html#a40e54c2cdc4faec4a9880b9e0d5382ff',1,'AxonRunner_::process()']]],
+  ['prof_18',['PROF',['../classSigHandle.html#ae1c501ca35a1e871b58f6a442b1fdcbeaeb970203d64f5491267a22dfef93037c',1,'SigHandle']]],
+  ['progdir_19',['progdir',['../additions_2cpp-tools_2src_2program_8cpp.html#a803c4141c9a2f79e6ef67df619fb3b70',1,'progdir():&#160;program.cpp'],['../program_8h.html#a803c4141c9a2f79e6ef67df619fb3b70',1,'progdir():&#160;program.cpp']]],
+  ['program_2ecpp_20',['program.cpp',['../additions_2cpp-tools_2src_2program_8cpp.html',1,'(Global Namespace)'],['../src_2core_2external-srcs_2program_8cpp.html',1,'(Global Namespace)']]],
+  ['program_2eh_21',['program.h',['../program_8h.html',1,'']]],
+  ['properties_22',['properties',['../classVisionCamera.html#a31f223a9df35f19e2bf2d862a2a928fe',1,'VisionCamera']]],
+  ['put_23',['PUT',['../http_8h.html#a2a3c0067e44c5ef3210a256d06c16b0fa3e75383a5992a6d15fb81e872e46e256',1,'http.h']]],
+  ['pwr_24',['PWR',['../classSigHandle.html#ae1c501ca35a1e871b58f6a442b1fdcbeaf3a06680271a5bc11ba1e29a2475f52d',1,'SigHandle']]]
+];

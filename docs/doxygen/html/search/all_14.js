@@ -1,0 +1,13 @@
+var searchData=
+[
+  ['uint_0',['uint',['../resources_8h.html#a91ad9478d81a7aaf2593e8d9c3d06a14',1,'resources.h']]],
+  ['unauthorized_1',['UNAUTHORIZED',['../http_8h.html#af31477bc48f67856bedb0fa8e5b5281da0ab06e7c28266cc1ed601325013a874c',1,'http.h']]],
+  ['uniquetarget_2',['UniqueTarget',['../classvs2_1_1UniqueTarget.html#a7156fb0a800dbf7180c00bb942810ff6',1,'vs2::UniqueTarget::UniqueTarget()=delete'],['../classvs2_1_1UniqueTarget.html#a6e6884d0a4d3925212a5b8ca04502767',1,'vs2::UniqueTarget::UniqueTarget(const std::string &amp;n)'],['../classvs2_1_1UniqueTarget.html#adc74568b1b69ddf30aba92965996a22b',1,'vs2::UniqueTarget::UniqueTarget(std::string &amp;&amp;n)'],['../classvs2_1_1UniqueTarget.html#ae8b816eede847fcc1833d1ad4e78d2dd',1,'vs2::UniqueTarget::UniqueTarget(const UniqueTarget &amp;)=default'],['../classvs2_1_1UniqueTarget.html#af74d82a8e7990f42d4ec62707a529c07',1,'vs2::UniqueTarget::UniqueTarget(UniqueTarget &amp;&amp;)=default'],['../classvs2_1_1UniqueTarget.html',1,'vs2::UniqueTarget&lt; derived &gt;']]],
+  ['unsupported_5fmedia_5ftype_3',['UNSUPPORTED_MEDIA_TYPE',['../http_8h.html#af31477bc48f67856bedb0fa8e5b5281dac8def42f5dfe44bd1ea86a055fb1b5a6',1,'http.h']]],
+  ['untildaytime_4',['untilDayTime',['../timing_8h.html#a1849876994bad925e9e0e93c033fc30c',1,'untilDayTime(const DayTime &amp;tme):&#160;timing.cpp'],['../additions_2cpp-tools_2src_2timing_8cpp.html#a1849876994bad925e9e0e93c033fc30c',1,'untilDayTime(const DayTime &amp;tme):&#160;timing.cpp']]],
+  ['update_5',['update',['../structDayTime.html#a14c8a39b624e51f608987b4df48d51fa',1,'DayTime::update()'],['../classHttpServer_1_1HttpFormatter.html#a33275c162d5b09f6859504240965f75b',1,'HttpServer::HttpFormatter::update()'],['../classResponse.html#a704b4961a4bf035ec084b04ef1873e1c',1,'Response::update(Code responsecode, HeaderList &amp;headers, const std::string &amp;body=std::string())'],['../classResponse.html#a62e5a6ba2b1fbebb8295ae61b5233b75',1,'Response::update(Code responsecode, const std::vector&lt; Segment &gt; &amp;headers, const std::string &amp;body=std::string())']]],
+  ['urg_6',['URG',['../classSigHandle.html#ae1c501ca35a1e871b58f6a442b1fdcbeaab0b87e5caabc936ee6f8454bf5526bd',1,'SigHandle']]],
+  ['uri_5ftoo_5flong_7',['URI_TOO_LONG',['../http_8h.html#af31477bc48f67856bedb0fa8e5b5281da7b62eb07bf8f336f3cb07d87946bbd98',1,'http.h']]],
+  ['usr1_8',['USR1',['../classSigHandle.html#ae1c501ca35a1e871b58f6a442b1fdcbeaa6327a1e7df0b7c0643b3b73467c5692',1,'SigHandle']]],
+  ['usr2_9',['USR2',['../classSigHandle.html#ae1c501ca35a1e871b58f6a442b1fdcbea25feba912ad4915545dfd94a7170e8fc',1,'SigHandle']]]
+];
