@@ -24,12 +24,14 @@ public:
 		return base;
 	}
 
-	inline static void Init() {
-		getInstance();
-	}
 	inline static VisionServer& getInstance() {
 		static VisionServer instance;
 		return instance;
+	}
+	inline static void Init() {
+		getInstance();
+		BasePipe::ntable();
+		OutputStream::ntable();
 	}
 
 

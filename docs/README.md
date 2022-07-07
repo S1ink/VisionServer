@@ -12,7 +12,7 @@ __Highlighted Features:__
 - Run each pipeline in its own thread for concurrent operation, or one at a time in singlethreaded mode
 - Extendable pipeline class for easily running custom pipelines
 - Parse ntable and camera settings from frc.json (WPILibPi config file) or any other provided json in order to auto-initialize cameras (and calibration data)
-- Setup any number of output streams (amount limited by cscore) and dynamically assign input sources during runtime.
+- Setup any number of output streams (amount limited by cscore) and dynamically assign input sources during runtime
 - Chain pipeline outputs dynamically during runtime (although this is very non-performant)
 - SequentialPipeline class for running any number of pipelines sequentially - this accomplishes the same as above but is much more performant
 - Camera feeds can be processed by multiple pipelines concurrently without losing frames
@@ -21,7 +21,7 @@ __Highlighted Features:__
 - TfLite libraries included, along with base pipeline classes to support training and using [WPILib] Axon object detection models
 - EdgeTPU library included for running hardware accelerated TfLite models
 
-__Simple Example Program using VisionServer:__
+__Simple object detection program using VisionServer (and an axon-generated tflite model):__
 ```cpp
 #include <vector>
 #include <core/visioncamera.h>
@@ -37,9 +37,9 @@ int main() {
 
     VisionServer::Init();           // verbosely initialize VS rather than allow lazy-loading
     VisionServer::addCameras(std::move(cameras));
-    VisionServer::addStream("output stream");
-    AxonRunner<> a("model.tflite", TfModel::Optimization::EDGETPU, "map.pbtxt", 4);
-    VisionServer::addPipeline(&a);  // or VisionServer::addPipeline< AxonRunner<> >(); for [default-constructed] dynamically allocated pipeline
+    VisionServer::addStream("vision");
+    AxonRunner a("model.tflite", TfModel::Optimization::EDGETPU, "map.pbtxt", 4);   // filename for model, attempt to load as edge tpu optimized, filename for labels, use 4 threads
+    VisionServer::addPipeline(&a);  // or VisionServer::addPipeline<AxonRunner>(); for [default-constructed,] dynamically allocated pipeline
     VisionServer::run(50);          // the target (and maximum) fps
 
     atexit(VisionServer::stopExit);  // stop the server when the program ends
@@ -48,13 +48,18 @@ int main() {
 ```
 
 ## Get Started
-- __[Setup guide](SETUP.md) for installing the cross-compiler and setting up a dev environment__
-- __*Coming soon* - a guide for integrating with a wpilib robot project__
-- __*Coming soon* - a guide for deploying to a raspberry pi and configuring WPILibPi__
-- __[Source code](robotrio-vs) for communicating with VS over networktables (robot program) - this is not up to date with VS2, and currently implements the VS1 ntables pattern__
+- __[Setup guide](SETUP.md) for basic developement requirements__
+- __[A guide](ROBOT_PROJECT.md) on integrating a vision project into a WPILib robot project__
+- __[More info](BUILD.md) on building the project, or building another project and linking to VS__
+- __[Some helpful tips](WPILIBPI_TIPS.md) for deploying to and using WPILibPi (and specifically when attached to a robot)__
+- __*Coming Soon* - a guide on using the included calibration tools, and how to included calibrations in the config json__
+- __[Source code](/roborio-vs) for robot[program]-side networktables communication abstraction API - *At any given time this may not be completely up to date with the latest VS source/release*__
 
 ## Documentation
 - __Doxygen-generated documentation is currently not working but can be found [here](https://frc3407.github.io/VisionServer/doxygen/html/).__
 
 ## More on Vision Processing
 - __Some [helpful resources](REFERENCES.md) used in the making of this project__
+
+## Suggestions?
+__Currently [I](https://github.com/S1ink/) am the sole developer and maintainer of this project, so any suggestions/help are welcome (note that things don't get done very fast) - just post an issue or create a pull request. There is no template for this, just use common sense and try to be as helpful as possible.__
