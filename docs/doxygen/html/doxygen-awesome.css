@@ -999,6 +999,12 @@ table.params .paramname {
     color: var(--page-foreground-color);
 }
 
+.compoundTemplParams {
+    color: var(--primary-color);
+    font-size: var(--page-font-size);
+    line-height: var(--content-line-height);
+}
+
 /*
  Table of Contents
  */
