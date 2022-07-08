@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>VisionServer: Main Page</title>
+<title>VisionServer: VisionServer</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -17,6 +17,8 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -27,6 +29,7 @@
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VisionServer
    </div>
+   <div id="projectbrief">FRC Vision Library</div>
   </td>
  </tr>
  </tbody>
@@ -81,16 +84,90 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 </iframe>
 </div>
 
-<div class="header">
-  <div class="headertitle"><div class="title">VisionServer Documentation</div></div>
+<div><div class="header">
+  <div class="headertitle"><div class="title">VisionServer </div></div>
 </div><!--header-->
 <div class="contents">
+<div class="textblock"><p ><a class="anchor" id="md_docs_README"></a> <a href="https://github.com/FRC3407/VisionServer/actions/workflows/ci.yml"><img src="https://github.com/FRC3407/VisionServer/actions/workflows/ci.yml/badge.svg" alt="CI" style="pointer-events: none;" class="inline"/></a> <a href="https://github.com/FRC3407/VisionServer/actions/workflows/doxygen-pages.yml"><img src="https://github.com/FRC3407/VisionServer/actions/workflows/doxygen-pages.yml/badge.svg?branch=main" alt="Build Docs" style="pointer-events: none;" class="inline"/></a></p>
+<h1><a class="anchor" id="autotoc_md0"></a>
+[FRC 3407] VisionServer</h1>
+<h2>Project Overview</h2>
+<ul>
+<li>This project originally existed as a testing environment for vision processing code that would be run on an FRC robot (Raspberry Pi coprocessor).</li>
+<li>C++ was chosen as the primary development language, and a more generalized program framework was created, titled 'VisionServer'.</li>
+<li>VisionServer[v1.*] was released as a framework which could be reimplemented by modifying the main source file(s) and recompiling the entire project. These releases were utilized during 2021 testing and the 2022 Rapid React season; provided features for both ease of use [on a robot] and advanced vision processing techniques.</li>
+<li>VisionServer[v2.*+] now comes with a redesigned program (library) structure that focuses on concurrency and multithreading. The project is also now implemented as a library that allows easier integration in external projects, and can functionally be used as a git submodule. This repo contains automations for updating the necessary dependencies (wpilib, opencv, tflite), which makes creating a vision program simpler and more accessible.</li>
+</ul>
+<p ><b>Highlighted Features:</b></p><ul>
+<li>Load and run unlimited* vision processing pipelines - although obviously limited by hardware specs</li>
+<li>Run each pipeline in its own thread for concurrent operation, or one at a time in singlethreaded mode</li>
+<li>Extendable pipeline class for easily running custom pipelines</li>
+<li>Parse ntable and camera settings from frc.json (WPILibPi config file) or any other provided json in order to auto-initialize cameras (and calibration data)</li>
+<li>Setup any number of output streams (amount limited by cscore) and dynamically assign input sources during runtime</li>
+<li>Chain pipeline outputs dynamically during runtime (although this is very non-performant)</li>
+<li>SequentialPipeline class for running any number of pipelines sequentially - this accomplishes the same as above but is much more performant</li>
+<li>Camera feeds can be processed by multiple pipelines concurrently without losing frames</li>
+<li>Automatic networktable integration for pipelines, output streams, and main settings for dynamic runtime control (and robot communication)</li>
+<li>Target class for sending target information to a robot over networktables</li>
+<li>TfLite libraries included, along with base pipeline classes to support training and using [WPILib] Axon object detection models</li>
+<li>EdgeTPU library included for running hardware accelerated TfLite models</li>
+</ul>
+<p ><b>Simple object detection program using VisionServer (and an axon-generated tflite model):</b> </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="visioncamera_8h.html">core/visioncamera.h</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="visionserver2_8h.html">core/visionserver2.h</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="vision_8h.html">core/vision.h</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="tfmodel_8h.html">core/tfmodel.h</a>&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacevs2.html">vs2</a>;</div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">int</span> main() {</div>
+<div class="line">    std::vector&lt;VisionCamera&gt; cameras;</div>
+<div class="line">    <a class="code hl_function" href="vision_8cpp.html#a6c1e034cdc2ac1be100fe1d866b70271">readConfig</a>(cameras);            <span class="comment">// default config is /boot/frc.json</span></div>
+<div class="line"> </div>
+<div class="line">    VisionServer::Init();           <span class="comment">// verbosely initialize VS rather than allow lazy-loading</span></div>
+<div class="line">    VisionServer::addCameras(std::move(cameras));</div>
+<div class="line">    VisionServer::addStream(<span class="stringliteral">&quot;vision&quot;</span>);</div>
+<div class="line">    <a class="code hl_class" href="classAxonRunner__.html">AxonRunner</a> a(<span class="stringliteral">&quot;model.tflite&quot;</span>, <a class="code hl_enumvalue" href="classTfModel.html#aaeb63dfaefe19112bf57be34aa57afe1ac665d3d61d79d4d41038ebd1198529ec">TfModel::Optimization::EDGETPU</a>, <span class="stringliteral">&quot;map.pbtxt&quot;</span>, 4);   <span class="comment">// filename for model, attempt to load as edge tpu optimized, filename for labels, use 4 threads</span></div>
+<div class="line">    VisionServer::addPipeline(&amp;a);  <span class="comment">// or VisionServer::addPipeline&lt;AxonRunner&gt;(); for [default-constructed,] dynamically allocated pipeline</span></div>
+<div class="line">    VisionServer::run(50);          <span class="comment">// the target (and maximum) fps</span></div>
+<div class="line"> </div>
+<div class="line">    atexit(VisionServer::stopExit);  <span class="comment">// stop the server when the program ends</span></div>
+<div class="line">    <span class="keywordflow">return</span> 0;</div>
+<div class="line">}</div>
+<div class="ttc" id="aclassAxonRunner___html"><div class="ttname"><a href="classAxonRunner__.html">AxonRunner_</a></div><div class="ttdef"><b>Definition:</b> <a href="tfmodel_8h_source.html#l00077">tfmodel.h:77</a></div></div>
+<div class="ttc" id="aclassTfModel_html_aaeb63dfaefe19112bf57be34aa57afe1ac665d3d61d79d4d41038ebd1198529ec"><div class="ttname"><a href="classTfModel.html#aaeb63dfaefe19112bf57be34aa57afe1ac665d3d61d79d4d41038ebd1198529ec">TfModel::Optimization::EDGETPU</a></div><div class="ttdeci">@ EDGETPU</div></div>
+<div class="ttc" id="anamespacevs2_html"><div class="ttname"><a href="namespacevs2.html">vs2</a></div><div class="ttdef"><b>Definition:</b> <a href="extensions_8h_source.html#l00009">extensions.h:9</a></div></div>
+<div class="ttc" id="atfmodel_8h_html"><div class="ttname"><a href="tfmodel_8h.html">tfmodel.h</a></div></div>
+<div class="ttc" id="avision_8cpp_html_a6c1e034cdc2ac1be100fe1d866b70271"><div class="ttname"><a href="vision_8cpp.html#a6c1e034cdc2ac1be100fe1d866b70271">readConfig</a></div><div class="ttdeci">bool readConfig(std::vector&lt; VisionCamera &gt; &amp;cameras, const char *file)</div><div class="ttdef"><b>Definition:</b> <a href="vision_8cpp_source.html#l00007">vision.cpp:7</a></div></div>
+<div class="ttc" id="avision_8h_html"><div class="ttname"><a href="vision_8h.html">vision.h</a></div></div>
+<div class="ttc" id="avisioncamera_8h_html"><div class="ttname"><a href="visioncamera_8h.html">visioncamera.h</a></div></div>
+<div class="ttc" id="avisionserver2_8h_html"><div class="ttname"><a href="visionserver2_8h.html">visionserver2.h</a></div></div>
+</div><!-- fragment --><h2>Get Started</h2>
+<ul>
+<li><b>Setup guide for basic developement requirements</b></li>
+<li><b>A guide on integrating a vision project into a WPILib robot project</b></li>
+<li><b>More info on building the project, or building another project and linking to VS</b></li>
+<li><b>Some helpful tips for deploying to and using WPILibPi (and specifically when attached to a robot)</b></li>
+<li><b><em>Coming Soon</em> - a guide on using the included calibration tools, and how to included calibrations in the config json</b></li>
+<li><b><a href="/roborio-vs">Source code</a> for robot[program]-side networktables communication abstraction API - <em>At any given time this may not be completely up to date with the latest VS source/release</em></b></li>
+</ul>
+<h2>Documentation</h2>
+<ul>
+<li><b>Doxygen-generated documentation is currently not working but can be found <a href="https://frc3407.github.io/VisionServer/doxygen/html/">here</a>.</b></li>
+</ul>
+<h2>More on Vision Processing</h2>
+<ul>
+<li><b>Some helpful resources used in the making of this project</b></li>
+</ul>
+<h2>Suggestions?</h2>
+<p ><b>Currently <a href="https://github.com/S1ink/">I</a> am the sole developer and maintainer of this project, so any suggestions/help are welcome (note that things don't get done very fast) - just post an issue or create a pull request. There is no template for this, just use common sense and try to be as helpful as possible.</b> </p>
+</div></div><!-- PageDoc -->
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Jul 7 2022 19:44:42 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Thu Jul 7 2022 21:38:10 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>

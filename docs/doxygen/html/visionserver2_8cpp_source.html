@@ -17,6 +17,8 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -27,6 +29,7 @@
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VisionServer
    </div>
+   <div id="projectbrief">FRC Vision Library</div>
   </td>
  </tr>
  </tbody>
@@ -87,7 +90,7 @@ $(document).ready(function(){initNavTree('visionserver2_8cpp_source.html',''); i
 <div class="contents">
 <a href="visionserver2_8cpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#include &quot;<a class="code" href="visionserver2_8h.html">visionserver2.h</a>&quot;</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;<a class="code" href="resources_8h.html">cpp-tools/src/resources.h</a>&quot;</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;cpp-tools/src/resources.h&quot;</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacevs2.html">vs2</a>;</div>
@@ -454,21 +457,21 @@ $(document).ready(function(){initNavTree('visionserver2_8cpp_source.html',''); i
 <div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>            _inst.<a class="code hl_variable" href="classvs2_1_1VisionServer.html#ac1aa320a1eeb74d7b16e3a947326b7f1">pipelines</a>.at(i)-&gt;setCamera(_inst.<a class="code hl_variable" href="classvs2_1_1VisionServer.html#a962acb771a9c2fa3b5cb0b7092ff1b2e">cameras</a>.at(active));</div>
 <div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>            std::cout &lt;&lt; <span class="stringliteral">&quot;Compensation: connected [pipeline] &quot;</span></div>
 <div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>                &lt;&lt; _inst.<a class="code hl_variable" href="classvs2_1_1VisionServer.html#ac1aa320a1eeb74d7b16e3a947326b7f1">pipelines</a>[i]-&gt;getName() &lt;&lt; <span class="stringliteral">&quot; to [camera] &quot;</span></div>
-<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>                &lt;&lt; _inst.<a class="code hl_variable" href="classvs2_1_1VisionServer.html#a962acb771a9c2fa3b5cb0b7092ff1b2e">cameras</a>[active].GetName() &lt;&lt; <a class="code hl_variable" href="resources_8h.html#a1d129544a36690a862060d526ccd24fc">newline</a>;</div>
+<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>                &lt;&lt; _inst.<a class="code hl_variable" href="classvs2_1_1VisionServer.html#a962acb771a9c2fa3b5cb0b7092ff1b2e">cameras</a>[active].GetName() &lt;&lt; newline;</div>
 <div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>        }</div>
 <div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>        <span class="keywordflow">if</span>(i) {</div>
 <div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>            <span class="keywordflow">for</span>(<span class="keywordtype">size_t</span> j = 0; j &lt; _inst.<a class="code hl_variable" href="classvs2_1_1VisionServer.html#af563be0c9e56f172b1e741198af52fd3">streams</a>.size(); j++) {</div>
 <div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>                _inst.<a class="code hl_variable" href="classvs2_1_1VisionServer.html#af563be0c9e56f172b1e741198af52fd3">streams</a>.at(j).setPipelineIdx(1);</div>
 <div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>                std::cout &lt;&lt; <span class="stringliteral">&quot;Compensation: connected [stream] &quot;</span></div>
 <div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>                    &lt;&lt; _inst.<a class="code hl_variable" href="classvs2_1_1VisionServer.html#af563be0c9e56f172b1e741198af52fd3">streams</a>[j].GetName() &lt;&lt; <span class="stringliteral">&quot; to [pipeline] &quot;</span></div>
-<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>                    &lt;&lt; _inst.<a class="code hl_variable" href="classvs2_1_1VisionServer.html#ac1aa320a1eeb74d7b16e3a947326b7f1">pipelines</a>[0]-&gt;getName() &lt;&lt; <a class="code hl_variable" href="resources_8h.html#a1d129544a36690a862060d526ccd24fc">newline</a>;</div>
+<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>                    &lt;&lt; _inst.<a class="code hl_variable" href="classvs2_1_1VisionServer.html#ac1aa320a1eeb74d7b16e3a947326b7f1">pipelines</a>[0]-&gt;getName() &lt;&lt; newline;</div>
 <div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>            }</div>
 <div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>        } <span class="keywordflow">else</span> {</div>
 <div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>            <span class="keywordflow">for</span>(<span class="keywordtype">size_t</span> j = 0; j &lt; _inst.<a class="code hl_variable" href="classvs2_1_1VisionServer.html#af563be0c9e56f172b1e741198af52fd3">streams</a>.size(); j++) {</div>
 <div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>                _inst.<a class="code hl_variable" href="classvs2_1_1VisionServer.html#af563be0c9e56f172b1e741198af52fd3">streams</a>.at(j).setCameraIdx(active + 1);</div>
 <div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>                std::cout &lt;&lt; <span class="stringliteral">&quot;Compensation: connected [stream] &quot;</span></div>
 <div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>                    &lt;&lt; _inst.<a class="code hl_variable" href="classvs2_1_1VisionServer.html#af563be0c9e56f172b1e741198af52fd3">streams</a>[i].GetName() &lt;&lt; <span class="stringliteral">&quot; to [camera] &quot;</span></div>
-<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>                    &lt;&lt; _inst.<a class="code hl_variable" href="classvs2_1_1VisionServer.html#a962acb771a9c2fa3b5cb0b7092ff1b2e">cameras</a>[active].GetName() &lt;&lt; <a class="code hl_variable" href="resources_8h.html#a1d129544a36690a862060d526ccd24fc">newline</a>;</div>
+<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>                    &lt;&lt; _inst.<a class="code hl_variable" href="classvs2_1_1VisionServer.html#a962acb771a9c2fa3b5cb0b7092ff1b2e">cameras</a>[active].GetName() &lt;&lt; newline;</div>
 <div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>            }</div>
 <div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>        }</div>
 <div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>        std::cout.flush();</div>
@@ -734,8 +737,6 @@ $(document).ready(function(){initNavTree('visionserver2_8cpp_source.html',''); i
 <div class="ttc" id="aclassvs2_1_1VisionServer_html_af563be0c9e56f172b1e741198af52fd3"><div class="ttname"><a href="classvs2_1_1VisionServer.html#af563be0c9e56f172b1e741198af52fd3">vs2::VisionServer::streams</a></div><div class="ttdeci">std::vector&lt; OutputStream &gt; streams</div><div class="ttdef"><b>Definition:</b> <a href="visionserver2_8h_source.html#l00148">visionserver2.h:148</a></div></div>
 <div class="ttc" id="aclassvs2_1_1VisionServer_html_afdc8e5ed9cecd0e0a5783a3f626c4735"><div class="ttname"><a href="classvs2_1_1VisionServer.html#afdc8e5ed9cecd0e0a5783a3f626c4735">vs2::VisionServer::run</a></div><div class="ttdeci">static bool run(uint16_t rps=50)</div><div class="ttdef"><b>Definition:</b> <a href="visionserver2_8cpp_source.html#l00417">visionserver2.cpp:417</a></div></div>
 <div class="ttc" id="anamespacevs2_html"><div class="ttname"><a href="namespacevs2.html">vs2</a></div><div class="ttdef"><b>Definition:</b> <a href="extensions_8h_source.html#l00009">extensions.h:9</a></div></div>
-<div class="ttc" id="aresources_8h_html"><div class="ttname"><a href="resources_8h.html">resources.h</a></div></div>
-<div class="ttc" id="aresources_8h_html_a1d129544a36690a862060d526ccd24fc"><div class="ttname"><a href="resources_8h.html#a1d129544a36690a862060d526ccd24fc">newline</a></div><div class="ttdeci">constexpr char newline</div><div class="ttdef"><b>Definition:</b> <a href="resources_8h_source.html#l00009">resources.h:9</a></div></div>
 <div class="ttc" id="astructvs2_1_1VisionServer_1_1OutputStream_html"><div class="ttname"><a href="structvs2_1_1VisionServer_1_1OutputStream.html">vs2::VisionServer::OutputStream</a></div><div class="ttdef"><b>Definition:</b> <a href="visionserver2_8h_source.html#l00153">visionserver2.h:153</a></div></div>
 <div class="ttc" id="astructvs2_1_1VisionServer_1_1OutputStream_html_a15d05948d2dbb43eff7a3ebf1af2c1d1"><div class="ttname"><a href="structvs2_1_1VisionServer_1_1OutputStream.html#a15d05948d2dbb43eff7a3ebf1af2c1d1">vs2::VisionServer::OutputStream::syncIdx</a></div><div class="ttdeci">void syncIdx()</div><div class="ttdef"><b>Definition:</b> <a href="visionserver2_8cpp_source.html#l00238">visionserver2.cpp:238</a></div></div>
 <div class="ttc" id="astructvs2_1_1VisionServer_1_1OutputStream_html_a2babbb3d86ef35acbeb9f0c99c73aa46"><div class="ttname"><a href="structvs2_1_1VisionServer_1_1OutputStream.html#a2babbb3d86ef35acbeb9f0c99c73aa46">vs2::VisionServer::OutputStream::table</a></div><div class="ttdeci">const std::shared_ptr&lt; nt::NetworkTable &gt; table</div><div class="ttdef"><b>Definition:</b> <a href="visionserver2_8h_source.html#l00180">visionserver2.h:180</a></div></div>
@@ -750,7 +751,7 @@ $(document).ready(function(){initNavTree('visionserver2_8cpp_source.html',''); i
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_30d9ea9a8d9df1a989aa8aa8f59da391.html">lib-vs</a></li><li class="navelem"><a class="el" href="dir_4505e8eed2522850e8dd12da3b28dc54.html">src</a></li><li class="navelem"><a class="el" href="dir_16b7c41ca322cf05371f268760117ee9.html">core</a></li><li class="navelem"><a class="el" href="visionserver2_8cpp.html">visionserver2.cpp</a></li>
-    <li class="footer">Generated on Thu Jul 7 2022 19:44:41 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Thu Jul 7 2022 21:38:10 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>

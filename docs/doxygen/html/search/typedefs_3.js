@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['is_5fbase_5fof_5fnum_5ftemplate_0',['is_base_of_num_template',['../types_8h.html#ade09f1a1a74409791030cfcc68fea424',1,'types.h']]],
-  ['is_5fbase_5fof_5ftemplate_1',['is_base_of_template',['../types_8h.html#a0bc6a957d9435e2a478030d8fd9a83e4',1,'types.h']]]
+  ['this_5ft_0',['This_t',['../classvs2_1_1UniqueTarget.html#a6f76015d5c52853ac0f27c02f114dc49',1,'vs2::UniqueTarget::This_t()'],['../classAxonRunner__.html#a736e5b898f84156f68bae58be449cc5d',1,'AxonRunner_::This_t()'],['../classMoveNet__.html#a9721f5399f359d978cb29e9d2e60069b',1,'MoveNet_::This_t()'],['../classvs2_1_1VPipeline.html#a6420eed08661e541f345364166f09bbd',1,'vs2::VPipeline::This_t()'],['../classvs2_1_1SequentialPipeline.html#aa8e88141b41350c7b113a1ae3a7e62cb',1,'vs2::SequentialPipeline::This_t()']]]
 ];

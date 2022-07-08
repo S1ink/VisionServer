@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['lerror_0',['lerror',['../classHttpServer.html#a67ec83cb43263f3407985543d41f4d99',1,'HttpServer']]],
-  ['loadobjectlabels_1',['loadObjectLabels',['../tfmodel_8cpp.html#a6231e52bd45f80bbf713fdd9f5e08513',1,'loadObjectLabels(const std::string &amp;f, std::vector&lt; std::string &gt; &amp;objs):&#160;tfmodel.cpp'],['../tfmodel_8h.html#ad0d4dee843979b164acc302f3e0bcbba',1,'loadObjectLabels(const std::string &amp;file, std::vector&lt; std::string &gt; &amp;objs):&#160;tfmodel.cpp']]],
-  ['loopingthread_2',['loopingThread',['../threading_8h.html#ad5c599d79b265fbd64d0aae500403f92',1,'threading.h']]],
-  ['lstream_3',['lstream',['../classlstream.html#a07c9f3b5c73ab50a4173ef1fe9bd6e79',1,'lstream::lstream()'],['../classlstream.html#aa030ea71af8b9519cce480d367fa2488',1,'lstream::lstream(const char *file, const OMODE modes=(std::ios::in|std::ios::out))'],['../classlstream.html#aced77919571867bbcbb868187eaac25f',1,'lstream::lstream(const char *file, void *init, const OMODE modes=(std::ios::in|std::ios::out))'],['../classlstream.html#a74a6ec89f92b754874f058cba9072f33',1,'lstream::lstream(const lstream &amp;other)'],['../classlstream.html#ae226643185921c80811156e3f389686b',1,'lstream::lstream(lstream &amp;&amp;other)']]]
+  ['ntable_0',['ntable',['../classvs2_1_1Target.html#a19a75ed68f143e2737ccd8e998763a24',1,'vs2::Target::ntable()'],['../classvs2_1_1VisionServer.html#a5fe9f6ff7d1b1f73944aa3db02d91733',1,'vs2::VisionServer::ntable()'],['../classvs2_1_1VisionServer_1_1BasePipe.html#ac70f81ec5be2b051b84ddd69e698bc1a',1,'vs2::VisionServer::BasePipe::ntable()'],['../structvs2_1_1VisionServer_1_1OutputStream.html#a2053f91d3c9edc245a19f1a4d56b7f04',1,'vs2::VisionServer::OutputStream::ntable()']]],
+  ['numcameras_1',['numCameras',['../classvs2_1_1VisionServer.html#a338abdd72b7dc89309802de2b9e4f73b',1,'vs2::VisionServer']]],
+  ['numpipelines_2',['numPipelines',['../classvs2_1_1VisionServer.html#a36f2bd2879914a08b9e2cd38b55c7ab3',1,'vs2::VisionServer']]],
+  ['numstreams_3',['numStreams',['../classvs2_1_1VisionServer.html#a73a00d23097ac59d44e1d7cd591de3b1',1,'vs2::VisionServer']]]
 ];

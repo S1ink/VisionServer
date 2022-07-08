@@ -17,6 +17,8 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -27,6 +29,7 @@
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VisionServer
    </div>
+   <div id="projectbrief">FRC Vision Library</div>
   </td>
  </tr>
  </tbody>
@@ -96,14 +99,14 @@ $(document).ready(function(){initNavTree('vision_8cpp_source.html',''); initResi
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>    std::error_code ec;</div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>    wpi::raw_fd_istream is(file, ec);</div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>    <span class="keywordflow">if</span> (ec) {</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>        wpi::errs() &lt;&lt; <span class="stringliteral">&quot;Could not open &#39;&quot;</span> &lt;&lt; file &lt;&lt; <span class="stringliteral">&quot;&#39;: &quot;</span> &lt;&lt; ec.message() &lt;&lt; <a class="code hl_variable" href="resources_8h.html#a1d129544a36690a862060d526ccd24fc">newline</a>;</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>        wpi::errs() &lt;&lt; <span class="stringliteral">&quot;Could not open &#39;&quot;</span> &lt;&lt; file &lt;&lt; <span class="stringliteral">&quot;&#39;: &quot;</span> &lt;&lt; ec.message() &lt;&lt; newline;</div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    }</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    wpi::json j;</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    <span class="keywordflow">try</span> { j = wpi::json::parse(is); }</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    <span class="keywordflow">catch</span> (<span class="keyword">const</span> wpi::json::parse_error&amp; e) {</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        wpi::errs() &lt;&lt; <span class="stringliteral">&quot;Config error in &quot;</span> &lt;&lt; file &lt;&lt; <span class="comment">/*&quot;: byte &quot; &lt;&lt; (int)e.byte &lt;&lt;*/</span> <span class="stringliteral">&quot;: &quot;</span> &lt;&lt; e.what() &lt;&lt; <a class="code hl_variable" href="resources_8h.html#a1d129544a36690a862060d526ccd24fc">newline</a>;</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        wpi::errs() &lt;&lt; <span class="stringliteral">&quot;Config error in &quot;</span> &lt;&lt; file &lt;&lt; <span class="comment">/*&quot;: byte &quot; &lt;&lt; (int)e.byte &lt;&lt;*/</span> <span class="stringliteral">&quot;: &quot;</span> &lt;&lt; e.what() &lt;&lt; newline;</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    }</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    <span class="keywordflow">if</span> (!j.is_object()) {</div>
@@ -121,18 +124,18 @@ $(document).ready(function(){initNavTree('vision_8cpp_source.html',''); initResi
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>                    nt::NetworkTableInstance::GetDefault().StartDSClient();</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>                }</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>                <span class="keywordflow">catch</span> (<span class="keyword">const</span> wpi::json::exception&amp; e) {</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>                    wpi::errs() &lt;&lt; <span class="stringliteral">&quot;Config error in &quot;</span> &lt;&lt; file &lt;&lt; <span class="stringliteral">&quot;: could not read team number: &quot;</span> &lt;&lt; e.what() &lt;&lt; <a class="code hl_variable" href="resources_8h.html#a1d129544a36690a862060d526ccd24fc">newline</a>;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>                    wpi::errs() &lt;&lt; <span class="stringliteral">&quot;Config error in &quot;</span> &lt;&lt; file &lt;&lt; <span class="stringliteral">&quot;: could not read team number: &quot;</span> &lt;&lt; e.what() &lt;&lt; newline;</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>                    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>                }</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>            } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (wpi::equals_lower(str, <span class="stringliteral">&quot;server&quot;</span>)) {</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>                wpi::outs() &lt;&lt; <span class="stringliteral">&quot;Setting up NetworkTables in SERVER mode\n&quot;</span>;</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>                nt::NetworkTableInstance::GetDefault().StartServer();</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                wpi::outs() &lt;&lt; <span class="stringliteral">&quot;Setting up NetworkTables for SIMULATION mode - host: &quot;</span> &lt;&lt; str &lt;&lt; <a class="code hl_variable" href="resources_8h.html#a1d129544a36690a862060d526ccd24fc">newline</a>;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                wpi::outs() &lt;&lt; <span class="stringliteral">&quot;Setting up NetworkTables for SIMULATION mode - host: &quot;</span> &lt;&lt; str &lt;&lt; newline;</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>                nt::NetworkTableInstance::GetDefault().StartClient(str.c_str());</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>            }</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        } <span class="keywordflow">catch</span> (<span class="keyword">const</span> wpi::json::exception&amp; e) {</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>            wpi::errs() &lt;&lt; <span class="stringliteral">&quot;Config error in &quot;</span> &lt;&lt; file &lt;&lt; <span class="stringliteral">&quot;: coud not read ntmode: &quot;</span> &lt;&lt; e.what() &lt;&lt; <a class="code hl_variable" href="resources_8h.html#a1d129544a36690a862060d526ccd24fc">newline</a>;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>            wpi::errs() &lt;&lt; <span class="stringliteral">&quot;Config error in &quot;</span> &lt;&lt; file &lt;&lt; <span class="stringliteral">&quot;: coud not read ntmode: &quot;</span> &lt;&lt; e.what() &lt;&lt; newline;</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        }</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    }</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
@@ -148,7 +151,7 @@ $(document).ready(function(){initNavTree('vision_8cpp_source.html',''); initResi
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>                        cameras.emplace_back(camera, calibration);</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>                        <span class="comment">//std::cout &lt;&lt; &quot;MAKING CAMERA:\n&quot; &lt;&lt; camera.dump() &lt;&lt; newline;</span></div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>                    } <span class="keywordflow">catch</span> (<span class="keyword">const</span> wpi::json::exception&amp; e) {</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>                        wpi::errs() &lt;&lt; <span class="stringliteral">&quot;Config error in &quot;</span> &lt;&lt; file &lt;&lt; <span class="stringliteral">&quot;: failed to get configuration object: &quot;</span> &lt;&lt; e.what() &lt;&lt; <a class="code hl_variable" href="resources_8h.html#a1d129544a36690a862060d526ccd24fc">newline</a>;  <span class="comment">// print out more info if needed</span></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>                        wpi::errs() &lt;&lt; <span class="stringliteral">&quot;Config error in &quot;</span> &lt;&lt; file &lt;&lt; <span class="stringliteral">&quot;: failed to get configuration object: &quot;</span> &lt;&lt; e.what() &lt;&lt; newline;  <span class="comment">// print out more info if needed</span></div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>                        cameras.emplace_back(camera);</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>                    }</div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>                } <span class="keywordflow">else</span> {</div>
@@ -160,7 +163,7 @@ $(document).ready(function(){initNavTree('vision_8cpp_source.html',''); initResi
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>            }</div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        }</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        <span class="keywordflow">catch</span> (<span class="keyword">const</span> wpi::json::exception&amp; e) {</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>            wpi::errs() &lt;&lt; <span class="stringliteral">&quot;Config error in &quot;</span> &lt;&lt; file &lt;&lt; <span class="stringliteral">&quot;: could not read cameras: &quot;</span> &lt;&lt; e.what() &lt;&lt; <a class="code hl_variable" href="resources_8h.html#a1d129544a36690a862060d526ccd24fc">newline</a>;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>            wpi::errs() &lt;&lt; <span class="stringliteral">&quot;Config error in &quot;</span> &lt;&lt; file &lt;&lt; <span class="stringliteral">&quot;: could not read cameras: &quot;</span> &lt;&lt; e.what() &lt;&lt; newline;</div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        }</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    }</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <span class="comment">// if(j.count(&quot;switched cameras&quot;) != 0) {</span></div>
@@ -300,7 +303,6 @@ $(document).ready(function(){initNavTree('vision_8cpp_source.html',''); initResi
 <div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span><span class="comment">//  std::array&lt;cv::Scalar, 3&gt;{cv::Scalar(0, 255, 0), cv::Scalar(0, 255, 127), cv::Scalar(0, 255, 255)}, //green</span></div>
 <div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span><span class="comment">//  std::array&lt;cv::Scalar, 3&gt;{cv::Scalar(0, 0, 255), cv::Scalar(127, 0, 255), cv::Scalar(255, 0, 255)}, //red</span></div>
 <div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span><span class="comment">// };</span></div>
-<div class="ttc" id="aresources_8h_html_a1d129544a36690a862060d526ccd24fc"><div class="ttname"><a href="resources_8h.html#a1d129544a36690a862060d526ccd24fc">newline</a></div><div class="ttdeci">constexpr char newline</div><div class="ttdef"><b>Definition:</b> <a href="resources_8h_source.html#l00009">resources.h:9</a></div></div>
 <div class="ttc" id="avision_8cpp_html_a6c1e034cdc2ac1be100fe1d866b70271"><div class="ttname"><a href="vision_8cpp.html#a6c1e034cdc2ac1be100fe1d866b70271">readConfig</a></div><div class="ttdeci">bool readConfig(std::vector&lt; VisionCamera &gt; &amp;cameras, const char *file)</div><div class="ttdef"><b>Definition:</b> <a href="vision_8cpp_source.html#l00007">vision.cpp:7</a></div></div>
 <div class="ttc" id="avision_8cpp_html_a96fd1f768d8cda63dc172d07bd2bc798"><div class="ttname"><a href="vision_8cpp.html#a96fd1f768d8cda63dc172d07bd2bc798">getJsonVideoMode</a></div><div class="ttdeci">cs::VideoMode getJsonVideoMode(const wpi::json &amp;config)</div><div class="ttdef"><b>Definition:</b> <a href="vision_8cpp_source.html#l00152">vision.cpp:152</a></div></div>
 <div class="ttc" id="avision_8cpp_html_aaaff09fde08179d16fe5e301abc7be7c"><div class="ttname"><a href="vision_8cpp.html#aaaff09fde08179d16fe5e301abc7be7c">switchedCameraVision</a></div><div class="ttdeci">cs::CvSink switchedCameraVision(const std::vector&lt; VisionCamera &gt; &amp;cameras, std::shared_ptr&lt; nt::NetworkTable &gt; table)</div><div class="ttdef"><b>Definition:</b> <a href="vision_8cpp_source.html#l00126">vision.cpp:126</a></div></div>
@@ -312,7 +314,7 @@ $(document).ready(function(){initNavTree('vision_8cpp_source.html',''); initResi
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_30d9ea9a8d9df1a989aa8aa8f59da391.html">lib-vs</a></li><li class="navelem"><a class="el" href="dir_4505e8eed2522850e8dd12da3b28dc54.html">src</a></li><li class="navelem"><a class="el" href="dir_16b7c41ca322cf05371f268760117ee9.html">core</a></li><li class="navelem"><a class="el" href="vision_8cpp.html">vision.cpp</a></li>
-    <li class="footer">Generated on Thu Jul 7 2022 19:44:41 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Thu Jul 7 2022 21:38:10 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>
