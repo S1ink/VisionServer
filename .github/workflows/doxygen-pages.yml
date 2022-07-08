@@ -18,10 +18,13 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@main
         with:
+          fetch-depth: 0
           submodules: recursive
       - run: |
-          sudo apt-get install -y graphviz
+          echo '::echo::on'
+          cd $GITHUB_WORKSPACE
           echo "PROJECT_NUMBER = `git describe --tags`" >> ./docs/Doxyfile
+      - run: sudo apt-get install -y graphviz
       - uses: langroodi/doxygenize@master
         with:
           doxygenconf: ./docs/Doxyfile
