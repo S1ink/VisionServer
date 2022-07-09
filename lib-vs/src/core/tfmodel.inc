@@ -1,5 +1,7 @@
 #include "tfmodel.h"
 
+#ifndef EXCLUDE_TFLITE
+
 
 template<class derived_t>
 AxonRunner_<derived_t>::AxonRunner_(std::initializer_list<std::pair<const char*, Optimization> > options, const char* map, size_t th) :
@@ -73,3 +75,5 @@ void MoveNet_<derived_t>::process(cv::Mat& io_frame) {
 		}
 	}
 }
+
+#endif

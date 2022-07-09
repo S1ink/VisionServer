@@ -15,26 +15,29 @@
 
 # IMPORTANT VALUES
 #   PROJECT_NAME
-#   PROJECT_BREIF
+#   PROJECT_BRIEF
 #   PROJECT_LOGO
 #   OUTPUT_DIRECTORY
+
 #   EXTENSION_MAPPING
 #   EXTRACT_ALL
-#   SHOW_INCLUDE_FILES
-#   SHOW_GROUPED_MEMB_INC
-#   SORT_MEMBER_DOCS
-#   SORT_MEMBERS_CTORS_1ST
 #   INPUT
 #   FILE_PATTERNS
 #   RECURSIVE
 #   EXCLUDE
 #   EXCLUDE_PATTERNS
 #   IMAGE_PATH
-#   USE_MDFILE_AS_MAINPAGE
-#   SOURCE_BROWSER
+
+#   SHOW_INCLUDE_FILES
+#   SHOW_GROUPED_MEMB_INC
+#   SORT_MEMBER_DOCS
+#   SORT_MEMBERS_CTORS_1ST
 #   REFERENCED_BY_RELATION
 #   REFERENCES_RELATION
 #   REFERENCES_LINK_SOURCE
+
+#   USE_MDFILE_AS_MAINPAGE
+#   SOURCE_BROWSER
 #   HTML_HEADER
 #   HTML_EXTRA_STYLESHEET
 #   HTML_EXTRA_FILES
@@ -1201,7 +1204,8 @@ HTML_STYLESHEET        =
 
 HTML_EXTRA_STYLESHEET  =    ./docs/doxygen/doxygen-awesome.css \
                             ./docs/doxygen/doxygen-awesome-sidebar-only.css \
-                            ./docs/doxygen/doxygen-awesome-sidebar-only-darkmode-toggle.css
+                            ./docs/doxygen/doxygen-awesome-sidebar-only-darkmode-toggle.css \
+                            ./docs/doxygen/theme.css
 
 # The HTML_EXTRA_FILES tag can be used to specify one or more extra images or
 # other source files which should be copied to the HTML output directory. Note
@@ -1222,7 +1226,7 @@ HTML_EXTRA_FILES       = ./docs/doxygen/doxygen-awesome-darkmode-toggle.js
 # Minimum value: 0, maximum value: 359, default value: 220.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_COLORSTYLE_HUE    = 209
+HTML_COLORSTYLE_HUE    = 16
 
 # The HTML_COLORSTYLE_SAT tag controls the purity (or saturation) of the colors
 # in the HTML output. For a value of 0 the output will use grayscales only. A
@@ -1241,7 +1245,7 @@ HTML_COLORSTYLE_SAT    = 255
 # Minimum value: 40, maximum value: 240, default value: 80.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_COLORSTYLE_GAMMA  = 113
+HTML_COLORSTYLE_GAMMA  = 90
 
 # If the HTML_TIMESTAMP tag is set to YES then the footer of each generated HTML
 # page will contain the date and time when the page was generated. Setting this
@@ -2395,7 +2399,7 @@ DOT_IMAGE_FORMAT       = svg
 # The default value is: NO.
 # This tag requires that the tag HAVE_DOT is set to YES.
 
-INTERACTIVE_SVG        = NO
+INTERACTIVE_SVG        = YES
 
 # The DOT_PATH tag can be used to specify the path where the dot tool can be
 # found. If left blank, it is assumed the dot tool can be found in the path.
@@ -2474,7 +2478,7 @@ MAX_DOT_GRAPH_DEPTH    = 0
 # The default value is: NO.
 # This tag requires that the tag HAVE_DOT is set to YES.
 
-DOT_TRANSPARENT        = NO
+DOT_TRANSPARENT        = YES
 
 # Set the DOT_MULTI_TARGETS tag to YES to allow dot to generate multiple output
 # files in one run (i.e. multiple -o and -T options on the command line). This
@@ -2483,7 +2487,7 @@ DOT_TRANSPARENT        = NO
 # The default value is: NO.
 # This tag requires that the tag HAVE_DOT is set to YES.
 
-DOT_MULTI_TARGETS      = NO
+DOT_MULTI_TARGETS      = YES
 
 # If the GENERATE_LEGEND tag is set to YES doxygen will generate a legend page
 # explaining the meaning of the various boxes and arrows in the dot generated

@@ -1,5 +1,7 @@
 #pragma once
 
+#ifndef EXCLUDE_TFLITE
+
 #include <vector>
 #include <string>
 #include <thread>
@@ -190,4 +192,9 @@ protected:
 };
 typedef MoveNet_<>	MoveNet;
 
+
 #include "tfmodel.inc"
+
+#else
+#define __TFMODEL_UNSUPPORTED
+#endif

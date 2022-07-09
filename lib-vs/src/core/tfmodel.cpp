@@ -1,5 +1,7 @@
 #include "tfmodel.h"
 
+#ifndef EXCLUDE_TFLITE
+
 
 void loadObjectLabels(const std::string& f, std::vector<std::string>& objs) {
 	objs.clear();
@@ -72,3 +74,5 @@ TfModel::TfModel(std::initializer_list<std::pair<const char*, Optimization> > mo
 	}
 
 }
+
+#endif

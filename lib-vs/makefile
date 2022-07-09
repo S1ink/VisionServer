@@ -20,6 +20,8 @@
 rwildcard = $(foreach d,$(wildcard $(addsuffix *,$(1))),$(call rwildcard,$(d)/,$(2)) $(filter $(subst *,%,$(2)),$(d)))
 
 OPT ?= release
+TFLITE ?= true
+ADEFINES ?=
 
 CROSS_PREFIX := arm-raspbian10-linux-gnueabihf-
 CXX := g++
@@ -85,9 +87,9 @@ endif
 COPY_HEADERS := $(HEADERS:$(SRC_DIR)%=$(HEADER_DIR)%)
 
 
-CDEBUG := -g -Og -D__DEBUG__
+CDEBUG := -g -Og -D__DEBUG__ $(foreach df,$(ADEFINES),-D$(df))
 LDEBUG := -g
-CRELEASE := -O3 -D__RELEASE__
+CRELEASE := -O3 -D__RELEASE__ $(foreach df,$(ADEFINES),-D$(df))
 LRELEASE :=
 
 CPPFLAGS := -pthread -Iinclude -Iadditions -Iinclude/opencv4 -MMD -MP
@@ -95,12 +97,19 @@ CFLAGS := -Wall -fpermissive
 ASMFLAGS := -mcpu=cortex-a72 -mfpu=neon-fp-armv8
 LDFLAGS := -pthread -Wall -Llib -Wl,--unresolved-symbols=ignore-in-shared-libs
 LDLIBS := \
-	-lm -lpigpio -ledgetpu -ltensorflowlite -lwpilibc -lwpiHal \
+	-lm -lpigpio -lwpilibc -lwpiHal \
 	-lcameraserver -lntcore -lcscore -lopencv_gapi -lopencv_highgui \
 	-lopencv_ml -lopencv_objdetect -lopencv_photo -lopencv_stitching \
 	-lopencv_video -lopencv_calib3d -lopencv_features2d -lopencv_dnn \
 	-lopencv_flann -lopencv_videoio -lopencv_imgcodecs -lopencv_imgproc \
 	-lopencv_core -lwpiutil -latomic
+
+ifneq ($(filter $(TFLITE),false no n exclude),)
+	CDEBUG += -DEXCLUDE_TFLITE
+	CRELEASE += -DEXCLUDE_TFLITE
+else
+	LDLIBS += -ledgetpu -ltensorflowlite
+endif
 
 ifeq ($(OPT),release)
 COPT := $(CRELEASE)
@@ -110,7 +119,7 @@ COPT := $(CDEBUG)
 LOPT := $(LDEBUG)
 endif
 
-.PHONY: shared static rebuild rebuild-static clean #clean-headers
+.PHONY: shared static rebuild rebuild-static clean #test #clean-headers
 
 shared: $(LIB_SHARED) $(COPY_HEADERS)
 static: $(LIB_STATIC) $(COPY_HEADERS)

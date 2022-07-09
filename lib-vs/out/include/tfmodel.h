@@ -1,5 +1,7 @@
 #pragma once
 
+#ifndef EXCLUDE_TFLITE
+
 #include <vector>
 #include <string>
 #include <thread>
@@ -74,14 +76,14 @@ struct AxonRunner_B {
 
 /** Runs an Axon-generated or similar object classification tflite model within a vision pipeline */
 template<class derived_t = void>
-class AxonRunner : public vs2::VPipeline<AxonRunner<derived_t> >, public TfModel, public AxonRunner_B {
-	typedef struct AxonRunner<derived_t>	This_t;
+class AxonRunner_ : public vs2::VPipeline<AxonRunner_<derived_t> >, public TfModel, public AxonRunner_B {
+	typedef struct AxonRunner_<derived_t>	This_t;
 public:
-	inline AxonRunner(size_t th = default_threading) :
-		AxonRunner({{default_model, Optimization::DEFAULT}, {edgetpu_model, Optimization::EDGETPU}}, default_labels, th) {}
-	inline AxonRunner(const char* model, Optimization opt = Optimization::DEFAULT, const char* map = default_labels, size_t th = default_threading) :
-		AxonRunner({{model, opt}}, map, th) {}
-	AxonRunner(std::initializer_list<std::pair<const char*, Optimization> >, const char* map = default_labels, size_t = default_threading);
+	inline AxonRunner_(size_t th = default_threading) :
+		AxonRunner_({{default_model, Optimization::DEFAULT}, {edgetpu_model, Optimization::EDGETPU}}, default_labels, th) {}
+	inline AxonRunner_(const char* model, Optimization opt = Optimization::DEFAULT, const char* map = default_labels, size_t th = default_threading) :
+		AxonRunner_({{model, opt}}, map, th) {}
+	AxonRunner_(std::initializer_list<std::pair<const char*, Optimization> >, const char* map = default_labels, size_t = default_threading);
 
 	inline bool isValidOutput() const { return this->coords && this->labels && this->confidence && this->detections; }
 
@@ -108,6 +110,7 @@ protected:
 
 
 };
+typedef AxonRunner_<>	AxonRunner;
 
 
 
@@ -163,14 +166,14 @@ constexpr inline size_t operator~(MoveNet_B::Output e) { return static_cast<size
 
 /** Runs a MoveNet pose estimation tflite model within a vision pipeline */
 template<class derived_t = void>
-class MoveNet : public vs2::VPipeline<MoveNet<derived_t> >, public TfModel, public MoveNet_B {
-	typedef struct MoveNet<derived_t>		This_t;
+class MoveNet_ : public vs2::VPipeline<MoveNet_<derived_t> >, public TfModel, public MoveNet_B {
+	typedef struct MoveNet_<derived_t>		This_t;
 public:
-	inline MoveNet(size_t th = default_threading) :
-		MoveNet({{default_model, Optimization::DEFAULT}}, th) {}
-	inline MoveNet(const char* model, Optimization opt = Optimization::DEFAULT, size_t th = default_threading) :
-		MoveNet({{model, opt}}, th) {}
-	MoveNet(std::initializer_list<std::pair<const char*, Optimization> >, size_t th = default_threading);
+	inline MoveNet_(size_t th = default_threading) :
+		MoveNet_({{default_model, Optimization::DEFAULT}}, th) {}
+	inline MoveNet_(const char* model, Optimization opt = Optimization::DEFAULT, size_t th = default_threading) :
+		MoveNet_({{model, opt}}, th) {}
+	MoveNet_(std::initializer_list<std::pair<const char*, Optimization> >, size_t th = default_threading);
 
 	inline bool isValidOutput() const { return this->outputs; }
 
@@ -187,5 +190,11 @@ protected:
 
 
 };
+typedef MoveNet_<>	MoveNet;
+
 
 #include "tfmodel.inc"
+
+#else
+#define __TFMODEL_UNSUPPORTED
+#endif

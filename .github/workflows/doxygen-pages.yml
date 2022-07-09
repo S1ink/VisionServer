@@ -5,6 +5,7 @@ on:
     paths:
       - 'docs/Doxyfile'
       - 'docs/README.md'
+      - 'docs/doxygen/**'
       - 'lib-vs/**'
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
