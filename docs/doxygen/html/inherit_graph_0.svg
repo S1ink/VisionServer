@@ -8,12 +8,11 @@
  viewBox="0.00 0.00 557.00 341.50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 337.5)">
 <title>Graphical Class Hierarchy</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-337.5 553,-337.5 553,4 -4,4"/>
 <!-- Node0 -->
 <g id="node1" class="node">
 <title>Node0</title>
 <g id="a_node1"><a xlink:href="structAxonRunner__B.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="black" points="272,-314 272,-333 353,-333 353,-314 272,-314"/>
+<polygon fill="none" stroke="black" points="272,-314 272,-333 353,-333 353,-314 272,-314"/>
 <text text-anchor="middle" x="312.5" y="-321" font-family="Helvetica,sans-Serif" font-size="10.00">AxonRunner_B</text>
 </a>
 </g>
@@ -22,7 +21,7 @@
 <g id="node2" class="node">
 <title>Node1</title>
 <g id="a_node2"><a xlink:href="classAxonRunner__.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="black" points="418,-270 418,-289 549,-289 549,-270 418,-270"/>
+<polygon fill="none" stroke="black" points="418,-270 418,-289 549,-289 549,-270 418,-270"/>
 <text text-anchor="middle" x="483.5" y="-277" font-family="Helvetica,sans-Serif" font-size="10.00">AxonRunner_&lt; derived_t &gt;</text>
 </a>
 </g>
@@ -37,7 +36,7 @@
 <g id="node3" class="node">
 <title>Node3</title>
 <g id="a_node3"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="0,-160 0,-179 74,-179 74,-160 0,-160"/>
+<polygon fill="none" stroke="#bfbfbf" points="0,-160 0,-179 74,-179 74,-160 0,-160"/>
 <text text-anchor="middle" x="37" y="-167" font-family="Helvetica,sans-Serif" font-size="10.00">cs::CvSource</text>
 </a>
 </g>
@@ -46,7 +45,7 @@
 <g id="node4" class="node">
 <title>Node4</title>
 <g id="a_node4"><a xlink:href="classvs2_1_1VisionServer_1_1BasePipe.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="black" points="110,-154.5 110,-184.5 207,-184.5 207,-154.5 110,-154.5"/>
+<polygon fill="none" stroke="black" points="110,-154.5 110,-184.5 207,-184.5 207,-154.5 110,-154.5"/>
 <text text-anchor="start" x="118" y="-172.5" font-family="Helvetica,sans-Serif" font-size="10.00">vs2::VisionServer::</text>
 <text text-anchor="middle" x="158.5" y="-161.5" font-family="Helvetica,sans-Serif" font-size="10.00">BasePipe</text>
 </a>
@@ -62,7 +61,7 @@
 <g id="node5" class="node">
 <title>Node5</title>
 <g id="a_node5"><a xlink:href="classvs2_1_1VPipeline.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="black" points="243,-264.5 243,-294.5 382,-294.5 382,-264.5 243,-264.5"/>
+<polygon fill="none" stroke="black" points="243,-264.5 243,-294.5 382,-294.5 382,-264.5 243,-264.5"/>
 <text text-anchor="start" x="251" y="-282.5" font-family="Helvetica,sans-Serif" font-size="10.00">vs2::VPipeline&lt; AxonRunner</text>
 <text text-anchor="middle" x="312.5" y="-271.5" font-family="Helvetica,sans-Serif" font-size="10.00">_&lt; void &gt; &gt;</text>
 </a>
@@ -78,7 +77,7 @@
 <g id="node6" class="node">
 <title>Node6</title>
 <g id="a_node6"><a xlink:href="classvs2_1_1VPipeline.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="black" points="249.5,-176.5 249.5,-206.5 375.5,-206.5 375.5,-176.5 249.5,-176.5"/>
+<polygon fill="none" stroke="black" points="249.5,-176.5 249.5,-206.5 375.5,-206.5 375.5,-176.5 249.5,-176.5"/>
 <text text-anchor="start" x="257.5" y="-194.5" font-family="Helvetica,sans-Serif" font-size="10.00">vs2::VPipeline&lt; MoveNet</text>
 <text text-anchor="middle" x="312.5" y="-183.5" font-family="Helvetica,sans-Serif" font-size="10.00">_&lt; void &gt; &gt;</text>
 </a>
@@ -94,7 +93,7 @@
 <g id="node8" class="node">
 <title>Node8</title>
 <g id="a_node8"><a xlink:href="classvs2_1_1VPipeline.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="black" points="246.5,-88.5 246.5,-118.5 378.5,-118.5 378.5,-88.5 246.5,-88.5"/>
+<polygon fill="none" stroke="black" points="246.5,-88.5 246.5,-118.5 378.5,-118.5 378.5,-88.5 246.5,-88.5"/>
 <text text-anchor="start" x="254.5" y="-106.5" font-family="Helvetica,sans-Serif" font-size="10.00">vs2::VPipeline&lt; Sequential</text>
 <text text-anchor="middle" x="312.5" y="-95.5" font-family="Helvetica,sans-Serif" font-size="10.00">Pipeline&lt; pipelines_t... &gt; &gt;</text>
 </a>
@@ -110,7 +109,7 @@
 <g id="node10" class="node">
 <title>Node10</title>
 <g id="a_node10"><a xlink:href="classvs2_1_1VPipeline.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="black" points="249.5,-50 249.5,-69 375.5,-69 375.5,-50 249.5,-50"/>
+<polygon fill="none" stroke="black" points="249.5,-50 249.5,-69 375.5,-69 375.5,-50 249.5,-50"/>
 <text text-anchor="middle" x="312.5" y="-57" font-family="Helvetica,sans-Serif" font-size="10.00">vs2::VPipeline&lt; derived &gt;</text>
 </a>
 </g>
@@ -131,7 +130,7 @@
 <g id="node7" class="node">
 <title>Node7</title>
 <g id="a_node7"><a xlink:href="classMoveNet__.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="black" points="424.5,-182 424.5,-201 542.5,-201 542.5,-182 424.5,-182"/>
+<polygon fill="none" stroke="black" points="424.5,-182 424.5,-201 542.5,-201 542.5,-182 424.5,-182"/>
 <text text-anchor="middle" x="483.5" y="-189" font-family="Helvetica,sans-Serif" font-size="10.00">MoveNet_&lt; derived_t &gt;</text>
 </a>
 </g>
@@ -146,7 +145,7 @@
 <g id="node9" class="node">
 <title>Node9</title>
 <g id="a_node9"><a xlink:href="classvs2_1_1SequentialPipeline.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="black" points="425,-88.5 425,-118.5 542,-118.5 542,-88.5 425,-88.5"/>
+<polygon fill="none" stroke="black" points="425,-88.5 425,-118.5 542,-118.5 542,-88.5 425,-88.5"/>
 <text text-anchor="start" x="433" y="-106.5" font-family="Helvetica,sans-Serif" font-size="10.00">vs2::SequentialPipeline</text>
 <text text-anchor="middle" x="483.5" y="-95.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; pipelines_t &gt;</text>
 </a>
@@ -162,7 +161,7 @@
 <g id="node11" class="node">
 <title>Node11</title>
 <g id="a_node11"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="129,-94 129,-113 188,-113 188,-94 129,-94"/>
+<polygon fill="none" stroke="#bfbfbf" points="129,-94 129,-113 188,-113 188,-94 129,-94"/>
 <text text-anchor="middle" x="158.5" y="-101" font-family="Helvetica,sans-Serif" font-size="10.00">Instanced</text>
 </a>
 </g>
@@ -195,7 +194,7 @@
 <g id="node12" class="node">
 <title>Node12</title>
 <g id="a_node12"><a xlink:href="classvs2_1_1UniqueTarget.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="black" points="262,-0.5 262,-30.5 363,-30.5 363,-0.5 262,-0.5"/>
+<polygon fill="none" stroke="black" points="262,-0.5 262,-30.5 363,-30.5 363,-0.5 262,-0.5"/>
 <text text-anchor="start" x="270" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">vs2::UniqueTarget&lt;</text>
 <text text-anchor="middle" x="312.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00"> derived &gt;</text>
 </a>
@@ -211,7 +210,7 @@
 <g id="node13" class="node">
 <title>Node15</title>
 <g id="a_node13"><a xlink:href="structMoveNet__B.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="black" points="278.5,-138 278.5,-157 346.5,-157 346.5,-138 278.5,-138"/>
+<polygon fill="none" stroke="black" points="278.5,-138 278.5,-157 346.5,-157 346.5,-138 278.5,-138"/>
 <text text-anchor="middle" x="312.5" y="-145" font-family="Helvetica,sans-Serif" font-size="10.00">MoveNet_B</text>
 </a>
 </g>
@@ -226,7 +225,7 @@
 <g id="node14" class="node">
 <title>Node16</title>
 <g id="a_node14"><a xlink:href="classvs2_1_1Target.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="black" points="126,-6 126,-25 191,-25 191,-6 126,-6"/>
+<polygon fill="none" stroke="black" points="126,-6 126,-25 191,-25 191,-6 126,-6"/>
 <text text-anchor="middle" x="158.5" y="-13" font-family="Helvetica,sans-Serif" font-size="10.00">vs2::Target</text>
 </a>
 </g>
@@ -241,7 +240,7 @@
 <g id="node15" class="node">
 <title>Node17</title>
 <g id="a_node15"><a xlink:href="classTfModel.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="black" points="286.5,-226 286.5,-245 338.5,-245 338.5,-226 286.5,-226"/>
+<polygon fill="none" stroke="black" points="286.5,-226 286.5,-245 338.5,-245 338.5,-226 286.5,-226"/>
 <text text-anchor="middle" x="312.5" y="-233" font-family="Helvetica,sans-Serif" font-size="10.00">TfModel</text>
 </a>
 </g>

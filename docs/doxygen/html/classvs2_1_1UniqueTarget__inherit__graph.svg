@@ -8,7 +8,6 @@
  viewBox="0.00 0.00 217.50 106.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 102)">
 <title>vs2::UniqueTarget&lt; derived &gt;</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-102 213.5,-102 213.5,4 -4,4"/>
 <!-- Node1 -->
 <g id="node1" class="node">
 <title>Node1</title>
@@ -23,7 +22,7 @@
 <g id="node2" class="node">
 <title>Node2</title>
 <g id="a_node2"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="0,-67.5 0,-97.5 126,-97.5 126,-67.5 0,-67.5"/>
+<polygon fill="none" stroke="#bfbfbf" points="0,-67.5 0,-97.5 126,-97.5 126,-67.5 0,-67.5"/>
 <text text-anchor="start" x="8" y="-85.5" font-family="Helvetica,sans-Serif" font-size="10.00">Instanced&lt; UniqueTarget</text>
 <text text-anchor="middle" x="63" y="-74.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; void &gt; &gt;</text>
 </a>
@@ -39,7 +38,7 @@
 <g id="node3" class="node">
 <title>Node3</title>
 <g id="a_node3"><a xlink:href="classvs2_1_1Target.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="black" points="144.5,-73 144.5,-92 209.5,-92 209.5,-73 144.5,-73"/>
+<polygon fill="none" stroke="black" points="144.5,-73 144.5,-92 209.5,-92 209.5,-73 144.5,-73"/>
 <text text-anchor="middle" x="177" y="-80" font-family="Helvetica,sans-Serif" font-size="10.00">vs2::Target</text>
 </a>
 </g>

@@ -8,12 +8,11 @@
  viewBox="0.00 0.00 227.00 39.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 35)">
 <title>Graphical Class Hierarchy</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-35 223,-35 223,4 -4,4"/>
 <!-- Node13 -->
 <g id="node1" class="node">
 <title>Node13</title>
 <g id="a_node1"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="0,-6 0,-25 86,-25 86,-6 0,-6"/>
+<polygon fill="none" stroke="#bfbfbf" points="0,-6 0,-25 86,-25 86,-6 0,-6"/>
 <text text-anchor="middle" x="43" y="-13" font-family="Helvetica,sans-Serif" font-size="10.00">cs::MjpegServer</text>
 </a>
 </g>
@@ -22,7 +21,7 @@
 <g id="node2" class="node">
 <title>Node0</title>
 <g id="a_node2"><a xlink:href="structvs2_1_1VisionServer_1_1OutputStream.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="black" points="122,-0.5 122,-30.5 219,-30.5 219,-0.5 122,-0.5"/>
+<polygon fill="none" stroke="black" points="122,-0.5 122,-30.5 219,-30.5 219,-0.5 122,-0.5"/>
 <text text-anchor="start" x="130" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">vs2::VisionServer::</text>
 <text text-anchor="middle" x="170.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">OutputStream</text>
 </a>

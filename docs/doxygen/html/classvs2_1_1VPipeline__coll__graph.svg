@@ -8,7 +8,6 @@
  viewBox="0.00 0.00 286.00 231.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 227)">
 <title>vs2::VPipeline&lt; derived &gt;</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-227 282,-227 282,4 -4,4"/>
 <!-- Node1 -->
 <g id="node1" class="node">
 <title>Node1</title>
@@ -22,7 +21,7 @@
 <g id="node2" class="node">
 <title>Node2</title>
 <g id="a_node2"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="0,-57.5 0,-87.5 109,-87.5 109,-57.5 0,-57.5"/>
+<polygon fill="none" stroke="#bfbfbf" points="0,-57.5 0,-87.5 109,-87.5 109,-57.5 0,-57.5"/>
 <text text-anchor="start" x="8" y="-75.5" font-family="Helvetica,sans-Serif" font-size="10.00">Instanced&lt; VPipeline</text>
 <text text-anchor="middle" x="54.5" y="-64.5" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; derived &gt; &gt;</text>
 </a>
@@ -38,7 +37,7 @@
 <g id="node3" class="node">
 <title>Node3</title>
 <g id="a_node3"><a xlink:href="classvs2_1_1VisionServer_1_1BasePipe.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="black" points="127,-57.5 127,-87.5 224,-87.5 224,-57.5 127,-57.5"/>
+<polygon fill="none" stroke="black" points="127,-57.5 127,-87.5 224,-87.5 224,-57.5 127,-57.5"/>
 <text text-anchor="start" x="135" y="-75.5" font-family="Helvetica,sans-Serif" font-size="10.00">vs2::VisionServer::</text>
 <text text-anchor="middle" x="175.5" y="-64.5" font-family="Helvetica,sans-Serif" font-size="10.00">BasePipe</text>
 </a>
@@ -54,7 +53,7 @@
 <g id="node4" class="node">
 <title>Node4</title>
 <g id="a_node4"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="109.5,-135.5 109.5,-154.5 183.5,-154.5 183.5,-135.5 109.5,-135.5"/>
+<polygon fill="none" stroke="#bfbfbf" points="109.5,-135.5 109.5,-154.5 183.5,-154.5 183.5,-135.5 109.5,-135.5"/>
 <text text-anchor="middle" x="146.5" y="-142.5" font-family="Helvetica,sans-Serif" font-size="10.00">cs::CvSource</text>
 </a>
 </g>
@@ -69,7 +68,7 @@
 <g id="node5" class="node">
 <title>Node5</title>
 <g id="a_node5"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="202,-135.5 202,-154.5 261,-154.5 261,-135.5 202,-135.5"/>
+<polygon fill="none" stroke="#bfbfbf" points="202,-135.5 202,-154.5 261,-154.5 261,-135.5 202,-135.5"/>
 <text text-anchor="middle" x="231.5" y="-142.5" font-family="Helvetica,sans-Serif" font-size="10.00">std::string</text>
 </a>
 </g>
@@ -85,7 +84,7 @@
 <g id="node6" class="node">
 <title>Node6</title>
 <g id="a_node6"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="185,-192.5 185,-222.5 278,-222.5 278,-192.5 185,-192.5"/>
+<polygon fill="none" stroke="#bfbfbf" points="185,-192.5 185,-222.5 278,-222.5 278,-192.5 185,-192.5"/>
 <text text-anchor="start" x="193" y="-210.5" font-family="Helvetica,sans-Serif" font-size="10.00">std::basic_string&lt;</text>
 <text text-anchor="middle" x="231.5" y="-199.5" font-family="Helvetica,sans-Serif" font-size="10.00"> Char &gt;</text>
 </a>
