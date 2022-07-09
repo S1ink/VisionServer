@@ -5,16 +5,17 @@ html {
 
 	--content-maxwidth: auto;
 	--side-nav-arrow-opacity: 0.5;
+	--side-nav-fixed-width: 350px;
 
 	--fragment-background: #F8F9FA;
     --fragment-foreground: #37474F;
-    --fragment-keyword: #bb6bb2;
-    --fragment-keywordtype: #8258b3;
-    --fragment-keywordflow: #d67c3b;
-    --fragment-token: #438a59;
-    --fragment-comment: #969696;
-    --fragment-link: #5383d6;
-    --fragment-preprocessor: #46aaa5;
+    --fragment-keyword: #4455ff;
+    --fragment-keywordtype: #9639e7;
+    --fragment-keywordflow: #9639e7;
+    --fragment-token: #14ac01;
+    --fragment-comment: #999999;
+    --fragment-link: #0fa8ffe8;
+    --fragment-preprocessor: #c53094;
     --fragment-linenumber-color: #797979;
     --fragment-linenumber-background: #f4f4f5;
     --fragment-linenumber-border: #e3e5e7;
@@ -24,9 +25,6 @@ html.dark-mode {
 	--primary-color: #e96d08;
 	--primary-dark-color: #ad5700;
 	--primary-light-color: #de9923;
-
-	--content-maxwidth: auto;
-	--side-nav-arrow-opacity: 0.5;
 
 	--fragment-background: #282c34;
     --fragment-foreground: #6fb4bd;
@@ -55,4 +53,8 @@ html.dark-mode {
 
 html.dark-mode #variants_image img {
     filter: brightness(87%) hue-rotate(180deg) invert();
+}
+
+#projectlogo img {
+	width: 100%;
 }
