@@ -28,7 +28,7 @@ jobs:
       - run: sudo apt-get install -y graphviz
       - uses: langroodi/doxygenize@master
         with:
-          doxygenconf: ./docs/Doxyfile
+          doxygenconf: ./docs/doxygen/Doxyfile
           # Generated HTML documents output folder
           htmloutput: ./docs/doxygen/html/
           # GitHub Pages branch name
