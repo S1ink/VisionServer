@@ -7,26 +7,6 @@ html {
 	--side-nav-arrow-opacity: 0.5;
 	--side-nav-fixed-width: 350px;
 
-	--fragment-background: #F8F9FA;
-    --fragment-foreground: #37474F;
-    --fragment-keyword: #4455ff;
-    --fragment-keywordtype: #9639e7;
-    --fragment-keywordflow: #9639e7;
-    --fragment-token: #14ac01;
-    --fragment-comment: #999999;
-    --fragment-link: #0fa8ffe8;
-    --fragment-preprocessor: #c53094;
-    --fragment-linenumber-color: #797979;
-    --fragment-linenumber-background: #f4f4f5;
-    --fragment-linenumber-border: #e3e5e7;
-}
-
-html.dark-mode {
-	--primary-color: #e96d08;
-	--primary-dark-color: #ad5700;
-	--primary-light-color: #de9923;
-
-	--fragment-background: #282c34;
     --fragment-foreground: #6fb4bd;
     --fragment-keyword: #4455ff;
     --fragment-keywordtype: #9639e7;
@@ -35,9 +15,21 @@ html.dark-mode {
     --fragment-comment: #999999;
     --fragment-link: #0fa8ffe8;
     --fragment-preprocessor: #c53094;
-    --fragment-linenumber-color: #cccccc;
-    --fragment-linenumber-background: #35393c;
-    --fragment-linenumber-border: #1f1f1f;
+}
+
+html.dark-mode {
+	--primary-color: #e96d08;
+	--primary-dark-color: #ad5700;
+	--primary-light-color: #de9923;
+
+    --fragment-foreground: #6fb4bd;
+    --fragment-keyword: #4455ff;
+    --fragment-keywordtype: #9639e7;
+    --fragment-keywordflow: #9639e7;
+    --fragment-token: #14ac01;
+    --fragment-comment: #999999;
+    --fragment-link: #0fa8ffe8;
+    --fragment-preprocessor: #c53094;
 }
 
 .compoundTemplParams {
@@ -47,8 +39,10 @@ html.dark-mode {
 }
 
 .github-corner svg {
-	fill: var(--primary-light-color);
+	fill: var(--primary-color);
 	color: var(--page-background-color);
+    width: 60px;
+    height: 60px;
 }
 
 html.dark-mode #variants_image img {
@@ -57,4 +51,19 @@ html.dark-mode #variants_image img {
 
 #projectlogo img {
 	width: 100%;
+}
+
+#doc-content {
+	padding-top: 0px;
+}
+
+div.header .summary {
+    float: right;
+    font-size: var(--code-font-size);
+    margin-bottom: var(--spacing-medium);
+}
+div.header .title {
+	top: 0;
+	font-size: 250%;
+	margin-top: var(--spacing-medium);
 }

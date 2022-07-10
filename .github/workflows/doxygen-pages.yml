@@ -34,5 +34,5 @@ jobs:
           # GitHub Pages branch name
           ghpagesbranch: main
           # GitHub Pages directory path
-          ghpagesdir: ./docs/doxygen/html/
+          ghpagesdir: ./docs/
           darkmode: false

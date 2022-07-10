@@ -1,5 +1,0 @@
-MODIFICATIONS TO WPILIBPI:
-1. Run user program with root (fixes no output stream, funky behaviour with robot code) ->
-	- sudo nano /etc/service/camera/run (configure as writable on the dashboard)
-	- change "exec pgrphack /usr/local/bin/setuidgids pi ./runCamera" to "exec pgrphack ./runCamera"
-	- Ctrl+S to save, then Ctrl+X to exit -> done!
