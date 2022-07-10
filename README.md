@@ -1,6 +1,8 @@
 [![CI](https://github.com/FRC3407/VisionServer/actions/workflows/ci.yml/badge.svg)](https://github.com/FRC3407/VisionServer/actions/workflows/ci.yml) [![Build Docs](https://github.com/FRC3407/VisionServer/actions/workflows/doxygen-pages.yml/badge.svg?branch=main)](https://github.com/FRC3407/VisionServer/actions/workflows/doxygen-pages.yml)
 
 # [FRC 3407] VisionServer
+### | [Get Started](#get-started) | [Vision Resources](#more-on-vision-processing) | [Docs](https://frc3407.github.io/VisionServer/) |
+
 ## Project Overview
  - This project originally existed as a testing environment for vision processing code that would be run on an FRC robot (Raspberry Pi coprocessor).
  - C++ was chosen as the primary development language, and a more generalized program framework was created, titled 'VisionServer'.
@@ -48,18 +50,10 @@ int main() {
 ```
 
 ## Get Started
-- __[Setup guide](SETUP.md) for basic developement requirements__
-- __[A guide](ROBOT_PROJECT.md) on integrating a vision project into a WPILib robot project__
-- __[More info](BUILD.md) on building the project, or building another project and linking to VS__
-- __[Some helpful tips](WPILIBPI_TIPS.md) for deploying to and using WPILibPi (and specifically when attached to a robot)__
-- __*Coming Soon* - a guide on using the included calibration tools, and how to included calibrations in the config json__
-- __[Source code](/roborio-vs) for robot[program]-side networktables communication abstraction API - *At any given time this may not be completely up to date with the latest VS source/release*__
-
-## Documentation
-- __Doxygen-generated documentation is currently not working but can be found [here](https://frc3407.github.io/VisionServer/doxygen/html/).__
+__All guides and code documentation can be found on this repo's [gh-pages](https://frc3407.github.io/VisionServer/).__ Additionally, all guides can be found in markdown format under [docs/guide/](docs/guide/).
 
 ## More on Vision Processing
-- __Some [helpful resources](REFERENCES.md) used in the making of this project__
+__Here is a list of some [helpful resources](docs/guide/References.md) used in the making of this project.__
 
 ## Suggestions?
 __Currently [I](https://github.com/S1ink/) am the sole developer and maintainer of this project, so any suggestions/help are welcome (note that things don't get done very fast) - just post an issue or create a pull request. There is no template for this, just use common sense and try to be as helpful as possible.__

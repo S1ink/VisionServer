@@ -1,7 +1,9 @@
 # Using WPILibPi
 __Before reading this guide, make sure to familiarize yourself with WPILibPi using [its own docs](https://docs.wpilib.org/en/stable/docs/software/vision-processing/wpilibpi/).__
+
 ## Shared Libraries - IMPORTANT
 WPILibPi comes preinstalled with WPILib, OpenCV, and Pigpio, but not with Tensorflow Lite (only the python version is present, not C++) or the Edge TPU driver - these will have to be uploaded manually. Both files (libtensorflowlite.so and libedgetpu.so) are copied to the output directory during each VS build, and can be found there for uploading on the Pi using the web dashboard (these are treated as "supplementary files" in step 2 below). Uploading these should be a one-time process, but will need to be repeated when newer versions of WPILibPi are released, and this repo is updated with newer versions of TfLite and the EdgeTPU driver.
+
 ## Deployment Process
 1. __Build your project (and/or VS).__
 2. __Go to the WPILibPi dashboard (http://wpilibpi - or http://IP_ADDRESS_OF_RPI) in your browser and navigate to the `Application` tab.__ Make sure to toggle the Pi into __Writable__ mode using the button at the top of the page.
@@ -11,6 +13,7 @@ WPILibPi comes preinstalled with WPILib, OpenCV, and Pigpio, but not with Tensor
 3. __Run the program.__ This can be done through the web dashboard or by ssh'ing into the Pi and running the program manually.
 	* On the dashboard, navigate to the `Vision Status` tab and select the __"Up"__ option to start the program. Additionally make sure to enable console output, which is oftentimes crucial for debugging.
 	* When ssh'ed into the Pi, enter `sudo ./uploaded` to run the program. This can be helpful when more direct terminal output is needed (sometimes the dashboard can be misformatted and skip some lines).
+
 ## "Patches"
 For some reason uploaded executables may require sudo permissions to work properly, and without can sometimes fail to output streams and simply not work correctly. By default, WPILibPi runs uploaded executables without sudo, but this can be changed with a few modifications.
 1. __SSH into your Pi.__ Additionally go to the web dashboard and set the Pi to __Writable__ mode.
@@ -18,6 +21,7 @@ For some reason uploaded executables may require sudo permissions to work proper
 3. __Change `exec pgrphack /usr/local/bin/setuidgids pi ./runCamera` to `exec pgrphack ./runCamera`.__
 4. __Use `Ctrl + S` to save, then `Ctrl + X` to exit.__
 5. __Set the Pi back to __Read-Only__ and run the program through the dashboard - it should work normally.__
+
 ## Troubleshooting (Robot Deployment)
 Using and connecting to the Pi directly may seem fluid and stable, but there are a whole host of issues that can arrise during robot deployment. This can include anything from short stutters/freezing video streams, to unresponsive connections and a complete inability to connect.
 

@@ -3,8 +3,6 @@ name: Build Doxygen
 on:
   push:
     paths:
-      - 'docs/Doxyfile'
-      - 'docs/README.md'
       - 'docs/doxygen/**'
       - 'lib-vs/**'
   # Allows you to run this workflow manually from the Actions tab
@@ -24,7 +22,7 @@ jobs:
       - run: |
           echo '::echo::on'
           cd $GITHUB_WORKSPACE
-          echo "PROJECT_NUMBER = `git describe --tags`" >> ./docs/Doxyfile
+          echo "PROJECT_NUMBER = `git describe --tags`" >> ./docs/doxygen/Doxyfile
       - run: sudo apt-get install -y graphviz
       - uses: langroodi/doxygenize@master
         with:
