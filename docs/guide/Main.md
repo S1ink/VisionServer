@@ -1,10 +1,10 @@
 # Welcome to VisionServer
 
-This page will have better organization in the future. Here are the current guides:
+__This site contains guides for using the library as well as documentation for its internals. Below is a list of all the guides, which is in the correct order of how they should be read. All items can also be accessed from the side panel.__
 
-- __[Setup guide](Setup-Dev.md) for basic developement requirements__
-- __[A guide](Robot-Project.md) on integrating a vision project into a WPILib robot project__
-- __[More info](Build.md) on building the project, or building another project and linking to VS__
-- __[Some helpful tips](WPILibPi-Infor.md) for deploying to and using WPILibPi (and specifically when attached to a robot)__
-- __*Coming Soon* - a guide on using the included calibration tools, and how to included calibrations in the config json__
-- __[Source code](/roborio-vs) for robot[program]-side networktables communication abstraction API - *At any given time this may not be completely up to date with the latest VS source/release*__
+1. #### [Basic dependencies and setup](Setup-Dev.md)
+2. #### [Creating a project using VisionServer](Robot-Project.md)
+3. #### [How to properly use WPILibPi (important)](WPILibPi-Info.md)
+4. #### [Camera calibration](Calibration.md)
+5. #### [The build system](Build_.md)
+6. #### [Vision resources](References_.md)

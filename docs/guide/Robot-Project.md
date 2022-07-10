@@ -22,6 +22,7 @@ __This tutorial will traverse through the process of integrating the VisionServe
 				> src/
 			> other build files...
 		```
+
 ## Project Files
 3. __Clone VisionServer.__ While still inside the base vision directory, open a terminal and enter `git clone https://github.com/FRC3407/VisionServer --recurse-submodules` to clone this repo and its submodules.
 	* If your base project is already a git repo, and you want to add VisionServer as a submodule (definitely recommended for this config), then navigate to the base project folder and `git submodule add https://github.com/FRC3407/VisionServer VISION_PROGRAM_RELATIVE_PATH/VisionServer` - where for this tutorial `VISION_PROGRAM_RELATIVE_PATH` would be `vision` (as created in step 1).
@@ -46,6 +47,7 @@ __This tutorial will traverse through the process of integrating the VisionServe
 6. __Add the robot-side API files into your robot project.__ Within the base project directory, navigate to where your source files are located (ex. `src/main/java/frc/robot/` for Java), and `git clone https://github.com/S1ink/VisionServer-Robot API_DIR` - where `API_DIR` represents the directory name where the repo will be cloned (ex. `vision` is once again a good name).
 	* Again, if submodules are preferred, then this should be added as a submodule from the base project directory: `git submodule add https://github.com/S1ink/VisionServer-Robot SRC_DIR_PATH/API_DIR`.
 	* Note that for Java projects the "package" line at the top of the added files will need to be updated based on the directory names used above.
+
 ## Additional Automations (Optional)
 7. __Configure VSCode workspace and tasks.__ This is the same process as described in step 4 in [SETUP.md](SETUP.md), except that include paths may need to be adjusted based on the build system present. A build task can be constructed to invoke whatever build system is used with the correct parameters, and allows for a keybound build command.
 8. __Rebuild VisionServer before each project build.__ If you plan on editing the library itself during development, you can simply create a build script that calls `make -C VISION_DIR/VisionServer/lib-vs shared OPT=release` or `make -C VISION_DIR/VisionServer/lib-vs static OPT=release` before the vision program itself is built. This will update `...VisionServer/lib-vs/out/libvs3407.so [and .a]` along with recopy all headers into `...VisionServer/lib-vs/out/include/`, which can then be used as artifacts for the program build.

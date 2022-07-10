@@ -119,12 +119,13 @@ COPT := $(CDEBUG)
 LOPT := $(LDEBUG)
 endif
 
-.PHONY: shared static rebuild rebuild-static clean #test #clean-headers
+.PHONY: shared static rebuild rebuild-shared rebuild-static clean #test #clean-headers
 
 shared: $(LIB_SHARED) $(COPY_HEADERS)
 static: $(LIB_STATIC) $(COPY_HEADERS)
 
-rebuild: shared | clean
+rebuild: rebuild-shared
+rebuild-shared: shared | clean
 rebuild-static: static | clean
 
 clean:
