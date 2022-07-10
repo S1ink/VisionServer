@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['welcome_20to_20visionserver_0',['Welcome to VisionServer',['../index.html',1,'']]]
+  ['using_20wpilibpi_0',['Using WPILibPi',['../md_docs_guide_WPILibPi_Info.html',1,'']]]
 ];

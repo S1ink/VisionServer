@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['using_20wpilibpi_0',['Using WPILibPi',['../md_docs_guide_WPILibPi_Info.html',1,'']]]
+  ['setup_0',['Setup',['../md_docs_guide_Setup_Dev.html',1,'']]]
 ];

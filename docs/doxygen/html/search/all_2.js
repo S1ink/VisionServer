@@ -6,6 +6,6 @@ var searchData=
   ['blue_3',['BLUE',['../namespacevs2.html#ae52486a5b23f75ab18b4b6617ebf10aba1b3e1ee9bff86431dea6b181365ba65f',1,'vs2']]],
   ['box_5fcoords_4',['BOX_COORDS',['../structAxonRunner__B.html#af114d474aaccfe5d798fc9caf59fb164a2a4e8011aadd47ab7ecc148fd0ea7540',1,'AxonRunner_B']]],
   ['brightness_5',['brightness',['../classVisionCamera.html#a6799562884c93586fde0039b95d05de5',1,'VisionCamera']]],
-  ['build_6',['BUILD',['../md_docs_guide_BUILD.html',1,'']]],
-  ['build_2emd_7',['BUILD.md',['../BUILD_8md.html',1,'']]]
+  ['build_5f_2emd_6',['Build_.md',['../Build___8md.html',1,'']]],
+  ['building_20visionserver_7',['Building VisionServer',['../md_docs_guide_Build_.html',1,'']]]
 ];
