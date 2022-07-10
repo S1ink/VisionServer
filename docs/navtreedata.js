@@ -25,12 +25,12 @@
 var NAVTREE =
 [
   [ "VisionServer", "index.html", [
-    [ "[FRC 3407] VisionServer", "index.html#autotoc_md0", null ],
+    [ "Welcome to VisionServer", "index.html", null ],
     [ "BUILD", "md_docs_guide_BUILD.html", null ],
     [ "Helpful sources", "md_docs_guide_REFERENCES.html", null ],
-    [ "Robot Project Integration", "md_docs_guide_ROBOT_PROJECT.html", null ],
-    [ "Setup", "md_docs_guide_SETUP.html", null ],
-    [ "Using WPILibPi", "md_docs_guide_WPILIBPI_TIPS.html", null ],
+    [ "Robot Project Integration", "md_docs_guide_Robot_Project.html", null ],
+    [ "Setup", "md_docs_guide_Setup_Dev.html", null ],
+    [ "Using WPILibPi", "md_docs_guide_WPILibPi_Info.html", null ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [
