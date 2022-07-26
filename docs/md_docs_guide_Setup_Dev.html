@@ -40,7 +40,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VisionServer
-   &#160;<span id="projectnumber">v2.0.0-36-ga34c0fd</span>
+   &#160;<span id="projectnumber">v2.0.0-39-g0e57d40</span>
    </div>
    <div id="projectbrief">FRC vision library</div>
   </td>
@@ -101,8 +101,9 @@ $(document).ready(function(){initNavTree('md_docs_guide_Setup_Dev.html',''); ini
   <div class="headertitle"><div class="title">Setup </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h3><b>Although the project has only ever been developed on Windows, cross platform support should be possible using VSCode (which is cross-platform) and cross-comipler builds from the wpilib raspbian-toolchain repository; both having downloads for Windows, MacOS and Linux. Simply follow the steps below to setup the required tools in order to build both VisionServer itself and programs that utilize it (for RPI).</b></h3>
-<h1>Dependencies/Environment</h1>
+<div class="textblock"><p ><b>Although the project has only ever been developed on Windows, cross platform support should be possible using VSCode (which is cross-platform) and cross-comipler builds from the wpilib raspbian-toolchain repository; both having downloads for Windows, MacOS and Linux. Simply follow the steps below to setup the required tools in order to build both VisionServer itself and programs that utilize it (for RPI).</b></p>
+<hr  />
+ <h1>Dependencies/Environment</h1>
 <ol type="1">
 <li><b>Install VSCode.</b> This can either be downloaded directly from <a href="https://code.visualstudio.com/">it's website</a> or by using the <a href="https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-2/wpilib-setup.html">WPILIB Installer</a> (which you probably already have if you are developing for FRC). Make sure to download the correct version for your platform and architecture from either source.<ul>
 <li>Note that you will also want to have the C/C++ extension installed for VSC. This comes already with WPILIB if you clicked <code>Visual Studio Code Extensions</code>, but can be installed manually by clicking on the extensions tab (the side bar) in VSC, and then searching for <code>C/C++ Extension Pack</code>. <a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools-extension-pack">(this one)</a></li>
@@ -118,12 +119,16 @@ $(document).ready(function(){initNavTree('md_docs_guide_Setup_Dev.html',''); ini
 <li><em>The "bin" folder should be <code>(location from first bullet point)/Raspbian10-Windows64-Toolchain-8.3.0/raspbian10/bin</code> (or a similar structure for difference versions and platforms) and should contain quite a few executables.</em></li>
 <li><em>I also copy/move the <b>Make executable</b> (see the previous bullet point) to this directory so it is accessable along with the other programs.</em></li>
 <li><p class="startli"><em>As an example, my PATH looks like this, with the highlighted entry being the bin folder and my location folder being <code>D:\Programs</code>.</em></p>
-<p class="startli"><img src="https://user-images.githubusercontent.com/60528506/147836117-fec75d6f-2871-46fa-9e10-3c21a7b73024.png" alt="image" class="inline"/> </p><h1>Configuring the Project</h1>
+<p class="startli"><img src="https://user-images.githubusercontent.com/60528506/147836117-fec75d6f-2871-46fa-9e10-3c21a7b73024.png" alt="image" class="inline"/></p>
 </li>
 </ul>
 </li>
 </ul>
 </li>
+</ol>
+<hr  />
+ <h1>Configuring the Project</h1>
+<ol type="1">
 <li><b>If you haven't already, download the project by cloning directly from the <a href="https://github.com/FRC3407/VisionServer">latest commit</a> or by downloading the source code archive from a <a href="https://github.com/FRC3407/VisionServer/releases">release</a>.</b><ul>
 <li>The project should be able to be built right away by running <code>make</code> in the command line in the project directory (try it to test that everything is working), but additional configuration needs to be done to setup a VSCode workflow.</li>
 </ul>
@@ -155,7 +160,7 @@ $(document).ready(function(){initNavTree('md_docs_guide_Setup_Dev.html',''); ini
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun Jul 10 2022 20:28:43 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Tue Jul 26 2022 19:03:58 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>

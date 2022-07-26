@@ -40,7 +40,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VisionServer
-   &#160;<span id="projectnumber">v2.0.0-36-ga34c0fd</span>
+   &#160;<span id="projectnumber">v2.0.0-39-g0e57d40</span>
    </div>
    <div id="projectbrief">FRC vision library</div>
   </td>
@@ -103,7 +103,8 @@ $(document).ready(function(){initNavTree('md_docs_guide_Robot_Project.html','');
 <div class="contents">
 <div class="textblock"><p ><b>Although it is not strictly necessary to develop vision code alongside robot code, combining the two into a single project can be helpful for cross-referencing during development, and compartmentalizing code for similar tasks. Additionally, this makes it easy to publish all season code, both for a robot and for vision, to a single repository.</b></p>
 <p ><b>This tutorial will traverse through the process of integrating the VisionServer library into a robot project.</b></p>
-<h1>Filestructure</h1>
+<hr  />
+ <h1>Filestructure</h1>
 <ol type="1">
 <li><b>Create/have a WPILib robot project.</b> More info can be found <a href="https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-4/creating-benchtop-test-program-cpp-java.html">here</a>.</li>
 <li><b>Setup the vision program directories.</b><ul>
@@ -124,7 +125,8 @@ $(document).ready(function(){initNavTree('md_docs_guide_Robot_Project.html','');
 </ul>
 </li>
 </ol>
-<h1>Project Files</h1>
+<hr  />
+ <h1>Project Files</h1>
 <ol type="1">
 <li><b>Clone VisionServer.</b> While still inside the base vision directory, open a terminal and enter <code>git clone <a href="https://github.com/FRC3407/VisionServer">https://github.com/FRC3407/VisionServer</a> --recurse-submodules</code> to clone this repo and its submodules.<ul>
 <li>If your base project is already a git repo, and you want to add VisionServer as a submodule (definitely recommended for this config), then navigate to the base project folder and <code>git submodule add <a href="https://github.com/FRC3407/VisionServer">https://github.com/FRC3407/VisionServer</a> VISION_PROGRAM_RELATIVE_PATH/VisionServer</code> - where for this tutorial <code>VISION_PROGRAM_RELATIVE_PATH</code> would be <code>vision</code> (as created in step 1).</li>
@@ -156,12 +158,14 @@ $(document).ready(function(){initNavTree('md_docs_guide_Robot_Project.html','');
 </ul>
 </li>
 </ol>
-<h1>Additional Automations (Optional)</h1>
+<hr  />
+ <h1>Additional Automations (Optional)</h1>
 <ol type="1">
 <li><b>Configure VSCode workspace and tasks.</b> This is the same process as described in step 4 in SETUP.md, except that include paths may need to be adjusted based on the build system present. A build task can be constructed to invoke whatever build system is used with the correct parameters, and allows for a keybound build command.</li>
 <li><b>Rebuild VisionServer before each project build.</b> If you plan on editing the library itself during development, you can simply create a build script that calls <code>make -C VISION_DIR/VisionServer/lib-vs shared OPT=release</code> or <code>make -C VISION_DIR/VisionServer/lib-vs static OPT=release</code> before the vision program itself is built. This will update <code>...VisionServer/lib-vs/out/libvs3407.so [and .a]</code> along with recopy all headers into <code>...VisionServer/lib-vs/out/include/</code>, which can then be used as artifacts for the program build.</li>
 </ol>
-<h1>Example Project</h1>
+<hr  />
+ <h1>Example Project</h1>
 <p ><b>An example project used during the Rapid React FRC season can be found <a href="https://github.com/S1ink/2022-Rapid-React">here</a>.</b> </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
@@ -169,7 +173,7 @@ $(document).ready(function(){initNavTree('md_docs_guide_Robot_Project.html','');
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun Jul 10 2022 20:28:43 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Tue Jul 26 2022 19:03:58 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>

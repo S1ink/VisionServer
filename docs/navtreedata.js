@@ -26,12 +26,16 @@ var NAVTREE =
 [
   [ "VisionServer", "index.html", [
     [ "Welcome to VisionServer", "index.html", null ],
-    [ "Building VisionServer", "md_docs_guide_Build_.html", null ],
+    [ "Building VisionServer", "md_docs_guide_Build.html", null ],
     [ "Including Camera Calibrations", "md_docs_guide_Calibration.html", null ],
-    [ "Helpful sources", "md_docs_guide_References_.html", null ],
+    [ "Helpful Sources", "md_docs_guide_References.html", null ],
     [ "Robot Project Integration", "md_docs_guide_Robot_Project.html", null ],
     [ "Setup", "md_docs_guide_Setup_Dev.html", null ],
-    [ "Using WPILibPi", "md_docs_guide_WPILibPi_Info.html", null ],
+    [ "Using WPILibPi", "md_docs_guide_WPILibPi_Info.html", [
+      [ "WPILibPi comes preinstalled with WPILib, OpenCV, and Pigpio, but not with Tensorflow Lite (only the python version is present, not C++) or the Edge TPU driver - these will have to be uploaded manually. Both files (libtensorflowlite.so and libedgetpu.so) are copied to the output directory during each VS build, and can be found there for uploading on the Pi using the web dashboard (these are treated as \"supplementary files\" in step 2 below). Uploading these should be a one-time process, but will need to be repeated when newer versions of WPILibPi are released, and this repo is updated with newer versions of TfLite and the EdgeTPU driver.", "md_docs_guide_WPILibPi_Info.html#autotoc_md12", null ],
+      [ "* When ssh'ed into the Pi, enter <tt>sudo ./uploaded</tt> to run the program. This can be helpful when more direct terminal output is needed (sometimes the dashboard can be misformatted and skip some lines).", "md_docs_guide_WPILibPi_Info.html#autotoc_md13", null ],
+      [ "5. <strong>Set the Pi back to __Read-Only</strong> and run the program through the dashboard - it should work normally.__", "md_docs_guide_WPILibPi_Info.html#autotoc_md14", null ]
+    ] ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [
@@ -71,7 +75,7 @@ var NAVTREEINDEX =
 [
 "annotated.html",
 "classvs2_1_1VisionServer.html#a9339059f3c961d3713e4f81f012c6347",
-"tfmodel_8h.html#a9ea4fc0720ba4be6e59e2384da23709f"
+"tfmodel_8cpp_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

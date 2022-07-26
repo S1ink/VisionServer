@@ -40,7 +40,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VisionServer
-   &#160;<span id="projectnumber">v2.0.0-36-ga34c0fd</span>
+   &#160;<span id="projectnumber">v2.0.0-39-g0e57d40</span>
    </div>
    <div id="projectbrief">FRC vision library</div>
   </td>
@@ -103,30 +103,33 @@ $(document).ready(function(){initNavTree('md_docs_guide_WPILibPi_Info.html','');
 <div class="contents">
 <div class="textblock"><p ><b>Before reading this guide, make sure to familiarize yourself with WPILibPi using <a href="https://docs.wpilib.org/en/stable/docs/software/vision-processing/wpilibpi/">its own docs</a>.</b></p>
 <h1>Shared Libraries - IMPORTANT</h1>
-<p >WPILibPi comes preinstalled with WPILib, OpenCV, and Pigpio, but not with Tensorflow Lite (only the python version is present, not C++) or the Edge TPU driver - these will have to be uploaded manually. Both files (libtensorflowlite.so and libedgetpu.so) are copied to the output directory during each VS build, and can be found there for uploading on the Pi using the web dashboard (these are treated as "supplementary files" in step 2 below). Uploading these should be a one-time process, but will need to be repeated when newer versions of WPILibPi are released, and this repo is updated with newer versions of TfLite and the EdgeTPU driver.</p>
+<h1><a class="anchor" id="autotoc_md12"></a>
+WPILibPi comes preinstalled with WPILib, OpenCV, and Pigpio, but not with Tensorflow Lite (only the python version is present, not C++) or the Edge TPU driver - these will have to be uploaded manually. Both files (libtensorflowlite.so and libedgetpu.so) are copied to the output directory during each VS build, and can be found there for uploading on the Pi using the web dashboard (these are treated as "supplementary files" in step 2 below). Uploading these should be a one-time process, but will need to be repeated when newer versions of WPILibPi are released, and this repo is updated with newer versions of TfLite and the EdgeTPU driver.</h1>
 <h1>Deployment Process</h1>
 <ol type="1">
 <li><b>Build your project (and/or VS).</b></li>
-<li><b>Go to the WPILibPi dashboard (<a href="http://wpilibpi">http://wpilibpi</a> - or <a href="http://IP_ADDRESS_OF_RPI">http://IP_ADDRESS_OF_RPI</a>) in your browser and navigate to the <code>Application</code> tab.</b> Make sure to toggle the Pi into <b>Writable</b> mode using the button at the top of the page.<ul>
+<li><b>Go to the WPILibPi dashboard (<a href="http://wpilibpi">http://wpilibpi</a> or <a href="http://IP_ADDRESS_OF_RPI">http://IP_ADDRESS_OF_RPI</a>) in your browser and navigate to the <code>Application</code> tab.</b> Make sure to toggle the Pi into <b>Writable</b> mode using the button at the top of the page.<ul>
 <li>To upload a new vision program, select __"Uploaded C++ executable"__ from the dropdown, then select the binary from the output directory and upload it.</li>
 <li>To upload a new version of the VisionServer shared library (libvs3407.so), or other supplementary files (ex. a tflite model), navigate towards the bottom of the page under __"Upload other files"__ and select the required files. Note that in the case of the shared library, the old version within the Pi's filesystem will simply be replaced with the newer version provided that they are named the same.</li>
 <li>Change the Pi back to <b>Read-Only</b> mode before proceeding.</li>
 </ul>
 </li>
 <li><b>Run the program.</b> This can be done through the web dashboard or by ssh'ing into the Pi and running the program manually.<ul>
-<li>On the dashboard, navigate to the <code>Vision Status</code> tab and select the __"Up"__ option to start the program. Additionally make sure to enable console output, which is oftentimes crucial for debugging.</li>
-<li>When ssh'ed into the Pi, enter <code>sudo ./uploaded</code> to run the program. This can be helpful when more direct terminal output is needed (sometimes the dashboard can be misformatted and skip some lines).</li>
+<li>On the dashboard, navigate to the <code>Vision Status</code> tab and select the __"Up"__ option to start the program. Additionally make sure to enable console output, which is oftentimes crucial for debugging. </li>
 </ul>
 </li>
 </ol>
+<h1><a class="anchor" id="autotoc_md13"></a>
+* When ssh'ed into the Pi, enter &lt;tt&gt;sudo ./uploaded&lt;/tt&gt; to run the program. This can be helpful when more direct terminal output is needed (sometimes the dashboard can be misformatted and skip some lines).</h1>
 <h1>"Patches"</h1>
 <p >For some reason uploaded executables may require sudo permissions to work properly, and without can sometimes fail to output streams and simply not work correctly. By default, WPILibPi runs uploaded executables without sudo, but this can be changed with a few modifications.</p><ol type="1">
 <li><b>SSH into your Pi.</b> Additionally go to the web dashboard and set the Pi to <b>Writable</b> mode.</li>
 <li><b>Enter <code>sudo nano /etc/service/camera/run</code> to begin editing this file.</b></li>
 <li><b>Change <code>exec pgrphack /usr/local/bin/setuidgids pi ./runCamera</code> to <code>exec pgrphack ./runCamera</code>.</b></li>
-<li><b>Use <code>Ctrl + S</code> to save, then <code>Ctrl + X</code> to exit.</b></li>
-<li><b>Set the Pi back to __Read-Only</b> and run the program through the dashboard - it should work normally.__</li>
+<li><b>Use <code>Ctrl + S</code> to save, then <code>Ctrl + X</code> to exit.</b> </li>
 </ol>
+<h1><a class="anchor" id="autotoc_md14"></a>
+5. &lt;strong&gt;Set the Pi back to __Read-Only&lt;/strong&gt; and run the program through the dashboard - it should work normally.__</h1>
 <h1>Troubleshooting (Robot Deployment)</h1>
 <p >Using and connecting to the Pi directly may seem fluid and stable, but there are a whole host of issues that can arrise during robot deployment. This can include anything from short stutters/freezing video streams, to unresponsive connections and a complete inability to connect.</p>
 <ul>
@@ -141,7 +144,7 @@ $(document).ready(function(){initNavTree('md_docs_guide_WPILibPi_Info.html','');
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun Jul 10 2022 20:28:43 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Tue Jul 26 2022 19:03:58 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>
