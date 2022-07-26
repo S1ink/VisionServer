@@ -11,7 +11,7 @@ var searchData=
   ['raw_8',['raw',['../classVisionCamera.html#aa2297e6ce82be48a02b311b413ab12cd',1,'VisionCamera']]],
   ['readconfig_9',['readConfig',['../vision_8cpp.html#a6c1e034cdc2ac1be100fe1d866b70271',1,'readConfig(std::vector&lt; VisionCamera &gt; &amp;cameras, const char *file):&#160;vision.cpp'],['../vision_8h.html#a25962e04b9cdb396c90b4861c0f83274',1,'readConfig(std::vector&lt; VisionCamera &gt; &amp;cameras, const char *file=_default):&#160;vision.cpp']]],
   ['red_10',['RED',['../namespacevs2.html#ae52486a5b23f75ab18b4b6617ebf10abaa2d9547b5d3dd9f05984475f7c926da0',1,'vs2']]],
-  ['references_2emd_11',['REFERENCES.md',['../REFERENCES_8md.html',1,'']]],
+  ['references_5f_2emd_11',['References_.md',['../References___8md.html',1,'']]],
   ['reinsert_12',['reinsert',['../vision_8h.html#ae7d5d69d8b9d421a79c63262abba0006',1,'vision.h']]],
   ['reordercclockwise_13',['reorderCClockWise',['../vision_8inc.html#a844f81ca206cd18831a06d00da7c2a3b',1,'reorderCClockWise(std::vector&lt; cv::Point_&lt; num_t &gt; &gt; &amp;points):&#160;vision.inc'],['../vision_8h.html#a844f81ca206cd18831a06d00da7c2a3b',1,'reorderCClockWise(std::vector&lt; cv::Point_&lt; num_t &gt; &gt; &amp;points):&#160;vision.inc']]],
   ['reorderclockwise_14',['reorderClockWise',['../vision_8h.html#a11b3c85806f7fb6212d768f4fd14ddb2',1,'reorderClockWise(std::vector&lt; cv::Point_&lt; num_t &gt; &gt; &amp;points):&#160;vision.inc'],['../vision_8inc.html#a11b3c85806f7fb6212d768f4fd14ddb2',1,'reorderClockWise(std::vector&lt; cv::Point_&lt; num_t &gt; &gt; &amp;points):&#160;vision.inc']]],

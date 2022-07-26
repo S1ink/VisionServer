@@ -26,8 +26,9 @@ var NAVTREE =
 [
   [ "VisionServer", "index.html", [
     [ "Welcome to VisionServer", "index.html", null ],
-    [ "BUILD", "md_docs_guide_BUILD.html", null ],
-    [ "Helpful sources", "md_docs_guide_REFERENCES.html", null ],
+    [ "Building VisionServer", "md_docs_guide_Build_.html", null ],
+    [ "Including Camera Calibrations", "md_docs_guide_Calibration.html", null ],
+    [ "Helpful sources", "md_docs_guide_References_.html", null ],
     [ "Robot Project Integration", "md_docs_guide_Robot_Project.html", null ],
     [ "Setup", "md_docs_guide_Setup_Dev.html", null ],
     [ "Using WPILibPi", "md_docs_guide_WPILibPi_Info.html", null ],
@@ -70,7 +71,7 @@ var NAVTREEINDEX =
 [
 "annotated.html",
 "classvs2_1_1VisionServer.html#a9339059f3c961d3713e4f81f012c6347",
-"tfmodel_8h.html#abd002405cbfb91dda7946aa20617de57"
+"tfmodel_8h.html#a9ea4fc0720ba4be6e59e2384da23709f"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
