@@ -1,4 +1,4 @@
-## Helpful sources
+## Helpful Sources
  - WPILibPi example programs (scroll to bottom of the latest release): https://github.com/wpilibsuite/WPILibPi/releases
  - Raspbian g++ toolchain: https://github.com/wpilibsuite/raspbian-toolchain/releases/latest
  - A similar project in python by the Ligerbots: https://github.com/ligerbots/VisionServer

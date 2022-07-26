@@ -1,7 +1,7 @@
 [![CI](https://github.com/FRC3407/VisionServer/actions/workflows/ci.yml/badge.svg)](https://github.com/FRC3407/VisionServer/actions/workflows/ci.yml) [![Build Docs](https://github.com/FRC3407/VisionServer/actions/workflows/doxygen-pages.yml/badge.svg?branch=main)](https://github.com/FRC3407/VisionServer/actions/workflows/doxygen-pages.yml)
 
 # [FRC 3407] VisionServer
-### | [Get Started](#get-started) | [Vision Resources](#more-on-vision-processing) | [Docs][] |
+### | [Get Started](#get-started) | [Vision Resources](#more-on-vision-processing) | [Docs](https://frc3407.github.io/VisionServer) |
 
 ## Project Overview
  - This project originally existed as a testing environment for vision processing code that would be run on an FRC robot (Raspberry Pi coprocessor).
@@ -50,7 +50,7 @@ int main() {
 ```
 
 ## Get Started
-__All guides and code documentation can be found on this repo's [gh-pages][].__ Additionally, all guides can be found in markdown format under [docs/guide/](docs/guide/).
+__All guides and code documentation can be found on this repo's [gh-pages](https://frc3407.github.io/VisionServer).__ Additionally, all guides can be found in markdown format under [docs/guide/](docs/guide/).
 
 ## More on Vision Processing
 __Here is a list of some [helpful resources](docs/guide/References.md) used in the making of this project.__

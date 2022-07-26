@@ -3,6 +3,7 @@ __Although it is not strictly necessary to develop vision code alongside robot c
 
 __This tutorial will traverse through the process of integrating the VisionServer library into a robot project.__
 
+---
 ## Filestructure
 1. __Create/have a WPILib robot project.__ More info can be found [here](https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-4/creating-benchtop-test-program-cpp-java.html).
 2. __Setup the vision program directories.__
@@ -23,6 +24,7 @@ __This tutorial will traverse through the process of integrating the VisionServe
 			> other build files...
 		```
 
+---
 ## Project Files
 3. __Clone VisionServer.__ While still inside the base vision directory, open a terminal and enter `git clone https://github.com/FRC3407/VisionServer --recurse-submodules` to clone this repo and its submodules.
 	* If your base project is already a git repo, and you want to add VisionServer as a submodule (definitely recommended for this config), then navigate to the base project folder and `git submodule add https://github.com/FRC3407/VisionServer VISION_PROGRAM_RELATIVE_PATH/VisionServer` - where for this tutorial `VISION_PROGRAM_RELATIVE_PATH` would be `vision` (as created in step 1).
@@ -48,9 +50,11 @@ __This tutorial will traverse through the process of integrating the VisionServe
 	* Again, if submodules are preferred, then this should be added as a submodule from the base project directory: `git submodule add https://github.com/S1ink/VisionServer-Robot SRC_DIR_PATH/API_DIR`.
 	* Note that for Java projects the "package" line at the top of the added files will need to be updated based on the directory names used above.
 
+---
 ## Additional Automations (Optional)
 7. __Configure VSCode workspace and tasks.__ This is the same process as described in step 4 in [SETUP.md](SETUP.md), except that include paths may need to be adjusted based on the build system present. A build task can be constructed to invoke whatever build system is used with the correct parameters, and allows for a keybound build command.
 8. __Rebuild VisionServer before each project build.__ If you plan on editing the library itself during development, you can simply create a build script that calls `make -C VISION_DIR/VisionServer/lib-vs shared OPT=release` or `make -C VISION_DIR/VisionServer/lib-vs static OPT=release` before the vision program itself is built. This will update `...VisionServer/lib-vs/out/libvs3407.so [and .a]` along with recopy all headers into `...VisionServer/lib-vs/out/include/`, which can then be used as artifacts for the program build.
 
+---
 ## Example Project
 __An example project used during the Rapid React FRC season can be found [here](https://github.com/S1ink/2022-Rapid-React).__

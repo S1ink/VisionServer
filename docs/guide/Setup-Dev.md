@@ -1,5 +1,7 @@
 # Setup
-#### __Although the project has only ever been developed on Windows, cross platform support should be possible using VSCode (which is cross-platform) and cross-comipler builds from the wpilib raspbian-toolchain repository; both having downloads for Windows, MacOS and Linux. Simply follow the steps below to setup the required tools in order to build both VisionServer itself and programs that utilize it (for RPI).__
+__Although the project has only ever been developed on Windows, cross platform support should be possible using VSCode (which is cross-platform) and cross-comipler builds from the wpilib raspbian-toolchain repository; both having downloads for Windows, MacOS and Linux. Simply follow the steps below to setup the required tools in order to build both VisionServer itself and programs that utilize it (for RPI).__
+
+---
 ## Dependencies/Environment
 1. __Install VSCode.__ This can either be downloaded directly from [it's website](https://code.visualstudio.com/) or by using the [WPILIB Installer](https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-2/wpilib-setup.html) (which you probably already have if you are developing for FRC). Make sure to download the correct version for your platform and architecture from either source. 
     - Note that you will also want to have the C/C++ extension installed for VSC. This comes already with WPILIB if you clicked `Visual Studio Code Extensions`, but can be installed manually by clicking on the extensions tab (the side bar) in VSC, and then searching for `C/C++ Extension Pack`. [(this one)](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools-extension-pack)
@@ -13,6 +15,8 @@
       - *As an example, my PATH looks like this, with the highlighted entry being the bin folder and my location folder being `D:\Programs`.*
 
         ![image](https://user-images.githubusercontent.com/60528506/147836117-fec75d6f-2871-46fa-9e10-3c21a7b73024.png)
+
+---
 ## Configuring the Project
 3. __If you haven't already, download the project by cloning directly from the [latest commit](https://github.com/FRC3407/VisionServer) or by downloading the source code archive from a [release](https://github.com/FRC3407/VisionServer/releases).__
     - The project should be able to be built right away by running `make` in the command line in the project directory (try it to test that everything is working), but additional configuration needs to be done to setup a VSCode workflow. 

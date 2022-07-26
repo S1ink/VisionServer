@@ -2,9 +2,10 @@
 
 __This site contains guides for using the library as well as documentation for its internals. Below is a list of all the guides, which is in the correct order of how they should be read. All items can also be accessed from the side panel.__
 
-1. #### [Basic dependencies and setup](Setup-Dev.md)
-2. #### [Creating a project using VisionServer](Robot-Project.md)
-3. #### [How to properly use WPILibPi (important)](WPILibPi-Info.md)
-4. #### [Camera calibration](Calibration.md)
-5. #### [The build system](Build_.md)
-6. #### [Vision resources](References_.md)
+## Guides
+1. __[Basic dependencies and setup](Setup-Dev.md)__
+2. __[Creating a project using VisionServer](Robot-Project.md)__
+3. __[How to properly use WPILibPi (important)](WPILibPi-Info.md)__
+4. __[Camera calibration](Calibration.md)__
+5. __[The build system](Build.md)__
+6. __[Vision resources](References.md)__
