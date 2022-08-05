@@ -11,6 +11,7 @@ var classvs2_1_1VisionServer_1_1BasePipe =
     [ "setCamera", "classvs2_1_1VisionServer_1_1BasePipe.html#aa1166b76f2c18cda290a17aff26c797d", null ],
     [ "setPipeline", "classvs2_1_1VisionServer_1_1BasePipe.html#ab0b4ffd71e8316e448d8e390acdc2e5f", null ],
     [ "setSource", "classvs2_1_1VisionServer_1_1BasePipe.html#a4cea8657d80be13d15f94e72e4025233", null ],
+    [ "getFrame", "classvs2_1_1VisionServer_1_1BasePipe.html#a297da60289ad94e8b2690d3eaa5e4dbb", null ],
     [ "getSrcMatrix", "classvs2_1_1VisionServer_1_1BasePipe.html#a3afd204454ba2788fe359a3e5b6c5e27", null ],
     [ "getSrcDistort", "classvs2_1_1VisionServer_1_1BasePipe.html#a0178f705de1a96e8d719c98e0961976e", null ],
     [ "VisionServer", "classvs2_1_1VisionServer_1_1BasePipe.html#a2bf0a434b47409407c38d03266f3a5be", null ],

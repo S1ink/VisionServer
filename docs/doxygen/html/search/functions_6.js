@@ -8,7 +8,7 @@ var searchData=
   ['getdetections_5',['getDetections',['../classAxonRunner__.html#aad1acb1758d4cc8d0215bb0ea9424132',1,'AxonRunner_']]],
   ['getdistortioncoefs_6',['getDistortionCoefs',['../classVisionCamera.html#aac0400ff3ce52514c2048c0c47dd5867',1,'VisionCamera']]],
   ['getexposure_7',['getExposure',['../classVisionCamera.html#a27090c92b4d741c2354cfb73dd182c8e',1,'VisionCamera']]],
-  ['getframe_8',['getFrame',['../classVisionCamera.html#af89b8b7e87c40c75ddf3cf9c459c3da0',1,'VisionCamera']]],
+  ['getframe_8',['getFrame',['../classVisionCamera.html#af89b8b7e87c40c75ddf3cf9c459c3da0',1,'VisionCamera::getFrame()'],['../classvs2_1_1VisionServer_1_1BasePipe.html#a297da60289ad94e8b2690d3eaa5e4dbb',1,'vs2::VisionServer::BasePipe::getFrame()']]],
   ['getframenotmo_9',['getFrameNoTmO',['../classVisionCamera.html#a2bf0b3cedad6299a3b3eb1a3d138fc39',1,'VisionCamera']]],
   ['getheight_10',['getHeight',['../classVisionCamera.html#ac6fdb27abee65235a2d914e62bcce908',1,'VisionCamera']]],
   ['getinstance_11',['getInstance',['../classvs2_1_1VisionServer.html#ab5fe90c3a19090f0562f38dcc960f22c',1,'vs2::VisionServer']]],

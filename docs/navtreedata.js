@@ -75,7 +75,7 @@ var NAVTREEINDEX =
 [
 "annotated.html",
 "classvs2_1_1VisionServer.html#a9339059f3c961d3713e4f81f012c6347",
-"tfmodel_8cpp_source.html"
+"tfmodel_8cpp.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
