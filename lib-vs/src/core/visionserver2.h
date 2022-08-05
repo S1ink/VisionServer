@@ -64,6 +64,7 @@ public:
 		void setCamera(const VisionCamera&);
 		void setPipeline(const BasePipe&);
 		void setSource(const cs::VideoSource&);
+		void getFrame(cv::Mat&);
 
 		inline const cv::Mat1f& getSrcMatrix() const { return *this->src_matrix; }
 		inline const cv::Mat1f& getSrcDistort() const { return *this->src_distort; }

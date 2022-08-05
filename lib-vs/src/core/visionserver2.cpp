@@ -36,6 +36,9 @@ void VisionServer::BasePipe::setSource(const cs::VideoSource& src) {
 	this->src_matrix = &VisionCamera::default_matrix;
 	this->src_distort = &VisionCamera::default_distort;
 }
+void VisionServer::BasePipe::getFrame(cv::Mat& io_frame) {
+	this->input.GrabFrame(io_frame);
+}
 
 
 bool VisionServer::addCamera(VisionCamera&& c) {
@@ -466,7 +469,7 @@ bool VisionServer::runSingle(uint16_t rps) {
 
 		std::shared_ptr<nt::NetworkTable> stats = VisionServer::ntable()->GetSubTable("stats");
 
-		int c_idx = 1, p_idx = 1;
+		int c_idx = 0, p_idx = 1;
 		float max_ftime = 1.f / rps, util_percent = 0.f, fps = 0.f;
 		double init_time = 0, proc_time = 0, out_time = 0, active_time = 1, full_time = 0;
 		std::chrono::high_resolution_clock::time_point beg_frame, beg_proc, end_proc, end_frame, last;
