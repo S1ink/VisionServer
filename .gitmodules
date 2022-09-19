@@ -4,3 +4,6 @@
 [submodule "roborio-vs"]
 	path = roborio-vs
 	url = https://github.com/S1ink/VisionServer-Robot
+[submodule "lib-vs/additions/simpleNN"]
+	path = lib-vs/additions/simpleNN
+	url = https://github.com/S1ink/SimpleNN
