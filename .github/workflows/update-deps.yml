@@ -17,7 +17,7 @@ jobs:
       - name: Get latest TF release tag
         id: tf-latest-tag
         #run: echo "::set-output name=tag::$(curl -s https://api.github.com/repos/tensorflow/tensorflow/releases/latest | jq '.tag_name' | sed 's/\"//g')"
-        run: echo "::set-output name=tag::$(echo v2.9.2)
+        run: echo "::set-output name=tag::$(echo v2.9.2)"
       - name: Get latest TF commit
         id: tf-latest-commit
         run: echo "::set-output name=commit::$(git ls-remote https://github.com/tensorflow/tensorflow refs/tags/${{ steps.tf-latest-tag.outputs.tag }} | awk '{print $1}')"
