@@ -239,3 +239,4 @@ jobs:
           add-paths: |
             lib-vs/include/**
             lib-vs/lib/**
+            lib-vs/src/core/opencv-contrib/**
