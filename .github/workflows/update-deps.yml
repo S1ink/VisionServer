@@ -132,7 +132,7 @@ jobs:
         run: echo "::set-output name=version::$($(grep -h -r '#define CV_VERSION_MAJOR .*' out/cpp-multiCameraServer/include/ | tr -s ' ' | cut -d ' ' -f3).$(grep -h -r '#define CV_VERSION_MINOR .*' out/cpp-multiCameraServer/include/ | tr -s ' ' | cut -d ' ' -f3).$(grep -h -r '#define CV_VERSION_REVISION .*' out/cpp-multiCameraServer/include/ | tr -s ' ' | cut -d ' ' -f3))"
       - run: echo ${{ steps.opencv-ver.outputs.version }}
       - name: Get OpenCV-Contrib and Zip
-      - run: |
+        run: |
           wget https://github.com/opencv/opencv_contrib/archive/refs/tags/${{ steps.opencv-ver.outputs.version }}.zip
           ls -l
           unzip opencv_contrib-${{ steps.opencv-ver.outputs.version }}.zip -d out
