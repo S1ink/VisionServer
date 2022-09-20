@@ -129,7 +129,7 @@ jobs:
           unzip cpp-multiCameraServer.zip -d out
       - name: Get Included OpenCV Version
         id: opencv-ver
-        run: echo "::set-output name=version::$($(grep -h -r '#define CV_VERSION_MAJOR .*' out/cpp-multiCameraServer/include/ | tr -s ' ' | cut -d ' ' -f3)).$(grep -h -r '#define CV_VERSION_MINOR .*' out/cpp-multiCameraServer/include/ | tr -s ' ' | cut -d ' ' -f3).$(grep -h -r '#define CV_VERSION_REVISION .*' out/cpp-multiCameraServer/include/ | tr -s ' ' | cut -d ' ' -f3))"
+        run: echo "::set-output name=version::$($(grep -h -r '#define CV_VERSION_MAJOR .*' out/cpp-multiCameraServer/include/ | tr -s ' ' | cut -d ' ' -f3).$(grep -h -r '#define CV_VERSION_MINOR .*' out/cpp-multiCameraServer/include/ | tr -s ' ' | cut -d ' ' -f3).$(grep -h -r '#define CV_VERSION_REVISION .*' out/cpp-multiCameraServer/include/ | tr -s ' ' | cut -d ' ' -f3))"
       - run: echo ${{ steps.opencv-ver.outputs.version }}
       - name: Get OpenCV-Contrib and Zip
       - run: |
