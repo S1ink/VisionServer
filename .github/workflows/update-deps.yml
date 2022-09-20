@@ -133,7 +133,7 @@ jobs:
       - run: echo ${{ steps.opencv-ver.outputs.version }}
       - name: Get OpenCV-Contrib and Zip
         run: |
-          wget ‐‐output-document=opencv-contrib.zip https://github.com/opencv/opencv_contrib/archive/refs/tags/${{ steps.opencv-ver.outputs.version }}.zip
+          wget -O opencv-contrib.zip https://github.com/opencv/opencv_contrib/archive/refs/tags/${{ steps.opencv-ver.outputs.version }}.zip
           unzip opencv-contrib.zip -d out
           ls -l
           cp -R out/cpp-multiCameraServer/{lib,include} artifacts
