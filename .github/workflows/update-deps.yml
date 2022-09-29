@@ -10,10 +10,9 @@ jobs:
       tf-tag: ${{ steps.tf-latest-tag.outputs.tag }}
       tf-commit: ${{ steps.tf-latest-commit.outputs.commit }}
       tf-sha256: ${{ steps.tf-latest-hash.outputs.sha256 }}
-#       wpilibpi-tag: ${{ steps.wpilibpi-latest-tag.outputs.tag }}
-#       pigpio-tag: ${{ steps.pigpio-latest-tag.outputs.tag }}
     steps:
       - run: echo '::echo::on'
+
       - name: Get latest TF release tag
         id: tf-latest-tag
         #run: echo "::set-output name=tag::$(curl -s https://api.github.com/repos/tensorflow/tensorflow/releases/latest | jq '.tag_name' | sed 's/\"//g')"
@@ -24,35 +23,33 @@ jobs:
       - name: Get latest TF hash code
         id: tf-latest-hash
         run: echo "::set-output name=sha256::$(curl -L "https://github.com/tensorflow/tensorflow/archive/${{ steps.tf-latest-commit.outputs.commit }}.tar.gz" | sha256sum | awk '{print $1}')"
-#       - name: Get latest WPILibPi tag
-#         id: wpilibpi-latest-tag
-#         run: echo "::set-output name=tag::$(curl -s https://api.github.com/repos/wpilibsuite/WPILibPi/releases/latest | jq '.tag_name' | sed 's/\"//g')"
-#       - name: Get latest pigpio tag
-#         id: pigpio-latest-tag
-#         run: echo "::set-output name=tag::$(curl -s https://api.github.com/repos/joan2937/pigpio/releases/latest | jq '.tag_name' | sed 's/\"//g')"
+
       - name: Confirm Info
         run: |
           echo ${{ steps.tf-latest-tag.outputs.tag }}
           echo ${{ steps.tf-latest-commit.outputs.commit }}
           echo ${{ steps.tf-latest-hash.outputs.sha256 }}
-#          echo ${{ steps.wpilibpi-latest-tag.outputs.tag }}
-#          echo ${{ steps.pigpio-latest-tag.outputs.tag }}
+
+
 
   build-tflite:
     runs-on: ubuntu-latest
     needs: fetch-latest-tf-release
     steps:
       - run: echo '::echo::on'
+
       - name: Checkout Tensorflow
         uses: actions/checkout@main
         with:
           repository: tensorflow/tensorflow
           ref: ${{ needs.fetch-latest-tf-release.outputs.tf-tag }}
+
       - name: Get Deps
         run: |
           npm install @bazel/bazelisk
           pip install numpy
           sudo apt-get install zip
+
       - name: Get Flatbuffers and Abseil
         run: |
           mkdir {absl,flatbuffers}
@@ -61,9 +58,11 @@ jobs:
           wget -O flatbuffers.tar.gz $(grep 'urls = tf_mirror_urls(".*"' third_party/flatbuffers/workspace.bzl | cut -d \" -f2)
           tar -xzf flatbuffers.tar.gz -C flatbuffers --strip-components=1
           ls -l -R
-      - name: Build
+
+      - name: Build Tflite
         run: |
           bazel build --config=elinux_armhf -c opt //tensorflow/lite:libtensorflowlite.so
+
       - name: Copy and Zip Artifacts
         run: |
           mkdir artifacts
@@ -74,21 +73,26 @@ jobs:
           cp -R ./flatbuffers/include/flatbuffers ./artifacts
           cp bazel-bin/tensorflow/lite/libtensorflowlite.so artifacts
           zip -r artifacts.zip artifacts
+
       - name: Upload Artifacts
         uses: actions/upload-artifact@main
         with: 
           name: build-tflite
           path: artifacts.zip
-          
+
+
+
   build-edgetpu:
     runs-on: ubuntu-latest
     needs: fetch-latest-tf-release
     steps:
       - run: echo '::echo::on'
+
       - name: Checkout Libedgetpu
         uses: actions/checkout@main
         with:
           repository: google-coral/libedgetpu
+
       - name: Configure Build
         run: |
           sed -i 's/TENSORFLOW_COMMIT = ".*/TENSORFLOW_COMMIT = "${{ needs.fetch-latest-tf-release.outputs.tf-commit }}"/' ./workspace.bzl
@@ -97,6 +101,7 @@ jobs:
           cat ./workspace.bzl
           cat ./Makefile
           mkdir -p artifacts/{direct,throttled}
+
       - name: Build and Prep Artifacts
         run: |
          DOCKER_CPUS="armv7a" DOCKER_IMAGE="debian:stretch" DOCKER_TARGETS=libedgetpu make docker-build
@@ -105,64 +110,80 @@ jobs:
          cp tflite/public/edgetpu.h artifacts
          sudo apt-get install zip
          zip -r artifacts.zip artifacts
+
       - name: Upload Artifacts
         uses: actions/upload-artifact@main
         with:
           name: build-edgetpu
           path: artifacts.zip
 
+
+
   extract-wpilibpi:
     runs-on: ubuntu-latest
     outputs:
       latest-tag: ${{ steps.wpilibpi-latest-tag.outputs.tag }}
-      opencv-ver: ${{ steps.opencv-ver.outputs.version }}
+#      opencv-ver: ${{ steps.opencv-ver.outputs.version }}
     steps:
       - run: echo '::echo::on'
+
       - name: Get latest WPILibPi release tag
         id: wpilibpi-latest-tag
         run: echo "::set-output name=tag::$(curl -s https://api.github.com/repos/wpilibsuite/WPILibPi/releases/latest | jq '.tag_name' | sed 's/\"//g')"
+#        run: echo "::set-output name=tag::$(curl -s https://api.github.com/repos/S1ink/WPILibPi-Mod-Build/releases/latest | jq '.tag_name' | sed 's/\"//g')"
+
       - name: Extract Latest WPILibPi
         run: |
           wget https://github.com/wpilibsuite/WPILibPi/releases/download/${{ steps.wpilibpi-latest-tag.outputs.tag }}/cpp-multiCameraServer.zip
+#          wget https://github.com/S1ink/WPILibPi-Mod-Build/releases/download/${{ steps.wpilibpi-latest-tag.outputs.tag }}/cpp-multiCameraServer.zip
           sudo apt-get install unzip
           sudo apt-get install zip
           mkdir {out,artifacts}
           unzip cpp-multiCameraServer.zip -d out
-      - name: Get Included OpenCV Version
-        id: opencv-ver
-        run: echo "::set-output name=version::$(echo $(grep -h -r '#define CV_VERSION_MAJOR .*' out/cpp-multiCameraServer/include/ | tr -s ' ' | cut -d ' ' -f3).$(grep -h -r '#define CV_VERSION_MINOR .*' out/cpp-multiCameraServer/include/ | tr -s ' ' | cut -d ' ' -f3).$(grep -h -r '#define CV_VERSION_REVISION .*' out/cpp-multiCameraServer/include/ | tr -s ' ' | cut -d ' ' -f3))"
-      - run: echo ${{ steps.opencv-ver.outputs.version }}
+
+#      - name: Get included OpenCV version
+#        id: opencv-ver
+#        run: echo "::set-output name=version::$(echo $(grep -h -r '#define CV_VERSION_MAJOR .*' out/cpp-multiCameraServer/include/ | tr -s ' ' | cut -d ' ' -f3).$(grep -h -r '#define CV_VERSION_MINOR .*' out/cpp-multiCameraServer/include/ | tr -s ' ' | cut -d ' ' -f3).$(grep -h -r '#define CV_VERSION_REVISION .*' out/cpp-multiCameraServer/include/ | tr -s ' ' | cut -d ' ' -f3))"
+#      - run: echo ${{ steps.opencv-ver.outputs.version }}
+
       - name: Get OpenCV-Contrib and Zip
         run: |
-          wget -O opencv-contrib.zip https://github.com/opencv/opencv_contrib/archive/refs/tags/${{ steps.opencv-ver.outputs.version }}.zip
-          unzip opencv-contrib.zip -d out
+#          wget -O opencv-contrib.zip https://github.com/opencv/opencv_contrib/archive/refs/tags/${{ steps.opencv-ver.outputs.version }}.zip
+#          unzip opencv-contrib.zip -d out
           cp -R out/cpp-multiCameraServer/{lib,include} artifacts
-          cp -R out/opencv_contrib-${{ steps.opencv-ver.outputs.version }}/modules/aruco/include/opencv2/. artifacts/include/opencv4/opencv2/
-          mkdir -p artifacts/opencv-contrib/aruco
-          cp -R out/opencv_contrib-${{ steps.opencv-ver.outputs.version }}/modules/aruco/src/. artifacts/opencv-contrib/aruco
+#          cp -R out/opencv_contrib-${{ steps.opencv-ver.outputs.version }}/modules/aruco/include/opencv2/. artifacts/include/opencv4/opencv2/
+#          mkdir -p artifacts/opencv-contrib/aruco
+#          cp -R out/opencv_contrib-${{ steps.opencv-ver.outputs.version }}/modules/aruco/src/. artifacts/opencv-contrib/aruco
           zip -r artifacts.zip artifacts
+
       - name: Upload Artifacts
         uses: actions/upload-artifact@main
         with:
           name: extract-wpilibpi
           path: artifacts.zip
-  
+
+
+
   build-pigpio:
     runs-on: ubuntu-latest
     outputs:
       latest-tag: ${{ steps.pigpio-latest-tag.outputs.tag }}
     steps:
       - run: echo '::echo::on'
+
       - name: Get latest pigpio release tag
         id: pigpio-latest-tag
         run: echo "::set-output name=tag::$(curl -s https://api.github.com/repos/joan2937/pigpio/releases/latest | jq '.tag_name' | sed 's/\"//g')"
+
       - name: Checkout Pigpio
         uses: actions/checkout@main
         with:
           repository: joan2937/pigpio
           ref: ${{ steps.pigpio-latest-tag.outputs.tag }}
+
       - name: Get Cross Compiler
         run: sudo apt-get install gcc-arm-linux-gnueabihf
+
       - name: Build and Copy
         run: |
          arm-linux-gnueabihf-gcc --version
@@ -172,16 +193,20 @@ jobs:
          cp pigpio.h artifacts
          sudo apt-get install zip
          zip -r artifacts.zip artifacts
+
       - name: Upload Artifacts
         uses: actions/upload-artifact@main
         with:
           name: build-pigpio
           path: artifacts.zip
 
+
+
   combine-and-deploy:
     runs-on: ubuntu-latest
     needs: [fetch-latest-tf-release,build-tflite,build-edgetpu,extract-wpilibpi,build-pigpio]
     steps:
+
       - uses: actions/download-artifact@main
       - run: |
           sudo apt-get install unzip
@@ -192,7 +217,7 @@ jobs:
           unzip build-pigpio/artifacts.zip -d pigpio
           unzip build-edgetpu/artifacts.zip -d edgetpu
           unzip build-tflite/artifacts.zip -d tflite
-          cp -R wpilibpi/artifacts/{include,lib,opencv-contrib} output
+          cp -R wpilibpi/artifacts/{include,lib} output   # and opencv-contrib
           cp pigpio/artifacts/pigpio.h output/include
           cp pigpio/artifacts/libpigpio.so output/lib
           cp edgetpu/artifacts/edgetpu.h output/include
@@ -208,18 +233,22 @@ jobs:
           cd $GITHUB_WORKSPACE
           zip -r deps.zip output
           mkdir main
+
       - uses: actions/checkout@main
         with:
           path: main
           submodules: recursive
+
       - run: |
           rm -r main/lib-vs/{lib,include}
           cp -R output/{include,lib} main/lib-vs
-          cp -R output/opencv-contrib main/lib-vs/src/core
+#          cp -R output/opencv-contrib main/lib-vs/src/core
+
       - uses: actions/upload-artifact@main
         with:
           name: all-deps
           path: deps.zip
+
       - uses: peter-evans/create-pull-request@main
         with:
           path: main
@@ -230,13 +259,12 @@ jobs:
           body: |
             Updated Dependency Versions:
             - TensorFlow[Lite] && EdgeTPU: ${{ needs.fetch-latest-tf-release.outputs.tf-tag }}
-            - WPILibPi: ${{ needs.extract-wpilibpi.outputs.latest-tag }} - OpenCV: ${{ needs.extract-wpilibpi.outputs.opencv-ver }}
+            - WPILibPi: ${{ needs.extract-wpilibpi.outputs.latest-tag }} - OpenCV: v${{ needs.extract-wpilibpi.outputs.opencv-ver }}
             - Pigpio: ${{ needs.build-pigpio.outputs.latest-tag }}
 
-            *Auto-generated by [create-pull-request][1]*
-            [1]: https://github.com/peter-evans/create-pull-request
+            *Auto-generated by [peter-evans/create-pull-request](https://github.com/peter-evans/create-pull-request)*
           labels: automated-action
           add-paths: |
             lib-vs/include/**
             lib-vs/lib/**
-            lib-vs/src/core/opencv-contrib/**
+#            lib-vs/src/core/opencv-contrib/**
