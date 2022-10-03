@@ -12,22 +12,12 @@
 #include <cameraserver/CameraServer.h>
 #include <wpi/StringExtras.h>
 
-#include "cpp-tools/src/resources.h"
 #include "visioncamera.h"
-
 
 /**
  * This file contains vision-related helper functions used throughout the framework
 */
 
-CE_STR _default = "/boot/frc.json";
-/**
- * Reads a config json and creates appropriate VisionCameras in the supplied vector
- * @param cameras The output vector in which cameras will be created
- * @param file The path to the json, default is "/boot/frc.json"
- * @return false if there was an error
-*/
-bool readConfig(std::vector<VisionCamera>& cameras, const char* file = _default);
 
 /**
  * Starts a stream and creates a networktable value for changing which camera is streamed

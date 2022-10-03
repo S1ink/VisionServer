@@ -1,7 +1,10 @@
 #include "vision.h"
+#include "config.h"
 
 #include <wpi/raw_ostream.h>
 #include <wpi/raw_istream.h>
+
+#include "cpp-tools/src/resources.h"
 
 
 bool readConfig(std::vector<VisionCamera>& cameras, const char* file) {
@@ -152,7 +155,7 @@ cs::CvSink switchedCameraVision(const std::vector<VisionCamera>& cameras, std::s
 cs::VideoMode getJsonVideoMode(const wpi::json& config) {
     cs::VideoMode mode;
 
-// the following is copied from: https://github.com/wpilibsuite/allwpilib/blob/main/cscore/src/main/native/cpp/SourceImpl.cpp (184)
+// the following is copied from: https://github.com/wpilibsuite/allwpilib/blob/main/cscore/src/main/native/cpp/SourceImpl.cpp#L184
     if (config.count("pixel format") != 0) {
         try {
             std::string str = config.at("pixel format").get<std::string>();

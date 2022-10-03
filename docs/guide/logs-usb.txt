@@ -1,0 +1,7 @@
+GUIDE: Mount a writable USB drive while in RO mode (for logs)
+1. Find 'UUID' using 'lsblk -fp' or 'blkid'
+2. [backup and] edit /etc/fstab -->
+ - add 'UUID=####-####	/MNT_LOCATION	vfat	defaults,auto,users,rw,nofail,umask=000	0	0
+ * vfat --> this is the type of FS (ex. vfat, ntfs, exfat, ext4)
+ * umask=000 can be ommited for exfat and ext4
+3. 'sudo mount -a' for hot-plug after startup, otherwise this drive will be mounted at startup
