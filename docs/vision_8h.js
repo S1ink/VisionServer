@@ -1,6 +1,5 @@
 var vision_8h =
 [
-    [ "readConfig", "vision_8h.html#a25962e04b9cdb396c90b4861c0f83274", null ],
     [ "switchedCameraVision", "vision_8h.html#a6aece20ba8f156f2415b29849dadeb66", null ],
     [ "getResolution", "vision_8h.html#a72998ffc1eb7701c43ca0945cc94afe5", null ],
     [ "getJsonVideoMode", "vision_8h.html#a96fd1f768d8cda63dc172d07bd2bc798", null ],
@@ -43,7 +42,6 @@ var vision_8h =
     [ "operator+", "vision_8h.html#a1b3f9f72bbafd657d0ce9362b47330a3", null ],
     [ "operator+", "vision_8h.html#a90f73c2297490e3b4e9206d56ea9c7c5", null ],
     [ "operator+=", "vision_8h.html#a4d261b6355bcb578912223a38b41909c", null ],
-    [ "_default", "vision_8h.html#a218465907e06aff6d59145fb7e09f46d", null ],
     [ "extend_array", "vision_8h.html#abec58e4a7ba126123a58e90b78401f8b", null ],
     [ "extend_vector", "vision_8h.html#aa34b4dd342701041898b480601e4668a", null ],
     [ "markup_map", "vision_8h.html#a0a779e4a5e18a07f2711370a01b823f9", null ]

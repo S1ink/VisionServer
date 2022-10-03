@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['obj_5flabels_0',['obj_labels',['../classAxonRunner__.html#a14ea4c880835b87eda657028d09f9e20',1,'AxonRunner_']]],
-  ['outputs_1',['outputs',['../classMoveNet__.html#a03abff932c6309f4e4b6b9afbf497f25',1,'MoveNet_']]]
+  ['pipelines_0',['pipelines',['../classvs2_1_1VisionServer.html#ac1aa320a1eeb74d7b16e3a947326b7f1',1,'vs2::VisionServer::pipelines()'],['../classvs2_1_1SequentialPipeline.html#af16a4f2928a56866404b21e6035e6537',1,'vs2::SequentialPipeline::pipelines()']]],
+  ['points_1',['points',['../classMoveNet__.html#a1b20185400d2f0afc8c96d282199ee42',1,'MoveNet_']]],
+  ['properties_2',['properties',['../classVisionCamera.html#a31f223a9df35f19e2bf2d862a2a928fe',1,'VisionCamera']]]
 ];

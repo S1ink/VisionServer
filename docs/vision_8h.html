@@ -40,7 +40,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VisionServer
-   &#160;<span id="projectnumber">v2.0.0-63-g1afd140</span>
+   &#160;<span id="projectnumber">v2.0.0-66-ge4d81b0</span>
    </div>
    <div id="projectbrief">FRC vision library</div>
   </td>
@@ -113,7 +113,6 @@ $(document).ready(function(){initNavTree('vision_8h.html',''); initResizable(); 
 <code>#include &lt;networktables/NetworkTable.h&gt;</code><br />
 <code>#include &lt;cameraserver/CameraServer.h&gt;</code><br />
 <code>#include &lt;wpi/StringExtras.h&gt;</code><br />
-<code>#include &quot;cpp-tools/src/resources.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="visioncamera_8h_source.html">visioncamera.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="vision_8inc_source.html">vision.inc</a>&quot;</code><br />
 </div><div class="textblock"><div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
@@ -137,8 +136,6 @@ $(document).ready(function(){initNavTree('vision_8h.html',''); initResizable(); 
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a25962e04b9cdb396c90b4861c0f83274"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vision_8h.html#a25962e04b9cdb396c90b4861c0f83274">readConfig</a> (std::vector&lt; <a class="el" href="classVisionCamera.html">VisionCamera</a> &gt; &amp;cameras, const char *file=<a class="el" href="vision_8h.html#a218465907e06aff6d59145fb7e09f46d">_default</a>)</td></tr>
-<tr class="separator:a25962e04b9cdb396c90b4861c0f83274"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6aece20ba8f156f2415b29849dadeb66"><td class="memItemLeft" align="right" valign="top">cs::CvSink&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vision_8h.html#a6aece20ba8f156f2415b29849dadeb66">switchedCameraVision</a> (const std::vector&lt; <a class="el" href="classVisionCamera.html">VisionCamera</a> &gt; &amp;cameras, std::shared_ptr&lt; nt::NetworkTable &gt; table=nt::NetworkTableInstance::GetDefault().GetTable(&quot;Vision&quot;))</td></tr>
 <tr class="separator:a6aece20ba8f156f2415b29849dadeb66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a72998ffc1eb7701c43ca0945cc94afe5"><td class="memItemLeft" align="right" valign="top">cv::Size&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vision_8h.html#a72998ffc1eb7701c43ca0945cc94afe5">getResolution</a> (cs::VideoMode vm)</td></tr>
@@ -264,8 +261,6 @@ Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a218465907e06aff6d59145fb7e09f46d"><td class="memItemLeft" align="right" valign="top">CE_STR&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vision_8h.html#a218465907e06aff6d59145fb7e09f46d">_default</a> = &quot;/boot/frc.json&quot;</td></tr>
-<tr class="separator:a218465907e06aff6d59145fb7e09f46d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abec58e4a7ba126123a58e90b78401f8b"><td class="memTemplParams" colspan="2">template&lt;typename num_t , size_t s&gt; </td></tr>
 <tr class="memitem:abec58e4a7ba126123a58e90b78401f8b"><td class="memTemplItemLeft" align="right" valign="top">const auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="vision_8h.html#abec58e4a7ba126123a58e90b78401f8b">extend_array</a> = operator+=&lt;num_t, s&gt;</td></tr>
 <tr class="separator:abec58e4a7ba126123a58e90b78401f8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -276,44 +271,6 @@ Variables</h2></td></tr>
 <tr class="separator:a0a779e4a5e18a07f2711370a01b823f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a25962e04b9cdb396c90b4861c0f83274" name="a25962e04b9cdb396c90b4861c0f83274"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a25962e04b9cdb396c90b4861c0f83274">&#9670;&nbsp;</a></span>readConfig()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool readConfig </td>
-          <td>(</td>
-          <td class="paramtype">std::vector&lt; <a class="el" href="classVisionCamera.html">VisionCamera</a> &gt; &amp;&#160;</td>
-          <td class="paramname"><em>cameras</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>file</em> = <code><a class="el" href="vision_8h.html#a218465907e06aff6d59145fb7e09f46d">_default</a></code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >Reads a config json and creates appropriate VisionCameras in the supplied vector </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">cameras</td><td>The output vector in which cameras will be created </td></tr>
-    <tr><td class="paramname">file</td><td>The path to the json, default is "/boot/frc.json" </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>false if there was an error </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="vision_8cpp_source.html#l00007">7</a> of file <a class="el" href="vision_8cpp_source.html">vision.cpp</a>.</p>
-
-</div>
-</div>
 <a id="a6aece20ba8f156f2415b29849dadeb66" name="a6aece20ba8f156f2415b29849dadeb66"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6aece20ba8f156f2415b29849dadeb66">&#9670;&nbsp;</a></span>switchedCameraVision()</h2>
 
@@ -339,7 +296,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Starts a stream and creates a networktable value for changing which camera is streamed </p><dl class="params"><dt>Parameters</dt><dd>
+<p >This file contains vision-related helper functions used throughout the framework Starts a stream and creates a networktable value for changing which camera is streamed </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">cameras</td><td>A vector of VisionCameras to be used </td></tr>
     <tr><td class="paramname">table</td><td>A networktable in which to put the camera index entries </td></tr>
@@ -348,7 +305,7 @@ Variables</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A cs::CvSink which is is the source for the stream </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="vision_8cpp_source.html#l00126">126</a> of file <a class="el" href="vision_8cpp_source.html">vision.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8cpp_source.html#l00129">129</a> of file <a class="el" href="vision_8cpp_source.html">vision.cpp</a>.</p>
 
 </div>
 </div>
@@ -383,7 +340,7 @@ Variables</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The resolutuion in cv::Size format </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00048">48</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00038">38</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
 
 </div>
 </div>
@@ -404,7 +361,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <p >Extracts videomode properties from a config json - 0-values returned if config is invalid </p><dl class="section return"><dt>Returns</dt><dd>The VideoMode object </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="vision_8cpp_source.html#l00152">152</a> of file <a class="el" href="vision_8cpp_source.html">vision.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8cpp_source.html#l00155">155</a> of file <a class="el" href="vision_8cpp_source.html">vision.cpp</a>.</p>
 
 </div>
 </div>
@@ -495,7 +452,7 @@ template&lt;typename num_t &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="vision_8cpp_source.html#l00196">196</a> of file <a class="el" href="vision_8cpp_source.html">vision.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8cpp_source.html#l00199">199</a> of file <a class="el" href="vision_8cpp_source.html">vision.cpp</a>.</p>
 
 </div>
 </div>
@@ -544,7 +501,7 @@ template&lt;typename num_t &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A new cv::Size representing the division </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00081">81</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00071">71</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
 
 </div>
 </div>
@@ -590,7 +547,7 @@ template&lt;typename num_t &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00087">87</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00077">77</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
 
 </div>
 </div>
@@ -622,7 +579,7 @@ template&lt;typename t &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00094">94</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00084">84</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
 
 </div>
 </div>
@@ -668,7 +625,7 @@ template&lt;typename t &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00099">99</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00089">89</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
 
 </div>
 </div>
@@ -698,7 +655,7 @@ template&lt;typename num_t &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00104">104</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00094">94</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
 
 </div>
 </div>
@@ -738,7 +695,7 @@ template&lt;typename num_t &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00107">107</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00097">97</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
 
 </div>
 </div>
@@ -778,7 +735,7 @@ template&lt;typename num_t &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00112">112</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00102">102</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
 
 </div>
 </div>
@@ -818,7 +775,7 @@ template&lt;typename num_t &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00118">118</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00108">108</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
 
 </div>
 </div>
@@ -858,7 +815,7 @@ template&lt;typename num_t &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00123">123</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00113">113</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
 
 </div>
 </div>
@@ -898,7 +855,7 @@ template&lt;typename num_t &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00128">128</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00118">118</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
 
 </div>
 </div>
@@ -938,7 +895,7 @@ template&lt;typename num_t &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00133">133</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00123">123</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
 
 </div>
 </div>
@@ -978,7 +935,7 @@ template&lt;typename num_t &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00139">139</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00129">129</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
 
 </div>
 </div>
@@ -1018,7 +975,7 @@ template&lt;typename num_t &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00144">144</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00134">134</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
 
 </div>
 </div>
@@ -1058,7 +1015,7 @@ template&lt;typename num_t &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00149">149</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00139">139</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
 
 </div>
 </div>
@@ -1098,7 +1055,7 @@ template&lt;typename num_t &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00154">154</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00144">144</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
 
 </div>
 </div>
@@ -1138,7 +1095,7 @@ template&lt;typename inum1_t , typename inum2_t , typename onum_t &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00160">160</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00150">150</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
 
 </div>
 </div>
@@ -1727,23 +1684,6 @@ template&lt;typename num_t &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
-<a id="a218465907e06aff6d59145fb7e09f46d" name="a218465907e06aff6d59145fb7e09f46d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a218465907e06aff6d59145fb7e09f46d">&#9670;&nbsp;</a></span>_default</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">CE_STR _default = &quot;/boot/frc.json&quot;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >This file contains vision-related helper functions used throughout the framework </p>
-
-<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00023">23</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
-
-</div>
-</div>
 <a id="abec58e4a7ba126123a58e90b78401f8b" name="abec58e4a7ba126123a58e90b78401f8b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abec58e4a7ba126123a58e90b78401f8b">&#9670;&nbsp;</a></span>extend_array</h2>
 
@@ -1758,7 +1698,7 @@ template&lt;typename num_t , size_t s&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00216">216</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00206">206</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
 
 </div>
 </div>
@@ -1776,7 +1716,7 @@ template&lt;typename num_t &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00218">218</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00208">208</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
 
 </div>
 </div>
@@ -1805,7 +1745,7 @@ template&lt;typename num_t &gt; </div>
 <div class="line">    std::array&lt;cv::Scalar, 3&gt;{cv::Scalar(0, 0, 255), cv::Scalar(127, 0, 255), cv::Scalar(255, 0, 255)}, </div>
 <div class="line">}</div>
 </div><!-- fragment -->
-<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00220">220</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8h_source.html#l00210">210</a> of file <a class="el" href="vision_8h_source.html">vision.h</a>.</p>
 
 </div>
 </div>
@@ -1815,7 +1755,7 @@ template&lt;typename num_t &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_30d9ea9a8d9df1a989aa8aa8f59da391.html">lib-vs</a></li><li class="navelem"><a class="el" href="dir_4505e8eed2522850e8dd12da3b28dc54.html">src</a></li><li class="navelem"><a class="el" href="dir_16b7c41ca322cf05371f268760117ee9.html">core</a></li><li class="navelem"><a class="el" href="vision_8h.html">vision.h</a></li>
-    <li class="footer">Generated on Fri Sep 30 2022 03:45:06 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Mon Oct 3 2022 03:24:02 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>
