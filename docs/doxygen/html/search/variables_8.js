@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['map_0',['map',['../classTfModel.html#a492cb0c7dd0232ddf93710b2a2cc46e7',1,'TfModel']]],
-  ['markup_5fmap_1',['markup_map',['../vision_8h.html#a0a779e4a5e18a07f2711370a01b823f9',1,'vision.h']]],
-  ['model_2',['model',['../classTfModel.html#ac74fe0fbf08e60cf5d8b18414e3dc197',1,'TfModel']]]
+  ['name_0',['name',['../classvs2_1_1Target.html#a0712222a11021323785d007734566ffc',1,'vs2::Target::name()'],['../classvs2_1_1VisionServer_1_1BasePipe.html#a6ef3fc6bcbe2128ff0f22f9b369f6b88',1,'vs2::VisionServer::BasePipe::name()']]],
+  ['names_1',['names',['../structMoveNet__B.html#a880fe32c31516707027694b8c91907de',1,'MoveNet_B']]]
 ];

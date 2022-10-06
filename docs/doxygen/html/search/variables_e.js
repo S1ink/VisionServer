@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['table_0',['table',['../classvs2_1_1Target.html#ae7e88fdbd293bb7ea33ccd8f42cae958',1,'vs2::Target::table()'],['../classvs2_1_1VisionServer_1_1BasePipe.html#a6db1f0df45489dbda77f2083b484a7ee',1,'vs2::VisionServer::BasePipe::table()'],['../structvs2_1_1VisionServer_1_1OutputStream.html#a2babbb3d86ef35acbeb9f0c99c73aa46',1,'vs2::VisionServer::OutputStream::table()']]]
+  ['weights_5fmap_0',['weights_map',['../namespacevs2.html#a554f7e144ecdbeaa30f98f916d10aab3',1,'vs2']]],
+  ['whitebalance_1',['whitebalance',['../classVisionCamera.html#aa021cbf1a25a7507ccb48446a01a01a5',1,'VisionCamera']]]
 ];

@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['labels_0',['labels',['../classAxonRunner__.html#a9dadc10ac2a6eb750e34a49cd5d232e3',1,'AxonRunner_']]],
-  ['local_5fidx_1',['local_idx',['../structvs2_1_1VisionServer_1_1OutputStream.html#a8d8f564a6ec490634e576724ed16cf5f',1,'vs2::VisionServer::OutputStream']]]
+  ['map_0',['map',['../classTfModel.html#a492cb0c7dd0232ddf93710b2a2cc46e7',1,'TfModel']]],
+  ['markup_5fmap_1',['markup_map',['../vision_8h.html#a0a779e4a5e18a07f2711370a01b823f9',1,'vision.h']]],
+  ['model_2',['model',['../classTfModel.html#ac74fe0fbf08e60cf5d8b18414e3dc197',1,'TfModel']]]
 ];

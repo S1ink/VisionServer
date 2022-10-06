@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['_5fdefault_0',['_default',['../vision_8h.html#a218465907e06aff6d59145fb7e09f46d',1,'vision.h']]]
+  ['brightness_0',['brightness',['../classVisionCamera.html#a6799562884c93586fde0039b95d05de5',1,'VisionCamera']]]
 ];
