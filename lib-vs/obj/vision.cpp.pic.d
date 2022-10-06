@@ -35,9 +35,8 @@ obj/vision.cpp.pic.o: src\core/vision.cpp src\core/vision.h \
  include/cscore.h include/cscore_c.h include/cscore_cpp.h \
  include/cscore_oo.h include/cscore_oo.inc include/cscore_cv.h \
  include/cameraserver/CameraServer.inc include/wpi/StringExtras.h \
- additions/cpp-tools/src/resources.h src\core/visioncamera.h \
- include/opencv4/opencv2/opencv.hpp include/opencv4/opencv2/core.hpp \
- include/opencv4/opencv2/core/mat.hpp \
+ src\core/visioncamera.h include/opencv4/opencv2/opencv.hpp \
+ include/opencv4/opencv2/core.hpp include/opencv4/opencv2/core/mat.hpp \
  include/opencv4/opencv2/core/bufferpool.hpp \
  include/opencv4/opencv2/core/mat.inl.hpp \
  include/opencv4/opencv2/core/persistence.hpp \
@@ -118,7 +117,7 @@ obj/vision.cpp.pic.o: src\core/vision.cpp src\core/vision.h \
  include/opencv4/opencv2/video.hpp \
  include/opencv4/opencv2/video/tracking.hpp \
  include/opencv4/opencv2/video/background_segm.hpp include/wpi/json.h \
- src\core/vision.inc include/wpi/raw_ostream.h include/wpi/raw_istream.h
+ src\core/vision.inc additions/cpp-tools/src/resources.h
 
 src\core/vision.h:
 
@@ -229,8 +228,6 @@ include/cscore_cv.h:
 include/cameraserver/CameraServer.inc:
 
 include/wpi/StringExtras.h:
-
-additions/cpp-tools/src/resources.h:
 
 src\core/visioncamera.h:
 
@@ -414,6 +411,4 @@ include/wpi/json.h:
 
 src\core/vision.inc:
 
-include/wpi/raw_ostream.h:
-
-include/wpi/raw_istream.h:
+additions/cpp-tools/src/resources.h:

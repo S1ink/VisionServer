@@ -13,7 +13,7 @@
 */
 class VisionCamera final: public cs::VideoCamera {
 public:
-	inline static cv::Mat_<float>
+	inline static const cv::Mat_<float>
 		default_matrix{cv::Mat_<float>::zeros(3, 3)},
 		default_distort{cv::Mat_<float>::zeros(1, 5)}
 	;
@@ -118,6 +118,10 @@ public:
 	 * @return a const reference to the internal matrix
 	*/
 	inline const cv::Mat_<float>& getDistortionCoefs() const { return this->distortion; }
+
+	bool setCalibrationJson(const wpi::json&);
+	bool setCameraMatrix(const cv::Mat_<float>&);
+	bool setDistortionCoefs(const cv::Mat_<float>&);
 
 	/**
 	 * Wraps cs::CvSink::GrabFrame() for the internal sink. If the camera is not physically connected, the buffer is set to a blank frame

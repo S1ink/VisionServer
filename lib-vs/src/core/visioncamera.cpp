@@ -176,6 +176,30 @@ bool VisionCamera::getJsonDistortionCoefs(cv::Mat_<float>& array) const {
     return false;
 }
 
+bool VisionCamera::setCalibrationJson(const wpi::json& j) {
+    if(!j.is_object()) {
+        return false;
+    }
+    this->calibration = j;
+    return
+        this->getJsonCameraMatrix(this->camera_matrix) &&
+        this->getJsonDistortionCoefs(this->distortion);
+}
+bool VisionCamera::setCameraMatrix(const cv::Mat_<float>& mat) {
+    if(mat.size() != default_matrix.size()) {
+        return false;
+    }
+    this->camera_matrix = mat;
+    return true;
+}
+bool VisionCamera::setDistortionCoefs(const cv::Mat_<float>& mat) {
+    if(mat.size() != default_matrix.size()) {
+        return false;
+    }
+    this->distortion = mat;
+    return true;
+}
+
 uint64_t VisionCamera::getFrame(cv::Mat& o_frame, double timeout) const {
 	if(this->IsConnected()) {
 		return this->raw.GrabFrame(o_frame, timeout);
@@ -207,7 +231,7 @@ int VisionCamera::getConfigFPS() const {
     return this->properties.fps;
 }
 cv::Size VisionCamera::getResolution() const {
-    return cv::Size(this->properties.width, properties.height);
+    return cv::Size(this->properties.width, this->properties.height);
 }
 
 int8_t VisionCamera::getBrightness() const {
