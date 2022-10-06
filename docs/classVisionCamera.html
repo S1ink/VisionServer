@@ -40,7 +40,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VisionServer
-   &#160;<span id="projectnumber">v2.0.0-66-ge4d81b0</span>
+   &#160;<span id="projectnumber">v2.0.0-69-gbf22363</span>
    </div>
    <div id="projectbrief">FRC vision library</div>
   </td>
@@ -162,6 +162,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac89bdf693667a79b19609f91564760b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac0400ff3ce52514c2048c0c47dd5867"><td class="memItemLeft" align="right" valign="top">const cv::Mat_&lt; float &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisionCamera.html#aac0400ff3ce52514c2048c0c47dd5867">getDistortionCoefs</a> () const</td></tr>
 <tr class="separator:aac0400ff3ce52514c2048c0c47dd5867"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5dcf9da846cc0877d00441f7c159c96"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisionCamera.html#ae5dcf9da846cc0877d00441f7c159c96">setCalibrationJson</a> (const wpi::json &amp;)</td></tr>
+<tr class="separator:ae5dcf9da846cc0877d00441f7c159c96"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af41af25d618c191a72275952e731f31d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisionCamera.html#af41af25d618c191a72275952e731f31d">setCameraMatrix</a> (const cv::Mat_&lt; float &gt; &amp;)</td></tr>
+<tr class="separator:af41af25d618c191a72275952e731f31d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af21bc078e376b7947f5329440d7da960"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisionCamera.html#af21bc078e376b7947f5329440d7da960">setDistortionCoefs</a> (const cv::Mat_&lt; float &gt; &amp;)</td></tr>
+<tr class="separator:af21bc078e376b7947f5329440d7da960"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af89b8b7e87c40c75ddf3cf9c459c3da0"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisionCamera.html#af89b8b7e87c40c75ddf3cf9c459c3da0">getFrame</a> (cv::Mat &amp;o_frame, double timeout=0.225) const</td></tr>
 <tr class="separator:af89b8b7e87c40c75ddf3cf9c459c3da0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2bf0b3cedad6299a3b3eb1a3d138fc39"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisionCamera.html#a2bf0b3cedad6299a3b3eb1a3d138fc39">getFrameNoTmO</a> (cv::Mat &amp;o_frame) const</td></tr>
@@ -199,10 +205,10 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:a38829722c074dd802e87c6efeb4390c3"><td class="memItemLeft" align="right" valign="top">static cv::Mat_&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisionCamera.html#a38829722c074dd802e87c6efeb4390c3">default_matrix</a> {cv::Mat_&lt;float&gt;::zeros(3, 3)}</td></tr>
-<tr class="separator:a38829722c074dd802e87c6efeb4390c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a06d50b359164d53e2d8aaf2ad77381bb"><td class="memItemLeft" align="right" valign="top">static cv::Mat_&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisionCamera.html#a06d50b359164d53e2d8aaf2ad77381bb">default_distort</a> {cv::Mat_&lt;float&gt;::zeros(1, 5)}</td></tr>
-<tr class="separator:a06d50b359164d53e2d8aaf2ad77381bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa0d62db105682d0c29b0f78f071dcbd6"><td class="memItemLeft" align="right" valign="top">static const cv::Mat_&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisionCamera.html#aa0d62db105682d0c29b0f78f071dcbd6">default_matrix</a> {cv::Mat_&lt;float&gt;::zeros(3, 3)}</td></tr>
+<tr class="separator:aa0d62db105682d0c29b0f78f071dcbd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af7b7caeb7ad29f42ea2a2277e82ef901"><td class="memItemLeft" align="right" valign="top">static const cv::Mat_&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisionCamera.html#af7b7caeb7ad29f42ea2a2277e82ef901">default_distort</a> {cv::Mat_&lt;float&gt;::zeros(1, 5)}</td></tr>
+<tr class="separator:af7b7caeb7ad29f42ea2a2277e82ef901"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -221,9 +227,9 @@ Private Attributes</h2></td></tr>
 <tr class="separator:aaf91a2cea909f512cac4bb027e821393"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa2297e6ce82be48a02b311b413ab12cd"><td class="memItemLeft" align="right" valign="top">cs::CvSink&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisionCamera.html#aa2297e6ce82be48a02b311b413ab12cd">raw</a></td></tr>
 <tr class="separator:aa2297e6ce82be48a02b311b413ab12cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa1cebbbf53828b008acae6321669f6ff"><td class="memItemLeft" align="right" valign="top">cv::Mat_&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisionCamera.html#aa1cebbbf53828b008acae6321669f6ff">camera_matrix</a> {<a class="el" href="classVisionCamera.html#a38829722c074dd802e87c6efeb4390c3">default_matrix</a>}</td></tr>
+<tr class="memitem:aa1cebbbf53828b008acae6321669f6ff"><td class="memItemLeft" align="right" valign="top">cv::Mat_&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisionCamera.html#aa1cebbbf53828b008acae6321669f6ff">camera_matrix</a> {<a class="el" href="classVisionCamera.html#aa0d62db105682d0c29b0f78f071dcbd6">default_matrix</a>}</td></tr>
 <tr class="separator:aa1cebbbf53828b008acae6321669f6ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adaa18fef9093af1627306b411c9f2db3"><td class="memItemLeft" align="right" valign="top">cv::Mat_&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisionCamera.html#adaa18fef9093af1627306b411c9f2db3">distortion</a> {<a class="el" href="classVisionCamera.html#a06d50b359164d53e2d8aaf2ad77381bb">default_distort</a>}</td></tr>
+<tr class="memitem:adaa18fef9093af1627306b411c9f2db3"><td class="memItemLeft" align="right" valign="top">cv::Mat_&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisionCamera.html#adaa18fef9093af1627306b411c9f2db3">distortion</a> {<a class="el" href="classVisionCamera.html#af7b7caeb7ad29f42ea2a2277e82ef901">default_distort</a>}</td></tr>
 <tr class="separator:adaa18fef9093af1627306b411c9f2db3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31f223a9df35f19e2bf2d862a2a928fe"><td class="memItemLeft" align="right" valign="top">cs::VideoMode&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisionCamera.html#a31f223a9df35f19e2bf2d862a2a928fe">properties</a></td></tr>
 <tr class="separator:a31f223a9df35f19e2bf2d862a2a928fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -706,6 +712,66 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="ae5dcf9da846cc0877d00441f7c159c96" name="ae5dcf9da846cc0877d00441f7c159c96"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae5dcf9da846cc0877d00441f7c159c96">&#9670;&nbsp;</a></span>setCalibrationJson()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool VisionCamera::setCalibrationJson </td>
+          <td>(</td>
+          <td class="paramtype">const wpi::json &amp;&#160;</td>
+          <td class="paramname"><em>j</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00179">179</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
+
+</div>
+</div>
+<a id="af41af25d618c191a72275952e731f31d" name="af41af25d618c191a72275952e731f31d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af41af25d618c191a72275952e731f31d">&#9670;&nbsp;</a></span>setCameraMatrix()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool VisionCamera::setCameraMatrix </td>
+          <td>(</td>
+          <td class="paramtype">const cv::Mat_&lt; float &gt; &amp;&#160;</td>
+          <td class="paramname"><em>mat</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00188">188</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
+
+</div>
+</div>
+<a id="af21bc078e376b7947f5329440d7da960" name="af21bc078e376b7947f5329440d7da960"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af21bc078e376b7947f5329440d7da960">&#9670;&nbsp;</a></span>setDistortionCoefs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool VisionCamera::setDistortionCoefs </td>
+          <td>(</td>
+          <td class="paramtype">const cv::Mat_&lt; float &gt; &amp;&#160;</td>
+          <td class="paramname"><em>mat</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00195">195</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
+
+</div>
+</div>
 <a id="af89b8b7e87c40c75ddf3cf9c459c3da0" name="af89b8b7e87c40c75ddf3cf9c459c3da0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af89b8b7e87c40c75ddf3cf9c459c3da0">&#9670;&nbsp;</a></span>getFrame()</h2>
 
@@ -740,7 +806,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the frametime, in 1 microsecond increments (see wpi::Now()) </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00179">179</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00203">203</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
 
 </div>
 </div>
@@ -767,7 +833,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the frametime, in 1 microsecond increments (see wpi::Now()) </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00187">187</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00211">211</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
 
 </div>
 </div>
@@ -795,7 +861,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >Get the internal CvSink for aquiring frames from the camera </p><dl class="section return"><dt>Returns</dt><dd>a const reference to the internal sink </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="visioncamera_8h_source.html#l00139">139</a> of file <a class="el" href="visioncamera_8h_source.html">visioncamera.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visioncamera_8h_source.html#l00143">143</a> of file <a class="el" href="visioncamera_8h_source.html">visioncamera.h</a>.</p>
 
 </div>
 </div>
@@ -815,7 +881,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >Get the width of a frame output by the camera </p><dl class="section return"><dt>Returns</dt><dd>The width in pixels </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00196">196</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00220">220</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
 
 </div>
 </div>
@@ -835,7 +901,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >Get the height of a frame output by the camera </p><dl class="section return"><dt>Returns</dt><dd>The height in pixels </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00199">199</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00223">223</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
 
 </div>
 </div>
@@ -855,7 +921,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >Get the total number of pixels in each frame (width x height) </p><dl class="section return"><dt>Returns</dt><dd>The total number of pixels in each frame </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00202">202</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00226">226</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
 
 </div>
 </div>
@@ -875,7 +941,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >Get the current fps the camera is set to capture at </p><dl class="section return"><dt>Returns</dt><dd>The fps </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00206">206</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00230">230</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
 
 </div>
 </div>
@@ -895,7 +961,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >Get the width and height of a camera frame in cv::Size format </p><dl class="section return"><dt>Returns</dt><dd>The resolution of a camera frame in a cv::Size object </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00209">209</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00233">233</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
 
 </div>
 </div>
@@ -915,7 +981,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >Get the current brightness setting for the camera </p><dl class="section return"><dt>Returns</dt><dd>The brightness (0-100, -1 for auto) </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00213">213</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00237">237</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
 
 </div>
 </div>
@@ -935,7 +1001,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >Get the current exposure setting for the camera </p><dl class="section return"><dt>Returns</dt><dd>The exposure (0-100, -1 for auto) </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00216">216</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00240">240</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
 
 </div>
 </div>
@@ -955,7 +1021,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >Get the current whitebalance setting for the camera </p><dl class="section return"><dt>Returns</dt><dd>The whitebalance (0-??? (&gt;7000), -1 for auto) </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00219">219</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00243">243</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
 
 </div>
 </div>
@@ -981,7 +1047,7 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00223">223</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00247">247</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
 
 </div>
 </div>
@@ -1007,7 +1073,7 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00227">227</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00251">251</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
 
 </div>
 </div>
@@ -1033,7 +1099,7 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00231">231</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00255">255</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
 
 </div>
 </div>
@@ -1059,7 +1125,7 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00236">236</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00260">260</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
 
 </div>
 </div>
@@ -1079,7 +1145,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >Publish networktables-adjustable settings for exposure, brightness, and whitebalance under the camera's networktable </p>
 
-<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00239">239</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00263">263</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
 
 </div>
 </div>
@@ -1099,7 +1165,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >Deletes all created entries in the camera's networktable </p>
 
-<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00244">244</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00268">268</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
 
 </div>
 </div>
@@ -1127,7 +1193,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >Publish an adjustable networktable entry for the camera's brightness </p>
 
-<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00250">250</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00274">274</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
 
 </div>
 </div>
@@ -1155,7 +1221,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >Publish an adjustable networktable entry for the camera's whitebalance </p>
 
-<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00261">261</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00285">285</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
 
 </div>
 </div>
@@ -1183,13 +1249,13 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >Publish an adjustable networktable entry for the camera's exposure </p>
 
-<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00272">272</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visioncamera_8cpp_source.html#l00296">296</a> of file <a class="el" href="visioncamera_8cpp_source.html">visioncamera.cpp</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a38829722c074dd802e87c6efeb4390c3" name="a38829722c074dd802e87c6efeb4390c3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a38829722c074dd802e87c6efeb4390c3">&#9670;&nbsp;</a></span>default_matrix</h2>
+<a id="aa0d62db105682d0c29b0f78f071dcbd6" name="aa0d62db105682d0c29b0f78f071dcbd6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa0d62db105682d0c29b0f78f071dcbd6">&#9670;&nbsp;</a></span>default_matrix</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1198,7 +1264,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">cv::Mat_&lt;float&gt; VisionCamera::default_matrix {cv::Mat_&lt;float&gt;::zeros(3, 3)}</td>
+          <td class="memname">const cv::Mat_&lt;float&gt; VisionCamera::default_matrix {cv::Mat_&lt;float&gt;::zeros(3, 3)}</td>
         </tr>
       </table>
   </td>
@@ -1212,8 +1278,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a06d50b359164d53e2d8aaf2ad77381bb" name="a06d50b359164d53e2d8aaf2ad77381bb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a06d50b359164d53e2d8aaf2ad77381bb">&#9670;&nbsp;</a></span>default_distort</h2>
+<a id="af7b7caeb7ad29f42ea2a2277e82ef901" name="af7b7caeb7ad29f42ea2a2277e82ef901"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af7b7caeb7ad29f42ea2a2277e82ef901">&#9670;&nbsp;</a></span>default_distort</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1222,7 +1288,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">cv::Mat_&lt;float&gt; VisionCamera::default_distort {cv::Mat_&lt;float&gt;::zeros(1, 5)}</td>
+          <td class="memname">const cv::Mat_&lt;float&gt; VisionCamera::default_distort {cv::Mat_&lt;float&gt;::zeros(1, 5)}</td>
         </tr>
       </table>
   </td>
@@ -1256,7 +1322,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visioncamera_8h_source.html#l00228">228</a> of file <a class="el" href="visioncamera_8h_source.html">visioncamera.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visioncamera_8h_source.html#l00232">232</a> of file <a class="el" href="visioncamera_8h_source.html">visioncamera.h</a>.</p>
 
 </div>
 </div>
@@ -1280,7 +1346,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visioncamera_8h_source.html#l00228">228</a> of file <a class="el" href="visioncamera_8h_source.html">visioncamera.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visioncamera_8h_source.html#l00232">232</a> of file <a class="el" href="visioncamera_8h_source.html">visioncamera.h</a>.</p>
 
 </div>
 </div>
@@ -1304,7 +1370,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visioncamera_8h_source.html#l00229">229</a> of file <a class="el" href="visioncamera_8h_source.html">visioncamera.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visioncamera_8h_source.html#l00233">233</a> of file <a class="el" href="visioncamera_8h_source.html">visioncamera.h</a>.</p>
 
 </div>
 </div>
@@ -1318,7 +1384,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">cv::Mat_&lt;float&gt; VisionCamera::camera_matrix {<a class="el" href="classVisionCamera.html#a38829722c074dd802e87c6efeb4390c3">default_matrix</a>}</td>
+          <td class="memname">cv::Mat_&lt;float&gt; VisionCamera::camera_matrix {<a class="el" href="classVisionCamera.html#aa0d62db105682d0c29b0f78f071dcbd6">default_matrix</a>}</td>
         </tr>
       </table>
   </td>
@@ -1328,7 +1394,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visioncamera_8h_source.html#l00230">230</a> of file <a class="el" href="visioncamera_8h_source.html">visioncamera.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visioncamera_8h_source.html#l00234">234</a> of file <a class="el" href="visioncamera_8h_source.html">visioncamera.h</a>.</p>
 
 </div>
 </div>
@@ -1342,7 +1408,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">cv::Mat_&lt;float&gt; VisionCamera::distortion {<a class="el" href="classVisionCamera.html#a06d50b359164d53e2d8aaf2ad77381bb">default_distort</a>}</td>
+          <td class="memname">cv::Mat_&lt;float&gt; VisionCamera::distortion {<a class="el" href="classVisionCamera.html#af7b7caeb7ad29f42ea2a2277e82ef901">default_distort</a>}</td>
         </tr>
       </table>
   </td>
@@ -1352,7 +1418,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visioncamera_8h_source.html#l00230">230</a> of file <a class="el" href="visioncamera_8h_source.html">visioncamera.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visioncamera_8h_source.html#l00234">234</a> of file <a class="el" href="visioncamera_8h_source.html">visioncamera.h</a>.</p>
 
 </div>
 </div>
@@ -1376,7 +1442,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visioncamera_8h_source.html#l00231">231</a> of file <a class="el" href="visioncamera_8h_source.html">visioncamera.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visioncamera_8h_source.html#l00235">235</a> of file <a class="el" href="visioncamera_8h_source.html">visioncamera.h</a>.</p>
 
 </div>
 </div>
@@ -1401,7 +1467,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p >The camera's networktable - default value is '(root)/Cameras/NAME/' </p>
 
-<p class="definition">Definition at line <a class="el" href="visioncamera_8h_source.html#l00234">234</a> of file <a class="el" href="visioncamera_8h_source.html">visioncamera.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visioncamera_8h_source.html#l00238">238</a> of file <a class="el" href="visioncamera_8h_source.html">visioncamera.h</a>.</p>
 
 </div>
 </div>
@@ -1425,7 +1491,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visioncamera_8h_source.html#l00236">236</a> of file <a class="el" href="visioncamera_8h_source.html">visioncamera.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visioncamera_8h_source.html#l00240">240</a> of file <a class="el" href="visioncamera_8h_source.html">visioncamera.h</a>.</p>
 
 </div>
 </div>
@@ -1449,7 +1515,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visioncamera_8h_source.html#l00236">236</a> of file <a class="el" href="visioncamera_8h_source.html">visioncamera.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visioncamera_8h_source.html#l00240">240</a> of file <a class="el" href="visioncamera_8h_source.html">visioncamera.h</a>.</p>
 
 </div>
 </div>
@@ -1473,7 +1539,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visioncamera_8h_source.html#l00237">237</a> of file <a class="el" href="visioncamera_8h_source.html">visioncamera.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visioncamera_8h_source.html#l00241">241</a> of file <a class="el" href="visioncamera_8h_source.html">visioncamera.h</a>.</p>
 
 </div>
 </div>
@@ -1487,7 +1553,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classVisionCamera.html">VisionCamera</a></li>
-    <li class="footer">Generated on Mon Oct 3 2022 03:24:02 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Thu Oct 6 2022 03:10:33 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>

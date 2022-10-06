@@ -10,6 +10,7 @@ var searchData=
   ['l_5fwrist_7',['L_WRIST',['../structMoveNet__B.html#af66c0377354bf28cd99163983b7e7eccaa508e3fbebf60657c362ed66edc6595e',1,'MoveNet_B']]],
   ['label_5fidx_8',['LABEL_IDX',['../structAxonRunner__B.html#af114d474aaccfe5d798fc9caf59fb164a7ab3ad8bddf05be20c1f7afee4d8c975',1,'AxonRunner_B']]],
   ['labels_9',['labels',['../classAxonRunner__.html#a9dadc10ac2a6eb750e34a49cd5d232e3',1,'AxonRunner_']]],
-  ['loadobjectlabels_10',['loadObjectLabels',['../tfmodel_8cpp.html#a6231e52bd45f80bbf713fdd9f5e08513',1,'loadObjectLabels(const std::string &amp;f, std::vector&lt; std::string &gt; &amp;objs):&#160;tfmodel.cpp'],['../tfmodel_8h.html#ad0d4dee843979b164acc302f3e0bcbba',1,'loadObjectLabels(const std::string &amp;file, std::vector&lt; std::string &gt; &amp;objs):&#160;tfmodel.cpp']]],
-  ['local_5fidx_11',['local_idx',['../structvs2_1_1VisionServer_1_1OutputStream.html#a8d8f564a6ec490634e576724ed16cf5f',1,'vs2::VisionServer::OutputStream']]]
+  ['loadjson_10',['loadJson',['../config_8cpp.html#af0909d7da137d216603f29d53757f59b',1,'loadJson(wpi::json &amp;j, const char *file):&#160;config.cpp'],['../config_8h.html#a4f01521d4c53311d256cc911818c44c7',1,'loadJson(wpi::json &amp;, const char *file):&#160;config.cpp']]],
+  ['loadobjectlabels_11',['loadObjectLabels',['../tfmodel_8cpp.html#a6231e52bd45f80bbf713fdd9f5e08513',1,'loadObjectLabels(const std::string &amp;f, std::vector&lt; std::string &gt; &amp;objs):&#160;tfmodel.cpp'],['../tfmodel_8h.html#ad0d4dee843979b164acc302f3e0bcbba',1,'loadObjectLabels(const std::string &amp;file, std::vector&lt; std::string &gt; &amp;objs):&#160;tfmodel.cpp']]],
+  ['local_5fidx_12',['local_idx',['../structvs2_1_1VisionServer_1_1OutputStream.html#a8d8f564a6ec490634e576724ed16cf5f',1,'vs2::VisionServer::OutputStream']]]
 ];

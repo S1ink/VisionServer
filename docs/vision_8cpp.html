@@ -40,7 +40,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VisionServer
-   &#160;<span id="projectnumber">v2.0.0-66-ge4d81b0</span>
+   &#160;<span id="projectnumber">v2.0.0-69-gbf22363</span>
    </div>
    <div id="projectbrief">FRC vision library</div>
   </td>
@@ -104,9 +104,6 @@ $(document).ready(function(){initNavTree('vision_8cpp.html',''); initResizable()
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="vision_8h_source.html">vision.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="config_8h_source.html">config.h</a>&quot;</code><br />
-<code>#include &lt;wpi/raw_ostream.h&gt;</code><br />
-<code>#include &lt;wpi/raw_istream.h&gt;</code><br />
 <code>#include &quot;cpp-tools/src/resources.h&quot;</code><br />
 </div><div class="textblock"><div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="closed.png" alt="+"/> Include dependency graph for vision.cpp:</div>
@@ -121,8 +118,6 @@ $(document).ready(function(){initNavTree('vision_8cpp.html',''); initResizable()
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a6c1e034cdc2ac1be100fe1d866b70271"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vision_8cpp.html#a6c1e034cdc2ac1be100fe1d866b70271">readConfig</a> (std::vector&lt; <a class="el" href="classVisionCamera.html">VisionCamera</a> &gt; &amp;cameras, const char *file)</td></tr>
-<tr class="separator:a6c1e034cdc2ac1be100fe1d866b70271"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaaff09fde08179d16fe5e301abc7be7c"><td class="memItemLeft" align="right" valign="top">cs::CvSink&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vision_8cpp.html#aaaff09fde08179d16fe5e301abc7be7c">switchedCameraVision</a> (const std::vector&lt; <a class="el" href="classVisionCamera.html">VisionCamera</a> &gt; &amp;cameras, std::shared_ptr&lt; nt::NetworkTable &gt; table)</td></tr>
 <tr class="separator:aaaff09fde08179d16fe5e301abc7be7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a96fd1f768d8cda63dc172d07bd2bc798"><td class="memItemLeft" align="right" valign="top">cs::VideoMode&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vision_8cpp.html#a96fd1f768d8cda63dc172d07bd2bc798">getJsonVideoMode</a> (const wpi::json &amp;config)</td></tr>
@@ -131,44 +126,6 @@ Functions</h2></td></tr>
 <tr class="separator:ac264ab10845b4171e552ad87b326c675"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a6c1e034cdc2ac1be100fe1d866b70271" name="a6c1e034cdc2ac1be100fe1d866b70271"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6c1e034cdc2ac1be100fe1d866b70271">&#9670;&nbsp;</a></span>readConfig()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool readConfig </td>
-          <td>(</td>
-          <td class="paramtype">std::vector&lt; <a class="el" href="classVisionCamera.html">VisionCamera</a> &gt; &amp;&#160;</td>
-          <td class="paramname"><em>cameras</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>file</em> = <code><a class="el" href="config_8h.html#a39f5128b23523e06ac734df99cb22976">FRC_CONFIG</a></code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >Reads a config json and creates appropriate VisionCameras in the supplied vector </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">cameras</td><td>The output vector in which cameras will be created </td></tr>
-    <tr><td class="paramname">file</td><td>The path to the json, default is "/boot/frc.json" </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>false if there was an error </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="vision_8cpp_source.html#l00010">10</a> of file <a class="el" href="vision_8cpp_source.html">vision.cpp</a>.</p>
-
-</div>
-</div>
 <a id="aaaff09fde08179d16fe5e301abc7be7c" name="aaaff09fde08179d16fe5e301abc7be7c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aaaff09fde08179d16fe5e301abc7be7c">&#9670;&nbsp;</a></span>switchedCameraVision()</h2>
 
@@ -203,7 +160,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A cs::CvSink which is is the source for the stream </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="vision_8cpp_source.html#l00129">129</a> of file <a class="el" href="vision_8cpp_source.html">vision.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8cpp_source.html#l00006">6</a> of file <a class="el" href="vision_8cpp_source.html">vision.cpp</a>.</p>
 
 </div>
 </div>
@@ -224,7 +181,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 <p >Extracts videomode properties from a config json - 0-values returned if config is invalid </p><dl class="section return"><dt>Returns</dt><dd>The VideoMode object </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="vision_8cpp_source.html#l00155">155</a> of file <a class="el" href="vision_8cpp_source.html">vision.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8cpp_source.html#l00032">32</a> of file <a class="el" href="vision_8cpp_source.html">vision.cpp</a>.</p>
 
 </div>
 </div>
@@ -268,7 +225,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="vision_8cpp_source.html#l00199">199</a> of file <a class="el" href="vision_8cpp_source.html">vision.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8cpp_source.html#l00076">76</a> of file <a class="el" href="vision_8cpp_source.html">vision.cpp</a>.</p>
 
 </div>
 </div>
@@ -278,7 +235,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_30d9ea9a8d9df1a989aa8aa8f59da391.html">lib-vs</a></li><li class="navelem"><a class="el" href="dir_4505e8eed2522850e8dd12da3b28dc54.html">src</a></li><li class="navelem"><a class="el" href="dir_16b7c41ca322cf05371f268760117ee9.html">core</a></li><li class="navelem"><a class="el" href="vision_8cpp.html">vision.cpp</a></li>
-    <li class="footer">Generated on Mon Oct 3 2022 03:24:02 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Thu Oct 6 2022 03:10:33 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>
