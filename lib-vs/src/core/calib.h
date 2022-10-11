@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <array>
+#include <string>
 #include <unordered_map>
 
 #include <opencv2/core/types.hpp>

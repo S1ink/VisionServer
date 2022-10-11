@@ -38,6 +38,15 @@ void rescale(std::vector<cv::Point_<num_t> >& points, double scale) {
 		points[i] *= scale;
 	}
 }
+template<typename num_t>
+void rescale(std::vector<std::vector<cv::Point_<num_t> > >& contours, double scale) {
+	static_assert(std::is_arithmetic<num_t>::value, "Template parameter (num_t) must be arithemetic type");
+	for(std::vector<cv::Point_<num_t> >& contour : contours) {
+		for(cv::Point_<num_t>& point : contour) {
+			point *= scale;
+		}
+	}
+}
 
 template<typename num_t>
 cv::Point_<num_t> findCenter(const std::vector<cv::Point_<num_t> >& contour) {

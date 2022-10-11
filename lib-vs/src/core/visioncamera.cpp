@@ -186,17 +186,17 @@ bool VisionCamera::setCalibrationJson(const wpi::json& j) {
         this->getJsonDistortionCoefs(this->distortion);
 }
 bool VisionCamera::setCameraMatrix(const cv::Mat_<float>& mat) {
-    if(mat.size() != default_matrix.size()) {
+    if(mat.size().area() != default_matrix.size().area()) {
         return false;
     }
-    this->camera_matrix = mat;
+    this->camera_matrix = mat.reshape(0, 3);
     return true;
 }
 bool VisionCamera::setDistortionCoefs(const cv::Mat_<float>& mat) {
-    if(mat.size() != default_matrix.size()) {
+    if(mat.size().area() != default_distort.size().area()) {
         return false;
     }
-    this->distortion = mat;
+    this->distortion = mat.reshape(0, 1);
     return true;
 }
 

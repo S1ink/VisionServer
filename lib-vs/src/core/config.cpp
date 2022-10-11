@@ -108,18 +108,19 @@ bool createCameras(std::vector<VisionCamera>& cameras, CalibList calibrations, c
 			bool has_calibs = j.count("calibrations") > 0;
             for(const wpi::json& camera : j.at("cameras")) {
 				cameras.emplace_back(camera);
-                if(camera.count("properites") > 0 && camera.at("properties").count("type") > 0) {
+                if(camera.count("properties") && camera.at("properties").count("type")) {
                     try {
-                        std::string type = j.at("properties").at("type").get<std::string>();
+                        std::string type = camera.at("properties").at("type").get<std::string>();
                         using SizeItem = std::pair<cv::Size2i, std::array<cv::Mat_<float>, 2> >;
 						using TypeItem = std::pair<const char*, std::vector<SizeItem> >;
                         cv::Size2i sz = cameras.back().getResolution();
                         for(const TypeItem& item : calibrations) {
-							if(wpi::compare_lower(type, item.first)) {
+							if(wpi::equals_lower(type, item.first)) {
                                 for(const SizeItem& arr : item.second) {
                                     if(sz == arr.first) {
-                                        cameras.back().setCameraMatrix(arr.second.at(0));
-                                        cameras.back().setDistortionCoefs(arr.second.at(1));
+                                        cameras.back().setCameraMatrix(arr.second[0]);
+                                        cameras.back().setDistortionCoefs(arr.second[1]);
+                                        break;
                                     }
                                 }
 							}

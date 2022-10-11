@@ -169,6 +169,8 @@ template<typename num_t>
 void _rescale(std::vector<cv::Point_<num_t> >& points, size_t scale);	// scales down with a size value (multiplies by 1.0/value)
 template<typename num_t>
 void rescale(std::vector<cv::Point_<num_t> >& points, double scale);	// scales up or down (multiplies by scale)
+template<typename num_t>
+void rescale(std::vector<std::vector<cv::Point_<num_t> > >& contours, double scale);
 
 template<typename num_t>
 cv::Point_<num_t> findCenter(const std::vector<cv::Point_<num_t> >& contour);
@@ -207,10 +209,5 @@ const auto extend_array = operator+=<num_t, s>;	// an alias
 template<typename num_t>
 const auto extend_vector = operator+=<num_t>;
 
-inline static const std::array<std::array<cv::Scalar, 3>, 3> markup_map{
-    std::array<cv::Scalar, 3>{cv::Scalar(255, 0, 0), cv::Scalar(255, 127, 0), cv::Scalar(255, 255, 0)},	//blue
-	std::array<cv::Scalar, 3>{cv::Scalar(0, 255, 0), cv::Scalar(0, 255, 127), cv::Scalar(0, 255, 255)},	//green
-	std::array<cv::Scalar, 3>{cv::Scalar(0, 0, 255), cv::Scalar(127, 0, 255), cv::Scalar(255, 0, 255)},	//red
-};
 
 #include "vision.inc"

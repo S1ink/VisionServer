@@ -29,3 +29,10 @@ inline static std::array<std::array<uint16_t, 2>, 3> weights_map{
 
 
 } // namespace vs2
+
+
+inline static const std::array<std::array<cv::Scalar, 3>, 3> markup_map{
+    std::array<cv::Scalar, 3>{cv::Scalar(255, 0, 0), cv::Scalar(255, 127, 0), cv::Scalar(255, 255, 0)},	//blue
+	std::array<cv::Scalar, 3>{cv::Scalar(0, 255, 0), cv::Scalar(0, 255, 127), cv::Scalar(0, 255, 255)},	//green
+	std::array<cv::Scalar, 3>{cv::Scalar(0, 0, 255), cv::Scalar(127, 0, 255), cv::Scalar(255, 0, 255)},	//red
+};

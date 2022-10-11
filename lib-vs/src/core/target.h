@@ -24,11 +24,21 @@ public:
 		return targets;
 	}
 
+	enum Status {
+		INVALID = -1,
+		EXPIRED = 0,
+		VALID = 1
+	};
+
 	Target() = delete;
-	inline Target(const std::string& n) : name(n), table(Target::ntable()->GetSubTable(this->name)) {}
-	inline Target(std::string&& n) : name(std::move(n)), table(Target::ntable()->GetSubTable(this->name)) {}
+	inline Target(const std::string& n) : name(n), table(Target::ntable()->GetSubTable(this->name))
+		{ this->table->PutNumber("Status", VALID); }
+	inline Target(std::string&& n) : name(std::move(n)), table(Target::ntable()->GetSubTable(this->name))
+		{ this->table->PutNumber("Status", VALID); }
 	Target(const Target&) = default;
 	Target(Target&&) = default;
+	inline virtual ~Target()
+		{ this->table->PutNumber("Status", INVALID); }
 
 	inline const std::string& getName() const { return this->name; }
 
@@ -44,6 +54,13 @@ protected:
 	}
 	inline void setDist(double d) {
 		this->table->PutNumber("distance", d);
+	}
+
+	inline void setExpired() {
+		this->table->PutNumber("Status", EXPIRED);
+	}
+	inline void setValid() {
+		this->table->PutNumber("Status", VALID);
 	}
 
 	const std::string name;
@@ -64,6 +81,12 @@ public:
 	UniqueTarget(const UniqueTarget&) = default;
 	UniqueTarget(UniqueTarget&&) = default;
 
+protected:
+	inline void setPos(double x, double y, double z) { this->setPos(x, y, z); }
+	inline void setAngle(double ud, double lr) { this->setAngle(ud, lr); }
+	inline void setDist(double d) { this->setDist(d); }
+	inline void setExpired() { this->setExpired(); }
+	inline void setValid() { this->setValid(); }
 
 };
 
