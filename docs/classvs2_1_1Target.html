@@ -40,7 +40,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VisionServer
-   &#160;<span id="projectnumber">v2.0.0-69-gbf22363</span>
+   &#160;<span id="projectnumber">v2.0.0-72-gea9a615</span>
    </div>
    <div id="projectbrief">FRC vision library</div>
   </td>
@@ -99,6 +99,7 @@ $(document).ready(function(){initNavTree('classvs2_1_1Target.html',''); initResi
 
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
@@ -126,6 +127,14 @@ $(document).ready(function(){initNavTree('classvs2_1_1Target.html',''); initResi
 </div>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:ab91b352a393fea8f1344e1999fff2211"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classvs2_1_1Target.html#ab91b352a393fea8f1344e1999fff2211">Status</a> { <a class="el" href="classvs2_1_1Target.html#ab91b352a393fea8f1344e1999fff2211a9162619af068f36fa6a18ba688daf3f4">INVALID</a> = -1
+, <a class="el" href="classvs2_1_1Target.html#ab91b352a393fea8f1344e1999fff2211a219338cd97d5abe1b7acde8838bbd322">EXPIRED</a> = 0
+, <a class="el" href="classvs2_1_1Target.html#ab91b352a393fea8f1344e1999fff2211a7061ef12b01cf66b5d6793dd2e66df4d">VALID</a> = 1
+ }</td></tr>
+<tr class="separator:ab91b352a393fea8f1344e1999fff2211"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a5680ef0838ee01a69b6066a8f5b62785"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classvs2_1_1Target.html#a5680ef0838ee01a69b6066a8f5b62785">Target</a> ()=delete</td></tr>
@@ -138,6 +147,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a6e99a5d56dd23a4ab3485911576d024d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6d2176463f52fe85a1bc8147380faf45"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classvs2_1_1Target.html#a6d2176463f52fe85a1bc8147380faf45">Target</a> (<a class="el" href="classvs2_1_1Target.html">Target</a> &amp;&amp;)=default</td></tr>
 <tr class="separator:a6d2176463f52fe85a1bc8147380faf45"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52bbabd654eab74a9d3a9aba03db084b"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classvs2_1_1Target.html#a52bbabd654eab74a9d3a9aba03db084b">~Target</a> ()</td></tr>
+<tr class="separator:a52bbabd654eab74a9d3a9aba03db084b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad9758ca3ad93d5d425becc2f1088796b"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classvs2_1_1Target.html#ad9758ca3ad93d5d425becc2f1088796b">getName</a> () const</td></tr>
 <tr class="separator:ad9758ca3ad93d5d425becc2f1088796b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -154,6 +165,10 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:a24be436c7a989349766eb3ce5875bfa4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a71339bad2d8785c729f2e63cac3e40f6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classvs2_1_1Target.html#a71339bad2d8785c729f2e63cac3e40f6">setDist</a> (double d)</td></tr>
 <tr class="separator:a71339bad2d8785c729f2e63cac3e40f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0245e2a0164205ba60a23a9e37c00e75"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classvs2_1_1Target.html#a0245e2a0164205ba60a23a9e37c00e75">setExpired</a> ()</td></tr>
+<tr class="separator:a0245e2a0164205ba60a23a9e37c00e75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a301d93b9ee75d6bd94782e2f404c345d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classvs2_1_1Target.html#a301d93b9ee75d6bd94782e2f404c345d">setValid</a> ()</td></tr>
+<tr class="separator:a301d93b9ee75d6bd94782e2f404c345d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -166,7 +181,29 @@ Protected Attributes</h2></td></tr>
 <div class="textblock"><p >Basic ntables target representation </p>
 
 <p class="definition">Definition at line <a class="el" href="target_8h_source.html#l00020">20</a> of file <a class="el" href="target_8h_source.html">target.h</a>.</p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+</div><h2 class="groupheader">Member Enumeration Documentation</h2>
+<a id="ab91b352a393fea8f1344e1999fff2211" name="ab91b352a393fea8f1344e1999fff2211"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab91b352a393fea8f1344e1999fff2211">&#9670;&nbsp;</a></span>Status</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="classvs2_1_1Target.html#ab91b352a393fea8f1344e1999fff2211">vs2::Target::Status</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ab91b352a393fea8f1344e1999fff2211a9162619af068f36fa6a18ba688daf3f4" name="ab91b352a393fea8f1344e1999fff2211a9162619af068f36fa6a18ba688daf3f4"></a>INVALID&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="ab91b352a393fea8f1344e1999fff2211a219338cd97d5abe1b7acde8838bbd322" name="ab91b352a393fea8f1344e1999fff2211a219338cd97d5abe1b7acde8838bbd322"></a>EXPIRED&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="ab91b352a393fea8f1344e1999fff2211a7061ef12b01cf66b5d6793dd2e66df4d" name="ab91b352a393fea8f1344e1999fff2211a7061ef12b01cf66b5d6793dd2e66df4d"></a>VALID&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+<p class="definition">Definition at line <a class="el" href="target_8h_source.html#l00027">27</a> of file <a class="el" href="target_8h_source.html">target.h</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a5680ef0838ee01a69b6066a8f5b62785" name="a5680ef0838ee01a69b6066a8f5b62785"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5680ef0838ee01a69b6066a8f5b62785">&#9670;&nbsp;</a></span>Target() <span class="overload">[1/5]</span></h2>
 
@@ -216,7 +253,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="target_8h_source.html#l00028">28</a> of file <a class="el" href="target_8h_source.html">target.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="target_8h_source.html#l00034">34</a> of file <a class="el" href="target_8h_source.html">target.h</a>.</p>
 
 </div>
 </div>
@@ -244,7 +281,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="target_8h_source.html#l00029">29</a> of file <a class="el" href="target_8h_source.html">target.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="target_8h_source.html#l00036">36</a> of file <a class="el" href="target_8h_source.html">target.h</a>.</p>
 
 </div>
 </div>
@@ -300,6 +337,33 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a52bbabd654eab74a9d3a9aba03db084b" name="a52bbabd654eab74a9d3a9aba03db084b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a52bbabd654eab74a9d3a9aba03db084b">&#9670;&nbsp;</a></span>~Target()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual vs2::Target::~Target </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="target_8h_source.html#l00040">40</a> of file <a class="el" href="target_8h_source.html">target.h</a>.</p>
+
+</div>
+</div>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="a19a75ed68f143e2737ccd8e998763a24" name="a19a75ed68f143e2737ccd8e998763a24"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a19a75ed68f143e2737ccd8e998763a24">&#9670;&nbsp;</a></span>ntable()</h2>
@@ -351,7 +415,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="target_8h_source.html#l00033">33</a> of file <a class="el" href="target_8h_source.html">target.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="target_8h_source.html#l00043">43</a> of file <a class="el" href="target_8h_source.html">target.h</a>.</p>
 
 </div>
 </div>
@@ -395,7 +459,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="target_8h_source.html#l00036">36</a> of file <a class="el" href="target_8h_source.html">target.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="target_8h_source.html#l00046">46</a> of file <a class="el" href="target_8h_source.html">target.h</a>.</p>
 
 </div>
 </div>
@@ -433,7 +497,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="target_8h_source.html#l00041">41</a> of file <a class="el" href="target_8h_source.html">target.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="target_8h_source.html#l00051">51</a> of file <a class="el" href="target_8h_source.html">target.h</a>.</p>
 
 </div>
 </div>
@@ -461,7 +525,61 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="target_8h_source.html#l00045">45</a> of file <a class="el" href="target_8h_source.html">target.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="target_8h_source.html#l00055">55</a> of file <a class="el" href="target_8h_source.html">target.h</a>.</p>
+
+</div>
+</div>
+<a id="a0245e2a0164205ba60a23a9e37c00e75" name="a0245e2a0164205ba60a23a9e37c00e75"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0245e2a0164205ba60a23a9e37c00e75">&#9670;&nbsp;</a></span>setExpired()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void vs2::Target::setExpired </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="target_8h_source.html#l00059">59</a> of file <a class="el" href="target_8h_source.html">target.h</a>.</p>
+
+</div>
+</div>
+<a id="a301d93b9ee75d6bd94782e2f404c345d" name="a301d93b9ee75d6bd94782e2f404c345d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a301d93b9ee75d6bd94782e2f404c345d">&#9670;&nbsp;</a></span>setValid()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void vs2::Target::setValid </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="target_8h_source.html#l00062">62</a> of file <a class="el" href="target_8h_source.html">target.h</a>.</p>
 
 </div>
 </div>
@@ -486,7 +604,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="target_8h_source.html#l00049">49</a> of file <a class="el" href="target_8h_source.html">target.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="target_8h_source.html#l00066">66</a> of file <a class="el" href="target_8h_source.html">target.h</a>.</p>
 
 </div>
 </div>
@@ -510,7 +628,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="target_8h_source.html#l00050">50</a> of file <a class="el" href="target_8h_source.html">target.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="target_8h_source.html#l00067">67</a> of file <a class="el" href="target_8h_source.html">target.h</a>.</p>
 
 </div>
 </div>
@@ -523,7 +641,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespacevs2.html">vs2</a></li><li class="navelem"><a class="el" href="classvs2_1_1Target.html">Target</a></li>
-    <li class="footer">Generated on Thu Oct 6 2022 03:10:33 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Tue Oct 11 2022 03:30:41 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>

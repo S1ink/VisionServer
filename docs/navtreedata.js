@@ -56,6 +56,7 @@ var NAVTREE =
         [ "Variables", "functions_vars.html", null ],
         [ "Typedefs", "functions_type.html", null ],
         [ "Enumerations", "functions_enum.html", null ],
+        [ "Enumerator", "functions_eval.html", null ],
         [ "Related Functions", "functions_rela.html", null ]
       ] ]
     ] ],
@@ -75,8 +76,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"classvs2_1_1VisionServer.html#a8c76c81ce465fabb2cfe6b67f2cee6b5",
-"structvs2_1_1VisionServer_1_1OutputStream.html#a2babbb3d86ef35acbeb9f0c99c73aa46"
+"classvs2_1_1VisionServer.html#a69618987d6ca973cc54cfc92be0d1cc9",
+"structMoveNet__B.html#acee3f0584ccaef6d1d91e050677bae62"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

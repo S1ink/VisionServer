@@ -28,6 +28,7 @@ var vision_8h =
     [ "rescale", "vision_8h.html#a0b1c62136ee157cb30e5dc0af82f83b3", null ],
     [ "_rescale", "vision_8h.html#a1fdc3740077d1c51214f453caa07da12", null ],
     [ "rescale", "vision_8h.html#afad2a3e35bffb727e0e4b66402cc0d48", null ],
+    [ "rescale", "vision_8h.html#af973d5191f94d68520c3fb597ee6f465", null ],
     [ "findCenter", "vision_8h.html#a95023c9010f3d4638c9f4b26a634f4df", null ],
     [ "findCenter", "vision_8h.html#a83bd95327432d9850a3a1f79816f2dc1", null ],
     [ "findCenter3D", "vision_8h.html#a76cd002d5a5a735e21b63663a420d73c", null ],
@@ -43,6 +44,5 @@ var vision_8h =
     [ "operator+", "vision_8h.html#a90f73c2297490e3b4e9206d56ea9c7c5", null ],
     [ "operator+=", "vision_8h.html#a4d261b6355bcb578912223a38b41909c", null ],
     [ "extend_array", "vision_8h.html#abec58e4a7ba126123a58e90b78401f8b", null ],
-    [ "extend_vector", "vision_8h.html#aa34b4dd342701041898b480601e4668a", null ],
-    [ "markup_map", "vision_8h.html#a0a779e4a5e18a07f2711370a01b823f9", null ]
+    [ "extend_vector", "vision_8h.html#aa34b4dd342701041898b480601e4668a", null ]
 ];

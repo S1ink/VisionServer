@@ -6,5 +6,6 @@ var extensions_8h =
       [ "RED", "extensions_8h.html#ae52486a5b23f75ab18b4b6617ebf10abaa2d9547b5d3dd9f05984475f7c926da0", null ]
     ] ],
     [ "operator~", "extensions_8h.html#a0c9386cbd552bd359f23e614f8e00207", null ],
-    [ "weights_map", "extensions_8h.html#a554f7e144ecdbeaa30f98f916d10aab3", null ]
+    [ "weights_map", "extensions_8h.html#a554f7e144ecdbeaa30f98f916d10aab3", null ],
+    [ "markup_map", "extensions_8h.html#a0a779e4a5e18a07f2711370a01b823f9", null ]
 ];
