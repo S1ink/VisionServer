@@ -40,7 +40,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VisionServer
-   &#160;<span id="projectnumber">v2.0.0-66-ge4d81b0</span>
+   &#160;<span id="projectnumber">v2.0.0-69-gbf22363</span>
    </div>
    <div id="projectbrief">FRC vision library</div>
   </td>
@@ -136,8 +136,8 @@ $(document).ready(function(){initNavTree('visionserver2_8cpp_source.html',''); i
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="classvs2_1_1VisionServer_1_1BasePipe.html#a4cea8657d80be13d15f94e72e4025233">   33</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classvs2_1_1VisionServer_1_1BasePipe.html#a4cea8657d80be13d15f94e72e4025233">VisionServer::BasePipe::setSource</a>(<span class="keyword">const</span> cs::VideoSource&amp; src) {</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    this-&gt;SetVideoMode(src.GetVideoMode());</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    this-&gt;input.SetSource(src);</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    this-&gt;src_matrix = &amp;<a class="code hl_variable" href="classVisionCamera.html#a38829722c074dd802e87c6efeb4390c3">VisionCamera::default_matrix</a>;</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    this-&gt;src_distort = &amp;<a class="code hl_variable" href="classVisionCamera.html#a06d50b359164d53e2d8aaf2ad77381bb">VisionCamera::default_distort</a>;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    this-&gt;src_matrix = &amp;<a class="code hl_variable" href="classVisionCamera.html#aa0d62db105682d0c29b0f78f071dcbd6">VisionCamera::default_matrix</a>;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    this-&gt;src_distort = &amp;<a class="code hl_variable" href="classVisionCamera.html#af7b7caeb7ad29f42ea2a2277e82ef901">VisionCamera::default_distort</a>;</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>}</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="classvs2_1_1VisionServer_1_1BasePipe.html#a297da60289ad94e8b2690d3eaa5e4dbb">   39</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="classvs2_1_1VisionServer_1_1BasePipe.html#a297da60289ad94e8b2690d3eaa5e4dbb">VisionServer::BasePipe::getFrame</a>(cv::Mat&amp; io_frame) {</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    this-&gt;input.GrabFrame(io_frame);</div>
@@ -708,10 +708,10 @@ $(document).ready(function(){initNavTree('visionserver2_8cpp_source.html',''); i
 <div class="line"><a id="l00605" name="l00605"></a><span class="lineno">  605</span>    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00606" name="l00606"></a><span class="lineno">  606</span>}</div>
 <div class="ttc" id="aclassVisionCamera_html"><div class="ttname"><a href="classVisionCamera.html">VisionCamera</a></div><div class="ttdef"><b>Definition:</b> <a href="visioncamera_8h_source.html#l00014">visioncamera.h:14</a></div></div>
-<div class="ttc" id="aclassVisionCamera_html_a06d50b359164d53e2d8aaf2ad77381bb"><div class="ttname"><a href="classVisionCamera.html#a06d50b359164d53e2d8aaf2ad77381bb">VisionCamera::default_distort</a></div><div class="ttdeci">static cv::Mat_&lt; float &gt; default_distort</div><div class="ttdef"><b>Definition:</b> <a href="visioncamera_8h_source.html#l00018">visioncamera.h:18</a></div></div>
-<div class="ttc" id="aclassVisionCamera_html_a38829722c074dd802e87c6efeb4390c3"><div class="ttname"><a href="classVisionCamera.html#a38829722c074dd802e87c6efeb4390c3">VisionCamera::default_matrix</a></div><div class="ttdeci">static cv::Mat_&lt; float &gt; default_matrix</div><div class="ttdef"><b>Definition:</b> <a href="visioncamera_8h_source.html#l00017">visioncamera.h:17</a></div></div>
+<div class="ttc" id="aclassVisionCamera_html_aa0d62db105682d0c29b0f78f071dcbd6"><div class="ttname"><a href="classVisionCamera.html#aa0d62db105682d0c29b0f78f071dcbd6">VisionCamera::default_matrix</a></div><div class="ttdeci">static const cv::Mat_&lt; float &gt; default_matrix</div><div class="ttdef"><b>Definition:</b> <a href="visioncamera_8h_source.html#l00017">visioncamera.h:17</a></div></div>
 <div class="ttc" id="aclassVisionCamera_html_aac0400ff3ce52514c2048c0c47dd5867"><div class="ttname"><a href="classVisionCamera.html#aac0400ff3ce52514c2048c0c47dd5867">VisionCamera::getDistortionCoefs</a></div><div class="ttdeci">const cv::Mat_&lt; float &gt; &amp; getDistortionCoefs() const</div><div class="ttdef"><b>Definition:</b> <a href="visioncamera_8h_source.html#l00120">visioncamera.h:120</a></div></div>
 <div class="ttc" id="aclassVisionCamera_html_ac89bdf693667a79b19609f91564760b5"><div class="ttname"><a href="classVisionCamera.html#ac89bdf693667a79b19609f91564760b5">VisionCamera::getCameraMatrix</a></div><div class="ttdeci">const cv::Mat_&lt; float &gt; &amp; getCameraMatrix() const</div><div class="ttdef"><b>Definition:</b> <a href="visioncamera_8h_source.html#l00115">visioncamera.h:115</a></div></div>
+<div class="ttc" id="aclassVisionCamera_html_af7b7caeb7ad29f42ea2a2277e82ef901"><div class="ttname"><a href="classVisionCamera.html#af7b7caeb7ad29f42ea2a2277e82ef901">VisionCamera::default_distort</a></div><div class="ttdeci">static const cv::Mat_&lt; float &gt; default_distort</div><div class="ttdef"><b>Definition:</b> <a href="visioncamera_8h_source.html#l00018">visioncamera.h:18</a></div></div>
 <div class="ttc" id="aclassvs2_1_1VisionServer_1_1BasePipe_html"><div class="ttname"><a href="classvs2_1_1VisionServer_1_1BasePipe.html">vs2::VisionServer::BasePipe</a></div><div class="ttdef"><b>Definition:</b> <a href="visionserver2_8h_source.html#l00038">visionserver2.h:38</a></div></div>
 <div class="ttc" id="aclassvs2_1_1VisionServer_1_1BasePipe_html_a297da60289ad94e8b2690d3eaa5e4dbb"><div class="ttname"><a href="classvs2_1_1VisionServer_1_1BasePipe.html#a297da60289ad94e8b2690d3eaa5e4dbb">vs2::VisionServer::BasePipe::getFrame</a></div><div class="ttdeci">void getFrame(cv::Mat &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="visionserver2_8cpp_source.html#l00039">visionserver2.cpp:39</a></div></div>
 <div class="ttc" id="aclassvs2_1_1VisionServer_1_1BasePipe_html_a41b3c29ec19cdd47eadbe4536b8029ff"><div class="ttname"><a href="classvs2_1_1VisionServer_1_1BasePipe.html#a41b3c29ec19cdd47eadbe4536b8029ff">vs2::VisionServer::BasePipe::src_distort</a></div><div class="ttdeci">const cv::Mat_&lt; float &gt; * src_distort</div><div class="ttdef"><b>Definition:</b> <a href="visionserver2_8h_source.html#l00077">visionserver2.h:77</a></div></div>
@@ -768,7 +768,7 @@ $(document).ready(function(){initNavTree('visionserver2_8cpp_source.html',''); i
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_30d9ea9a8d9df1a989aa8aa8f59da391.html">lib-vs</a></li><li class="navelem"><a class="el" href="dir_4505e8eed2522850e8dd12da3b28dc54.html">src</a></li><li class="navelem"><a class="el" href="dir_16b7c41ca322cf05371f268760117ee9.html">core</a></li><li class="navelem"><a class="el" href="visionserver2_8cpp.html">visionserver2.cpp</a></li>
-    <li class="footer">Generated on Mon Oct 3 2022 03:24:02 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Thu Oct 6 2022 03:10:33 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>

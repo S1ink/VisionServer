@@ -9,7 +9,7 @@ var searchData=
   ['r_5fshoulder_6',['R_SHOULDER',['../structMoveNet__B.html#af66c0377354bf28cd99163983b7e7ecca3cc118994b117f06677e3ac5c554be19',1,'MoveNet_B']]],
   ['r_5fwrist_7',['R_WRIST',['../structMoveNet__B.html#af66c0377354bf28cd99163983b7e7eccab6e86b20d40432d01d6ccc65386579bc',1,'MoveNet_B']]],
   ['raw_8',['raw',['../classVisionCamera.html#aa2297e6ce82be48a02b311b413ab12cd',1,'VisionCamera']]],
-  ['readconfig_9',['readConfig',['../config_8h.html#a7bfac3b7deef466958885026638d0221',1,'readConfig(std::vector&lt; VisionCamera &gt; &amp;cameras, const char *file=FRC_CONFIG):&#160;vision.cpp'],['../vision_8cpp.html#a6c1e034cdc2ac1be100fe1d866b70271',1,'readConfig(std::vector&lt; VisionCamera &gt; &amp;cameras, const char *file):&#160;vision.cpp']]],
+  ['readconfig_9',['readConfig',['../config_8cpp.html#a6c1e034cdc2ac1be100fe1d866b70271',1,'readConfig(std::vector&lt; VisionCamera &gt; &amp;cameras, const char *file):&#160;config.cpp'],['../config_8h.html#a7bfac3b7deef466958885026638d0221',1,'readConfig(std::vector&lt; VisionCamera &gt; &amp;cameras, const char *file=FRC_CONFIG):&#160;config.cpp']]],
   ['red_10',['RED',['../namespacevs2.html#ae52486a5b23f75ab18b4b6617ebf10abaa2d9547b5d3dd9f05984475f7c926da0',1,'vs2']]],
   ['references_2emd_11',['References.md',['../References_8md.html',1,'']]],
   ['reinsert_12',['reinsert',['../vision_8h.html#ae7d5d69d8b9d421a79c63262abba0006',1,'vision.h']]],

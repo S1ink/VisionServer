@@ -1,9 +1,9 @@
 var searchData=
 [
   ['default_0',['DEFAULT',['../classTfModel.html#aaeb63dfaefe19112bf57be34aa57afe1a5b39c8b553c821e7cddc6da64b5bd2ee',1,'TfModel']]],
-  ['default_5fdistort_1',['default_distort',['../classVisionCamera.html#a06d50b359164d53e2d8aaf2ad77381bb',1,'VisionCamera']]],
+  ['default_5fdistort_1',['default_distort',['../classVisionCamera.html#af7b7caeb7ad29f42ea2a2277e82ef901',1,'VisionCamera']]],
   ['default_5flabels_2',['default_labels',['../structAxonRunner__B.html#a065fb4e8fe0364e2e8f86e5d04f901df',1,'AxonRunner_B']]],
-  ['default_5fmatrix_3',['default_matrix',['../classVisionCamera.html#a38829722c074dd802e87c6efeb4390c3',1,'VisionCamera']]],
+  ['default_5fmatrix_3',['default_matrix',['../classVisionCamera.html#aa0d62db105682d0c29b0f78f071dcbd6',1,'VisionCamera']]],
   ['default_5fmodel_4',['default_model',['../structAxonRunner__B.html#aa43431aa1676e86acb3d8c54a79eaa70',1,'AxonRunner_B::default_model()'],['../structMoveNet__B.html#a4e46f17776f1e6a66c8ddddc16c4f652',1,'MoveNet_B::default_model()']]],
   ['default_5fthreading_5',['default_threading',['../classTfModel.html#acf99387359da3e03a88dca7ac419e33d',1,'TfModel']]],
   ['deleteentries_6',['deleteEntries',['../classVisionCamera.html#a0d801ee3ed1eaa19e1639817ee5a2a33',1,'VisionCamera']]],
