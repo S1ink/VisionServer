@@ -18,6 +18,7 @@ var classvs2_1_1Target =
     [ "setDist", "classvs2_1_1Target.html#a71339bad2d8785c729f2e63cac3e40f6", null ],
     [ "setExpired", "classvs2_1_1Target.html#a0245e2a0164205ba60a23a9e37c00e75", null ],
     [ "setValid", "classvs2_1_1Target.html#a301d93b9ee75d6bd94782e2f404c345d", null ],
+    [ "UniqueTarget", "classvs2_1_1Target.html#abf7d984961a0c9845a150d36a3939e54", null ],
     [ "name", "classvs2_1_1Target.html#a0712222a11021323785d007734566ffc", null ],
     [ "table", "classvs2_1_1Target.html#ae7e88fdbd293bb7ea33ccd8f42cae958", null ]
 ];
