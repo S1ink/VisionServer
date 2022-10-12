@@ -40,7 +40,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VisionServer
-   &#160;<span id="projectnumber">v2.0.0-69-gbf22363</span>
+   &#160;<span id="projectnumber">v2.0.0-72-gea9a615</span>
    </div>
    <div id="projectbrief">FRC vision library</div>
   </td>
@@ -105,43 +105,44 @@ $(document).ready(function(){initNavTree('calib_8h_source.html',''); initResizab
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;array&gt;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;unordered_map&gt;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;opencv2/core/types.hpp&gt;</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;unordered_map&gt;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;opencv2/core/types.hpp&gt;</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Ts&gt;</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="calib_8h.html#a9672bee81691c21e875546d1cd68df05">   11</a></span><span class="keyword">using</span> <a class="code hl_typedef" href="calib_8h.html#a9672bee81691c21e875546d1cd68df05">VecMap</a> = std::vector&lt;std::pair&lt;Ts...&gt; &gt;;</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">template</span>&lt;</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    <span class="keyword">typename</span> fp_T = float,</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    <span class="keyword">typename</span> str_T = std::string,</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span>...&gt; <span class="keyword">typename</span> map_T = std::unordered_map&gt;</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="calib_8h.html#a0316340fcd1efe2d7d4a33b78219e0b9">   17</a></span><span class="keyword">using</span> <a class="code hl_typedef" href="calib_8h.html#a0316340fcd1efe2d7d4a33b78219e0b9">CalibMap_</a> =</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    map_T&lt;</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        str_T,  map_T&lt;</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>                    cv::Size2i, std::array&lt;cv::Mat_&lt;fp_T&gt;, 2&gt;</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>                &gt;</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    &gt;</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="calib_8h.html#a93479e861036c69ee45fc7ed940470b7">   23</a></span>; <span class="keyword">typedef</span> <a class="code hl_typedef" href="calib_8h.html#a0316340fcd1efe2d7d4a33b78219e0b9">CalibMap_&lt;&gt;</a>   <a class="code hl_typedef" href="calib_8h.html#a93479e861036c69ee45fc7ed940470b7">CalibMap</a>;</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">template</span>&lt;</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="keyword">typename</span> fp_T = float,</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="keyword">typename</span> str_T = <span class="keyword">const</span> <span class="keywordtype">char</span>*&gt;</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="calib_8h.html#a739f9ab0752e24b8bceb297903c6effe">   28</a></span><span class="keyword">using</span> <a class="code hl_typedef" href="calib_8h.html#a739f9ab0752e24b8bceb297903c6effe">CalibList_</a>    =   <a class="code hl_typedef" href="calib_8h.html#a0316340fcd1efe2d7d4a33b78219e0b9">CalibMap_&lt;fp_T, str_T, VecMap&gt;</a>;</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="calib_8h.html#a6d6f5133923500c8a659804a59f2bfbd">   29</a></span><span class="keyword">typedef</span> <a class="code hl_typedef" href="calib_8h.html#a739f9ab0752e24b8bceb297903c6effe">CalibList_&lt;&gt;</a>    <a class="code hl_typedef" href="calib_8h.html#a6d6f5133923500c8a659804a59f2bfbd">CalibList</a>;</div>
-<div class="ttc" id="acalib_8h_html_a0316340fcd1efe2d7d4a33b78219e0b9"><div class="ttname"><a href="calib_8h.html#a0316340fcd1efe2d7d4a33b78219e0b9">CalibMap_</a></div><div class="ttdeci">map_T&lt; str_T, map_T&lt; cv::Size2i, std::array&lt; cv::Mat_&lt; fp_T &gt;, 2 &gt; &gt; &gt; CalibMap_</div><div class="ttdef"><b>Definition:</b> <a href="calib_8h_source.html#l00017">calib.h:23</a></div></div>
-<div class="ttc" id="acalib_8h_html_a6d6f5133923500c8a659804a59f2bfbd"><div class="ttname"><a href="calib_8h.html#a6d6f5133923500c8a659804a59f2bfbd">CalibList</a></div><div class="ttdeci">CalibList_ CalibList</div><div class="ttdef"><b>Definition:</b> <a href="calib_8h_source.html#l00029">calib.h:29</a></div></div>
-<div class="ttc" id="acalib_8h_html_a739f9ab0752e24b8bceb297903c6effe"><div class="ttname"><a href="calib_8h.html#a739f9ab0752e24b8bceb297903c6effe">CalibList_</a></div><div class="ttdeci">CalibMap_&lt; fp_T, str_T, VecMap &gt; CalibList_</div><div class="ttdef"><b>Definition:</b> <a href="calib_8h_source.html#l00028">calib.h:28</a></div></div>
-<div class="ttc" id="acalib_8h_html_a93479e861036c69ee45fc7ed940470b7"><div class="ttname"><a href="calib_8h.html#a93479e861036c69ee45fc7ed940470b7">CalibMap</a></div><div class="ttdeci">CalibMap_ CalibMap</div><div class="ttdef"><b>Definition:</b> <a href="calib_8h_source.html#l00023">calib.h:23</a></div></div>
-<div class="ttc" id="acalib_8h_html_a9672bee81691c21e875546d1cd68df05"><div class="ttname"><a href="calib_8h.html#a9672bee81691c21e875546d1cd68df05">VecMap</a></div><div class="ttdeci">std::vector&lt; std::pair&lt; Ts... &gt; &gt; VecMap</div><div class="ttdef"><b>Definition:</b> <a href="calib_8h_source.html#l00011">calib.h:11</a></div></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Ts&gt;</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="calib_8h.html#a9672bee81691c21e875546d1cd68df05">   12</a></span><span class="keyword">using</span> <a class="code hl_typedef" href="calib_8h.html#a9672bee81691c21e875546d1cd68df05">VecMap</a> = std::vector&lt;std::pair&lt;Ts...&gt; &gt;;</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">template</span>&lt;</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    <span class="keyword">typename</span> fp_T = float,</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    <span class="keyword">typename</span> str_T = std::string,</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span>...&gt; <span class="keyword">typename</span> map_T = std::unordered_map&gt;</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="calib_8h.html#a0316340fcd1efe2d7d4a33b78219e0b9">   18</a></span><span class="keyword">using</span> <a class="code hl_typedef" href="calib_8h.html#a0316340fcd1efe2d7d4a33b78219e0b9">CalibMap_</a> =</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    map_T&lt;</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        str_T,  map_T&lt;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>                    cv::Size2i, std::array&lt;cv::Mat_&lt;fp_T&gt;, 2&gt;</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>                &gt;</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    &gt;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="calib_8h.html#a93479e861036c69ee45fc7ed940470b7">   24</a></span>; <span class="keyword">typedef</span> <a class="code hl_typedef" href="calib_8h.html#a0316340fcd1efe2d7d4a33b78219e0b9">CalibMap_&lt;&gt;</a>   <a class="code hl_typedef" href="calib_8h.html#a93479e861036c69ee45fc7ed940470b7">CalibMap</a>;</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">template</span>&lt;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="keyword">typename</span> fp_T = float,</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="keyword">typename</span> str_T = <span class="keyword">const</span> <span class="keywordtype">char</span>*&gt;</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="calib_8h.html#a739f9ab0752e24b8bceb297903c6effe">   29</a></span><span class="keyword">using</span> <a class="code hl_typedef" href="calib_8h.html#a739f9ab0752e24b8bceb297903c6effe">CalibList_</a>    =   <a class="code hl_typedef" href="calib_8h.html#a0316340fcd1efe2d7d4a33b78219e0b9">CalibMap_&lt;fp_T, str_T, VecMap&gt;</a>;</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="calib_8h.html#a6d6f5133923500c8a659804a59f2bfbd">   30</a></span><span class="keyword">typedef</span> <a class="code hl_typedef" href="calib_8h.html#a739f9ab0752e24b8bceb297903c6effe">CalibList_&lt;&gt;</a>    <a class="code hl_typedef" href="calib_8h.html#a6d6f5133923500c8a659804a59f2bfbd">CalibList</a>;</div>
+<div class="ttc" id="acalib_8h_html_a0316340fcd1efe2d7d4a33b78219e0b9"><div class="ttname"><a href="calib_8h.html#a0316340fcd1efe2d7d4a33b78219e0b9">CalibMap_</a></div><div class="ttdeci">map_T&lt; str_T, map_T&lt; cv::Size2i, std::array&lt; cv::Mat_&lt; fp_T &gt;, 2 &gt; &gt; &gt; CalibMap_</div><div class="ttdef"><b>Definition:</b> <a href="calib_8h_source.html#l00018">calib.h:24</a></div></div>
+<div class="ttc" id="acalib_8h_html_a6d6f5133923500c8a659804a59f2bfbd"><div class="ttname"><a href="calib_8h.html#a6d6f5133923500c8a659804a59f2bfbd">CalibList</a></div><div class="ttdeci">CalibList_ CalibList</div><div class="ttdef"><b>Definition:</b> <a href="calib_8h_source.html#l00030">calib.h:30</a></div></div>
+<div class="ttc" id="acalib_8h_html_a739f9ab0752e24b8bceb297903c6effe"><div class="ttname"><a href="calib_8h.html#a739f9ab0752e24b8bceb297903c6effe">CalibList_</a></div><div class="ttdeci">CalibMap_&lt; fp_T, str_T, VecMap &gt; CalibList_</div><div class="ttdef"><b>Definition:</b> <a href="calib_8h_source.html#l00029">calib.h:29</a></div></div>
+<div class="ttc" id="acalib_8h_html_a93479e861036c69ee45fc7ed940470b7"><div class="ttname"><a href="calib_8h.html#a93479e861036c69ee45fc7ed940470b7">CalibMap</a></div><div class="ttdeci">CalibMap_ CalibMap</div><div class="ttdef"><b>Definition:</b> <a href="calib_8h_source.html#l00024">calib.h:24</a></div></div>
+<div class="ttc" id="acalib_8h_html_a9672bee81691c21e875546d1cd68df05"><div class="ttname"><a href="calib_8h.html#a9672bee81691c21e875546d1cd68df05">VecMap</a></div><div class="ttdeci">std::vector&lt; std::pair&lt; Ts... &gt; &gt; VecMap</div><div class="ttdef"><b>Definition:</b> <a href="calib_8h_source.html#l00012">calib.h:12</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_30d9ea9a8d9df1a989aa8aa8f59da391.html">lib-vs</a></li><li class="navelem"><a class="el" href="dir_4505e8eed2522850e8dd12da3b28dc54.html">src</a></li><li class="navelem"><a class="el" href="dir_16b7c41ca322cf05371f268760117ee9.html">core</a></li><li class="navelem"><a class="el" href="calib_8h.html">calib.h</a></li>
-    <li class="footer">Generated on Thu Oct 6 2022 03:10:33 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Tue Oct 11 2022 03:30:40 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>

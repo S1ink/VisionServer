@@ -40,7 +40,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VisionServer
-   &#160;<span id="projectnumber">v2.0.0-69-gbf22363</span>
+   &#160;<span id="projectnumber">v2.0.0-72-gea9a615</span>
    </div>
    <div id="projectbrief">FRC vision library</div>
   </td>
@@ -289,17 +289,17 @@ $(document).ready(function(){initNavTree('visioncamera_8cpp_source.html',''); in
 <div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>        this-&gt;<a class="code hl_function" href="classVisionCamera.html#a0b6289814c313a119ea2ba6108438140">getJsonDistortionCoefs</a>(this-&gt;<a class="code hl_variable" href="classVisionCamera.html#adaa18fef9093af1627306b411c9f2db3">distortion</a>);</div>
 <div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>}</div>
 <div class="line"><a id="l00188" name="l00188"></a><span class="lineno"><a class="line" href="classVisionCamera.html#af41af25d618c191a72275952e731f31d">  188</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="classVisionCamera.html#af41af25d618c191a72275952e731f31d">VisionCamera::setCameraMatrix</a>(<span class="keyword">const</span> cv::Mat_&lt;float&gt;&amp; mat) {</div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    <span class="keywordflow">if</span>(mat.size() != <a class="code hl_variable" href="classVisionCamera.html#aa0d62db105682d0c29b0f78f071dcbd6">default_matrix</a>.size()) {</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    <span class="keywordflow">if</span>(mat.size().area() != <a class="code hl_variable" href="classVisionCamera.html#aa0d62db105682d0c29b0f78f071dcbd6">default_matrix</a>.size().area()) {</div>
 <div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>    }</div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    this-&gt;<a class="code hl_variable" href="classVisionCamera.html#aa1cebbbf53828b008acae6321669f6ff">camera_matrix</a> = mat;</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    this-&gt;<a class="code hl_variable" href="classVisionCamera.html#aa1cebbbf53828b008acae6321669f6ff">camera_matrix</a> = mat.reshape(0, 3);</div>
 <div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>}</div>
 <div class="line"><a id="l00195" name="l00195"></a><span class="lineno"><a class="line" href="classVisionCamera.html#af21bc078e376b7947f5329440d7da960">  195</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="classVisionCamera.html#af21bc078e376b7947f5329440d7da960">VisionCamera::setDistortionCoefs</a>(<span class="keyword">const</span> cv::Mat_&lt;float&gt;&amp; mat) {</div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>    <span class="keywordflow">if</span>(mat.size() != <a class="code hl_variable" href="classVisionCamera.html#aa0d62db105682d0c29b0f78f071dcbd6">default_matrix</a>.size()) {</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>    <span class="keywordflow">if</span>(mat.size().area() != <a class="code hl_variable" href="classVisionCamera.html#af7b7caeb7ad29f42ea2a2277e82ef901">default_distort</a>.size().area()) {</div>
 <div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    }</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    this-&gt;<a class="code hl_variable" href="classVisionCamera.html#adaa18fef9093af1627306b411c9f2db3">distortion</a> = mat;</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    this-&gt;<a class="code hl_variable" href="classVisionCamera.html#adaa18fef9093af1627306b411c9f2db3">distortion</a> = mat.reshape(0, 1);</div>
 <div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>}</div>
 <div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span> </div>
@@ -447,6 +447,7 @@ $(document).ready(function(){initNavTree('visioncamera_8cpp_source.html',''); in
 <div class="ttc" id="aclassVisionCamera_html_ae5dcf9da846cc0877d00441f7c159c96"><div class="ttname"><a href="classVisionCamera.html#ae5dcf9da846cc0877d00441f7c159c96">VisionCamera::setCalibrationJson</a></div><div class="ttdeci">bool setCalibrationJson(const wpi::json &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="visioncamera_8cpp_source.html#l00179">visioncamera.cpp:179</a></div></div>
 <div class="ttc" id="aclassVisionCamera_html_af21bc078e376b7947f5329440d7da960"><div class="ttname"><a href="classVisionCamera.html#af21bc078e376b7947f5329440d7da960">VisionCamera::setDistortionCoefs</a></div><div class="ttdeci">bool setDistortionCoefs(const cv::Mat_&lt; float &gt; &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="visioncamera_8cpp_source.html#l00195">visioncamera.cpp:195</a></div></div>
 <div class="ttc" id="aclassVisionCamera_html_af41af25d618c191a72275952e731f31d"><div class="ttname"><a href="classVisionCamera.html#af41af25d618c191a72275952e731f31d">VisionCamera::setCameraMatrix</a></div><div class="ttdeci">bool setCameraMatrix(const cv::Mat_&lt; float &gt; &amp;)</div><div class="ttdef"><b>Definition:</b> <a href="visioncamera_8cpp_source.html#l00188">visioncamera.cpp:188</a></div></div>
+<div class="ttc" id="aclassVisionCamera_html_af7b7caeb7ad29f42ea2a2277e82ef901"><div class="ttname"><a href="classVisionCamera.html#af7b7caeb7ad29f42ea2a2277e82ef901">VisionCamera::default_distort</a></div><div class="ttdeci">static const cv::Mat_&lt; float &gt; default_distort</div><div class="ttdef"><b>Definition:</b> <a href="visioncamera_8h_source.html#l00018">visioncamera.h:18</a></div></div>
 <div class="ttc" id="aclassVisionCamera_html_af89b8b7e87c40c75ddf3cf9c459c3da0"><div class="ttname"><a href="classVisionCamera.html#af89b8b7e87c40c75ddf3cf9c459c3da0">VisionCamera::getFrame</a></div><div class="ttdeci">uint64_t getFrame(cv::Mat &amp;o_frame, double timeout=0.225) const</div><div class="ttdef"><b>Definition:</b> <a href="visioncamera_8cpp_source.html#l00203">visioncamera.cpp:203</a></div></div>
 <div class="ttc" id="avision_8cpp_html_a96fd1f768d8cda63dc172d07bd2bc798"><div class="ttname"><a href="vision_8cpp.html#a96fd1f768d8cda63dc172d07bd2bc798">getJsonVideoMode</a></div><div class="ttdeci">cs::VideoMode getJsonVideoMode(const wpi::json &amp;config)</div><div class="ttdef"><b>Definition:</b> <a href="vision_8cpp_source.html#l00032">vision.cpp:32</a></div></div>
 <div class="ttc" id="avision_8h_html"><div class="ttname"><a href="vision_8h.html">vision.h</a></div></div>
@@ -457,7 +458,7 @@ $(document).ready(function(){initNavTree('visioncamera_8cpp_source.html',''); in
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_30d9ea9a8d9df1a989aa8aa8f59da391.html">lib-vs</a></li><li class="navelem"><a class="el" href="dir_4505e8eed2522850e8dd12da3b28dc54.html">src</a></li><li class="navelem"><a class="el" href="dir_16b7c41ca322cf05371f268760117ee9.html">core</a></li><li class="navelem"><a class="el" href="visioncamera_8cpp.html">visioncamera.cpp</a></li>
-    <li class="footer">Generated on Thu Oct 6 2022 03:10:33 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Tue Oct 11 2022 03:30:40 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>

@@ -4,6 +4,7 @@ var vision_8inc =
     [ "rescale", "vision_8inc.html#a0b1c62136ee157cb30e5dc0af82f83b3", null ],
     [ "_rescale", "vision_8inc.html#a1fdc3740077d1c51214f453caa07da12", null ],
     [ "rescale", "vision_8inc.html#afad2a3e35bffb727e0e4b66402cc0d48", null ],
+    [ "rescale", "vision_8inc.html#af973d5191f94d68520c3fb597ee6f465", null ],
     [ "findCenter", "vision_8inc.html#a95023c9010f3d4638c9f4b26a634f4df", null ],
     [ "findCenter", "vision_8inc.html#a83bd95327432d9850a3a1f79816f2dc1", null ],
     [ "findCenter3D", "vision_8inc.html#a76cd002d5a5a735e21b63663a420d73c", null ],

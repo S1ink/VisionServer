@@ -40,7 +40,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VisionServer
-   &#160;<span id="projectnumber">v2.0.0-69-gbf22363</span>
+   &#160;<span id="projectnumber">v2.0.0-72-gea9a615</span>
    </div>
    <div id="projectbrief">FRC vision library</div>
   </td>
@@ -137,6 +137,9 @@ Functions</h2></td></tr>
 <tr class="memitem:afad2a3e35bffb727e0e4b66402cc0d48"><td class="memTemplParams" colspan="2">template&lt;typename num_t &gt; </td></tr>
 <tr class="memitem:afad2a3e35bffb727e0e4b66402cc0d48"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="vision_8inc.html#afad2a3e35bffb727e0e4b66402cc0d48">rescale</a> (std::vector&lt; cv::Point_&lt; num_t &gt; &gt; &amp;points, double scale)</td></tr>
 <tr class="separator:afad2a3e35bffb727e0e4b66402cc0d48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af973d5191f94d68520c3fb597ee6f465"><td class="memTemplParams" colspan="2">template&lt;typename num_t &gt; </td></tr>
+<tr class="memitem:af973d5191f94d68520c3fb597ee6f465"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="vision_8inc.html#af973d5191f94d68520c3fb597ee6f465">rescale</a> (std::vector&lt; std::vector&lt; cv::Point_&lt; num_t &gt; &gt; &gt; &amp;contours, double scale)</td></tr>
+<tr class="separator:af973d5191f94d68520c3fb597ee6f465"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95023c9010f3d4638c9f4b26a634f4df"><td class="memTemplParams" colspan="2">template&lt;typename num_t &gt; </td></tr>
 <tr class="memitem:a95023c9010f3d4638c9f4b26a634f4df"><td class="memTemplItemLeft" align="right" valign="top">cv::Point_&lt; num_t &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="vision_8inc.html#a95023c9010f3d4638c9f4b26a634f4df">findCenter</a> (const std::vector&lt; cv::Point_&lt; num_t &gt; &gt; &amp;contour)</td></tr>
 <tr class="separator:a95023c9010f3d4638c9f4b26a634f4df"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -229,7 +232,7 @@ template&lt;typename num_t &gt; </div>
 </div>
 </div>
 <a id="a0b1c62136ee157cb30e5dc0af82f83b3" name="a0b1c62136ee157cb30e5dc0af82f83b3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0b1c62136ee157cb30e5dc0af82f83b3">&#9670;&nbsp;</a></span>rescale() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b1c62136ee157cb30e5dc0af82f83b3">&#9670;&nbsp;</a></span>rescale() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -293,7 +296,7 @@ template&lt;typename num_t &gt; </div>
 </div>
 </div>
 <a id="afad2a3e35bffb727e0e4b66402cc0d48" name="afad2a3e35bffb727e0e4b66402cc0d48"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afad2a3e35bffb727e0e4b66402cc0d48">&#9670;&nbsp;</a></span>rescale() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#afad2a3e35bffb727e0e4b66402cc0d48">&#9670;&nbsp;</a></span>rescale() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -324,6 +327,38 @@ template&lt;typename num_t &gt; </div>
 
 </div>
 </div>
+<a id="af973d5191f94d68520c3fb597ee6f465" name="af973d5191f94d68520c3fb597ee6f465"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af973d5191f94d68520c3fb597ee6f465">&#9670;&nbsp;</a></span>rescale() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename num_t &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void rescale </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; std::vector&lt; cv::Point_&lt; num_t &gt; &gt; &gt; &amp;&#160;</td>
+          <td class="paramname"><em>contours</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>scale</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="vision_8inc_source.html#l00042">42</a> of file <a class="el" href="vision_8inc_source.html">vision.inc</a>.</p>
+
+</div>
+</div>
 <a id="a95023c9010f3d4638c9f4b26a634f4df" name="a95023c9010f3d4638c9f4b26a634f4df"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a95023c9010f3d4638c9f4b26a634f4df">&#9670;&nbsp;</a></span>findCenter() <span class="overload">[1/4]</span></h2>
 
@@ -342,7 +377,7 @@ template&lt;typename num_t &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="vision_8inc_source.html#l00043">43</a> of file <a class="el" href="vision_8inc_source.html">vision.inc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8inc_source.html#l00052">52</a> of file <a class="el" href="vision_8inc_source.html">vision.inc</a>.</p>
 
 </div>
 </div>
@@ -364,7 +399,7 @@ template&lt;typename onum_t , typename inum_t &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="vision_8inc_source.html#l00058">58</a> of file <a class="el" href="vision_8inc_source.html">vision.inc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8inc_source.html#l00067">67</a> of file <a class="el" href="vision_8inc_source.html">vision.inc</a>.</p>
 
 </div>
 </div>
@@ -386,7 +421,7 @@ template&lt;typename num_t &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="vision_8inc_source.html#l00074">74</a> of file <a class="el" href="vision_8inc_source.html">vision.inc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8inc_source.html#l00083">83</a> of file <a class="el" href="vision_8inc_source.html">vision.inc</a>.</p>
 
 </div>
 </div>
@@ -408,7 +443,7 @@ template&lt;typename onum_t , typename inum_t &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="vision_8inc_source.html#l00091">91</a> of file <a class="el" href="vision_8inc_source.html">vision.inc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8inc_source.html#l00100">100</a> of file <a class="el" href="vision_8inc_source.html">vision.inc</a>.</p>
 
 </div>
 </div>
@@ -430,7 +465,7 @@ template&lt;typename num_t &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="vision_8inc_source.html#l00110">110</a> of file <a class="el" href="vision_8inc_source.html">vision.inc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8inc_source.html#l00119">119</a> of file <a class="el" href="vision_8inc_source.html">vision.inc</a>.</p>
 
 </div>
 </div>
@@ -452,7 +487,7 @@ template&lt;typename onum_t , typename inum_t &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="vision_8inc_source.html#l00120">120</a> of file <a class="el" href="vision_8inc_source.html">vision.inc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8inc_source.html#l00129">129</a> of file <a class="el" href="vision_8inc_source.html">vision.inc</a>.</p>
 
 </div>
 </div>
@@ -474,7 +509,7 @@ template&lt;typename num_t &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="vision_8inc_source.html#l00132">132</a> of file <a class="el" href="vision_8inc_source.html">vision.inc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8inc_source.html#l00141">141</a> of file <a class="el" href="vision_8inc_source.html">vision.inc</a>.</p>
 
 </div>
 </div>
@@ -496,7 +531,7 @@ template&lt;typename num_t &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="vision_8inc_source.html#l00146">146</a> of file <a class="el" href="vision_8inc_source.html">vision.inc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8inc_source.html#l00155">155</a> of file <a class="el" href="vision_8inc_source.html">vision.inc</a>.</p>
 
 </div>
 </div>
@@ -528,7 +563,7 @@ template&lt;typename num_t , size_t s&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="vision_8inc_source.html#l00161">161</a> of file <a class="el" href="vision_8inc_source.html">vision.inc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8inc_source.html#l00170">170</a> of file <a class="el" href="vision_8inc_source.html">vision.inc</a>.</p>
 
 </div>
 </div>
@@ -560,7 +595,7 @@ template&lt;typename num_t , size_t s&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="vision_8inc_source.html#l00170">170</a> of file <a class="el" href="vision_8inc_source.html">vision.inc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8inc_source.html#l00179">179</a> of file <a class="el" href="vision_8inc_source.html">vision.inc</a>.</p>
 
 </div>
 </div>
@@ -592,7 +627,7 @@ template&lt;typename num_t , size_t s&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="vision_8inc_source.html#l00179">179</a> of file <a class="el" href="vision_8inc_source.html">vision.inc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8inc_source.html#l00188">188</a> of file <a class="el" href="vision_8inc_source.html">vision.inc</a>.</p>
 
 </div>
 </div>
@@ -624,7 +659,7 @@ template&lt;typename num_t &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="vision_8inc_source.html#l00186">186</a> of file <a class="el" href="vision_8inc_source.html">vision.inc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8inc_source.html#l00195">195</a> of file <a class="el" href="vision_8inc_source.html">vision.inc</a>.</p>
 
 </div>
 </div>
@@ -656,7 +691,7 @@ template&lt;typename num_t &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="vision_8inc_source.html#l00195">195</a> of file <a class="el" href="vision_8inc_source.html">vision.inc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8inc_source.html#l00204">204</a> of file <a class="el" href="vision_8inc_source.html">vision.inc</a>.</p>
 
 </div>
 </div>
@@ -688,7 +723,7 @@ template&lt;typename num_t &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="vision_8inc_source.html#l00204">204</a> of file <a class="el" href="vision_8inc_source.html">vision.inc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="vision_8inc_source.html#l00213">213</a> of file <a class="el" href="vision_8inc_source.html">vision.inc</a>.</p>
 
 </div>
 </div>
@@ -698,7 +733,7 @@ template&lt;typename num_t &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_30d9ea9a8d9df1a989aa8aa8f59da391.html">lib-vs</a></li><li class="navelem"><a class="el" href="dir_4505e8eed2522850e8dd12da3b28dc54.html">src</a></li><li class="navelem"><a class="el" href="dir_16b7c41ca322cf05371f268760117ee9.html">core</a></li><li class="navelem"><a class="el" href="vision_8inc.html">vision.inc</a></li>
-    <li class="footer">Generated on Thu Oct 6 2022 03:10:33 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Tue Oct 11 2022 03:30:41 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>
