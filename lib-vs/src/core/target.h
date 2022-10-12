@@ -18,6 +18,7 @@ namespace vs2 {
  * Basic ntables target representation
 */
 class Target {
+	template<typename T> friend class UniqueTarget;
 public:
 	inline static const std::shared_ptr<nt::NetworkTable>& ntable() {
 		static std::shared_ptr<nt::NetworkTable> targets{VisionServer::ntable()->GetSubTable("Targets")};
@@ -82,11 +83,11 @@ public:
 	UniqueTarget(UniqueTarget&&) = default;
 
 protected:
-	inline void setPos(double x, double y, double z) { this->setPos(x, y, z); }
-	inline void setAngle(double ud, double lr) { this->setAngle(ud, lr); }
-	inline void setDist(double d) { this->setDist(d); }
-	inline void setExpired() { this->setExpired(); }
-	inline void setValid() { this->setValid(); }
+	inline void setPos(double x, double y, double z) { static_cast<Target*>(this)->setPos(x, y, z); }
+	inline void setAngle(double ud, double lr) { static_cast<Target*>(this)->setAngle(ud, lr); }
+	inline void setDist(double d) { static_cast<Target*>(this)->setDist(d); }
+	inline void setExpired() { static_cast<Target*>(this)->setExpired(); }
+	inline void setValid() { static_cast<Target*>(this)->setValid(); }
 
 };
 
