@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['visionserver_0',['VisionServer',['../classvs2_1_1VisionServer_1_1BasePipe.html#a2bf0a434b47409407c38d03266f3a5be',1,'vs2::VisionServer::BasePipe::VisionServer()'],['../structvs2_1_1VisionServer_1_1OutputStream.html#a2bf0a434b47409407c38d03266f3a5be',1,'vs2::VisionServer::OutputStream::VisionServer()']]]
+  ['uniquetarget_0',['UniqueTarget',['../classvs2_1_1Target.html#abf7d984961a0c9845a150d36a3939e54',1,'vs2::Target']]]
 ];
