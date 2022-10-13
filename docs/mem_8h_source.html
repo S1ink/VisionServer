@@ -40,7 +40,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VisionServer
-   &#160;<span id="projectnumber">v2.0.0-75-g3988025</span>
+   &#160;<span id="projectnumber">v2.0.0-78-ge02bbde</span>
    </div>
    <div id="projectbrief">FRC vision library</div>
   </td>
@@ -105,19 +105,49 @@ $(document).ready(function(){initNavTree('mem_8h_source.html',''); initResizable
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno"><a class="line" href="mem_8h.html#a3ea24ae020f29add3731e755e19865e5">    5</a></span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> <span class="keywordtype">void</span> <a class="code hl_function" href="mem_8h.html#a3ea24ae020f29add3731e755e19865e5">memcpy_threshold_asm</a>(uint8_t* dest, <span class="keyword">const</span> uint8_t* src, <span class="keywordtype">int</span> size, <span class="keywordtype">int</span> minimum);</div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno"><a class="line" href="mem_8h.html#a551e6aa9b017cf6b6e5a15788db597f5">    6</a></span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> <span class="keywordtype">void</span> <a class="code hl_function" href="mem_8h.html#a551e6aa9b017cf6b6e5a15788db597f5">memcpy_threshold_binary_asm</a>(uint8_t* dest, <span class="keyword">const</span> uint8_t* src, <span class="keywordtype">int</span> size, <span class="keywordtype">int</span> minimum);</div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno"><a class="line" href="mem_8h.html#af6f3b064d809b4645bba96a60e476341">    7</a></span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> <span class="keywordtype">void</span> <a class="code hl_function" href="mem_8h.html#af6f3b064d809b4645bba96a60e476341">memcpy_subtract_asm</a>(uint8_t* base, uint8_t* sub, uint8_t* dest, <span class="keywordtype">int</span> size);</div>
-<div class="ttc" id="amem_8h_html_a3ea24ae020f29add3731e755e19865e5"><div class="ttname"><a href="mem_8h.html#a3ea24ae020f29add3731e755e19865e5">memcpy_threshold_asm</a></div><div class="ttdeci">void memcpy_threshold_asm(uint8_t *dest, const uint8_t *src, int size, int minimum)</div></div>
-<div class="ttc" id="amem_8h_html_a551e6aa9b017cf6b6e5a15788db597f5"><div class="ttname"><a href="mem_8h.html#a551e6aa9b017cf6b6e5a15788db597f5">memcpy_threshold_binary_asm</a></div><div class="ttdeci">void memcpy_threshold_binary_asm(uint8_t *dest, const uint8_t *src, int size, int minimum)</div></div>
-<div class="ttc" id="amem_8h_html_af6f3b064d809b4645bba96a60e476341"><div class="ttname"><a href="mem_8h.html#af6f3b064d809b4645bba96a60e476341">memcpy_subtract_asm</a></div><div class="ttdeci">void memcpy_subtract_asm(uint8_t *base, uint8_t *sub, uint8_t *dest, int size)</div></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno"><a class="line" href="mem_8h.html#a49d6eb71b79a167e944d6270592649c2">    5</a></span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> <span class="keywordtype">void</span> <a class="code hl_function" href="mem_8h.html#a49d6eb71b79a167e944d6270592649c2">memcpy_threshold_asm</a>(   <span class="comment">// keeps original threshold values</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span>    uint8_t* dest,</div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span>    uint8_t <span class="keyword">const</span> *src,</div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>    int32_t size, int32_t minimum</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>);</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno"><a class="line" href="mem_8h.html#a1ab7bc6ae21f33f00ec05eae249be16d">   10</a></span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> <span class="keywordtype">void</span> <a class="code hl_function" href="mem_8h.html#a1ab7bc6ae21f33f00ec05eae249be16d">memcpy_threshold_binary_asm</a>(    <span class="comment">// thresholds evaulate to all 1&#39;s rather than their original value</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>    uint8_t* dest,</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>    uint8_t <span class="keyword">const</span> *src,</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    int32_t size, int32_t minimum</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>);</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="mem_8h.html#afc0dfa7fb9d5bb8d7207043ca0c61108">   15</a></span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> <span class="keywordtype">void</span> <a class="code hl_function" href="mem_8h.html#afc0dfa7fb9d5bb8d7207043ca0c61108">memcpy_compare3_add_asm</a>(    <span class="comment">// threshold a channel based on if it has the highest value of all (3), then add some other amount (WST result)</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    uint8_t <span class="keyword">const</span> *primary,</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    uint8_t <span class="keyword">const</span> *cmp1,</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    uint8_t <span class="keyword">const</span> *cmp2,</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    uint8_t <span class="keyword">const</span> *add,</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    uint8_t* dest,</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    int32_t size</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>);</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="mem_8h.html#a09c0a9ccdd0b1629e7aea1a0ba344450">   23</a></span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> <span class="keywordtype">void</span> <a class="code hl_function" href="mem_8h.html#a09c0a9ccdd0b1629e7aea1a0ba344450">memcpy_bitwise_or_asm</a>(</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    uint8_t <span class="keyword">const</span> *a,</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    uint8_t <span class="keyword">const</span> *b,</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    uint8_t* dest,</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    int32_t size</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>);</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="mem_8h.html#a4b6a5d7b2a83f04c43289b3ee1831efd">   30</a></span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> <span class="keywordtype">void</span> <a class="code hl_function" href="mem_8h.html#a4b6a5d7b2a83f04c43289b3ee1831efd">memcpy_subtract_asm</a>(    <span class="comment">// don&#39;t use this it does not account for underflows</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    uint8_t <span class="keyword">const</span> *base,</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    uint8_t <span class="keyword">const</span> *sub,</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    uint8_t* dest,</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    int32_t size</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>);</div>
+<div class="ttc" id="amem_8h_html_a09c0a9ccdd0b1629e7aea1a0ba344450"><div class="ttname"><a href="mem_8h.html#a09c0a9ccdd0b1629e7aea1a0ba344450">memcpy_bitwise_or_asm</a></div><div class="ttdeci">void memcpy_bitwise_or_asm(uint8_t const *a, uint8_t const *b, uint8_t *dest, int32_t size)</div></div>
+<div class="ttc" id="amem_8h_html_a1ab7bc6ae21f33f00ec05eae249be16d"><div class="ttname"><a href="mem_8h.html#a1ab7bc6ae21f33f00ec05eae249be16d">memcpy_threshold_binary_asm</a></div><div class="ttdeci">void memcpy_threshold_binary_asm(uint8_t *dest, uint8_t const *src, int32_t size, int32_t minimum)</div></div>
+<div class="ttc" id="amem_8h_html_a49d6eb71b79a167e944d6270592649c2"><div class="ttname"><a href="mem_8h.html#a49d6eb71b79a167e944d6270592649c2">memcpy_threshold_asm</a></div><div class="ttdeci">void memcpy_threshold_asm(uint8_t *dest, uint8_t const *src, int32_t size, int32_t minimum)</div></div>
+<div class="ttc" id="amem_8h_html_a4b6a5d7b2a83f04c43289b3ee1831efd"><div class="ttname"><a href="mem_8h.html#a4b6a5d7b2a83f04c43289b3ee1831efd">memcpy_subtract_asm</a></div><div class="ttdeci">void memcpy_subtract_asm(uint8_t const *base, uint8_t const *sub, uint8_t *dest, int32_t size)</div></div>
+<div class="ttc" id="amem_8h_html_afc0dfa7fb9d5bb8d7207043ca0c61108"><div class="ttname"><a href="mem_8h.html#afc0dfa7fb9d5bb8d7207043ca0c61108">memcpy_compare3_add_asm</a></div><div class="ttdeci">void memcpy_compare3_add_asm(uint8_t const *primary, uint8_t const *cmp1, uint8_t const *cmp2, uint8_t const *add, uint8_t *dest, int32_t size)</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_30d9ea9a8d9df1a989aa8aa8f59da391.html">lib-vs</a></li><li class="navelem"><a class="el" href="dir_4505e8eed2522850e8dd12da3b28dc54.html">src</a></li><li class="navelem"><a class="el" href="dir_16b7c41ca322cf05371f268760117ee9.html">core</a></li><li class="navelem"><a class="el" href="mem_8h.html">mem.h</a></li>
-    <li class="footer">Generated on Wed Oct 12 2022 03:43:27 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Thu Oct 13 2022 03:01:06 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>
