@@ -18,7 +18,7 @@ namespace vs2 {
  * Basic ntables target representation
 */
 class Target {
-	template<> friend class UniqueTarget<>;
+	template<typename T> friend class UniqueTarget;
 public:
 	inline static const std::shared_ptr<nt::NetworkTable>& ntable() {
 		static std::shared_ptr<nt::NetworkTable> targets{VisionServer::ntable()->GetSubTable("Targets")};
