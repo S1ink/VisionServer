@@ -50,6 +50,9 @@ StripFinder<color>::StripFinder(VisionServer& server) :
 	VPipeline(server, "Upper-Hub Pipeline"), WeightedSubtraction<color>(server, this->table)
 {
 	this->table->PutBoolean("Show Thresholded", false);
+	this->table->PutBoolean("Enable Overlay", true);
+	this->table->PutNumber("Maximum Range", 215);
+	this->table->PutNumber("Minimum Range", 170);
 }
 
 template<VThreshold::LED color>
@@ -134,7 +137,48 @@ void StripFinder<color>::process(cv::Mat& io_frame, int8_t mode) {
 				// 	}
 				// }
 
-				break;
+				if(this->table->GetBoolean("Enable Overlay", false)) {
+
+					double
+						dist = this->target.getTable()->GetNumber("distance", 0),
+						max = this->table->GetNumber("Maximum Range", 0),
+						min = this->table->GetNumber("Minimum Range", 0),
+						heading = this->target.getTable()->GetNumber("left-right", 0);
+
+					if(dist < min) {
+						cv::putText(
+							io_frame, "Too Close. [ " + std::to_string((int)dist) + " ] inches",
+							cv::Point(20, io_frame.size().height - 30), cv::FONT_HERSHEY_DUPLEX, 0.8,
+							cv::Scalar(70, 0, 240), 2, cv::LINE_AA
+						);
+					} else if(dist > max) {
+						cv::putText(
+							io_frame, "Out of Range. [ " + std::to_string((int)dist) + " ] inches",
+							cv::Point(20, io_frame.size().height - 30), cv::FONT_HERSHEY_DUPLEX, 0.8,
+							cv::Scalar(20, 0, 240), 2, cv::LINE_AA
+						);
+					} else {
+						double offset = dist - (max + min) / 2;
+						cv::putText(
+							io_frame, "In Range! : " + std::to_string((int)offset) + " inches from Optimal",
+							cv::Point(20, io_frame.size().height - 30), cv::FONT_HERSHEY_DUPLEX, 0.8,
+							cv::Scalar(20, 240 - abs(offset) * 8, abs(offset) * 10), 2, cv::LINE_AA
+						);
+					}
+					if(abs(heading) < 2) {
+						cv::line(io_frame, cv::Point(270, 180), cv::Point(270, 300), cv::Scalar(20, 240, 0), 4);
+						cv::line(io_frame, cv::Point(370, 180), cv::Point(370, 300), cv::Scalar(20, 240, 0), 4);
+					} else if(heading < -2) {
+						cv::line(io_frame, cv::Point(270, 180), cv::Point(270, 300), cv::Scalar(20, 240 - abs(heading) * 8, abs(heading) * 10), 4);
+						cv::line(io_frame, cv::Point(370, 180), cv::Point(370, 300), cv::Scalar(20, 0, 240), 4);
+					} else {
+						cv::line(io_frame, cv::Point(270, 180), cv::Point(270, 300), cv::Scalar(20, 0, 240), 4);
+						cv::line(io_frame, cv::Point(370, 180), cv::Point(370, 300), cv::Scalar(20, 240 - abs(heading) * 8, abs(heading) * 10), 4);
+					}
+
+				}
+
+				return;
 			} else {
 				this->in_range.clear();
 			}

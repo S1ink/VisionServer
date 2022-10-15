@@ -11,9 +11,9 @@
 #include "core/visionserver.h"
 #include "core/processing.h"
 #include "core/vision.h"
-#include "core/httpnetworktables.h"
+//#include "core/httpnetworktables.h"
 
-#include "2021/testing.h"
+//#include "2021/testing.h"
 #include "2022/rapidreact.h"
 
 
@@ -53,10 +53,7 @@ int main(int argc, char* argv[]) {
 	//vserver.runVision_S<CargoFinder, StripFinder<VThreshold::LED::GREEN> >(25);	// this currently does not call the right worker
 	vserver.runVision<
 		CargoFinder,
-		StripFinder<VThreshold::LED::BLUE>,
-		SquareTargetPNP,
-		TargetSolver<Test6x6, WeightedSubtraction<VThreshold::LED::BLUE> >,
-		BBoxDemo
+		StripFinder<VThreshold::LED::GREEN>
 	>(25);
 	//hserver.serve<HttpNTables>();
 }
