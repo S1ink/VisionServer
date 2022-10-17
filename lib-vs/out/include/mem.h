@@ -20,6 +20,16 @@ extern "C" void memcpy_compare3_add_asm(	// threshold a channel based on if it h
 	uint8_t* dest,
 	int32_t size
 );
+extern "C" void memcpy_wst_asm(
+	uint8_t const *primary,
+	uint8_t const *ch2,
+	uint8_t const *ch3,
+	uint8_t *dest,
+	int32_t size,
+	uint8_t alpha,
+	uint8_t beta,
+	uint8_t gamma
+);
 extern "C" void memcpy_bitwise_or_asm(
 	uint8_t const *a,
 	uint8_t const *b,

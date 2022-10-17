@@ -40,7 +40,6 @@
   <td id="projectlogo"><img alt="Logo" src="logo.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VisionServer
-   &#160;<span id="projectnumber">v2.0.0-75-g3988025</span>
    </div>
    <div id="projectbrief">FRC vision library</div>
   </td>
@@ -79,7 +78,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('md_docs_guide_Robot_Project.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('md_docs_guide_ROBOT_PROJECT.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -103,8 +102,7 @@ $(document).ready(function(){initNavTree('md_docs_guide_Robot_Project.html','');
 <div class="contents">
 <div class="textblock"><p ><b>Although it is not strictly necessary to develop vision code alongside robot code, combining the two into a single project can be helpful for cross-referencing during development, and compartmentalizing code for similar tasks. Additionally, this makes it easy to publish all season code, both for a robot and for vision, to a single repository.</b></p>
 <p ><b>This tutorial will traverse through the process of integrating the VisionServer library into a robot project.</b></p>
-<hr  />
- <h1>Filestructure</h1>
+<h1>Filestructure</h1>
 <ol type="1">
 <li><b>Create/have a WPILib robot project.</b> More info can be found <a href="https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-4/creating-benchtop-test-program-cpp-java.html">here</a>.</li>
 <li><b>Setup the vision program directories.</b><ul>
@@ -121,13 +119,10 @@ $(document).ready(function(){initNavTree('md_docs_guide_Robot_Project.html','');
 <div class="line">        &gt; obj/</div>
 <div class="line">        &gt; src/</div>
 <div class="line">    &gt; other build files...</div>
-</div><!-- fragment --></li>
+</div><!-- fragment --> <h1>Project Files</h1>
+</li>
 </ul>
 </li>
-</ol>
-<hr  />
- <h1>Project Files</h1>
-<ol type="1">
 <li><b>Clone VisionServer.</b> While still inside the base vision directory, open a terminal and enter <code>git clone <a href="https://github.com/FRC3407/VisionServer">https://github.com/FRC3407/VisionServer</a> --recurse-submodules</code> to clone this repo and its submodules.<ul>
 <li>If your base project is already a git repo, and you want to add VisionServer as a submodule (definitely recommended for this config), then navigate to the base project folder and <code>git submodule add <a href="https://github.com/FRC3407/VisionServer">https://github.com/FRC3407/VisionServer</a> VISION_PROGRAM_RELATIVE_PATH/VisionServer</code> - where for this tutorial <code>VISION_PROGRAM_RELATIVE_PATH</code> would be <code>vision</code> (as created in step 1).</li>
 <li>The filestructure should now resemble something like this: <div class="fragment"><div class="line">&gt; Robot-Project/</div>
@@ -147,25 +142,21 @@ $(document).ready(function(){initNavTree('md_docs_guide_Robot_Project.html','');
 </li>
 <li><b>Setup the build system.</b> This could involve make, cmake, or even gradle. I personally use a makefile similar to that used for building VS itself.<ul>
 <li>For linking to VisionServer, the shared and static library binaries can be found in <code>...VisionServer/lib-vs/out/</code>. Headers are also contained in the <code>include/</code> subdirectory, although it is more convenient to just include straight from the source folder instead (<code>...VisionServer/lib-vs/src/</code>).</li>
-<li>BUILD.md contains more info about linking to and building the library itself.</li>
+<li><a class="el" href="md_docs_guide_BUILD.html">BUILD.md</a> contains more info about linking to and building the library itself.</li>
 <li>All libraries that VS depends on can also be conveniently utilized by a user-project (ex. OpenCV), and are located under <code>...VisionServer/lib-vs/lib/</code> and <code>...VisionServer/lib-vs/indlude/</code>.</li>
 <li><em>See the link at the end for an example project.</em></li>
 </ul>
 </li>
 <li><b>Add the robot-side API files into your robot project.</b> Within the base project directory, navigate to where your source files are located (ex. <code>src/main/java/frc/robot/</code> for Java), and <code>git clone <a href="https://github.com/S1ink/VisionServer-Robot">https://github.com/S1ink/VisionServer-Robot</a> API_DIR</code> - where <code>API_DIR</code> represents the directory name where the repo will be cloned (ex. <code>vision</code> is once again a good name).<ul>
 <li>Again, if submodules are preferred, then this should be added as a submodule from the base project directory: <code>git submodule add <a href="https://github.com/S1ink/VisionServer-Robot">https://github.com/S1ink/VisionServer-Robot</a> SRC_DIR_PATH/API_DIR</code>.</li>
-<li>Note that for Java projects the "package" line at the top of the added files will need to be updated based on the directory names used above.</li>
+<li>Note that for Java projects the "package" line at the top of the added files will need to be updated based on the directory names used above. <h1>Additional Automations (Optional)</h1>
+</li>
 </ul>
 </li>
-</ol>
-<hr  />
- <h1>Additional Automations (Optional)</h1>
-<ol type="1">
-<li><b>Configure VSCode workspace and tasks.</b> This is the same process as described in step 4 in SETUP.md, except that include paths may need to be adjusted based on the build system present. A build task can be constructed to invoke whatever build system is used with the correct parameters, and allows for a keybound build command.</li>
+<li><b>Configure VSCode workspace and tasks.</b> This is the same process as described in step 4 in <a class="el" href="md_docs_guide_SETUP.html">SETUP.md</a>, except that include paths may need to be adjusted based on the build system present. A build task can be constructed to invoke whatever build system is used with the correct parameters, and allows for a keybound build command.</li>
 <li><b>Rebuild VisionServer before each project build.</b> If you plan on editing the library itself during development, you can simply create a build script that calls <code>make -C VISION_DIR/VisionServer/lib-vs shared OPT=release</code> or <code>make -C VISION_DIR/VisionServer/lib-vs static OPT=release</code> before the vision program itself is built. This will update <code>...VisionServer/lib-vs/out/libvs3407.so [and .a]</code> along with recopy all headers into <code>...VisionServer/lib-vs/out/include/</code>, which can then be used as artifacts for the program build.</li>
 </ol>
-<hr  />
- <h1>Example Project</h1>
+<h1>Example Project</h1>
 <p ><b>An example project used during the Rapid React FRC season can be found <a href="https://github.com/S1ink/2022-Rapid-React">here</a>.</b> </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
@@ -173,7 +164,7 @@ $(document).ready(function(){initNavTree('md_docs_guide_Robot_Project.html','');
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Oct 12 2022 03:43:27 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Sun Jul 10 2022 01:00:45 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>
