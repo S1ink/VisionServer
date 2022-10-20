@@ -40,7 +40,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VisionServer
-   &#160;<span id="projectnumber">v2.0.0-84-g8a9f5b8</span>
+   &#160;<span id="projectnumber">v2.0.0-87-gb5d29bc</span>
    </div>
    <div id="projectbrief">FRC vision library</div>
   </td>
@@ -101,14 +101,158 @@ $(document).ready(function(){initNavTree('md_docs_guide_Calibration.html',''); i
   <div class="headertitle"><div class="title">Including Camera Calibrations </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p >to be filled with relevant info </p>
+<div class="textblock"><p ><b>This guide does not contain info for actually calibrating cameras [yet?]. A python script and some other references can be found in the source repository under <code>frc-config/calibration/</code>; otherwise consult OpenCV's docs.</b></p>
+<h2>The Old System:</h2>
+<div class="fragment"><div class="line">##/boot/frc.json</div>
+<div class="line">{</div>
+<div class="line">   &quot;team&quot;: &lt;team number&gt;,</div>
+<div class="line">   &quot;ntmode&quot;: &lt;&quot;client&quot;, &quot;server&quot;, or IP address of server(sim mode), &quot;client&quot; if unspecified&gt;,</div>
+<div class="line">   &quot;cameras&quot;: [</div>
+<div class="line">       {</div>
+<div class="line">           &quot;name&quot;: &lt;camera name&gt;</div>
+<div class="line">           &quot;path&quot;: &lt;path, e.g. &quot;/dev/video0&quot;&gt;</div>
+<div class="line">           &quot;pixel format&quot;: &lt;&quot;MJPEG&quot;, &quot;YUYV&quot;, etc&gt;   //optional</div>
+<div class="line">           &quot;width&quot;: &lt;video mode width&gt;              //optional</div>
+<div class="line">           &quot;height&quot;: &lt;video mode height&gt;            //optional</div>
+<div class="line">           &quot;fps&quot;: &lt;video mode fps&gt;                  //optional</div>
+<div class="line">           &quot;brightness&quot;: &lt;percentage brightness&gt;    //optional</div>
+<div class="line">           &quot;white balance&quot;: &lt;&quot;auto&quot;, &quot;hold&quot;, value&gt; //optional</div>
+<div class="line">           &quot;exposure&quot;: &lt;&quot;auto&quot;, &quot;hold&quot;, value&gt;      //optional</div>
+<div class="line">           &quot;properties&quot;: [                          //optional</div>
+<div class="line">               {</div>
+<div class="line">                   &quot;name&quot;: &lt;property name&gt;</div>
+<div class="line">                   &quot;value&quot;: &lt;property value&gt;</div>
+<div class="line">               }</div>
+<div class="line">           ],</div>
+<div class="line">           &quot;stream&quot;: {                              //optional</div>
+<div class="line">               &quot;properties&quot;: [</div>
+<div class="line">                   {</div>
+<div class="line">                       &quot;name&quot;: &lt;stream property name&gt;</div>
+<div class="line">                       &quot;value&quot;: &lt;stream property value&gt;</div>
+<div class="line">                   }</div>
+<div class="line">               ]</div>
+<div class="line">           },</div>
+<div class="line">           &quot;calibration&quot;: &lt;name of calibration block(defined below)&gt;</div>
+<div class="line">       }</div>
+<div class="line">   ],</div>
+<div class="line">   &quot;switched cameras&quot;: [</div>
+<div class="line">       {</div>
+<div class="line">           &quot;name&quot;: &lt;virtual camera name&gt;</div>
+<div class="line">           &quot;key&quot;: &lt;network table key used for selection&gt;</div>
+<div class="line">           // if NT value is a string, it&#39;s treated as aname</div>
+<div class="line">           // if NT value is a double, it&#39;s treated as aninteger index</div>
+<div class="line">       }</div>
+<div class="line">   ],</div>
+<div class="line">   &quot;calibrations&quot;: {</div>
+<div class="line">       &lt;calibration name&gt;: {</div>
+<div class="line">           &quot;camera_matrix&quot;: [ [x3],[x3],[x3] ],</div>
+<div class="line">           &quot;distortion&quot;: [ [x5] ]</div>
+<div class="line">       }</div>
+<div class="line">   }</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> Note the <code>calibrations</code> block, and how each calibration is referenced in the camera definitions above. In the program, simply calling <code>readconfig(~std::vector&lt;<a class="el" href="classVisionCamera.html">VisionCamera</a>&gt;~)</code> will evaluate the config references and load each camera with the appropriate matrix/dist values if applicable.</p>
+<hr  />
+ <h2>The New System:</h2>
+<p >(although also backwards compatible) </p><div class="fragment"><div class="line">##/boot/frc.json</div>
+<div class="line">{</div>
+<div class="line">   &quot;team&quot;: &lt;team number&gt;,</div>
+<div class="line">   &quot;ntmode&quot;: &lt;&quot;client&quot;, &quot;server&quot;, or IP address of server(sim mode), &quot;client&quot; if unspecified&gt;,</div>
+<div class="line">   &quot;cameras&quot;: [</div>
+<div class="line">       {</div>
+<div class="line">           &quot;name&quot;: &lt;camera name&gt;</div>
+<div class="line">           &quot;path&quot;: &lt;path, e.g. &quot;/dev/video0&quot;&gt;</div>
+<div class="line">           &quot;pixel format&quot;: &lt;&quot;MJPEG&quot;, &quot;YUYV&quot;, etc&gt;   //optional</div>
+<div class="line">           &quot;width&quot;: &lt;video mode width&gt;              //optional</div>
+<div class="line">           &quot;height&quot;: &lt;video mode height&gt;            //optional</div>
+<div class="line">           &quot;fps&quot;: &lt;video mode fps&gt;                  //optional</div>
+<div class="line">           &quot;brightness&quot;: &lt;percentage brightness&gt;    //optional</div>
+<div class="line">           &quot;white balance&quot;: &lt;&quot;auto&quot;, &quot;hold&quot;, value&gt; //optional</div>
+<div class="line">           &quot;exposure&quot;: &lt;&quot;auto&quot;, &quot;hold&quot;, value&gt;      //optional</div>
+<div class="line">           &quot;properties&quot;: [                          //optional</div>
+<div class="line">               {    // for any other property</div>
+<div class="line">                   &quot;name&quot;: &lt;property name&gt;</div>
+<div class="line">                   &quot;value&quot;: &lt;property value&gt;</div>
+<div class="line">               },</div>
+<div class="line">               {    // for calibration type property</div>
+<div class="line">                    &quot;type&quot;: &lt;calibration type - defined in user code&gt;</div>
+<div class="line">               }</div>
+<div class="line">           ],</div>
+<div class="line">           &quot;stream&quot;: {                              //optional</div>
+<div class="line">               &quot;properties&quot;: [</div>
+<div class="line">                   {</div>
+<div class="line">                       &quot;name&quot;: &lt;stream property name&gt;</div>
+<div class="line">                       &quot;value&quot;: &lt;stream property value&gt;</div>
+<div class="line">                   }</div>
+<div class="line">               ]</div>
+<div class="line">           }</div>
+<div class="line">       }</div>
+<div class="line">   ],</div>
+<div class="line">   &quot;switched cameras&quot;: [</div>
+<div class="line">       {</div>
+<div class="line">           &quot;name&quot;: &lt;virtual camera name&gt;</div>
+<div class="line">           &quot;key&quot;: &lt;network table key used for selection&gt;</div>
+<div class="line">           // if NT value is a string, it&#39;s treated as a name</div>
+<div class="line">           // if NT value is a double, it&#39;s treated as an integer index</div>
+<div class="line">       }</div>
+<div class="line">   ]</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> Here the main addition is the <code>cameras[...].properties[...].type</code> parameter. This should correspond to a string or indexable value that links to a key for a calibration map structure that is defined in user code (ex. "lifecam_hd3000"). There is no need to add a frame size specifier (required in old system) as this is automatically deduced based on the camera's size paramter. Although in the template json above the <code>calibrations</code> block was removed, the old style can still be utilized.</p>
+<p >In code, include <code>&lt;<a class="el" href="calib_8h.html">core/calib.h</a>&gt;</code> to create a static map of type-size-calibration data. Example usage: </p><div class="fragment"><div class="line"><span class="preprocessor">##main.cpp</span></div>
+<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="calib_8h.html">core/calib.h</a>&gt;</span> <span class="comment">// check out this file for &quot;CalibList&quot; definition</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">inline</span> <a class="code hl_typedef" href="calib_8h.html#a6d6f5133923500c8a659804a59f2bfbd">CalibList</a></div>
+<div class="line">    calibrations{</div>
+<div class="line">        {</div>
+<div class="line">            { <span class="stringliteral">&quot;lifecam_hd3000&quot;</span>, {</div>
+<div class="line">                { cv::Size{640, 480}, {</div>
+<div class="line">                    cv::Mat1f{{3, 3},{</div>
+<div class="line">                        673.6653136395231, 0, 339.861572657799,</div>
+<div class="line">                        0, 666.1104961259615, 244.21065776461745,</div>
+<div class="line">                        0, 0, 1}},</div>
+<div class="line">                    cv::Mat1f{{1, 5},{</div>
+<div class="line">                        0.04009256446529976, -0.4529245799337021,</div>
+<div class="line">                        -0.001655316303789686, -0.00019284071985319236,</div>
+<div class="line">                        0.5736326357832554}}</div>
+<div class="line">                } }</div>
+<div class="line">            } },</div>
+<div class="line">            { <span class="stringliteral">&quot;logitech_b910&quot;</span>, {</div>
+<div class="line">                { cv::Size{640, 480}, {</div>
+<div class="line">                    cv::Mat1f{</div>
+<div class="line">                        561.4074313049189, 0, 337.76418985338495,</div>
+<div class="line">                        0, 557.6888346113145, 237.32558163183825,</div>
+<div class="line">                        0, 0, 1},</div>
+<div class="line">                    cv::Mat1f{</div>
+<div class="line">                        0.03335218620375778, -0.42937056677801017,</div>
+<div class="line">                        -0.001215946872533738, 0.011464765688132103,</div>
+<div class="line">                        1.0705120077832195}</div>
+<div class="line">                } }</div>
+<div class="line">            } }</div>
+<div class="line">        }</div>
+<div class="line">    }</div>
+<div class="line">;</div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">int</span> main(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span>** argv) {</div>
+<div class="line">    std::vector&lt;VisionCamera&gt; cameras;</div>
+<div class="line"> </div>
+<div class="line">    <span class="keywordflow">if</span>(argc &gt; 1 &amp;&amp; <a class="code hl_function" href="config_8cpp.html#a24b5b3b599ab2c5f9b82ba9f168c1c4f">initNT</a>(argv[1]) &amp;&amp; <a class="code hl_function" href="config_8cpp.html#ab78d898a60791f15475482c4d5f65953">createCameras</a>(cameras, calibrations, argv[1])) {}</div>
+<div class="line">    <span class="keywordflow">else</span> <span class="keywordflow">if</span>(<a class="code hl_function" href="config_8cpp.html#a24b5b3b599ab2c5f9b82ba9f168c1c4f">initNT</a>() &amp;&amp; <a class="code hl_function" href="config_8cpp.html#ab78d898a60791f15475482c4d5f65953">createCameras</a>(cameras, calibrations)) {}</div>
+<div class="line">    <span class="keywordflow">else</span> { <span class="keywordflow">return</span> EXIT_FAILURE; }</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">//  ...continue program...</span></div>
+<div class="line"> </div>
+<div class="line">}</div>
+<div class="ttc" id="acalib_8h_html"><div class="ttname"><a href="calib_8h.html">calib.h</a></div></div>
+<div class="ttc" id="acalib_8h_html_a6d6f5133923500c8a659804a59f2bfbd"><div class="ttname"><a href="calib_8h.html#a6d6f5133923500c8a659804a59f2bfbd">CalibList</a></div><div class="ttdeci">CalibList_ CalibList</div><div class="ttdef"><b>Definition:</b> <a href="calib_8h_source.html#l00030">calib.h:30</a></div></div>
+<div class="ttc" id="aconfig_8cpp_html_a24b5b3b599ab2c5f9b82ba9f168c1c4f"><div class="ttname"><a href="config_8cpp.html#a24b5b3b599ab2c5f9b82ba9f168c1c4f">initNT</a></div><div class="ttdeci">bool initNT(const char *file)</div><div class="ttdef"><b>Definition:</b> <a href="config_8cpp_source.html#l00030">config.cpp:30</a></div></div>
+<div class="ttc" id="aconfig_8cpp_html_ab78d898a60791f15475482c4d5f65953"><div class="ttname"><a href="config_8cpp.html#ab78d898a60791f15475482c4d5f65953">createCameras</a></div><div class="ttdeci">bool createCameras(std::vector&lt; VisionCamera &gt; &amp;cameras, const char *file)</div><div class="ttdef"><b>Definition:</b> <a href="config_8cpp_source.html#l00063">config.cpp:63</a></div></div>
+</div><!-- fragment --><p> Note the replaced call to <code>readConfig(...)</code> with a call to <code>initNT(~config_file~)</code> and a separate call to <code>createCameras(~std::vector&lt;<a class="el" href="classVisionCamera.html">VisionCamera</a>&gt;~, ~CalibList~, ~config_file~)</code>, where you now must pass in the map of configs along with an uninitialized list of cameras. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Oct 20 2022 03:55:08 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Thu Oct 20 2022 18:27:47 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>
