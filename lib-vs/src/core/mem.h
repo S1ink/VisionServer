@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 
+
 extern "C" void memcpy_threshold_asm(	// keeps original threshold values
 	uint8_t* dest,
 	uint8_t const *src,
@@ -30,13 +31,22 @@ extern "C" void memcpy_wst_asm(
 	uint8_t beta,
 	uint8_t gamma
 );
+extern "C" void memcpy_split_wst_asm(
+	uint8_t const *framebuff_3C,
+	uint8_t *dest,
+	int32_t size,
+	uint8_t offset,
+	uint8_t alpha,
+	uint8_t beta,
+	uint8_t gamma
+);
+
 extern "C" void memcpy_bitwise_or_asm(
 	uint8_t const *a,
 	uint8_t const *b,
 	uint8_t* dest,
 	int32_t size
 );
-
 extern "C" void memcpy_subtract_asm(	// don't use this it does not account for underflows
 	uint8_t const *base,
 	uint8_t const *sub,
