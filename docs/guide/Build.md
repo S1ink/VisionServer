@@ -10,8 +10,8 @@ __VisionServer uses Make to automate building. The included makefile supports au
 | `rebuild` | This calls `rebuild-shared`, and is only included to provide congruency for `shared` being the default build option. | `make rebuild` |
 | `rebuild-shared` | This cleans all outputs and then builds the shared library. | `make rebuild-shared` |
 | `rebuild-static` | Clean all outputs and then build the static library. | `make rebuild-static` |
----
 
+---
 ## Options (Reassignable Variables)
 | Variable | Description | Options | Default Option | Example Usage |
 | - | - | - | - | - |
@@ -29,18 +29,19 @@ __Other internally modifyable and more general options include:__
 | `AR` | The name of the archiving tool. |
 | `STD` | What version of the standard library to use. |
 | `*_DIR` | These are self-explainatory, see the makefile for all options. |
----
 
+---
 ## Linking and Required Libraries
 __All required libraries are included along with the source and are updated automatically using a GitHub Action. In case any of the dependencies need to be referenced, below is a list of all required libraries and how they were sourced.__
 | Library | Sourcing Method / Notes | Link(s) |
 | - | - | - |
-| WPILib (built for raspbian) | Extracted from the "cpp-multiCameraServer" example, which is located on the latest WPILibPi release. | https://github.com/wpilibsuite/WPILibPi/releases/latest |
+| WPILib (built for raspbian, contains OpenCV) | Extracted from the "cpp-multiCameraServer" example, which is located on the latest WPILibPi release. __NEW: Built using Github Actions in order to include the Aruco module for OpenCV.__ | https://github.com/wpilibsuite/WPILibPi/releases/latest |
+| ^ | ^ | https://github.com/S1ink/WPILibPi-Mod-Build/releases/latest |
 | Pigpio | Built from source. | https://github.com/joan2937/pigpio |
-| Tensorflow Lite | Built from source __using Bazel__. Headers are extracted using this command: `find ./tensorflow -name '*.h' \| cpio -pdm OUTPUT_DIR` | https://github.com/tensorflow/tensorflow |
+| Tensorflow Lite | Built from source __using Bazel__. Headers are extracted using this command: ``find ./tensorflow -name '*.h' \| cpio -pdm OUTPUT_DIR`` | https://github.com/tensorflow/tensorflow |
 | ^ | ^ | https://www.tensorflow.org/lite/guide/build_arm#cross-compilation_for_arm_with_bazel |
-| EdgeTPU driver | Built from source using the included dockerfile and Bazel. Note that in order to function properly with TfLite, the `workspace.bzl` file needs to be configured with the same tensorflow commit as was used to build tensorflow lite. Also note that the output libs are stripped, and this causes them to fail to be linked during cross-compilation. I solved this problem by removing all instances of `$(STRIPPED_SUFFIX)` within the makefile using the command `sed -i 's/$(STRIPPED_SUFFIX)//' ./Makefile` | https://github.com/google-coral/libedgetpu |
-| Flatbuffers (headers for TfLite) | The automation script uses this command (while within the tensorflow repo directory): `wget -O flatbuffers.tar.gz $(grep 'urls = tf_mirror_urls(".*"' third_party/flatbuffers/workspace.bzl \| cut -d \" -f2)` . The headers are then located under `flatbuffers/include/flatbuffers/` | http://github.com/google/flatbuffers |
-| Abseil (headers for TfLite) | The automation script uses this command (while within the tensorflow rep directory): `wget -O absl.tar.gz https://github.com/abseil/abseil-cpp/archive/$(grep 'ABSL_COMMIT = ".*"' third_party/absl/workspace.bzl \| cut -d \" -f2).tar.gz` . The headers can then be extracted using: `find ./absl -name '*.h' \| cpio -pdm OUTPUT_DIR` | https://github.com/abseil/abseil-cpp |
+| EdgeTPU driver | Built from source using the included dockerfile and Bazel. Note that in order to function properly with TfLite, the `workspace.bzl` file needs to be configured with the same tensorflow commit as was used to build tensorflow lite. Also note that the output libs are stripped, and this causes them to fail to be linked during cross-compilation. I solved this problem by removing all instances of `$``(STRIPPED_SUFFIX)` within the makefile using the command ``sed -i 's/$````(STRIPPED_SUFFIX)//' ./Makefile`` | https://github.com/google-coral/libedgetpu |
+| Flatbuffers (headers for TfLite) | The automation script uses this command (while within the tensorflow repo directory): ``wget -O flatbuffers.tar.gz $````(grep 'urls = tf_mirror_urls(".*"' third_party/flatbuffers/workspace.bzl \| cut -d \" -f2)`` . The headers are then located under `flatbuffers/include/flatbuffers/` | http://github.com/google/flatbuffers |
+| Abseil (headers for TfLite) | The automation script uses this command (while within the tensorflow rep directory): ``wget -O absl.tar.gz https://github.com/abseil/abseil-cpp/archive/$````(grep 'ABSL_COMMIT = ".*"' third_party/absl/workspace.bzl \| cut -d \" -f2).tar.gz`` . The headers can then be extracted using: ``find ./absl -name '*.h' \| cpio -pdm OUTPUT_DIR`` | https://github.com/abseil/abseil-cpp |
 
 When linking statically to VisionServer, it is also required to link to many of these libraries. For a complete list it is best to reference the makefile.
