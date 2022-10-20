@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>VisionServer: BUILD</title>
+<title>VisionServer: Building VisionServer</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" type="image/svg+xml" href="logo.svg"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -40,7 +40,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VisionServer
-   &#160;<span id="projectnumber">v2.0.0-33-gfce95c2</span>
+   &#160;<span id="projectnumber">v2.0.0-81-g2fbd228</span>
    </div>
    <div id="projectbrief">FRC vision library</div>
   </td>
@@ -79,7 +79,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('md_docs_guide_BUILD.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('md_docs_guide_Build.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -98,17 +98,83 @@ $(document).ready(function(){initNavTree('md_docs_guide_BUILD.html',''); initRes
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">BUILD </div></div>
+  <div class="headertitle"><div class="title">Building VisionServer </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p >obviously not finished yet - just go read the <a href="/lib-vs/makefile">makefile</a> </p>
+<div class="textblock"><p ><b>VisionServer uses Make to automate building. The included makefile supports automatic platform detection and provides a few different options and targets.</b></p>
+<h1>Targets</h1>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Target   </th><th class="markdownTableHeadNone">Description   </th><th class="markdownTableHeadNone">Example Usage    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>shared</code>   </td><td class="markdownTableBodyNone">This is the default target - it builds the shared library libvs3407.so.   </td><td class="markdownTableBodyNone"><code>make shared</code> or just <code>make</code>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>static</code>   </td><td class="markdownTableBodyNone">This builds a static library (archive) of all sources - libvs3407.a. Note that the correct libraries will need to be linked to when using this form.   </td><td class="markdownTableBodyNone"><code>make static</code>    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>clean</code>   </td><td class="markdownTableBodyNone">This deletes all outputs and intermediate files, and is sometimes required when building after changing paramters (ex. debug to release).   </td><td class="markdownTableBodyNone"><code>make clean</code>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>rebuild</code>   </td><td class="markdownTableBodyNone">This calls <code>rebuild-shared</code>, and is only included to provide congruency for <code>shared</code> being the default build option.   </td><td class="markdownTableBodyNone"><code>make rebuild</code>    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>rebuild-shared</code>   </td><td class="markdownTableBodyNone">This cleans all outputs and then builds the shared library.   </td><td class="markdownTableBodyNone"><code>make rebuild-shared</code>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>rebuild-static</code>   </td><td class="markdownTableBodyNone">Clean all outputs and then build the static library.   </td><td class="markdownTableBodyNone"><code>make rebuild-static</code>   </td></tr>
+</table>
+<hr  />
+<h1>Options (Reassignable Variables)</h1>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Variable   </th><th class="markdownTableHeadNone">Description   </th><th class="markdownTableHeadNone">Options   </th><th class="markdownTableHeadNone">Default Option   </th><th class="markdownTableHeadNone">Example Usage    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone" rowspan="2"><code>OPT</code>   </td><td class="markdownTableBodyNone" rowspan="2">The OPTimization level that sources are compiled with.   </td><td class="markdownTableBodyNone"><code>debug</code> : -g -Og -D__DEBUG__   </td><td class="markdownTableBodyNone" rowspan="2"><code>release</code>   </td><td class="markdownTableBodyNone" rowspan="2"><code>make OPT=debug</code>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>release</code> : -O3 -D__RELEASE__    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone" rowspan="2"><code>TFLITE</code>   </td><td class="markdownTableBodyNone" rowspan="2">Defines whether or not TfLite (and edgeTPU) libs are linked with, and the corresponding code that uses these are included. This is useful if ML vision will not be used and it is undesired to deal with manually updating these libraries (they are not included by default on WPILibPi)   </td><td class="markdownTableBodyNone"><code>true</code>/<code>yes</code>/<code>y</code>/<code>include</code> : TfLite included   </td><td class="markdownTableBodyNone" rowspan="2"><code>true</code>   </td><td class="markdownTableBodyNone" rowspan="2"><code>make TFLITE=exclude</code>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>false</code>/<code>no</code>/<code>n</code>/<code>exclude</code> : TfLite not included    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>ADEFINES</code>   </td><td class="markdownTableBodyNone">Any additional defines to be declared when compiling. For multiple values, separate by spaces and surround with quotes. Note that "-D" is automatically appended to each define, and this is not required for input.   </td><td class="markdownTableBodyNone">n/a   </td><td class="markdownTableBodyNone">n/a   </td><td class="markdownTableBodyNone"><code>make ADEFINES="REMOVE_DISCONNECTED_CAMERAS COMPENSATE_ON_STARTUP"</code>   </td></tr>
+</table>
+<p ><b>Other internally modifyable and more general options include:</b> </p><table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Variable   </th><th class="markdownTableHeadNone">Description    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>CROSS_PREFIX</code>   </td><td class="markdownTableBodyNone">The prefix for the cross-compiler.    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>CXX</code>   </td><td class="markdownTableBodyNone">The name of the compiler.    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>AR</code>   </td><td class="markdownTableBodyNone">The name of the archiving tool.    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>STD</code>   </td><td class="markdownTableBodyNone">What version of the standard library to use.    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>*_DIR</code>   </td><td class="markdownTableBodyNone">These are self-explainatory, see the makefile for all options.   </td></tr>
+</table>
+<hr  />
+<h1>Linking and Required Libraries</h1>
+<p ><b>All required libraries are included along with the source and are updated automatically using a GitHub Action. In case any of the dependencies need to be referenced, below is a list of all required libraries and how they were sourced.</b> </p><table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Library   </th><th class="markdownTableHeadNone">Sourcing Method / Notes   </th><th class="markdownTableHeadNone">Link(s)    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">WPILib (built for raspbian)   </td><td class="markdownTableBodyNone">Extracted from the "cpp-multiCameraServer" example, which is located on the latest WPILibPi release.   </td><td class="markdownTableBodyNone"><a href="https://github.com/wpilibsuite/WPILibPi/releases/latest">https://github.com/wpilibsuite/WPILibPi/releases/latest</a>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Pigpio   </td><td class="markdownTableBodyNone">Built from source.   </td><td class="markdownTableBodyNone"><a href="https://github.com/joan2937/pigpio">https://github.com/joan2937/pigpio</a>    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone" rowspan="2">Tensorflow Lite   </td><td class="markdownTableBodyNone" rowspan="2">Built from source <b>using Bazel</b>. Headers are extracted using this command: &lsquo;find ./tensorflow -name &rsquo;*.h' | cpio -pdm OUTPUT_DIR`   </td><td class="markdownTableBodyNone"><a href="https://github.com/tensorflow/tensorflow">https://github.com/tensorflow/tensorflow</a>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a href="https://www.tensorflow.org/lite/guide/build_arm#cross-compilation_for_arm_with_bazel">https://www.tensorflow.org/lite/guide/build_arm#cross-compilation_for_arm_with_bazel</a>    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">EdgeTPU driver   </td><td class="markdownTableBodyNone">Built from source using the included dockerfile and Bazel. Note that in order to function properly with TfLite, the <code>workspace.bzl</code> file needs to be configured with the same tensorflow commit as was used to build tensorflow lite. Also note that the output libs are stripped, and this causes them to fail to be linked during cross-compilation. I solved this problem by removing all instances of <code></code> within the makefile using the command &lsquo;sed -i 's///&rsquo; ./Makefile<code>\ilinebr &lt;/td&gt; &lt;td class="markdownTableBodyNone"&gt; <a href="https://github.com/google-coral/libedgetpu">https://github.com/google-coral/libedgetpu</a> \ilinebr &lt;/td&gt; &lt;/tr&gt; &lt;tr class="markdownTableRowEven"&gt; &lt;td class="markdownTableBodyNone"&gt; Flatbuffers (headers for TfLite) \ilinebr &lt;/td&gt; &lt;td class="markdownTableBodyNone"&gt; The automation script uses this command (while within the tensorflow repo directory):</code>wget -O flatbuffers.tar.gz $(grep 'urls = tf_mirror_urls(".*"' third_party/flatbuffers/workspace.bzl | cut -d " -f2)` . The headers are then located under `flatbuffers/include/flatbuffers/`   </td><td class="markdownTableBodyNone"><a href="http://github.com/google/flatbuffers">http://github.com/google/flatbuffers</a>    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Abseil (headers for TfLite)   </td><td class="markdownTableBodyNone">The automation script uses this command (while within the tensorflow rep directory): `wget -O absl.tar.gz <a href="https://github.com/abseil/abseil-cpp/archive/$">https://github.com/abseil/abseil-cpp/archive/$</a>(grep 'ABSL_COMMIT = ".*"' third_party/absl/workspace.bzl | cut -d " -f2).tar.gz&lt;tt&gt;. The headers can then be extracted using:find ./absl -name '*.h' | cpio -pdm OUTPUT_DIR`   </td><td class="markdownTableBodyNone"><a href="https://github.com/abseil/abseil-cpp">https://github.com/abseil/abseil-cpp</a>   </td></tr>
+</table>
+<p >When linking statically to VisionServer, it is also required to link to many of these libraries. For a complete list it is best to reference the makefile. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun Jul 10 2022 14:35:42 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Mon Oct 17 2022 03:24:52 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>
