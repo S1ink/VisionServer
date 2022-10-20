@@ -40,7 +40,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo.svg"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">VisionServer
-   &#160;<span id="projectnumber">v2.0.0-81-g2fbd228</span>
+   &#160;<span id="projectnumber">v2.0.0-84-g8a9f5b8</span>
    </div>
    <div id="projectbrief">FRC vision library</div>
   </td>
@@ -125,6 +125,8 @@ Functions</h2></td></tr>
 <tr class="separator:afc0dfa7fb9d5bb8d7207043ca0c61108"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae2cd83da881121fd019c4050e988eab1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mem_8h.html#ae2cd83da881121fd019c4050e988eab1">memcpy_wst_asm</a> (uint8_t const *primary, uint8_t const *ch2, uint8_t const *ch3, uint8_t *dest, int32_t size, uint8_t alpha, uint8_t beta, uint8_t gamma)</td></tr>
 <tr class="separator:ae2cd83da881121fd019c4050e988eab1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7114ddab395402849bd5ac3ea1fb2e5e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mem_8h.html#a7114ddab395402849bd5ac3ea1fb2e5e">memcpy_split_wst_asm</a> (uint8_t const *framebuff_3C, uint8_t *dest, int32_t size, uint8_t offset, uint8_t alpha, uint8_t beta, uint8_t gamma)</td></tr>
+<tr class="separator:a7114ddab395402849bd5ac3ea1fb2e5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a09c0a9ccdd0b1629e7aea1a0ba344450"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mem_8h.html#a09c0a9ccdd0b1629e7aea1a0ba344450">memcpy_bitwise_or_asm</a> (uint8_t const *a, uint8_t const *b, uint8_t *dest, int32_t size)</td></tr>
 <tr class="separator:a09c0a9ccdd0b1629e7aea1a0ba344450"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4b6a5d7b2a83f04c43289b3ee1831efd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mem_8h.html#a4b6a5d7b2a83f04c43289b3ee1831efd">memcpy_subtract_asm</a> (uint8_t const *base, uint8_t const *sub, uint8_t *dest, int32_t size)</td></tr>
@@ -327,6 +329,64 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a7114ddab395402849bd5ac3ea1fb2e5e" name="a7114ddab395402849bd5ac3ea1fb2e5e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7114ddab395402849bd5ac3ea1fb2e5e">&#9670;&nbsp;</a></span>memcpy_split_wst_asm()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void memcpy_split_wst_asm </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t const *&#160;</td>
+          <td class="paramname"><em>framebuff_3C</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>dest</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int32_t&#160;</td>
+          <td class="paramname"><em>size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>offset</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>alpha</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>beta</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>gamma</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a09c0a9ccdd0b1629e7aea1a0ba344450" name="a09c0a9ccdd0b1629e7aea1a0ba344450"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a09c0a9ccdd0b1629e7aea1a0ba344450">&#9670;&nbsp;</a></span>memcpy_bitwise_or_asm()</h2>
 
@@ -413,7 +473,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_30d9ea9a8d9df1a989aa8aa8f59da391.html">lib-vs</a></li><li class="navelem"><a class="el" href="dir_4505e8eed2522850e8dd12da3b28dc54.html">src</a></li><li class="navelem"><a class="el" href="dir_16b7c41ca322cf05371f268760117ee9.html">core</a></li><li class="navelem"><a class="el" href="mem_8h.html">mem.h</a></li>
-    <li class="footer">Generated on Mon Oct 17 2022 03:24:52 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
+    <li class="footer">Generated on Thu Oct 20 2022 03:55:08 for VisionServer by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.2 </li>
   </ul>
 </div>
 </body>
