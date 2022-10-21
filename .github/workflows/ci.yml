@@ -1,4 +1,5 @@
 name: CI
+
 on:
   push:
     paths:
@@ -27,3 +28,12 @@ jobs:
           make static CROSS_PREFIX=arm-linux-gnueabihf-
           cd out
           ls -l -R
+      - name: Zip Artifacts
+        run: |
+          sudo apt-get install zip
+          zip -r build.zip lib-vs/out
+      - name: Upload Zip
+        uses: actions/upload-artifact@main
+        with:
+          name: build
+          path: build.zip
