@@ -117,7 +117,7 @@ obj/vision.cpp.pic.o: src\core/vision.cpp src\core/vision.h \
  include/opencv4/opencv2/video.hpp \
  include/opencv4/opencv2/video/tracking.hpp \
  include/opencv4/opencv2/video/background_segm.hpp include/wpi/json.h \
- src\core/vision.inc additions/cpp-tools/src/resources.h
+ additions/cpp-tools/src/resources.h
 
 src\core/vision.h:
 
@@ -408,7 +408,5 @@ include/opencv4/opencv2/video/tracking.hpp:
 include/opencv4/opencv2/video/background_segm.hpp:
 
 include/wpi/json.h:
-
-src\core/vision.inc:
 
 additions/cpp-tools/src/resources.h:

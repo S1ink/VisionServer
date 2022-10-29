@@ -118,7 +118,7 @@ obj/visioncamera.cpp.pic.o: src\core/visioncamera.cpp \
  include/cscore_oo.h include/cscore_oo.inc include/cscore_cv.h \
  include/cameraserver/CameraServer.inc include/wpi/json.h \
  include/wpi/raw_ostream.h additions/cpp-tools/src/resources.h \
- src\core/vision.h include/wpi/StringExtras.h src\core/vision.inc
+ src\core/vision.h include/wpi/StringExtras.h
 
 src\core/visioncamera.h:
 
@@ -413,5 +413,3 @@ additions/cpp-tools/src/resources.h:
 src\core/vision.h:
 
 include/wpi/StringExtras.h:
-
-src\core/vision.inc:

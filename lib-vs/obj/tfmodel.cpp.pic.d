@@ -147,8 +147,7 @@ obj/tfmodel.cpp.pic.o: src\core/tfmodel.cpp src\core/tfmodel.h \
  include/cameraserver/CameraServer.h include/wpi/deprecated.h \
  include/cscore.h include/cscore_c.h include/cscore_cpp.h \
  include/cscore_oo.h include/cscore_oo.inc include/cscore_cv.h \
- include/cameraserver/CameraServer.inc include/wpi/json.h \
- src\core/visionserver2.inc src\core/tfmodel.inc
+ include/cameraserver/CameraServer.inc include/wpi/json.h
 
 src\core/tfmodel.h:
 
@@ -509,7 +508,3 @@ include/cscore_cv.h:
 include/cameraserver/CameraServer.inc:
 
 include/wpi/json.h:
-
-src\core/visionserver2.inc:
-
-src\core/tfmodel.inc:

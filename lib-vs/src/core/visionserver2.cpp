@@ -251,22 +251,24 @@ void VisionServer::OutputStream::syncIdx() {
 }
 
 
-void VisionServer::pipelineRunner(BasePipe* pipe, uint16_t rps) {
+void VisionServer::pipelineRunner(BasePipe* pipe, float fps_cap) {
 	pipe->table->PutBoolean("Enable Processing", true);
 	pipe->table->PutNumber("Source Index", 1);
 	pipe->table->PutNumber("Statistics Verbosity", 0);
+	pipe->table->PutNumber("Max FPS", fps_cap);
 
 	VisionServer& _inst = VisionServer::getInstance();
 	std::shared_ptr<nt::NetworkTable> stats{pipe->table->GetSubTable("stats")};
 
 	int idx = 1;
-	float max_ftime = 1.f / rps, util_percent = 0.f, fps = 0.f;
+	float fps = 0.f;
 	double init_time = 0, proc_time = 0, out_time = 0, active_time = 1, full_time = 0;
-	std::chrono::high_resolution_clock::time_point beg_frame, beg_proc, end_proc, end_frame, last;
+	HRC::time_point beg_frame, beg_proc, end_proc, end_frame, last;
 	cv::Mat frame = cv::Mat::zeros(cv::Size(1, 1), CV_8UC3);
 
+	pipe->init();
 	while(VisionServer::isRunning()) {
-		beg_frame = std::chrono::high_resolution_clock::now();
+		beg_frame = HRC::now();
 		int n = pipe->table->GetEntry("Source Index").GetDouble(0);
 		if(n != idx) {
 			idx = n;
@@ -279,9 +281,9 @@ void VisionServer::pipelineRunner(BasePipe* pipe, uint16_t rps) {
 		if(pipe->table->GetEntry("Enable Processing").GetBoolean(false) && 
 			pipe->input.GrabFrame(frame/*, max_ftime / 2.f*/)
 		) {
-			beg_proc = std::chrono::high_resolution_clock::now();
+			beg_proc = HRC::now();
 			pipe->process(frame);
-			end_proc = std::chrono::high_resolution_clock::now();
+			end_proc = HRC::now();
 			int verbosity = pipe->table->GetEntry("Statistics Verbosity").GetDouble(0);
 			if(verbosity > 0) {
 				cv::putText(
@@ -292,37 +294,32 @@ void VisionServer::pipelineRunner(BasePipe* pipe, uint16_t rps) {
 			}
 			if(verbosity > 1) {
 				cv::putText(
-					frame, "Util%: " + std::to_string(util_percent),
-					cv::Point(5, 45), cv::FONT_HERSHEY_DUPLEX,
-					0.65, cv::Scalar(0, 255, 0), 1, cv::LINE_AA
-				);
-				cv::putText(
 					frame, "Active: " + std::to_string(active_time * 1000) + "ms",
-					cv::Point(5, 70), cv::FONT_HERSHEY_DUPLEX,
+					cv::Point(5, 45), cv::FONT_HERSHEY_DUPLEX,
 					0.65, cv::Scalar(0, 255, 0), 1, cv::LINE_AA
 				);
 			}
 			if(verbosity > 2) {
 				cv::putText(
 					frame, "Init: " + std::to_string(init_time * 1000) + "ms",
-					cv::Point(5, 95), cv::FONT_HERSHEY_DUPLEX,
+					cv::Point(5, 70), cv::FONT_HERSHEY_DUPLEX,
 					0.65, cv::Scalar(0, 255, 0), 1, cv::LINE_AA
 				);
 				cv::putText(
 					frame, "Process: " + std::to_string(proc_time * 1000) + "ms",
-					cv::Point(5, 120), cv::FONT_HERSHEY_DUPLEX,
+					cv::Point(5, 95), cv::FONT_HERSHEY_DUPLEX,
 					0.65, cv::Scalar(0, 255, 0), 1, cv::LINE_AA
 				);
 				cv::putText(
 					frame, "Output: " + std::to_string(out_time * 1000) + "ms",
-					cv::Point(5, 145), cv::FONT_HERSHEY_DUPLEX,
+					cv::Point(5, 120), cv::FONT_HERSHEY_DUPLEX,
 					0.65, cv::Scalar(0, 255, 0), 1, cv::LINE_AA
 				);
 			}
 			pipe->PutFrame(frame);
-			end_frame = std::chrono::high_resolution_clock::now();
+			end_frame = HRC::now();
 		} else {
-			beg_proc = end_proc = end_frame = std::chrono::high_resolution_clock::now();
+			beg_proc = end_proc = end_frame = HRC::now();
 		}
 
 		init_time = std::chrono::duration<double>(beg_proc - beg_frame).count();
@@ -330,28 +327,27 @@ void VisionServer::pipelineRunner(BasePipe* pipe, uint16_t rps) {
 		out_time = std::chrono::duration<double>(end_frame - end_proc).count();
 		full_time = std::chrono::duration<double>(beg_frame - last).count();
 		active_time = init_time + proc_time + out_time;
-		util_percent = active_time / max_ftime * 100.f;
 		fps = 1.f/full_time;
 
 		stats->PutNumber("FPS: ", fps);
-		stats->PutNumber("Utilization(%): ", util_percent);
 		stats->PutNumber("Active time(ms): ", active_time * 1000);
 		stats->PutNumber("Init time(ms): ", init_time * 1000);
 		stats->PutNumber("Process time(ms): ", proc_time * 1000);
 		stats->PutNumber("Output time(ms): ", out_time * 1000);
 
+		fps_cap = pipe->table->GetNumber("Max FPS", fps_cap);
 		std::this_thread::sleep_for(
-			std::chrono::nanoseconds((uint64_t)(max_ftime * 1E9)) - (
-				std::chrono::high_resolution_clock::now() - beg_frame
-			)
+			std::chrono::nanoseconds((uint64_t)(1E9 / fps_cap)) - (HRC::now() - beg_frame)
 		);
 
 		last = beg_frame;
 
 	}
+	pipe->close();
 	pipe->table->Delete("Enable Processing");
 	pipe->table->Delete("Source Index");
 	pipe->table->Delete("Statistics Verbosity");
+	pipe->table->Delete("Max FPS");
 
 }
 
@@ -399,12 +395,14 @@ bool VisionServer::runRaw() {
 		return false;
 	}
 	VisionServer& _inst = getInstance();
+	VisionServer::ntable()->GetEntry("Status").SetString("Streaming Raw");
 	while(!VisionServer::isRunning()) {
 		for(size_t i = 0; i < _inst.streams.size(); i++) {
 			_inst.streams.at(i).syncIdx();
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	}
+	VisionServer::ntable()->GetEntry("Status").SetString("Offline");
 	return true;
 }
 bool VisionServer::runRawThread() {
@@ -417,32 +415,31 @@ bool VisionServer::runRawThread() {
 
 
 
-bool VisionServer::run(uint16_t rps) {
-	if(!VisionServer::isRunning()) {
+bool VisionServer::run(float fps_cap) {
+	if(!VisionServer::isRunning() && VisionServer::numPipelines() > 0) {
 		VisionServer& _inst = getInstance();
 		_inst.is_running = true;
 
+		VisionServer::ntable()->GetEntry("Status").SetString("Running Multithreaded");
+
+		HRC::time_point tbuff;
+		// assert fps_cap == 0 ?
+		uint64_t max_nanos = 1E9 / fps_cap;
+
 		std::vector<std::thread> runners;
 		for(size_t i = 0; i < _inst.pipelines.size(); i++) {
-			runners.emplace_back(std::thread(pipelineRunner, _inst.pipelines.at(i), rps));
+			runners.emplace_back(std::thread(pipelineRunner, _inst.pipelines.at(i), fps_cap));
 		}
-
-		VisionServer::ntable()->GetEntry("Status").SetString("Running Multithreaded");
-		VisionServer::ntable()->PutNumber("Target FPS", rps);
-
-		std::chrono::high_resolution_clock::time_point tbuff;
-		uint64_t max_nanos = 1E9 / rps;
-
 		while(isRunning()) {	// main loop
-			tbuff = std::chrono::high_resolution_clock::now();
-			// update system stats?
-			nt::NetworkTableInstance::GetDefault().Flush();
+			tbuff = HRC::now();
+			
 			for(size_t i = 0; i < _inst.streams.size(); i++) {
 				_inst.streams[i].syncIdx();
 			}
+			nt::NetworkTableInstance::GetDefault().Flush();
 
 			std::this_thread::sleep_for(
-				std::chrono::nanoseconds(max_nanos) - (std::chrono::high_resolution_clock::now() - tbuff)
+				std::chrono::nanoseconds(max_nanos) - (HRC::now() - tbuff)
 			);
 		}
 
@@ -450,13 +447,12 @@ bool VisionServer::run(uint16_t rps) {
 			runners.at(i).join();
 		}
 		VisionServer::ntable()->GetEntry("Status").SetString("Offline");
-		VisionServer::ntable()->Delete("Target FPS");
 		return true;
 	}
 	return false;
 }
-bool VisionServer::runSingle(uint16_t rps) {
-	if(!VisionServer::isRunning()) {
+bool VisionServer::runSingle(float fps_cap) {
+	if(!VisionServer::isRunning() && VisionServer::numPipelines() > 0) {
 		VisionServer& _inst = getInstance();
 		_inst.is_running = true;
 
@@ -465,21 +461,24 @@ bool VisionServer::runSingle(uint16_t rps) {
 		VisionServer::ntable()->PutNumber("Camera Index", 1);
 		VisionServer::ntable()->PutNumber("Pipeline Index", 1);
 		VisionServer::ntable()->PutNumber("Statistics Verbosity", 0);
-		VisionServer::ntable()->PutNumber("Target FPS", rps);
+		VisionServer::ntable()->PutNumber("Max FPS", fps_cap);
 
 		std::shared_ptr<nt::NetworkTable> stats = VisionServer::ntable()->GetSubTable("stats");
 
-		int c_idx = 0, p_idx = 1;
-		float max_ftime = 1.f / rps, util_percent = 0.f, fps = 0.f;
+		int c_idx = 0, p_idx = 0;
+		float fps = 0.f;
 		double init_time = 0, proc_time = 0, out_time = 0, active_time = 1, full_time = 0;
-		std::chrono::high_resolution_clock::time_point beg_frame, beg_proc, end_proc, end_frame, last;
+		HRC::time_point beg_frame, beg_proc, end_proc, end_frame, last;
 		cv::Mat frame = cv::Mat::zeros(cv::Size(1, 1), CV_8UC3);
 
+		_inst.pipelines[p_idx]->init();
 		while(isRunning()) {
-			beg_frame = std::chrono::high_resolution_clock::now();
+			beg_frame = HRC::now();
 			int n = VisionServer::ntable()->GetEntry("Pipeline Index").GetDouble(0);
 			if(n != p_idx + 1 && n > 0 && n <= numPipelines()) {
+				_inst.pipelines[p_idx]->close();
 				p_idx = n - 1;
+				_inst.pipelines[p_idx]->init();
 				for(size_t i = 0; i < _inst.streams.size(); i++) {
 					_inst.streams[i].setSourceIdx(n);
 				}
@@ -497,9 +496,9 @@ bool VisionServer::runSingle(uint16_t rps) {
 			if(VisionServer::ntable()->GetEntry("Enable Processing").GetBoolean(false) &&
 				_inst.pipelines[p_idx]->input.GrabFrame(frame)
 			) {
-				beg_proc = std::chrono::high_resolution_clock::now();
+				beg_proc = HRC::now();
 				_inst.pipelines[p_idx]->process(frame);
-				end_proc = std::chrono::high_resolution_clock::now();
+				end_proc = HRC::now();
 				int verbosity = VisionServer::ntable()->GetEntry("Statistics Verbosity").GetDouble(0);
 				if(verbosity > 0) {
 					cv::putText(
@@ -510,37 +509,32 @@ bool VisionServer::runSingle(uint16_t rps) {
 				}
 				if(verbosity > 1) {
 					cv::putText(
-						frame, "Util%: " + std::to_string(util_percent),
-						cv::Point(5, 45), cv::FONT_HERSHEY_DUPLEX,
-						0.65, cv::Scalar(0, 255, 0), 1, cv::LINE_AA
-					);
-					cv::putText(
 						frame, "Active: " + std::to_string(active_time * 1000) + "ms",
-						cv::Point(5, 70), cv::FONT_HERSHEY_DUPLEX,
+						cv::Point(5, 45), cv::FONT_HERSHEY_DUPLEX,
 						0.65, cv::Scalar(0, 255, 0), 1, cv::LINE_AA
 					);
 				}
 				if(verbosity > 2) {
 					cv::putText(
 						frame, "Init: " + std::to_string(init_time * 1000) + "ms",
-						cv::Point(5, 95), cv::FONT_HERSHEY_DUPLEX,
+						cv::Point(5, 70), cv::FONT_HERSHEY_DUPLEX,
 						0.65, cv::Scalar(0, 255, 0), 1, cv::LINE_AA
 					);
 					cv::putText(
 						frame, "Process: " + std::to_string(proc_time * 1000) + "ms",
-						cv::Point(5, 120), cv::FONT_HERSHEY_DUPLEX,
+						cv::Point(5, 95), cv::FONT_HERSHEY_DUPLEX,
 						0.65, cv::Scalar(0, 255, 0), 1, cv::LINE_AA
 					);
 					cv::putText(
 						frame, "Output: " + std::to_string(out_time * 1000) + "ms",
-						cv::Point(5, 145), cv::FONT_HERSHEY_DUPLEX,
+						cv::Point(5, 120), cv::FONT_HERSHEY_DUPLEX,
 						0.65, cv::Scalar(0, 255, 0), 1, cv::LINE_AA
 					);
 				}
 				_inst.pipelines[p_idx]->PutFrame(frame);
-				end_frame = std::chrono::high_resolution_clock::now();
+				end_frame = HRC::now();
 			} else {
-				beg_proc = end_proc = end_frame = std::chrono::high_resolution_clock::now();
+				beg_proc = end_proc = end_frame = HRC::now();
 			}
 
 			init_time = std::chrono::duration<double>(beg_proc - beg_frame).count();
@@ -548,49 +542,48 @@ bool VisionServer::runSingle(uint16_t rps) {
 			out_time = std::chrono::duration<double>(end_frame - end_proc).count();
 			full_time = std::chrono::duration<double>(beg_frame - last).count();
 			active_time = init_time + proc_time + out_time;
-			util_percent = active_time / max_ftime * 100.f;
 			fps = 1.f/full_time;
 
 			stats->PutNumber("FPS: ", fps);
-			stats->PutNumber("Utilization(%): ", util_percent);
 			stats->PutNumber("Active time(ms): ", active_time * 1000);
 			stats->PutNumber("Init time(ms): ", init_time * 1000);
 			stats->PutNumber("Process time(ms): ", proc_time * 1000);
 			stats->PutNumber("Output time(ms): ", out_time * 1000);
 
 			nt::NetworkTableInstance::GetDefault().Flush();
-
+			fps_cap = VisionServer::ntable()->GetNumber("Max FPS", fps_cap);
 			std::this_thread::sleep_for(
-				std::chrono::nanoseconds((uint64_t)(max_ftime * 1E9)) - (
-					std::chrono::high_resolution_clock::now() - beg_frame
-				)
+				std::chrono::nanoseconds(
+					(uint64_t)(1E9 / fps_cap)
+				) - (HRC::now() - beg_frame)
 			);
 
 			last = beg_frame;
 		}
+		_inst.pipelines[p_idx]->close();
 		VisionServer::ntable()->GetEntry("Status").SetString("Offline");
 		VisionServer::ntable()->Delete("Enable Processing");
 		VisionServer::ntable()->Delete("Camera Index");
 		VisionServer::ntable()->Delete("Pipeline Index");
 		VisionServer::ntable()->Delete("Statistics Verbosity");
-		VisionServer::ntable()->Delete("Target FPS");
+		VisionServer::ntable()->Delete("Max FPS");
 
 		return true;
 	}
 	return false;
 }
-bool VisionServer::runThread(uint16_t rps) {
+bool VisionServer::runThread(float fps_cap) {
 	VisionServer& _inst = getInstance();
 	if(!VisionServer::isRunning() && !_inst.head.joinable()) {
-		_inst.head = std::move(std::thread(VisionServer::run, rps));
+		_inst.head = std::move(std::thread(VisionServer::run, fps_cap));
 		return true;
 	}
 	return false;
 }
-bool VisionServer::runSingleThread(uint16_t rps) {
+bool VisionServer::runSingleThread(float fps_cap) {
 	VisionServer& _inst = getInstance();
 	if(!VisionServer::isRunning() && !_inst.head.joinable()) {
-		_inst.head = std::move(std::thread(VisionServer::runSingle, rps));
+		_inst.head = std::move(std::thread(VisionServer::runSingle, fps_cap));
 		return true;
 	}
 	return false;

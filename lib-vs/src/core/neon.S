@@ -1,8 +1,9 @@
 .global memcpy_threshold_asm
 .global memcpy_threshold_binary_asm
-.global memcpy_compare3_add_asm
+.global memcpy_compare3_add_asm     // a bit broken
 .global memcpy_wst_asm
 .global memcpy_split_wst_asm
+
 .global memcpy_bitwise_or_asm
 .global memcpy_subtract_asm
 
@@ -277,6 +278,9 @@ memcpy_split_wst_asm:
         sub sp, fp, #0  // Pop our Stack Frame
         pop {r4-r6, fp}
         bx lr
+
+
+
 
 
 // Arg 0: r0: Source A
