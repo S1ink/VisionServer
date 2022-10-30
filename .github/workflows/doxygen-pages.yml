@@ -31,7 +31,7 @@ jobs:
       - run: |
           sudo apt install libclang1-9 libclang-cpp9
           sudo apt-get install -y graphviz
-          wget -O doxygen.tar.gz https://www.doxygen.nl/files/doxygen-1.9.2.linux.bin.tar.gz
+          wget -O doxygen.tar.gz https://sourceforge.net/projects/doxygen/files/rel-1.9.2/doxygen-1.9.2.linux.bin.tar.gz/download
           mkdir doxy-bin
           tar -xzf doxygen.tar.gz -C doxy-bin --strip-components=1
           sudo make -C doxy-bin install
