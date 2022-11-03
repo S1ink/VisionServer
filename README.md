@@ -50,10 +50,10 @@ int main() {
 ```
 
 ## Get Started
-__All guides and code documentation can be found on this repo's [gh-pages](https://frc3407.github.io/VisionServer).__ Additionally, all guides can be found in markdown format under [docs/guide/](docs/guide/).
+__All guides and code documentation can be found on this repo's [gh-pages](https://frc3407.github.io/VisionServer).__ Additionally, all guides can be found in markdown format under [docs/](docs/).
 
 ## More on Vision Processing
-__Here is a list of some [helpful resources](docs/guide/References.md) used in the making of this project.__
+__Here is a list of some [helpful resources](docs/References.md) used in the making of this project.__
 
 ## Suggestions?
 __Currently [I](https://github.com/S1ink/) am the sole developer and maintainer of this project, so any suggestions/help are welcome (note that things don't get done very fast) - just post an issue or create a pull request. There is no template for this, just use common sense and try to be as helpful as possible.__

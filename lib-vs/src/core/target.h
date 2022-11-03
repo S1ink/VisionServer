@@ -72,9 +72,9 @@ protected:
 /**
  * UniqueTarget<> must be extended by another class so that names match instancing types.
 */
-template<class derived = void>
-class UniqueTarget : public Instanced<UniqueTarget<derived> >, public Target {
-	typedef struct UniqueTarget<derived>	This_t;
+template<class derived_t = void>
+class UniqueTarget : public Instanced<UniqueTarget<derived_t> >, public Target {
+	typedef struct UniqueTarget<derived_t>	This_t;
 public:
 	UniqueTarget() = delete;
 	inline UniqueTarget(const std::string& n) : Instanced<This_t>(), Target(n + std::to_string(this->getInst())) {}
