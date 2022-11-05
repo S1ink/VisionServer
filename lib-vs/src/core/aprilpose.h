@@ -133,7 +133,7 @@ void AprilPose_<derived>::process(cv::Mat& io_frame) {
 		}
 		beg = HRC::now();
 #endif
-		cv::drawFrameAxis(io_frame, this->getSrcMatrix(), this->getSrcDistort(), this->rvec, this->tvec, 100.f);
+		cv::drawFrameAxes(io_frame, this->getSrcMatrix(), this->getSrcDistort(), this->rvec, this->tvec, 100.f);
 	}
 #ifdef APRILPOSE_DEBUG
 	else {

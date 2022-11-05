@@ -33,9 +33,9 @@ public:
 
 	Target() = delete;
 	inline Target(const std::string& n) : name(n), table(Target::ntable()->GetSubTable(this->name))
-		{ this->table->PutNumber("Status", VALID); }
+		{ this->table->PutNumber("Status", EXPIRED); }
 	inline Target(std::string&& n) : name(std::move(n)), table(Target::ntable()->GetSubTable(this->name))
-		{ this->table->PutNumber("Status", VALID); }
+		{ this->table->PutNumber("Status", EXPIRED); }
 	Target(const Target&) = default;
 	Target(Target&&) = default;
 	inline virtual ~Target()
@@ -75,19 +75,20 @@ protected:
 template<class derived_t = void>
 class UniqueTarget : public Instanced<UniqueTarget<derived_t> >, public Target {
 	typedef struct UniqueTarget<derived_t>	This_t;
+	inline Target* super() { return static_cast<Target*>(this); }
 public:
 	UniqueTarget() = delete;
-	inline UniqueTarget(const std::string& n) : Instanced<This_t>(), Target(n + std::to_string(this->getInst())) {}
-	inline UniqueTarget(std::string&& n) : Instanced<This_t>(), Target(n + std::to_string(this->getInst())) {}
+	inline UniqueTarget(const std::string& n) : Instanced<This_t>(), Target(n + "/Detection " + std::to_string(this->instance)) {}
+	inline UniqueTarget(std::string&& n) : Instanced<This_t>(), Target(n + "/Detection " + std::to_string(this->instance)) {}
 	UniqueTarget(const UniqueTarget&) = default;
 	UniqueTarget(UniqueTarget&&) = default;
 
 protected:
-	inline void setPos(double x, double y, double z) { static_cast<Target*>(this)->setPos(x, y, z); }
-	inline void setAngle(double ud, double lr) { static_cast<Target*>(this)->setAngle(ud, lr); }
-	inline void setDist(double d) { static_cast<Target*>(this)->setDist(d); }
-	inline void setExpired() { static_cast<Target*>(this)->setExpired(); }
-	inline void setValid() { static_cast<Target*>(this)->setValid(); }
+	inline void setPos(double x, double y, double z) { super()->setPos(x, y, z); }
+	inline void setAngle(double ud, double lr) { super()->setAngle(ud, lr); }
+	inline void setDist(double d) { super()->setDist(d); }
+	inline void setExpired() { super()->setExpired(); }
+	inline void setValid() { super()->setValid(); }
 
 };
 

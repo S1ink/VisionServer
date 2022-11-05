@@ -390,29 +390,6 @@ bool VisionServer::compensate() {
 		return false;
 	}
 }
-bool VisionServer::runRaw() {
-	if(VisionServer::isRunning()) {
-		return false;
-	}
-	VisionServer& _inst = getInstance();
-	VisionServer::ntable()->GetEntry("Status").SetString("Streaming Raw");
-	while(!VisionServer::isRunning()) {
-		for(size_t i = 0; i < _inst.streams.size(); i++) {
-			_inst.streams.at(i).syncIdx();
-		}
-		std::this_thread::sleep_for(std::chrono::milliseconds(100));
-	}
-	VisionServer::ntable()->GetEntry("Status").SetString("Offline");
-	return true;
-}
-bool VisionServer::runRawThread() {
-	if(!VisionServer::isRunning()) {
-		std::thread(VisionServer::runRaw).detach();
-		return true;
-	}
-	return false;
-}
-
 
 
 bool VisionServer::run(float fps_cap) {
@@ -572,6 +549,22 @@ bool VisionServer::runSingle(float fps_cap) {
 	}
 	return false;
 }
+bool VisionServer::runRaw() {
+	VisionServer& _inst = getInstance();
+	if(!VisionServer::isRunning()) {
+		VisionServer::ntable()->GetEntry("Status").SetString("Streaming Raw");
+		_inst.is_running = true;
+		while(VisionServer::isRunning()) {
+			for(size_t i = 0; i < _inst.streams.size(); i++) {
+				_inst.streams.at(i).syncIdx();
+			}
+			std::this_thread::sleep_for(std::chrono::milliseconds(100));
+		}
+		VisionServer::ntable()->GetEntry("Status").SetString("Offline");
+		return true;
+	}
+	return false;
+}
 bool VisionServer::runThread(float fps_cap) {
 	VisionServer& _inst = getInstance();
 	if(!VisionServer::isRunning() && !_inst.head.joinable()) {
@@ -584,6 +577,14 @@ bool VisionServer::runSingleThread(float fps_cap) {
 	VisionServer& _inst = getInstance();
 	if(!VisionServer::isRunning() && !_inst.head.joinable()) {
 		_inst.head = std::move(std::thread(VisionServer::runSingle, fps_cap));
+		return true;
+	}
+	return false;
+}
+bool VisionServer::runRawThread() {
+	VisionServer& _inst = getInstance();
+	if(!VisionServer::isRunning() && !_inst.head.joinable()) {
+		_inst.head = std::move(std::thread(VisionServer::runRaw));
 		return true;
 	}
 	return false;

@@ -191,6 +191,8 @@ private:
 
 
 
+typedef struct VPipeline_S		BasePipe;	// non-instanced ("singular") VPipeline is just an alias of BasePipe
+
 template<class derived>	// CRTP for instance counting -> all derived classes should inherit a passthrough template if they are expected to be extended as well
 class VPipeline : public Instanced<VPipeline<derived> >, public VisionServer::BasePipe {
 	typedef struct VPipeline<derived>	This_t;
@@ -198,11 +200,11 @@ protected:
 	VPipeline() = delete;
 	VPipeline(const VPipeline&) = delete;
 	inline VPipeline(const char* name) : 
-		Instanced<This_t>(), BasePipe(name + std::to_string(this->instance)) {}
+		Instanced<This_t>(), BasePipe(name + ("/Instance " + std::to_string(this->instance))) {}
 	inline VPipeline(const std::string& name) :
-		Instanced<This_t>(), BasePipe(name + std::to_string(this->instance)) {}
+		Instanced<This_t>(), BasePipe(name + "/Instance " + std::to_string(this->instance)) {}
 	inline VPipeline(std::string&& name) :
-		Instanced<This_t>(), BasePipe(name + std::to_string(this->instance)) {}
+		Instanced<This_t>(), BasePipe(name + "/Instance" + std::to_string(this->instance)) {}
 	inline virtual ~VPipeline() = default;
 
 
