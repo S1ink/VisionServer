@@ -10,7 +10,8 @@
 
 
 constexpr static inline cv::aruco::PREDEFINED_DICTIONARY_NAME
-	FRC_DICT = cv::aruco::DICT_APRILTAG_36h11;
+	FRC_DICT = cv::aruco::DICT_APRILTAG_16h5,
+	FRC_UNOFF_DICT = cv::aruco::DICT_APRILTAG_36h11;
 
 template<class derived_t = void>
 class AprilPose_ : public vs2::VPipeline<AprilPose_<derived_t> > {
@@ -26,7 +27,7 @@ public:
 
 	virtual void process(cv::Mat& io_frame) override;
 
-protected:	// update these
+protected:
 	inline AprilPose_(
 		const char* n, const cv::Ptr<cv::aruco::Board> f,
 		cv::Ptr<cv::aruco::DetectorParameters> p = cv::aruco::DetectorParameters::create()
