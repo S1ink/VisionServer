@@ -29,6 +29,7 @@ jobs:
           echo '::echo::on'
           echo "PROJECT_NUMBER = `git describe --tags`" >> ./docs/doxygen/Doxyfile
       - run: |
+          sudo apt-get update
           sudo apt install libclang1-9 libclang-cpp9
           sudo apt-get install -y graphviz
           wget -O doxygen.tar.gz https://sourceforge.net/projects/doxygen/files/rel-1.9.2/doxygen-1.9.2.linux.bin.tar.gz/download
