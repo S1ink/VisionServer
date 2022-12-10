@@ -19,14 +19,14 @@ namespace frc {
  *
  * Initialization:
  * @code{.cpp}
- * TrapezoidalMotionProfile::Constraints constraints{kMaxV, kMaxA};
+ * TrapezoidProfile::Constraints constraints{kMaxV, kMaxA};
  * double previousProfiledReference = initialReference;
  * @endcode
  *
  * Run on update:
  * @code{.cpp}
- * TrapezoidalMotionProfile profile{constraints, unprofiledReference,
- *                                  previousProfiledReference};
+ * TrapezoidProfile profile{constraints, unprofiledReference,
+ *                          previousProfiledReference};
  * previousProfiledReference = profile.Calculate(timeSincePreviousUpdate);
  * @endcode
  *
@@ -82,7 +82,7 @@ class TrapezoidProfile {
    * @param initial     The initial state (usually the current state).
    */
   TrapezoidProfile(Constraints constraints, State goal,
-                   State initial = State{Distance_t(0), Velocity_t(0)});
+                   State initial = State{Distance_t{0}, Velocity_t{0}});
 
   TrapezoidProfile(const TrapezoidProfile&) = default;
   TrapezoidProfile& operator=(const TrapezoidProfile&) = default;
