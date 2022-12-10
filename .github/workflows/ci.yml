@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get ARM Cross Compiler
-        run: sudo apt-get install g++-arm-linux-gnueabihf
+        run: sudo apt-get update && sudo apt-get install g++-arm-linux-gnueabihf
       - name: Checkout Self
         uses: actions/checkout@main
         with:
