@@ -48,7 +48,7 @@ jobs:
         run: |
           npm install @bazel/bazelisk
           pip install numpy
-          sudo apt-get install zip
+          sudo apt-get update && sudo apt-get install zip
 
       - name: Get Flatbuffers and Abseil
         run: |
@@ -137,7 +137,7 @@ jobs:
           ref: ${{ steps.pigpio-latest-tag.outputs.tag }}
 
       - name: Get Cross Compiler
-        run: sudo apt-get install gcc-arm-linux-gnueabihf
+        run: sudo apt-get update && sudo apt-get install gcc-arm-linux-gnueabihf
 
       - name: Build and Copy
         run: |
@@ -170,7 +170,7 @@ jobs:
       - uses: actions/download-artifact@main
       - run: |  #${{ steps.wpideps-latest.outputs.tag }}/cpp-deps.zip
           wget https://github.com/S1ink/WPILibPi-Mod-Build/releases/download/Latest-Deps/cpp-deps.zip
-          sudo apt-get install {unzip,zip}
+          sudo apt-get update && sudo apt-get install {unzip,zip}
           mkdir {output,deps,tflite,edgetpu,pigpio}
           unzip cpp-deps.zip -d deps
           unzip build-pigpio/artifacts.zip -d pigpio
