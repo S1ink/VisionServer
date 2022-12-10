@@ -89,7 +89,8 @@
         "csetjmp": "cpp",
         "unordered_set": "cpp",
         "future": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "span": "cpp"
     },
     "cmake.configureOnOpen": false
 }

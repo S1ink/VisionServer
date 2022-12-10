@@ -37,8 +37,13 @@ bool initNT(const char* file) {
             std::string str = j.at("ntmode").get<std::string>();
             if(wpi::equals_lower(str, "client")) {
                 wpi::outs() << "Setting up NetworkTables in CLIENT mode\n";
-                try { 
-                    nt::NetworkTableInstance::GetDefault().StartClientTeam(j.at("team").get<unsigned int>());
+                try {
+#if NT_CLIENT_VERSION == 4
+                    nt::NetworkTableInstance::GetDefault().StartClient4("VisionServer");
+#else
+                    nt::NetworkTableInstance::GetDefault().StartClient3("VisionServer");
+#endif
+                    nt::NetworkTableInstance::GetDefault().SetServerTeam(j.at("team").get<unsigned int>());
                     nt::NetworkTableInstance::GetDefault().StartDSClient();
                 }
                 catch (const wpi::json::exception& e) {
@@ -50,7 +55,12 @@ bool initNT(const char* file) {
                 nt::NetworkTableInstance::GetDefault().StartServer();
             } else {
                 wpi::outs() << "Setting up NetworkTables for SIMULATION mode - host: " << str << newline;
-                nt::NetworkTableInstance::GetDefault().StartClient(str.c_str());
+#if NT_CLIENT_VERSION == 4
+                    nt::NetworkTableInstance::GetDefault().StartClient4("VisionServer");
+#else
+                    nt::NetworkTableInstance::GetDefault().StartClient3("VisionServer");
+#endif
+                nt::NetworkTableInstance::GetDefault().SetServer(str.c_str());
             }
         } catch (const wpi::json::exception& e) {
             wpi::errs() << "Config error in " << file << ": coud not read ntmode: " << e.what() << newline;
@@ -162,8 +172,13 @@ bool readConfig(std::vector<VisionCamera>& cameras, const char* file) {
             std::string str = j.at("ntmode").get<std::string>();
             if(wpi::equals_lower(str, "client")) {
                 wpi::outs() << "Setting up NetworkTables in CLIENT mode\n";
-                try { 
-                    nt::NetworkTableInstance::GetDefault().StartClientTeam(j.at("team").get<unsigned int>());
+                try {
+#if NT_CLIENT_VERSION == 4
+                    nt::NetworkTableInstance::GetDefault().StartClient4("VisionServer");
+#else
+                    nt::NetworkTableInstance::GetDefault().StartClient3("VisionServer");
+#endif
+                    nt::NetworkTableInstance::GetDefault().SetServerTeam(j.at("team").get<unsigned int>());
                     nt::NetworkTableInstance::GetDefault().StartDSClient();
                 }
                 catch (const wpi::json::exception& e) {
@@ -175,7 +190,12 @@ bool readConfig(std::vector<VisionCamera>& cameras, const char* file) {
                 nt::NetworkTableInstance::GetDefault().StartServer();
             } else {
                 wpi::outs() << "Setting up NetworkTables for SIMULATION mode - host: " << str << newline;
-                nt::NetworkTableInstance::GetDefault().StartClient(str.c_str());
+#if NT_CLIENT_VERSION == 4
+                    nt::NetworkTableInstance::GetDefault().StartClient4("VisionServer");
+#else
+                    nt::NetworkTableInstance::GetDefault().StartClient3("VisionServer");
+#endif
+                nt::NetworkTableInstance::GetDefault().SetServer(str.c_str());
             }
         } catch (const wpi::json::exception& e) {
             wpi::errs() << "Config error in " << file << ": coud not read ntmode: " << e.what() << newline;

@@ -266,9 +266,9 @@ void VisionCamera::setNetworkAdjustable() {
     this->setExposureAdjustable();
 }
 void VisionCamera::deleteEntries() {
-    this->camera->Delete("Brightness");
-    this->camera->Delete("WhiteBalance");
-    this->camera->Delete("Exposure");
+    // this->camera->Delete("Brightness");
+    // this->camera->Delete("WhiteBalance");
+    // this->camera->Delete("Exposure");
 }
 
 void VisionCamera::setBrightnessAdjustable() {

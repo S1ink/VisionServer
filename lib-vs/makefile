@@ -23,10 +23,10 @@ OPT ?= release
 TFLITE ?= true
 ADEFINES ?=
 
-CROSS_PREFIX := arm-raspbian10-linux-gnueabihf-
+CROSS_PREFIX := armv7-bullseye-linux-gnueabihf-
 CXX := g++
 AR := ar
-STD := c++17
+STD := c++20
 
 ifeq ($(OS),Windows_NT)
 	UNAME := Windows
