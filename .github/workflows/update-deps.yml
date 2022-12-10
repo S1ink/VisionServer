@@ -168,8 +168,8 @@ jobs:
         run: echo "::set-output name=tag::$(curl -s https://api.github.com/repos/S1ink/WPILibPi-Mod-Build/releases/latest | jq '.tag_name' | sed 's/\"//g')"
 
       - uses: actions/download-artifact@main
-      - run: |
-          wget https://github.com/S1ink/WPILibPi-Mod-Build/releases/download/${{ steps.wpideps-latest.outputs.tag }}/cpp-deps.zip
+      - run: |  #${{ steps.wpideps-latest.outputs.tag }}/cpp-deps.zip
+          wget https://github.com/S1ink/WPILibPi-Mod-Build/releases/download/Latest-Deps/cpp-deps.zip
           sudo apt-get install {unzip,zip}
           mkdir {output,deps,tflite,edgetpu,pigpio}
           unzip cpp-deps.zip -d deps
