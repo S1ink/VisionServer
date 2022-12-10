@@ -2,6 +2,8 @@ name: Build and Deploy Doxygen
 
 on:
   push:
+    branches:
+      - 'main'
     paths:
       - 'docs/**'
       - 'lib-vs/**'
