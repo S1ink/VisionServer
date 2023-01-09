@@ -89,27 +89,27 @@ inline void RawEntry::Unpublish() {
 
 inline RawSubscriber RawTopic::Subscribe(
     std::string_view typeString, std::span<const uint8_t> defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return RawSubscriber{
       ::nt::Subscribe(m_handle, NT_RAW, typeString, options),
       defaultValue};
 }
 inline RawPublisher RawTopic::Publish(
-    std::string_view typeString, std::span<const PubSubOption> options) {
+    std::string_view typeString, const PubSubOptions& options) {
   return RawPublisher{
       ::nt::Publish(m_handle, NT_RAW, typeString, options)};
 }
 
 inline RawPublisher RawTopic::PublishEx(
     std::string_view typeString,
-    const wpi::json& properties, std::span<const PubSubOption> options) {
+    const wpi::json& properties, const PubSubOptions& options) {
   return RawPublisher{
       ::nt::PublishEx(m_handle, NT_RAW, typeString, properties, options)};
 }
 
 inline RawEntry RawTopic::GetEntry(
     std::string_view typeString, std::span<const uint8_t> defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return RawEntry{
       ::nt::GetEntry(m_handle, NT_RAW, typeString, options),
       defaultValue};

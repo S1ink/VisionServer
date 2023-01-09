@@ -89,42 +89,42 @@ inline void FloatArrayEntry::Unpublish() {
 
 inline FloatArraySubscriber FloatArrayTopic::Subscribe(
     std::span<const float> defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return FloatArraySubscriber{
       ::nt::Subscribe(m_handle, NT_FLOAT_ARRAY, "float[]", options),
       defaultValue};
 }
 inline FloatArraySubscriber FloatArrayTopic::SubscribeEx(
     std::string_view typeString, std::span<const float> defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return FloatArraySubscriber{
       ::nt::Subscribe(m_handle, NT_FLOAT_ARRAY, typeString, options),
       defaultValue};
 }
 
 inline FloatArrayPublisher FloatArrayTopic::Publish(
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return FloatArrayPublisher{
       ::nt::Publish(m_handle, NT_FLOAT_ARRAY, "float[]", options)};
 }
 
 inline FloatArrayPublisher FloatArrayTopic::PublishEx(
     std::string_view typeString,
-    const wpi::json& properties, std::span<const PubSubOption> options) {
+    const wpi::json& properties, const PubSubOptions& options) {
   return FloatArrayPublisher{
       ::nt::PublishEx(m_handle, NT_FLOAT_ARRAY, typeString, properties, options)};
 }
 
 inline FloatArrayEntry FloatArrayTopic::GetEntry(
     std::span<const float> defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return FloatArrayEntry{
       ::nt::GetEntry(m_handle, NT_FLOAT_ARRAY, "float[]", options),
       defaultValue};
 }
 inline FloatArrayEntry FloatArrayTopic::GetEntryEx(
     std::string_view typeString, std::span<const float> defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return FloatArrayEntry{
       ::nt::GetEntry(m_handle, NT_FLOAT_ARRAY, typeString, options),
       defaultValue};

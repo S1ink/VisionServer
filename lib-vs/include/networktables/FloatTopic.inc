@@ -73,42 +73,42 @@ inline void FloatEntry::Unpublish() {
 
 inline FloatSubscriber FloatTopic::Subscribe(
     float defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return FloatSubscriber{
       ::nt::Subscribe(m_handle, NT_FLOAT, "float", options),
       defaultValue};
 }
 inline FloatSubscriber FloatTopic::SubscribeEx(
     std::string_view typeString, float defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return FloatSubscriber{
       ::nt::Subscribe(m_handle, NT_FLOAT, typeString, options),
       defaultValue};
 }
 
 inline FloatPublisher FloatTopic::Publish(
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return FloatPublisher{
       ::nt::Publish(m_handle, NT_FLOAT, "float", options)};
 }
 
 inline FloatPublisher FloatTopic::PublishEx(
     std::string_view typeString,
-    const wpi::json& properties, std::span<const PubSubOption> options) {
+    const wpi::json& properties, const PubSubOptions& options) {
   return FloatPublisher{
       ::nt::PublishEx(m_handle, NT_FLOAT, typeString, properties, options)};
 }
 
 inline FloatEntry FloatTopic::GetEntry(
     float defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return FloatEntry{
       ::nt::GetEntry(m_handle, NT_FLOAT, "float", options),
       defaultValue};
 }
 inline FloatEntry FloatTopic::GetEntryEx(
     std::string_view typeString, float defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return FloatEntry{
       ::nt::GetEntry(m_handle, NT_FLOAT, typeString, options),
       defaultValue};

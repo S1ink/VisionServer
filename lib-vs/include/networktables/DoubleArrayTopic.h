@@ -306,7 +306,7 @@ class DoubleArrayTopic final : public Topic {
   [[nodiscard]]
   SubscriberType Subscribe(
       ParamType defaultValue,
-      std::span<const PubSubOption> options = {});
+      const PubSubOptions& options = kDefaultPubSubOptions);
   /**
    * Create a new subscriber to the topic, with specific type string.
    *
@@ -326,7 +326,7 @@ class DoubleArrayTopic final : public Topic {
   [[nodiscard]]
   SubscriberType SubscribeEx(
       std::string_view typeString, ParamType defaultValue,
-      std::span<const PubSubOption> options = {});
+      const PubSubOptions& options = kDefaultPubSubOptions);
 
   /**
    * Create a new publisher to the topic.
@@ -344,7 +344,7 @@ class DoubleArrayTopic final : public Topic {
    * @return publisher
    */
   [[nodiscard]]
-  PublisherType Publish(std::span<const PubSubOption> options = {});
+  PublisherType Publish(const PubSubOptions& options = kDefaultPubSubOptions);
 
   /**
    * Create a new publisher to the topic, with type string and initial
@@ -366,7 +366,7 @@ class DoubleArrayTopic final : public Topic {
    */
   [[nodiscard]]
   PublisherType PublishEx(std::string_view typeString,
-    const wpi::json& properties, std::span<const PubSubOption> options = {});
+    const wpi::json& properties, const PubSubOptions& options = kDefaultPubSubOptions);
 
   /**
    * Create a new entry for the topic.
@@ -390,7 +390,7 @@ class DoubleArrayTopic final : public Topic {
    */
   [[nodiscard]]
   EntryType GetEntry(ParamType defaultValue,
-                     std::span<const PubSubOption> options = {});
+                     const PubSubOptions& options = kDefaultPubSubOptions);
   /**
    * Create a new entry for the topic, with specific type string.
    *
@@ -414,7 +414,7 @@ class DoubleArrayTopic final : public Topic {
    */
   [[nodiscard]]
   EntryType GetEntryEx(std::string_view typeString, ParamType defaultValue,
-                       std::span<const PubSubOption> options = {});
+                       const PubSubOptions& options = kDefaultPubSubOptions);
 
 };
 

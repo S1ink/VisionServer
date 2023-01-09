@@ -73,42 +73,42 @@ inline void StringArrayEntry::Unpublish() {
 
 inline StringArraySubscriber StringArrayTopic::Subscribe(
     std::span<const std::string> defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return StringArraySubscriber{
       ::nt::Subscribe(m_handle, NT_STRING_ARRAY, "string[]", options),
       defaultValue};
 }
 inline StringArraySubscriber StringArrayTopic::SubscribeEx(
     std::string_view typeString, std::span<const std::string> defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return StringArraySubscriber{
       ::nt::Subscribe(m_handle, NT_STRING_ARRAY, typeString, options),
       defaultValue};
 }
 
 inline StringArrayPublisher StringArrayTopic::Publish(
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return StringArrayPublisher{
       ::nt::Publish(m_handle, NT_STRING_ARRAY, "string[]", options)};
 }
 
 inline StringArrayPublisher StringArrayTopic::PublishEx(
     std::string_view typeString,
-    const wpi::json& properties, std::span<const PubSubOption> options) {
+    const wpi::json& properties, const PubSubOptions& options) {
   return StringArrayPublisher{
       ::nt::PublishEx(m_handle, NT_STRING_ARRAY, typeString, properties, options)};
 }
 
 inline StringArrayEntry StringArrayTopic::GetEntry(
     std::span<const std::string> defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return StringArrayEntry{
       ::nt::GetEntry(m_handle, NT_STRING_ARRAY, "string[]", options),
       defaultValue};
 }
 inline StringArrayEntry StringArrayTopic::GetEntryEx(
     std::string_view typeString, std::span<const std::string> defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return StringArrayEntry{
       ::nt::GetEntry(m_handle, NT_STRING_ARRAY, typeString, options),
       defaultValue};

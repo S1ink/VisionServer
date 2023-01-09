@@ -73,42 +73,42 @@ inline void IntegerEntry::Unpublish() {
 
 inline IntegerSubscriber IntegerTopic::Subscribe(
     int64_t defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return IntegerSubscriber{
       ::nt::Subscribe(m_handle, NT_INTEGER, "int", options),
       defaultValue};
 }
 inline IntegerSubscriber IntegerTopic::SubscribeEx(
     std::string_view typeString, int64_t defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return IntegerSubscriber{
       ::nt::Subscribe(m_handle, NT_INTEGER, typeString, options),
       defaultValue};
 }
 
 inline IntegerPublisher IntegerTopic::Publish(
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return IntegerPublisher{
       ::nt::Publish(m_handle, NT_INTEGER, "int", options)};
 }
 
 inline IntegerPublisher IntegerTopic::PublishEx(
     std::string_view typeString,
-    const wpi::json& properties, std::span<const PubSubOption> options) {
+    const wpi::json& properties, const PubSubOptions& options) {
   return IntegerPublisher{
       ::nt::PublishEx(m_handle, NT_INTEGER, typeString, properties, options)};
 }
 
 inline IntegerEntry IntegerTopic::GetEntry(
     int64_t defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return IntegerEntry{
       ::nt::GetEntry(m_handle, NT_INTEGER, "int", options),
       defaultValue};
 }
 inline IntegerEntry IntegerTopic::GetEntryEx(
     std::string_view typeString, int64_t defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return IntegerEntry{
       ::nt::GetEntry(m_handle, NT_INTEGER, typeString, options),
       defaultValue};

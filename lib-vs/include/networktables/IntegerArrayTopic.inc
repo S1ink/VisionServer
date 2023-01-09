@@ -89,42 +89,42 @@ inline void IntegerArrayEntry::Unpublish() {
 
 inline IntegerArraySubscriber IntegerArrayTopic::Subscribe(
     std::span<const int64_t> defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return IntegerArraySubscriber{
       ::nt::Subscribe(m_handle, NT_INTEGER_ARRAY, "int[]", options),
       defaultValue};
 }
 inline IntegerArraySubscriber IntegerArrayTopic::SubscribeEx(
     std::string_view typeString, std::span<const int64_t> defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return IntegerArraySubscriber{
       ::nt::Subscribe(m_handle, NT_INTEGER_ARRAY, typeString, options),
       defaultValue};
 }
 
 inline IntegerArrayPublisher IntegerArrayTopic::Publish(
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return IntegerArrayPublisher{
       ::nt::Publish(m_handle, NT_INTEGER_ARRAY, "int[]", options)};
 }
 
 inline IntegerArrayPublisher IntegerArrayTopic::PublishEx(
     std::string_view typeString,
-    const wpi::json& properties, std::span<const PubSubOption> options) {
+    const wpi::json& properties, const PubSubOptions& options) {
   return IntegerArrayPublisher{
       ::nt::PublishEx(m_handle, NT_INTEGER_ARRAY, typeString, properties, options)};
 }
 
 inline IntegerArrayEntry IntegerArrayTopic::GetEntry(
     std::span<const int64_t> defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return IntegerArrayEntry{
       ::nt::GetEntry(m_handle, NT_INTEGER_ARRAY, "int[]", options),
       defaultValue};
 }
 inline IntegerArrayEntry IntegerArrayTopic::GetEntryEx(
     std::string_view typeString, std::span<const int64_t> defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return IntegerArrayEntry{
       ::nt::GetEntry(m_handle, NT_INTEGER_ARRAY, typeString, options),
       defaultValue};

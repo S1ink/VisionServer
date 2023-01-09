@@ -73,42 +73,42 @@ inline void DoubleEntry::Unpublish() {
 
 inline DoubleSubscriber DoubleTopic::Subscribe(
     double defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return DoubleSubscriber{
       ::nt::Subscribe(m_handle, NT_DOUBLE, "double", options),
       defaultValue};
 }
 inline DoubleSubscriber DoubleTopic::SubscribeEx(
     std::string_view typeString, double defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return DoubleSubscriber{
       ::nt::Subscribe(m_handle, NT_DOUBLE, typeString, options),
       defaultValue};
 }
 
 inline DoublePublisher DoubleTopic::Publish(
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return DoublePublisher{
       ::nt::Publish(m_handle, NT_DOUBLE, "double", options)};
 }
 
 inline DoublePublisher DoubleTopic::PublishEx(
     std::string_view typeString,
-    const wpi::json& properties, std::span<const PubSubOption> options) {
+    const wpi::json& properties, const PubSubOptions& options) {
   return DoublePublisher{
       ::nt::PublishEx(m_handle, NT_DOUBLE, typeString, properties, options)};
 }
 
 inline DoubleEntry DoubleTopic::GetEntry(
     double defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return DoubleEntry{
       ::nt::GetEntry(m_handle, NT_DOUBLE, "double", options),
       defaultValue};
 }
 inline DoubleEntry DoubleTopic::GetEntryEx(
     std::string_view typeString, double defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return DoubleEntry{
       ::nt::GetEntry(m_handle, NT_DOUBLE, typeString, options),
       defaultValue};

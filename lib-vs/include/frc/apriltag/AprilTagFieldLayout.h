@@ -6,12 +6,12 @@
 
 #include <optional>
 #include <string_view>
+#include <unordered_map>
 #include <vector>
 
 #include <units/length.h>
 #include <wpi/SymbolExports.h>
 
-#include "frc/DriverStation.h"
 #include "frc/apriltag/AprilTag.h"
 #include "frc/geometry/Pose3d.h"
 
@@ -28,17 +28,20 @@ namespace frc {
  * The "tags" object is a list of all AprilTags contained within a layout. Each
  * AprilTag serializes to a JSON object containing an ID and a Pose3d. The
  * "field" object is a descriptor of the size of the field in meters with
- * "width" and "height" values.  This is to account for arbitrary field sizes
- * when mirroring the poses.
+ * "width" and "length" values.  This is to account for arbitrary field sizes
+ * when transforming the poses.
  *
- * Pose3ds are assumed to be measured from the bottom-left corner of the field,
- * when the blue alliance is at the left. Pose3ds will automatically be returned
- * as passed in when calling GetTagPose(int).  Setting an alliance color via
- * SetAlliance(DriverStation::Alliance) will mirror the poses returned from
- * GetTagPose(int) to be correct relative to the other alliance.
- */
+ * Pose3ds in the JSON are measured using the normal FRC coordinate system, NWU
+ * with the origin at the bottom-right corner of the blue alliance wall.
+ * SetOrigin(OriginPosition) can be used to change the poses returned from
+ * GetTagPose(int) to be from the perspective of a specific alliance. */
 class WPILIB_DLLEXPORT AprilTagFieldLayout {
  public:
+  enum class OriginPosition {
+    kBlueAllianceWallRightSide,
+    kRedAllianceWallRightSide,
+  };
+
   AprilTagFieldLayout() = default;
 
   /**
@@ -52,21 +55,32 @@ class WPILIB_DLLEXPORT AprilTagFieldLayout {
    * Construct a new AprilTagFieldLayout from a vector of AprilTag objects.
    *
    * @param apriltags Vector of AprilTags.
-   * @param fieldLength Length of field the layout of representing.
+   * @param fieldLength Length of field the layout is representing.
    * @param fieldWidth Width of field the layout is representing.
    */
   AprilTagFieldLayout(std::vector<AprilTag> apriltags,
                       units::meter_t fieldLength, units::meter_t fieldWidth);
 
   /**
-   * Set the alliance that your team is on.
+   * Sets the origin based on a predefined enumeration of coordinate frame
+   * origins. The origins are calculated from the field dimensions.
    *
-   * This changes the GetTagPose(int) method to return the correct pose for your
-   * alliance.
+   * This transforms the Pose3ds returned by GetTagPose(int) to return the
+   * correct pose relative to a predefined coordinate frame.
    *
-   * @param alliance The alliance to mirror poses for.
+   * @param origin The predefined origin
    */
-  void SetAlliance(DriverStation::Alliance alliance);
+  void SetOrigin(OriginPosition origin);
+
+  /**
+   * Sets the origin for tag pose transformation.
+   *
+   * This tranforms the Pose3ds returned by GetTagPose(int) to return the
+   * correct pose relative to the provided origin.
+   *
+   * @param origin The new origin for tag transformations
+   */
+  void SetOrigin(const Pose3d& origin);
 
   /**
    * Gets an AprilTag pose by its ID.
@@ -86,25 +100,14 @@ class WPILIB_DLLEXPORT AprilTagFieldLayout {
 
   /*
    * Checks equality between this AprilTagFieldLayout and another object.
-   *
-   * @param other The other object.
-   * @return Whether the two objects are equal.
    */
-  bool operator==(const AprilTagFieldLayout& other) const;
-
-  /**
-   * Checks inequality between this AprilTagFieldLayout and another object.
-   *
-   * @param other The other object.
-   * @return Whether the two objects are not equal.
-   */
-  bool operator!=(const AprilTagFieldLayout& other) const;
+  bool operator==(const AprilTagFieldLayout&) const = default;
 
  private:
-  std::vector<AprilTag> m_apriltags;
+  std::unordered_map<int, AprilTag> m_apriltags;
   units::meter_t m_fieldLength;
   units::meter_t m_fieldWidth;
-  bool m_mirror = false;
+  Pose3d m_origin;
 
   friend WPILIB_DLLEXPORT void to_json(wpi::json& json,
                                        const AprilTagFieldLayout& layout);

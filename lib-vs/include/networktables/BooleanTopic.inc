@@ -73,42 +73,42 @@ inline void BooleanEntry::Unpublish() {
 
 inline BooleanSubscriber BooleanTopic::Subscribe(
     bool defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return BooleanSubscriber{
       ::nt::Subscribe(m_handle, NT_BOOLEAN, "boolean", options),
       defaultValue};
 }
 inline BooleanSubscriber BooleanTopic::SubscribeEx(
     std::string_view typeString, bool defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return BooleanSubscriber{
       ::nt::Subscribe(m_handle, NT_BOOLEAN, typeString, options),
       defaultValue};
 }
 
 inline BooleanPublisher BooleanTopic::Publish(
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return BooleanPublisher{
       ::nt::Publish(m_handle, NT_BOOLEAN, "boolean", options)};
 }
 
 inline BooleanPublisher BooleanTopic::PublishEx(
     std::string_view typeString,
-    const wpi::json& properties, std::span<const PubSubOption> options) {
+    const wpi::json& properties, const PubSubOptions& options) {
   return BooleanPublisher{
       ::nt::PublishEx(m_handle, NT_BOOLEAN, typeString, properties, options)};
 }
 
 inline BooleanEntry BooleanTopic::GetEntry(
     bool defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return BooleanEntry{
       ::nt::GetEntry(m_handle, NT_BOOLEAN, "boolean", options),
       defaultValue};
 }
 inline BooleanEntry BooleanTopic::GetEntryEx(
     std::string_view typeString, bool defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return BooleanEntry{
       ::nt::GetEntry(m_handle, NT_BOOLEAN, typeString, options),
       defaultValue};

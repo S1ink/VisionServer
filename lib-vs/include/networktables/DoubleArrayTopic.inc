@@ -89,42 +89,42 @@ inline void DoubleArrayEntry::Unpublish() {
 
 inline DoubleArraySubscriber DoubleArrayTopic::Subscribe(
     std::span<const double> defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return DoubleArraySubscriber{
       ::nt::Subscribe(m_handle, NT_DOUBLE_ARRAY, "double[]", options),
       defaultValue};
 }
 inline DoubleArraySubscriber DoubleArrayTopic::SubscribeEx(
     std::string_view typeString, std::span<const double> defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return DoubleArraySubscriber{
       ::nt::Subscribe(m_handle, NT_DOUBLE_ARRAY, typeString, options),
       defaultValue};
 }
 
 inline DoubleArrayPublisher DoubleArrayTopic::Publish(
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return DoubleArrayPublisher{
       ::nt::Publish(m_handle, NT_DOUBLE_ARRAY, "double[]", options)};
 }
 
 inline DoubleArrayPublisher DoubleArrayTopic::PublishEx(
     std::string_view typeString,
-    const wpi::json& properties, std::span<const PubSubOption> options) {
+    const wpi::json& properties, const PubSubOptions& options) {
   return DoubleArrayPublisher{
       ::nt::PublishEx(m_handle, NT_DOUBLE_ARRAY, typeString, properties, options)};
 }
 
 inline DoubleArrayEntry DoubleArrayTopic::GetEntry(
     std::span<const double> defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return DoubleArrayEntry{
       ::nt::GetEntry(m_handle, NT_DOUBLE_ARRAY, "double[]", options),
       defaultValue};
 }
 inline DoubleArrayEntry DoubleArrayTopic::GetEntryEx(
     std::string_view typeString, std::span<const double> defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return DoubleArrayEntry{
       ::nt::GetEntry(m_handle, NT_DOUBLE_ARRAY, typeString, options),
       defaultValue};

@@ -306,7 +306,7 @@ class RawTopic final : public Topic {
   [[nodiscard]]
   SubscriberType Subscribe(
       std::string_view typeString, ParamType defaultValue,
-      std::span<const PubSubOption> options = {});
+      const PubSubOptions& options = kDefaultPubSubOptions);
   /**
    * Create a new publisher to the topic.
    *
@@ -325,7 +325,7 @@ class RawTopic final : public Topic {
    * @return publisher
    */
   [[nodiscard]]
-  PublisherType Publish(std::string_view typeString, std::span<const PubSubOption> options = {});
+  PublisherType Publish(std::string_view typeString, const PubSubOptions& options = kDefaultPubSubOptions);
 
   /**
    * Create a new publisher to the topic, with type string and initial
@@ -347,7 +347,7 @@ class RawTopic final : public Topic {
    */
   [[nodiscard]]
   PublisherType PublishEx(std::string_view typeString,
-    const wpi::json& properties, std::span<const PubSubOption> options = {});
+    const wpi::json& properties, const PubSubOptions& options = kDefaultPubSubOptions);
 
   /**
    * Create a new entry for the topic.
@@ -373,7 +373,7 @@ class RawTopic final : public Topic {
    */
   [[nodiscard]]
   EntryType GetEntry(std::string_view typeString, ParamType defaultValue,
-                     std::span<const PubSubOption> options = {});
+                     const PubSubOptions& options = kDefaultPubSubOptions);
 };
 
 }  // namespace nt

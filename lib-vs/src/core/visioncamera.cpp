@@ -258,7 +258,7 @@ void VisionCamera::setExposure(int8_t val) {
 }
 
 void VisionCamera::setNetworkBase(const std::shared_ptr<nt::NetworkTable>& table) {
-    this->camera = table->GetSubTable("Cameras")->GetSubTable(this->GetName());
+    this->_nt.camera = table->GetSubTable("Cameras")->GetSubTable(this->GetName());
 }
 void VisionCamera::setNetworkAdjustable() {
     this->setBrightnessAdjustable();
@@ -272,35 +272,35 @@ void VisionCamera::deleteEntries() {
 }
 
 void VisionCamera::setBrightnessAdjustable() {
-    this->camera->PutNumber("Brightness", this->brightness);
-	this->camera->GetEntry("Brightness").AddListener(
-		[this](const nt::EntryNotification& event){
-			if(event.value->IsDouble()) {
-				this->setBrightness(event.value->GetDouble());
-			}
-		},
-		NT_NOTIFY_IMMEDIATE | NT_NOTIFY_NEW | NT_NOTIFY_UPDATE
-	);
+    // this->camera->PutNumber("Brightness", this->brightness);
+	// this->camera->GetEntry("Brightness").AddListener(
+	// 	[this](const nt::EntryNotification& event){
+	// 		if(event.value->IsDouble()) {
+	// 			this->setBrightness(event.value->GetDouble());
+	// 		}
+	// 	},
+	// 	NT_NOTIFY_IMMEDIATE | NT_NOTIFY_NEW | NT_NOTIFY_UPDATE
+	// );
 }
 void VisionCamera::setWhiteBalanceAdjustable() {
-    this->camera->PutNumber("WhiteBalance", this->whitebalance);
-	this->camera->GetEntry("WhiteBalance").AddListener(
-		[this](const nt::EntryNotification& event){
-			if(event.value->IsDouble()) {
-				this->setWhiteBalance(event.value->GetDouble());
-			}
-		},
-		NT_NOTIFY_IMMEDIATE | NT_NOTIFY_NEW | NT_NOTIFY_UPDATE
-	);
+    // this->camera->PutNumber("WhiteBalance", this->whitebalance);
+	// this->camera->GetEntry("WhiteBalance").AddListener(
+	// 	[this](const nt::EntryNotification& event){
+	// 		if(event.value->IsDouble()) {
+	// 			this->setWhiteBalance(event.value->GetDouble());
+	// 		}
+	// 	},
+	// 	NT_NOTIFY_IMMEDIATE | NT_NOTIFY_NEW | NT_NOTIFY_UPDATE
+	// );
 }
 void VisionCamera::setExposureAdjustable() {
-    this->camera->PutNumber("Exposure", this->exposure);
-	this->camera->GetEntry("Exposure").AddListener(
-		[this](const nt::EntryNotification& event){
-			if(event.value->IsDouble()) {
-				this->setExposure(event.value->GetDouble());
-			}
-		},
-		NT_NOTIFY_IMMEDIATE | NT_NOTIFY_NEW | NT_NOTIFY_UPDATE
-	);
+    // this->camera->PutNumber("Exposure", this->exposure);
+	// this->camera->GetEntry("Exposure").AddListener(
+	// 	[this](const nt::EntryNotification& event){
+	// 		if(event.value->IsDouble()) {
+	// 			this->setExposure(event.value->GetDouble());
+	// 		}
+	// 	},
+	// 	NT_NOTIFY_IMMEDIATE | NT_NOTIFY_NEW | NT_NOTIFY_UPDATE
+	// );
 }

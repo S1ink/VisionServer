@@ -89,42 +89,42 @@ inline void BooleanArrayEntry::Unpublish() {
 
 inline BooleanArraySubscriber BooleanArrayTopic::Subscribe(
     std::span<const int> defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return BooleanArraySubscriber{
       ::nt::Subscribe(m_handle, NT_BOOLEAN_ARRAY, "boolean[]", options),
       defaultValue};
 }
 inline BooleanArraySubscriber BooleanArrayTopic::SubscribeEx(
     std::string_view typeString, std::span<const int> defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return BooleanArraySubscriber{
       ::nt::Subscribe(m_handle, NT_BOOLEAN_ARRAY, typeString, options),
       defaultValue};
 }
 
 inline BooleanArrayPublisher BooleanArrayTopic::Publish(
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return BooleanArrayPublisher{
       ::nt::Publish(m_handle, NT_BOOLEAN_ARRAY, "boolean[]", options)};
 }
 
 inline BooleanArrayPublisher BooleanArrayTopic::PublishEx(
     std::string_view typeString,
-    const wpi::json& properties, std::span<const PubSubOption> options) {
+    const wpi::json& properties, const PubSubOptions& options) {
   return BooleanArrayPublisher{
       ::nt::PublishEx(m_handle, NT_BOOLEAN_ARRAY, typeString, properties, options)};
 }
 
 inline BooleanArrayEntry BooleanArrayTopic::GetEntry(
     std::span<const int> defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return BooleanArrayEntry{
       ::nt::GetEntry(m_handle, NT_BOOLEAN_ARRAY, "boolean[]", options),
       defaultValue};
 }
 inline BooleanArrayEntry BooleanArrayTopic::GetEntryEx(
     std::string_view typeString, std::span<const int> defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return BooleanArrayEntry{
       ::nt::GetEntry(m_handle, NT_BOOLEAN_ARRAY, typeString, options),
       defaultValue};

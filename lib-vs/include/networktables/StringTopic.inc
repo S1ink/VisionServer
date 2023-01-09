@@ -89,42 +89,42 @@ inline void StringEntry::Unpublish() {
 
 inline StringSubscriber StringTopic::Subscribe(
     std::string_view defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return StringSubscriber{
       ::nt::Subscribe(m_handle, NT_STRING, "string", options),
       defaultValue};
 }
 inline StringSubscriber StringTopic::SubscribeEx(
     std::string_view typeString, std::string_view defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return StringSubscriber{
       ::nt::Subscribe(m_handle, NT_STRING, typeString, options),
       defaultValue};
 }
 
 inline StringPublisher StringTopic::Publish(
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return StringPublisher{
       ::nt::Publish(m_handle, NT_STRING, "string", options)};
 }
 
 inline StringPublisher StringTopic::PublishEx(
     std::string_view typeString,
-    const wpi::json& properties, std::span<const PubSubOption> options) {
+    const wpi::json& properties, const PubSubOptions& options) {
   return StringPublisher{
       ::nt::PublishEx(m_handle, NT_STRING, typeString, properties, options)};
 }
 
 inline StringEntry StringTopic::GetEntry(
     std::string_view defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return StringEntry{
       ::nt::GetEntry(m_handle, NT_STRING, "string", options),
       defaultValue};
 }
 inline StringEntry StringTopic::GetEntryEx(
     std::string_view typeString, std::string_view defaultValue,
-    std::span<const PubSubOption> options) {
+    const PubSubOptions& options) {
   return StringEntry{
       ::nt::GetEntry(m_handle, NT_STRING, typeString, options),
       defaultValue};
