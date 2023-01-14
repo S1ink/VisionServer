@@ -144,6 +144,8 @@ obj/tfmodel.cpp.pic.o: src\core/tfmodel.cpp src\core/tfmodel.h \
  include/networktables/NetworkTableInstance.h \
  include/networktables/NetworkTableInstance.inc \
  include/networktables/Topic.h include/networktables/Topic.inc \
+ include/networktables/DoubleTopic.h \
+ include/networktables/DoubleTopic.inc \
  include/cameraserver/CameraServer.h include/cscore.h include/cscore_c.h \
  include/cscore_cpp.h include/cscore_oo.h include/cscore_oo.inc \
  include/cscore_cv.h include/cameraserver/CameraServer.inc \
@@ -318,6 +320,8 @@ include/networktables/NetworkTableInstance.h:
 include/networktables/NetworkTableInstance.inc:
 include/networktables/Topic.h:
 include/networktables/Topic.inc:
+include/networktables/DoubleTopic.h:
+include/networktables/DoubleTopic.inc:
 include/cameraserver/CameraServer.h:
 include/cscore.h:
 include/cscore_c.h:

@@ -238,16 +238,9 @@ private:
 	int8_t brightness{50}, exposure{-1};
 	int16_t whitebalance{-1};
 
-	struct NT {
-		inline NT(const VisionCamera* that) :
-			camera(nt::NetworkTableInstance::GetDefault().GetTable("Cameras")->GetSubTable(that->GetName())),
-			brightness(this->camera->GetDoubleTopic("Brightness").GetEntry(that->brightness)),
-			exposure(this->camera->GetDoubleTopic("Exposure").GetEntry(that->exposure)),
-			whitebalance(this->camera->GetDoubleTopic("WhiteBalance").GetEntry(that->whitebalance)) {}
-
-		std::shared_ptr<nt::NetworkTable> camera;
-		nt::DoubleEntry brightness, exposure, whitebalance;
-	} _nt{this};
+	std::shared_ptr<nt::NetworkTable> nt_camera{
+		nt::NetworkTableInstance::GetDefault().GetTable("Cameras")->GetSubTable(this->GetName())};
+	//nt::DoubleEntry nt_brightness, nt_exposure, nt_whitebalance;
 
 
 };

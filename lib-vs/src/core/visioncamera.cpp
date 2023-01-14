@@ -258,7 +258,7 @@ void VisionCamera::setExposure(int8_t val) {
 }
 
 void VisionCamera::setNetworkBase(const std::shared_ptr<nt::NetworkTable>& table) {
-    this->_nt.camera = table->GetSubTable("Cameras")->GetSubTable(this->GetName());
+    this->nt_camera = table->GetSubTable("Cameras")->GetSubTable(this->GetName());
 }
 void VisionCamera::setNetworkAdjustable() {
     this->setBrightnessAdjustable();
@@ -272,35 +272,44 @@ void VisionCamera::deleteEntries() {
 }
 
 void VisionCamera::setBrightnessAdjustable() {
-    // this->camera->PutNumber("Brightness", this->brightness);
-	// this->camera->GetEntry("Brightness").AddListener(
-	// 	[this](const nt::EntryNotification& event){
-	// 		if(event.value->IsDouble()) {
-	// 			this->setBrightness(event.value->GetDouble());
-	// 		}
-	// 	},
-	// 	NT_NOTIFY_IMMEDIATE | NT_NOTIFY_NEW | NT_NOTIFY_UPDATE
-	// );
+    nt::NetworkTableInstance::GetDefault().AddListener(
+        this->nt_camera->GetEntry("Brightness"), nt::EventFlags::kImmediate | nt::EventFlags::kValueAll,
+        [this](const nt::Event& e) {
+            this->setBrightness(e.GetValueEventData()->value.GetDouble());
+        }
+    );
+    // nt::NetworkTableInstance::GetDefault().AddListener(
+    //     this->nt_brightness, nt::EventFlags::kImmediate | nt::EventFlags::kValueAll,
+    //     [this](const nt::Event& e) {
+    //         this->setBrightness(e.GetValueEventData()->value.GetDouble());
+    //     }
+    // );
 }
 void VisionCamera::setWhiteBalanceAdjustable() {
-    // this->camera->PutNumber("WhiteBalance", this->whitebalance);
-	// this->camera->GetEntry("WhiteBalance").AddListener(
-	// 	[this](const nt::EntryNotification& event){
-	// 		if(event.value->IsDouble()) {
-	// 			this->setWhiteBalance(event.value->GetDouble());
-	// 		}
-	// 	},
-	// 	NT_NOTIFY_IMMEDIATE | NT_NOTIFY_NEW | NT_NOTIFY_UPDATE
-	// );
+    nt::NetworkTableInstance::GetDefault().AddListener(
+        this->nt_camera->GetEntry("WhiteBalance"), nt::EventFlags::kImmediate | nt::EventFlags::kValueAll,
+        [this](const nt::Event& e) {
+            this->setWhiteBalance(e.GetValueEventData()->value.GetDouble());
+        }
+    );
+    // nt::NetworkTableInstance::GetDefault().AddListener(
+    //     this->nt_whitebalance, nt::EventFlags::kImmediate | nt::EventFlags::kValueAll,
+    //     [this](const nt::Event& e) {
+    //         this->setWhiteBalance(e.GetValueEventData()->value.GetDouble());
+    //     }
+    // );
 }
 void VisionCamera::setExposureAdjustable() {
-    // this->camera->PutNumber("Exposure", this->exposure);
-	// this->camera->GetEntry("Exposure").AddListener(
-	// 	[this](const nt::EntryNotification& event){
-	// 		if(event.value->IsDouble()) {
-	// 			this->setExposure(event.value->GetDouble());
-	// 		}
-	// 	},
-	// 	NT_NOTIFY_IMMEDIATE | NT_NOTIFY_NEW | NT_NOTIFY_UPDATE
-	// );
+    nt::NetworkTableInstance::GetDefault().AddListener(
+        this->nt_camera->GetEntry("Exposure"), nt::EventFlags::kImmediate | nt::EventFlags::kValueAll,
+        [this](const nt::Event& e) {
+            this->setExposure(e.GetValueEventData()->value.GetDouble());
+        }
+    );
+    // nt::NetworkTableInstance::GetDefault().AddListener(
+    //     this->nt_exposure, nt::EventFlags::kImmediate | nt::EventFlags::kValueAll,
+    //     [this](const nt::Event& e) {
+    //         this->setExposure(e.GetValueEventData()->value.GetDouble());
+    //     }
+    // );
 }
