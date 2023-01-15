@@ -102,7 +102,7 @@ LDLIBS := \
 	-lopencv_ml -lopencv_objdetect -lopencv_photo -lopencv_stitching \
 	-lopencv_video -lopencv_calib3d -lopencv_features2d -lopencv_dnn \
 	-lopencv_flann -lopencv_videoio -lopencv_imgcodecs -lopencv_imgproc \
-	-lopencv_core -lwpiutil -latomic
+	-lopencv_core -lwpiutil -lopencv_aruco -latomic
 
 ifneq ($(filter $(TFLITE),false no n exclude),)
 	CDEBUG += -DEXCLUDE_TFLITE
