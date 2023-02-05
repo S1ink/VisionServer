@@ -16,13 +16,13 @@ jobs:
       - name: Get latest TF release tag
         id: tf-latest-tag
         #run: echo "::set-output name=tag::$(curl -s https://api.github.com/repos/tensorflow/tensorflow/releases/latest | jq '.tag_name' | sed 's/\"//g')"
-        run: echo "::set-output name=tag::$(echo v2.9.2)" #until this is fixed: https://github.com/tensorflow/tensorflow/issues/57364 --> fix is waiting for review
+        run: echo "tag=$(echo v2.9.2)" >> $GITHUB_OUTPUT #until this is fixed: https://github.com/tensorflow/tensorflow/issues/57364 --> fix is waiting for review
       - name: Get latest TF commit
         id: tf-latest-commit
-        run: echo "::set-output name=commit::$(git ls-remote https://github.com/tensorflow/tensorflow refs/tags/${{ steps.tf-latest-tag.outputs.tag }} | awk '{print $1}')"
+        run: echo "commit=$(git ls-remote https://github.com/tensorflow/tensorflow refs/tags/${{ steps.tf-latest-tag.outputs.tag }} | awk '{print $1}')" >> $GITHUB_OUTPUT
       - name: Get latest TF hash code
         id: tf-latest-hash
-        run: echo "::set-output name=sha256::$(curl -L "https://github.com/tensorflow/tensorflow/archive/${{ steps.tf-latest-commit.outputs.commit }}.tar.gz" | sha256sum | awk '{print $1}')"
+        run: echo "sha256=$(curl -L "https://github.com/tensorflow/tensorflow/archive/${{ steps.tf-latest-commit.outputs.commit }}.tar.gz" | sha256sum | awk '{print $1}')" >> $GITHUB_OUTPUT
 
       - name: Confirm Info
         run: |
@@ -61,7 +61,7 @@ jobs:
 
       - name: Build Tflite
         run: |
-          bazel build --config=elinux_armhf -c opt //tensorflow/lite:libtensorflowlite.so
+          bazel build --config=elinux_aarch64 -c opt //tensorflow/lite:libtensorflowlite.so
 
       - name: Copy and Zip Artifacts
         run: |
@@ -104,9 +104,9 @@ jobs:
 
       - name: Build and Prep Artifacts
         run: |
-         DOCKER_CPUS="armv7a" DOCKER_IMAGE="debian:stretch" DOCKER_TARGETS=libedgetpu make docker-build
-         cp out/direct/armv7a/libedgetpu.so.1.0 artifacts/direct/libedgetpu.so
-         cp out/throttled/armv7a/libedgetpu.so.1.0 artifacts/throttled/libedgetpu.so
+         DOCKER_CPUS="aarch64" DOCKER_IMAGE="debian:stretch" DOCKER_TARGETS=libedgetpu make docker-build
+         cp out/direct/aarch64/libedgetpu.so.1.0 artifacts/direct/libedgetpu.so
+         cp out/throttled/aarch64/libedgetpu.so.1.0 artifacts/throttled/libedgetpu.so
          cp tflite/public/edgetpu.h artifacts
          sudo apt-get install zip
          zip -r artifacts.zip artifacts
@@ -137,12 +137,12 @@ jobs:
           ref: ${{ steps.pigpio-latest-tag.outputs.tag }}
 
       - name: Get Cross Compiler
-        run: sudo apt-get update && sudo apt-get install gcc-arm-linux-gnueabihf
+        run: sudo apt-get update && sudo apt-get install gcc-aarch64-linux-gnu
 
       - name: Build and Copy
         run: |
-         arm-linux-gnueabihf-gcc --version
-         make lib CROSS_PREFIX=arm-linux-gnueabihf-
+         aarch64-linux-gnu-gcc --version
+         make lib CROSS_PREFIX=aarch64-linux-gnu-
          mkdir artifacts
          cp libpigpio.so artifacts
          cp pigpio.h artifacts
@@ -165,18 +165,19 @@ jobs:
 
       - name: Get latest WPILibPi release tag
         id: wpideps-latest
-        run: echo "::set-output name=tag::$(curl -s https://api.github.com/repos/S1ink/WPILibPi-Mod-Build/releases/latest | jq '.tag_name' | sed 's/\"//g')"
+        run: echo "tag=$(curl -s https://api.github.com/repos/wpilibsuite/WPILibPi/releases/latest | jq '.tag_name' | sed 's/\"//g')" >> $GITHUB_OUTPUT
+        # run: echo "::set-output name=tag::$(curl -s https://api.github.com/repos/S1ink/WPILibPi-Mod-Build/releases/latest | jq '.tag_name' | sed 's/\"//g')"
 
       - uses: actions/download-artifact@main
       - run: |  #${{ steps.wpideps-latest.outputs.tag }}/cpp-deps.zip
-          wget https://github.com/S1ink/WPILibPi-Mod-Build/releases/download/Latest-Deps/cpp-deps.zip
+          wget https://github.com/wpilibsuite/WPILibPi/releases/download/${{ steps.wpideps-latest.outputs.tag }}/cpp-multiCameraServer.zip
           sudo apt-get update && sudo apt-get install {unzip,zip}
           mkdir {output,deps,tflite,edgetpu,pigpio}
-          unzip cpp-deps.zip -d deps
+          unzip cpp-multiCameraServer.zip -d deps
           unzip build-pigpio/artifacts.zip -d pigpio
           unzip build-edgetpu/artifacts.zip -d edgetpu
           unzip build-tflite/artifacts.zip -d tflite
-          cp -R deps/cpp-deps/{include,lib} output
+          cp -R deps/cpp-multiCameraServer/{include,lib} output
           cp pigpio/artifacts/pigpio.h output/include
           cp pigpio/artifacts/libpigpio.so output/lib
           cp edgetpu/artifacts/edgetpu.h output/include
@@ -195,7 +196,7 @@ jobs:
           
       - name: Get included OpenCV version
         id: opencv-ver
-        run: echo "::set-output name=version::$(echo $(grep -h -r '#define CV_VERSION_MAJOR .*' output/include/ | tr -s ' ' | cut -d ' ' -f3).$(grep -h -r '#define CV_VERSION_MINOR .*' output/include/ | tr -s ' ' | cut -d ' ' -f3).$(grep -h -r '#define CV_VERSION_REVISION .*' output/include/ | tr -s ' ' | cut -d ' ' -f3))"
+        run: echo "version=$(echo $(grep -h -r '#define CV_VERSION_MAJOR .*' output/include/ | tr -s ' ' | cut -d ' ' -f3).$(grep -h -r '#define CV_VERSION_MINOR .*' output/include/ | tr -s ' ' | cut -d ' ' -f3).$(grep -h -r '#define CV_VERSION_REVISION .*' output/include/ | tr -s ' ' | cut -d ' ' -f3))" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@main
         with:
