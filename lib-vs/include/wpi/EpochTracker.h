@@ -1,41 +1,27 @@
 //===- llvm/ADT/EpochTracker.h - ADT epoch tracking --------------*- C++ -*-==//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is distributed under the University of Illinois Open Source
-// License. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-//
-// This file defines the DebugEpochBase and DebugEpochBase::HandleBase classes.
-// These can be used to write iterators that are fail-fast when LLVM is built
-// with asserts enabled.
-//
+///
+/// \file
+/// This file defines the DebugEpochBase and DebugEpochBase::HandleBase classes.
+/// These can be used to write iterators that are fail-fast when LLVM is built
+/// with asserts enabled.
+///
 //===----------------------------------------------------------------------===//
 
-#ifndef WPIUTIL_WPI_EPOCH_TRACKER_H
-#define WPIUTIL_WPI_EPOCH_TRACKER_H
+#ifndef WPIUTIL_WPI_EPOCHTRACKER_H
+#define WPIUTIL_WPI_EPOCHTRACKER_H
+
 
 #include <cstdint>
 
 namespace wpi {
 
-#ifdef NDEBUG //ifndef LLVM_ENABLE_ABI_BREAKING_CHECKS
-
-class DebugEpochBase {
-public:
-  void incrementEpoch() {}
-
-  class HandleBase {
-  public:
-    HandleBase() = default;
-    explicit HandleBase(const DebugEpochBase *) {}
-    bool isHandleInSync() const { return true; }
-    const void *getEpochAddress() const { return nullptr; }
-  };
-};
-
-#else
+#ifndef NDEBUG //ifndef LLVM_ENABLE_ABI_BREAKING_CHECKS
 
 /// A base class for data structure classes wishing to make iterators
 /// ("handles") pointing into themselves fail-fast.  When building without
@@ -87,6 +73,21 @@ public:
     /// this handle points into.  Can be used to check if two iterators point
     /// into the same data structure.
     const void *getEpochAddress() const { return EpochAddress; }
+  };
+};
+
+#else
+
+class DebugEpochBase {
+public:
+  void incrementEpoch() {}
+
+  class HandleBase {
+  public:
+    HandleBase() = default;
+    explicit HandleBase(const DebugEpochBase *) {}
+    bool isHandleInSync() const { return true; }
+    const void *getEpochAddress() const { return nullptr; }
   };
 };
 

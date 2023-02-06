@@ -23,6 +23,7 @@ public:
 	) : vs2::VPipeline<This_t>("AprilTag Pose Estimator "), field{f}, markers{f->dictionary}, params{p}
 	{
 		this->getTable()->PutNumber("Scaling", this->scale);
+		this->getTable()->PutNumber("Decimate", this->params->aprilTagQuadDecimate);
 	}
 
 	virtual void process(cv::Mat& io_frame) override;
@@ -51,7 +52,7 @@ protected:
 	std::array<float, 3> tvec, rvec;
 	
 	cv::Mat buffer;
-	size_t scale{2};
+	size_t scale{1};
 
 
 };
@@ -71,7 +72,8 @@ void AprilPose_<derived>::process(cv::Mat& io_frame) {
 	hrc::time_point beg, end;
 	beg = hrc::now();
 #endif
-	this->scale = this->getTable()->GetNumber("Scaling", 2.0);
+	this->scale = this->getTable()->GetNumber("Scaling", 1.0);
+	this->params->aprilTagQuadDecimate = this->getTable()->GetNumber("Decimate", this->params->aprilTagQuadDecimate);
 	this->corners.clear();
 	this->ids.clear();
 	cv::Size2i fsz = io_frame.size() / this->scale;
@@ -134,7 +136,7 @@ void AprilPose_<derived>::process(cv::Mat& io_frame) {
 		}
 		beg = HRC::now();
 #endif
-		cv::drawFrameAxes(io_frame, this->getSrcMatrix(), this->getSrcDistort(), this->rvec, this->tvec, 100.f);
+		//cv::drawFrameAxes(io_frame, this->getSrcMatrix(), this->getSrcDistort(), this->rvec, this->tvec, 100.f);
 	}
 #ifdef APRILPOSE_DEBUG
 	else {

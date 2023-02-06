@@ -14,9 +14,9 @@
                 "__linux__",
                 "__unix__"
             ],
-            "compilerPath": "D:\\Programs\\Raspbian10-Windows64-Toolchain-8.3.0\\raspbian10\\bin\\arm-raspbian10-linux-gnueabihf-g++.exe",
+            "compilerPath": "D:\\Programs\\armhf-bullseye-2023-x86_64-w64-mingw32-Toolchain-10.2.0\\bullseye\\bin\\armv7-bullseye-linux-gnueabihf-g++.exe",
             "cStandard": "c17",
-            "cppStandard": "c++17",
+            "cppStandard": "c++20",
             "intelliSenseMode": "linux-gcc-arm"
         },
         {

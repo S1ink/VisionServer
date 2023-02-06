@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get ARM Cross Compiler
-        run: sudo apt-get update && sudo apt-get install g++-arm-linux-gnueabihf
+        run: sudo apt-get update && sudo apt-get install g++-aarch64-linux-gnu
       - name: Checkout Self
         uses: actions/checkout@main
         with:
@@ -24,8 +24,8 @@ jobs:
         run: |
           cd lib-vs
           make clean
-          make shared CROSS_PREFIX=arm-linux-gnueabihf-
-          make static CROSS_PREFIX=arm-linux-gnueabihf-
+          make shared CROSS_PREFIX=aarch64-linux-gnu-
+          make static CROSS_PREFIX=aarch64-linux-gnu-
           cd out
           ls -l -R
       - name: Zip Artifacts

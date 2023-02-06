@@ -4,6 +4,7 @@
 
 #include <networktables/NetworkTableInstance.h>
 #include <networktables/NetworkTable.h>
+#include <networktables/DoubleTopic.h>
 #include <cameraserver/CameraServer.h>
 #include <wpi/json.h>
 
@@ -234,11 +235,12 @@ private:
 	cv::Mat_<float> camera_matrix{default_matrix}, distortion{default_distort};
 	cs::VideoMode properties;
 
-	/**The camera's networktable - default value is '(root)/Cameras/NAME/' */
-	std::shared_ptr<nt::NetworkTable> camera{nt::NetworkTableInstance::GetDefault().GetTable("Cameras")->GetSubTable(this->GetName())};
-
 	int8_t brightness{50}, exposure{-1};
 	int16_t whitebalance{-1};
+
+	std::shared_ptr<nt::NetworkTable> nt_camera{
+		nt::NetworkTableInstance::GetDefault().GetTable("Cameras")->GetSubTable(this->GetName())};
+	//nt::DoubleEntry nt_brightness, nt_exposure, nt_whitebalance;
 
 
 };

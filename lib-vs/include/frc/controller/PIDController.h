@@ -102,6 +102,20 @@ class WPILIB_DLLEXPORT PIDController
   units::second_t GetPeriod() const;
 
   /**
+   * Gets the position tolerance of this controller.
+   *
+   * @return The position tolerance of the controller.
+   */
+  double GetPositionTolerance() const;
+
+  /**
+   * Gets the velocity tolerance of this controller.
+   *
+   * @return The velocity tolerance of the controller.
+   */
+  double GetVelocityTolerance() const;
+
+  /**
    * Sets the setpoint for the PIDController.
    *
    * @param setpoint The desired setpoint.
@@ -238,6 +252,9 @@ class WPILIB_DLLEXPORT PIDController
 
   double m_setpoint = 0;
   double m_measurement = 0;
+
+  bool m_haveSetpoint = false;
+  bool m_haveMeasurement = false;
 };
 
 }  // namespace frc2

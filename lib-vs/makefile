@@ -23,10 +23,10 @@ OPT ?= release
 TFLITE ?= true
 ADEFINES ?=
 
-CROSS_PREFIX := arm-raspbian10-linux-gnueabihf-
+CROSS_PREFIX := aarch64-bullseye-linux-gnu-
 CXX := g++
 AR := ar
-STD := c++17
+STD := c++20
 
 ifeq ($(OS),Windows_NT)
 	UNAME := Windows
@@ -75,7 +75,8 @@ NAME := vs3407
 LIB_STATIC := $(OUT_DIR)/lib$(NAME).a
 LIB_SHARED := $(OUT_DIR)/lib$(NAME).so
 
-SRCS := $(call rwildcard,$(SRC_DIR)/,*.cpp *.c *.S *.s)
+# SRCS := $(call rwildcard,$(SRC_DIR)/,*.cpp *.c *.S *.s)
+SRCS := $(call rwildcard,$(SRC_DIR)/,*.cpp *.c)
 STATIC_OBJS := $(SRCS:$(SRC_DIR)/%=$(OBJ_DIR)/%.o)
 SHARED_OBJS := $(SRCS:$(SRC_DIR)/%=$(OBJ_DIR)/%.pic.o)
 
@@ -94,7 +95,7 @@ LRELEASE :=
 
 CPPFLAGS := -pthread -Iinclude -Iadditions -Iinclude/opencv4 -MMD -MP
 CFLAGS := -Wall -fpermissive
-ASMFLAGS := -mcpu=cortex-a72 -mfpu=neon-fp-armv8
+ASMFLAGS := -mcpu=cortex-a72 #-mfpu=neon-fp-armv8
 LDFLAGS := -pthread -Wall -Llib -Wl,--unresolved-symbols=ignore-in-shared-libs
 LDLIBS := \
 	-lm -lpigpio -lwpilibc -lwpiHal \

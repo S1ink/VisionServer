@@ -1,27 +1,29 @@
 //===- llvm/ADT/PointerIntPair.h - Pair for pointer and int -----*- C++ -*-===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is distributed under the University of Illinois Open Source
-// License. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-//
-// This file defines the PointerIntPair class.
-//
+///
+/// \file
+/// This file defines the PointerIntPair class.
+///
 //===----------------------------------------------------------------------===//
 
 #ifndef WPIUTIL_WPI_POINTERINTPAIR_H
 #define WPIUTIL_WPI_POINTERINTPAIR_H
 
+#include "wpi/Compiler.h"
 #include "wpi/PointerLikeTypeTraits.h"
+#include "wpi/type_traits.h"
 #include <cassert>
 #include <cstdint>
 #include <limits>
 
 namespace wpi {
 
-template <typename T> struct DenseMapInfo;
+template <typename T, typename Enable> struct DenseMapInfo;
 template <typename PointerT, unsigned IntBits, typename PtrTraits>
 struct PointerIntPairInfo;
 
@@ -59,19 +61,19 @@ public:
 
   IntType getInt() const { return (IntType)Info::getInt(Value); }
 
-  void setPointer(PointerTy PtrVal) {
+  void setPointer(PointerTy PtrVal) LLVM_LVALUE_FUNCTION {
     Value = Info::updatePointer(Value, PtrVal);
   }
 
-  void setInt(IntType IntVal) {
+  void setInt(IntType IntVal) LLVM_LVALUE_FUNCTION {
     Value = Info::updateInt(Value, static_cast<intptr_t>(IntVal));
   }
 
-  void initWithPointer(PointerTy PtrVal) {
+  void initWithPointer(PointerTy PtrVal) LLVM_LVALUE_FUNCTION {
     Value = Info::updatePointer(0, PtrVal);
   }
 
-  void setPointerAndInt(PointerTy PtrVal, IntType IntVal) {
+  void setPointerAndInt(PointerTy PtrVal, IntType IntVal) LLVM_LVALUE_FUNCTION {
     Value = Info::updateInt(Info::updatePointer(0, PtrVal),
                             static_cast<intptr_t>(IntVal));
   }
@@ -89,7 +91,7 @@ public:
 
   void *getOpaqueValue() const { return reinterpret_cast<void *>(Value); }
 
-  void setFromOpaqueValue(void *Val) {
+  void setFromOpaqueValue(void *Val) LLVM_LVALUE_FUNCTION {
     Value = reinterpret_cast<intptr_t>(Val);
   }
 
@@ -126,6 +128,7 @@ public:
   }
 };
 
+
 template <typename PointerT, unsigned IntBits, typename PtrTraits>
 struct PointerIntPairInfo {
   static_assert(PtrTraits::NumLowBitsAvailable <
@@ -133,7 +136,7 @@ struct PointerIntPairInfo {
                 "cannot use a pointer type that has all bits free");
   static_assert(IntBits <= PtrTraits::NumLowBitsAvailable,
                 "PointerIntPair with integer size too large for pointer");
-  enum : uintptr_t {
+  enum MaskAndShiftConstants : uintptr_t {
     /// PointerBitMask - The bits that come from the pointer.
     PointerBitMask =
         ~(uintptr_t)(((intptr_t)1 << PtrTraits::NumLowBitsAvailable) - 1),
@@ -176,15 +179,9 @@ struct PointerIntPairInfo {
   }
 };
 
-template <typename T> struct isPodLike;
-template <typename PointerTy, unsigned IntBits, typename IntType>
-struct isPodLike<PointerIntPair<PointerTy, IntBits, IntType>> {
-  static const bool value = true;
-};
-
 // Provide specialization of DenseMapInfo for PointerIntPair.
 template <typename PointerTy, unsigned IntBits, typename IntType>
-struct DenseMapInfo<PointerIntPair<PointerTy, IntBits, IntType>> {
+struct DenseMapInfo<PointerIntPair<PointerTy, IntBits, IntType>, void> {
   using Ty = PointerIntPair<PointerTy, IntBits, IntType>;
 
   static Ty getEmptyKey() {
@@ -227,7 +224,8 @@ struct PointerLikeTypeTraits<
     return PointerIntPair<PointerTy, IntBits, IntType>::getFromOpaqueValue(P);
   }
 
-  enum { NumLowBitsAvailable = PtrTraits::NumLowBitsAvailable - IntBits };
+  static constexpr int NumLowBitsAvailable =
+      PtrTraits::NumLowBitsAvailable - IntBits;
 };
 
 } // end namespace wpi

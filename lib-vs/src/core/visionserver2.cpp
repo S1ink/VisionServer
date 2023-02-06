@@ -12,9 +12,9 @@ VisionServer::VisionServer() {
 	ntable()->PutString("Status", "Offline");
 }
 VisionServer::~VisionServer() {
-	ntable()->Delete("Cameras Available");
-	ntable()->Delete("Pipelines Available");
-	ntable()->Delete("Status");
+	// ntable()->Delete("Cameras Available");
+	// ntable()->Delete("Pipelines Available");
+	// ntable()->Delete("Status");
 }
 
 
@@ -344,10 +344,10 @@ void VisionServer::pipelineRunner(BasePipe* pipe, float fps_cap) {
 
 	}
 	pipe->close();
-	pipe->table->Delete("Enable Processing");
-	pipe->table->Delete("Source Index");
-	pipe->table->Delete("Statistics Verbosity");
-	pipe->table->Delete("Max FPS");
+	// pipe->table->Delete("Enable Processing");
+	// pipe->table->Delete("Source Index");
+	// pipe->table->Delete("Statistics Verbosity");
+	// pipe->table->Delete("Max FPS");
 
 }
 
@@ -539,11 +539,11 @@ bool VisionServer::runSingle(float fps_cap) {
 		}
 		_inst.pipelines[p_idx]->close();
 		VisionServer::ntable()->GetEntry("Status").SetString("Offline");
-		VisionServer::ntable()->Delete("Enable Processing");
-		VisionServer::ntable()->Delete("Camera Index");
-		VisionServer::ntable()->Delete("Pipeline Index");
-		VisionServer::ntable()->Delete("Statistics Verbosity");
-		VisionServer::ntable()->Delete("Max FPS");
+		// VisionServer::ntable()->Delete("Enable Processing");
+		// VisionServer::ntable()->Delete("Camera Index");
+		// VisionServer::ntable()->Delete("Pipeline Index");
+		// VisionServer::ntable()->Delete("Statistics Verbosity");
+		// VisionServer::ntable()->Delete("Max FPS");
 
 		return true;
 	}

@@ -25,10 +25,10 @@
  * @param table A networktable in which to put the camera index entries
  * @return A cs::CvSink which is is the source for the stream
 */
-cs::CvSink switchedCameraVision(
-	const std::vector<VisionCamera>& cameras, 
-	std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("Vision")
-);
+// cs::CvSink switchedCameraVision(
+// 	const std::vector<VisionCamera>& cameras, 
+// 	std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("Vision")
+// );
 
 /**
  * Extracts the height and width of a cs::VideoMode object and converts to cv::Size
@@ -50,15 +50,15 @@ cs::VideoMode getJsonVideoMode(const wpi::json& config);
  * @param name The name of the entry
  * @param table The root networktable
 */
-template<typename num_t>
-void addNetTableVar(num_t& var, const std::string& name, std::shared_ptr<nt::NetworkTable> table);
+// template<typename num_t>
+// void addNetTableVar(num_t& var, const std::string& name, std::shared_ptr<nt::NetworkTable> table);
 /**
  * Adds a networktable entry to the provided networktable with a listener that will update the variable to match the networktable entry
  * @param var A reference to the boolean variable
  * @param name The name of the entry
  * @param table The root networktable
 */
-void addNetTableVar(bool& var, const std::string& name, std::shared_ptr<nt::NetworkTable> table);
+//void addNetTableVar(bool& var, const std::string& name, std::shared_ptr<nt::NetworkTable> table);
 
 /**
  * Divides a both parts of a cv::Size object by the specified scale
@@ -220,22 +220,22 @@ const auto extend_vector = operator+=<num_t>;
 
 /** vision.inc **/
 
-template<typename num_t>
-void addNetTableVar(num_t& var, const std::string& name, std::shared_ptr<nt::NetworkTable> table) {
-	static_assert(std::is_arithmetic<num_t>::value, "Template parameter (num_t) must be arithemetic type");
-	if(!table->ContainsKey(name)) {
-		table->PutNumber(name, var);
-	} else {}
-	table->GetEntry(name).AddListener(
-		[&var](const nt::EntryNotification& event){
-			if(event.value->IsDouble()) {
-				var = event.value->GetDouble();
-				//std::cout << "Networktable var(num) updated to : " << var << newline;
-			}
-		}, 
-		NT_NOTIFY_IMMEDIATE | NT_NOTIFY_NEW | NT_NOTIFY_UPDATE
-	);
-}
+// template<typename num_t>
+// void addNetTableVar(num_t& var, const std::string& name, std::shared_ptr<nt::NetworkTable> table) {
+// 	static_assert(std::is_arithmetic<num_t>::value, "Template parameter (num_t) must be arithemetic type");
+// 	if(!table->ContainsKey(name)) {
+// 		table->PutNumber(name, var);
+// 	} else {}
+// 	table->GetEntry(name).AddListener(
+// 		[&var](const nt::EntryNotification& event){
+// 			if(event.value->IsDouble()) {
+// 				var = event.value->GetDouble();
+// 				//std::cout << "Networktable var(num) updated to : " << var << newline;
+// 			}
+// 		}, 
+// 		NT_NOTIFY_IMMEDIATE | NT_NOTIFY_NEW | NT_NOTIFY_UPDATE
+// 	);
+// }
 
 template<typename num_t>
 void rescale(std::vector<cv::Point_<num_t> >& points, size_t scale) {
