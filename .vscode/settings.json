@@ -90,7 +90,15 @@
         "unordered_set": "cpp",
         "future": "cpp",
         "variant": "cpp",
-        "span": "cpp"
+        "span": "cpp",
+        "any": "cpp",
+        "bitset": "cpp",
+        "cfenv": "cpp",
+        "numbers": "cpp",
+        "ranges": "cpp",
+        "scoped_allocator": "cpp",
+        "shared_mutex": "cpp",
+        "typeindex": "cpp"
     },
     "cmake.configureOnOpen": false
 }
