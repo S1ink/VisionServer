@@ -56,9 +56,9 @@ bool initNT(const char* file) {
             } else {
                 wpi::outs() << "Setting up NetworkTables for SIMULATION mode - host: " << str << newline;
 #if NT_CLIENT_VERSION == 4
-                    nt::NetworkTableInstance::GetDefault().StartClient4("VisionServer");
+                nt::NetworkTableInstance::GetDefault().StartClient4("VisionServer");
 #else
-                    nt::NetworkTableInstance::GetDefault().StartClient3("VisionServer");
+            	nt::NetworkTableInstance::GetDefault().StartClient3("VisionServer");
 #endif
                 nt::NetworkTableInstance::GetDefault().SetServer(str.c_str());
             }
