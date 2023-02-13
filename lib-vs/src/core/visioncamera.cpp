@@ -68,11 +68,25 @@ VisionCamera::VisionCamera(const wpi::json& source_config) :
 // VisionCamera::VisionCamera(const VisionCamera& other) : 
 //     VideoCamera(other.GetHandle())/*, type(other.type)*/, config(other.config), calibration(other.calibration), 
 //     camera(other.camera), brightness(other.brightness), exposure(other.exposure), whitebalance(other.whitebalance) {}
-// VisionCamera::VisionCamera(VisionCamera&& other) : 
-//     VideoCamera(other.GetHandle())/*, type(other.type)*/, config(std::move(other.config)), calibration(std::move(other.calibration)), 
-//     camera(std::move(other.camera)), brightness(other.brightness), exposure(other.exposure), whitebalance(other.whitebalance) {}
+VisionCamera::VisionCamera(VisionCamera&& other) : 
+    VideoCamera(other.GetHandle()),
+    config(std::move(other.config)),
+    calibration(std::move(other.calibration)),
+    raw(std::move(other.raw)),
+    camera_matrix(std::move(other.camera_matrix)),
+    distortion(std::move(other.distortion)),
+    properties(other.properties),
+    ntable(other.ntable),
+    nt_brightness(std::move(other.nt_brightness)),
+    nt_exposure(std::move(other.nt_exposure)),
+    nt_whitebalance(std::move(other.nt_whitebalance)),
+    listener_handle(other.listener_handle)
+{
+    other.m_handle = 0;
+    other.listener_handle = 0;
+}
 VisionCamera::~VisionCamera() {
-    this->deleteEntries();
+    this->ntable->RemoveListener(this->listener_handle);
 }
 
 // VisionCamera& VisionCamera::operator=(const VisionCamera& other) {
@@ -85,16 +99,23 @@ VisionCamera::~VisionCamera() {
 //     this->exposure = other.exposure;
 //     this->whitebalance = other.whitebalance;
 // }
-// VisionCamera& VisionCamera::operator=(VisionCamera&& other) {    // there's really no point because wpi::json doesn't have a move operator
-//     this->m_handle = other.m_handle;
-//     this->type = other.type;
-//     this->config = std::move(other.config);
-//     this->calibration = std::move(other.calibration);
-//     this->camera = std::move(other.camera);
-//     this->brightness = other.brightness;
-//     this->exposure = other.exposure;
-//     this->whitebalance = other.whitebalance;
-// }
+VisionCamera& VisionCamera::operator=(VisionCamera&& other) {
+    this->m_handle = other.m_handle;
+    other.m_handle = 0;
+    this->config = std::move(other.config);
+    this->calibration = std::move(other.calibration);
+    this->raw = std::move(other.raw);
+    this->camera_matrix = std::move(other.camera_matrix);
+    this->distortion = std::move(other.distortion);
+    this->properties = std::move(other.properties);
+    this->ntable = other.ntable;
+    this->nt_brightness = std::move(other.nt_brightness);
+    this->nt_whitebalance = std::move(other.nt_whitebalance);
+    this->nt_exposure = std::move(other.nt_exposure);
+    this->listener_handle = other.listener_handle;
+    other.listener_handle = 0;
+    return *this;
+}
 
 // cs::VideoSource::Kind VisionCamera::getType() const {
 // 	return this->type;
@@ -234,82 +255,67 @@ cv::Size VisionCamera::getResolution() const {
     return cv::Size(this->properties.width, this->properties.height);
 }
 
-int8_t VisionCamera::getBrightness() const {
-    return this->brightness;
+int VisionCamera::getBrightness() const {
+    return this->nt_brightness.Get();
 }
-int8_t VisionCamera::getExposure() const {
-    return this->exposure;
+int VisionCamera::getExposure() const {
+    return this->nt_exposure.Get();
 }
-int16_t VisionCamera::getWhiteBalance() const {
-    return this->whitebalance;
+int VisionCamera::getWhiteBalance() const {
+    return this->nt_whitebalance.Get();
 }
 
-void VisionCamera::setBrightness(int8_t val) {
-    this->brightness = (val > 100 ? 100 : (val < 0 ? 0 : val));
-    this->SetBrightness(this->brightness);
+void VisionCamera::setBrightness(int val) {
+    this->nt_brightness.Set(this->_setBrightness(val));
 }
-void VisionCamera::setWhiteBalance(int16_t val) {
-    val < 0 ? this->SetWhiteBalanceAuto() : this->SetWhiteBalanceManual(val);   // find bounds and add checking
-    this->whitebalance = val;
+void VisionCamera::setWhiteBalance(int val) {
+    this->nt_whitebalance.Set(this->_setWhiteBalance(val));
 }
-void VisionCamera::setExposure(int8_t val) {
-    val < 0 ? this->SetExposureAuto() : this->SetExposureManual(val > 100 ? 100 : val);
-    this->exposure = (val > 100 ? 100 : val);
+void VisionCamera::setExposure(int val) {
+    this->nt_exposure.Set(this->_setExposure(val));
 }
 
 void VisionCamera::setNetworkBase(const std::shared_ptr<nt::NetworkTable>& table) {
-    this->nt_camera = table->GetSubTable("Cameras")->GetSubTable(this->GetName());
+    this->ntable = table->GetSubTable("Cameras")->GetSubTable(this->GetName());
 }
 void VisionCamera::setNetworkAdjustable() {
-    this->setBrightnessAdjustable();
-    this->setWhiteBalanceAdjustable();
-    this->setExposureAdjustable();
-}
-void VisionCamera::deleteEntries() {
-    // this->camera->Delete("Brightness");
-    // this->camera->Delete("WhiteBalance");
-    // this->camera->Delete("Exposure");
+    this->nt_brightness = this->ntable->GetIntegerTopic("Brightness").GetEntry(50);
+    this->nt_whitebalance = this->ntable->GetIntegerTopic("WhiteBalance").GetEntry(-1);
+    this->nt_exposure = this->ntable->GetIntegerTopic("Exposure").GetEntry(-1);
+    this->setBrightness(50);
+    this->setWhiteBalance(-1);
+    this->setExposure(-1);
+    nt::NetworkTableInstance::GetDefault().RemoveListener(this->listener_handle);
+    this->listener_handle = this->ntable->AddListener(
+        nt::EventFlags::kValueRemote | nt::EventFlags::kTopic,
+        [this](nt::NetworkTable *table, std::string_view key, const nt::Event& e) {
+            if(const nt::ValueEventData* v = e.GetValueEventData()) {
+                NT_Handle h = v->topic;
+                if(h == this->nt_brightness.GetTopic().GetHandle()) {
+                    this->_setBrightness(v->value.GetInteger());
+                } else
+                if(h == this->nt_exposure.GetTopic().GetHandle()) {
+                    this->_setExposure(v->value.GetInteger());
+                } else
+                if(h == this->nt_whitebalance.GetTopic().GetHandle()) {
+                    this->_setWhiteBalance(v->value.GetInteger());
+                }
+            }
+        }
+    );
 }
 
-void VisionCamera::setBrightnessAdjustable() {
-    nt::NetworkTableInstance::GetDefault().AddListener(
-        this->nt_camera->GetEntry("Brightness"), nt::EventFlags::kImmediate | nt::EventFlags::kValueAll,
-        [this](const nt::Event& e) {
-            this->setBrightness(e.GetValueEventData()->value.GetDouble());
-        }
-    );
-    // nt::NetworkTableInstance::GetDefault().AddListener(
-    //     this->nt_brightness, nt::EventFlags::kImmediate | nt::EventFlags::kValueAll,
-    //     [this](const nt::Event& e) {
-    //         this->setBrightness(e.GetValueEventData()->value.GetDouble());
-    //     }
-    // );
+int VisionCamera::_setBrightness(int val) {
+    val = (val > 100 ? 100 : (val < 0 ? 0 : val));
+    this->SetBrightness(val);
+    return val;
 }
-void VisionCamera::setWhiteBalanceAdjustable() {
-    nt::NetworkTableInstance::GetDefault().AddListener(
-        this->nt_camera->GetEntry("WhiteBalance"), nt::EventFlags::kImmediate | nt::EventFlags::kValueAll,
-        [this](const nt::Event& e) {
-            this->setWhiteBalance(e.GetValueEventData()->value.GetDouble());
-        }
-    );
-    // nt::NetworkTableInstance::GetDefault().AddListener(
-    //     this->nt_whitebalance, nt::EventFlags::kImmediate | nt::EventFlags::kValueAll,
-    //     [this](const nt::Event& e) {
-    //         this->setWhiteBalance(e.GetValueEventData()->value.GetDouble());
-    //     }
-    // );
+int VisionCamera::_setWhiteBalance(int val) {
+    val < 0 ? this->SetWhiteBalanceAuto() : this->SetWhiteBalanceManual(val);
+    return val;
 }
-void VisionCamera::setExposureAdjustable() {
-    nt::NetworkTableInstance::GetDefault().AddListener(
-        this->nt_camera->GetEntry("Exposure"), nt::EventFlags::kImmediate | nt::EventFlags::kValueAll,
-        [this](const nt::Event& e) {
-            this->setExposure(e.GetValueEventData()->value.GetDouble());
-        }
-    );
-    // nt::NetworkTableInstance::GetDefault().AddListener(
-    //     this->nt_exposure, nt::EventFlags::kImmediate | nt::EventFlags::kValueAll,
-    //     [this](const nt::Event& e) {
-    //         this->setExposure(e.GetValueEventData()->value.GetDouble());
-    //     }
-    // );
+int VisionCamera::_setExposure(int val) {
+    val = (val > 100 ? 100 : val);
+    val < 0 ? this->SetExposureAuto() : this->SetExposureManual(val);
+    return val;
 }

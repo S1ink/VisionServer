@@ -4,7 +4,7 @@
 
 #include <networktables/NetworkTableInstance.h>
 #include <networktables/NetworkTable.h>
-#include <networktables/DoubleTopic.h>
+#include <networktables/IntegerTopic.h>
 #include <cameraserver/CameraServer.h>
 #include <wpi/json.h>
 
@@ -54,16 +54,20 @@ public:
 	 * @param source_config The camera configuration json object
 	*/
 	VisionCamera(const wpi::json& source_config);
-	// VisionCamera(const VisionCamera&);
-	// VisionCamera(VisionCamera&&);
+	VisionCamera(const VisionCamera&) = delete;
+	VisionCamera(VisionCamera&&);
+	// inline VisionCamera(const VisionCamera&) { std::cout << "VCamera copied." << std::endl; }
+	// inline VisionCamera(VisionCamera&&) { std::cout << "VCamera moved." << std::endl; }
 	/**
 	 * Deletes all networktable entries for the camera's subtable
 	*/
 	~VisionCamera();
-	//VisionCamera& operator=(const VisionCamera&);
-	//VisionCamera& operator=(VisionCamera&&);
 
-	//cs::VideoSource::Kind getType() const;
+	inline VisionCamera& operator=(const VisionCamera&) = delete;
+	VisionCamera& operator=(VisionCamera&&);
+	// inline VisionCamera& operator=(const VisionCamera&) { std::cout << "VCamera copied via operator." << std::endl; }
+	// inline VisionCamera& operator=(VisionCamera&&) { std::cout << "VCamera moved via operator." << std::endl; }
+
 	/**
 	 * Get if the cameras calibration json is valid
 	 * @return Whether or not the calibration json is valid
@@ -173,33 +177,33 @@ public:
 	 * Get the current brightness setting for the camera
 	 * @return The brightness (0-100, -1 for auto)
 	*/
-	int8_t getBrightness() const;
+	int getBrightness() const;
 	/**
 	 * Get the current exposure setting for the camera
 	 * @return The exposure (0-100, -1 for auto)
 	*/
-	int8_t getExposure() const;
+	int getExposure() const;
 	/**
 	 * Get the current whitebalance setting for the camera
 	 * @return The whitebalance (0-??? (>7000), -1 for auto)
 	*/
-	int16_t getWhiteBalance() const;
+	int getWhiteBalance() const;
 
 	/**
 	 * Set the brightness of the camera
 	 * @param b The brightness (0-100, -1 for auto)
 	*/
-	void setBrightness(int8_t b);		// ranges 0 through 100 (a percent)
+	void setBrightness(int b);		// ranges 0 through 100 (a percent)
 	/**
 	 * Set the whitebalance of the camera
 	 * @param wb The whitebalance (0-???, -1 for auto)
 	*/
-	void setWhiteBalance(int16_t wb);	// ranges 0 through ~7000(+?) (look up) -> -1 sets to auto
+	void setWhiteBalance(int wb);	// ranges 0 through ~7000(+?) (look up) -> -1 sets to auto
 	/**
 	 * Set the exposure of the camera
 	 * @param e The exposure (0-100, -1 for auto)
 	*/
-	void setExposure(int8_t e);		// ranges 0 through 100 -> -1 sets to auto
+	void setExposure(int e);		// ranges 0 through 100 -> -1 sets to auto
 
 	/**
 	 * Set the root networktable in which the camera's own networktable should reside
@@ -210,24 +214,11 @@ public:
 	 * Publish networktables-adjustable settings for exposure, brightness, and whitebalance under the camera's networktable
 	*/
 	void setNetworkAdjustable();
-	/**
-	 * Deletes all created entries in the camera's networktable
-	*/
-	void deleteEntries();
 
 protected:
-	/**
-	 * Publish an adjustable networktable entry for the camera's brightness
-	*/
-	void setBrightnessAdjustable();
-	/**
-	 * Publish an adjustable networktable entry for the camera's whitebalance
-	*/
-	void setWhiteBalanceAdjustable();
-	/**
-	 * Publish an adjustable networktable entry for the camera's exposure
-	*/
-	void setExposureAdjustable();
+	int _setBrightness(int b);
+	int _setWhiteBalance(int wb);
+	int _setExposure(int e);
 
 private:
 	wpi::json config, calibration;
@@ -235,12 +226,11 @@ private:
 	cv::Mat_<float> camera_matrix{default_matrix}, distortion{default_distort};
 	cs::VideoMode properties;
 
-	int8_t brightness{50}, exposure{-1};
-	int16_t whitebalance{-1};
-
-	std::shared_ptr<nt::NetworkTable> nt_camera{
+	std::shared_ptr<nt::NetworkTable> ntable{
 		nt::NetworkTableInstance::GetDefault().GetTable("Cameras")->GetSubTable(this->GetName())};
-	//nt::DoubleEntry nt_brightness, nt_exposure, nt_whitebalance;
+	nt::IntegerEntry
+		nt_brightness, nt_exposure, nt_whitebalance;
+	NT_Listener listener_handle{0};
 
 
 };

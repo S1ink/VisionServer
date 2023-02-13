@@ -20,13 +20,13 @@ public:
 	inline AprilPose_(
 		const cv::Ptr<cv::aruco::Board> f,
 		cv::Ptr<cv::aruco::DetectorParameters> p = cv::aruco::DetectorParameters::create()
-	) : vs2::VPipeline<This_t>("AprilTag Pose Estimator "), field{f}, markers{f->dictionary}, params{p}
+	) : vs2::VPipeline<This_t>("AprilTag Pose Estimator"), field{f}, markers{f->dictionary}, params{p}
 	{
 		this->getTable()->PutNumber("Scaling", this->scale);
 		this->getTable()->PutNumber("Decimate", this->params->aprilTagQuadDecimate);
 	}
 
-	virtual void process(cv::Mat& io_frame) override;
+	inline virtual void process(cv::Mat& io_frame) override { this->_proc(io_frame); }
 
 protected:
 	inline AprilPose_(
@@ -42,6 +42,7 @@ protected:
 		cv::Ptr<cv::aruco::DetectorParameters> p = cv::aruco::DetectorParameters::create()
 	) : vs2::VPipeline<This_t>(n), field{f}, markers{f->dictionary}, params{p} { this->getTable()->PutNumber("Scaling", this->scale); }
 
+	void _proc(cv::Mat& io_frame);
 	
 	cv::Ptr<cv::aruco::Board> field;
 	cv::Ptr<cv::aruco::Dictionary> markers;
@@ -67,7 +68,7 @@ typedef AprilPose_<>	AprilPose;
 using hrc = std::chrono::high_resolution_clock;
 #endif
 template<class derived>
-void AprilPose_<derived>::process(cv::Mat& io_frame) {
+void AprilPose_<derived>::_proc(cv::Mat& io_frame) {
 #ifdef APRILPOSE_DEBUG
 	hrc::time_point beg, end;
 	beg = hrc::now();

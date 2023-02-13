@@ -87,7 +87,7 @@ public:
 	static bool addCamera(VisionCamera&&);
 	static bool addCameras(std::vector<VisionCamera>&&);
 	static bool setCameras(std::vector<VisionCamera>&&);
-	static const std::vector<VisionCamera>& getCameras();
+	static std::vector<VisionCamera>& getCameras();
 	static size_t numCameras();
 
 	template<class pipeline>
@@ -261,7 +261,7 @@ typedef SequentialPipeline<>	SeqPipeline;
 
 namespace vs2 {
 
-inline const std::vector<VisionCamera>& VisionServer::getCameras() { return inst().cameras; }
+inline std::vector<VisionCamera>& VisionServer::getCameras() { return inst().cameras; }
 inline size_t VisionServer::numCameras() { return inst().cameras.size(); }
 inline const std::vector<VisionServer::BasePipe*>& VisionServer::getPipelines() { return inst().pipelines; }
 inline size_t VisionServer::numPipelines() { return inst().pipelines.size(); }
