@@ -70,6 +70,19 @@ bool initNT(const char* file) {
     return true;
 
 }
+bool initSimNT(const char* sim_ip) {
+
+    wpi::outs() << "Setting up NetworkTables for SIMULATION mode - host: " << sim_ip << newline;
+#if NT_CLIENT_VERSION == 4
+    nt::NetworkTableInstance::GetDefault().StartClient4("VisionServer");
+#else
+    nt::NetworkTableInstance::GetDefault().StartClient3("VisionServer");
+#endif
+    nt::NetworkTableInstance::GetDefault().SetServer(sim_ip);
+    wpi::outs().flush();
+    return true;
+
+}
 bool createCameras(std::vector<VisionCamera>& cameras, const char* file) {
 	
 	wpi::json j;

@@ -291,14 +291,20 @@ void VisionCamera::setNetworkAdjustable() {
         [this](nt::NetworkTable *table, std::string_view key, const nt::Event& e) {
             if(const nt::ValueEventData* v = e.GetValueEventData()) {
                 NT_Handle h = v->topic;
-                if(h == this->nt_brightness.GetTopic().GetHandle()) {
-                    this->_setBrightness(v->value.GetInteger());
-                } else
-                if(h == this->nt_exposure.GetTopic().GetHandle()) {
-                    this->_setExposure(v->value.GetInteger());
-                } else
-                if(h == this->nt_whitebalance.GetTopic().GetHandle()) {
-                    this->_setWhiteBalance(v->value.GetInteger());
+                int val = (v->value.IsInteger() ?
+                    v->value.GetInteger() : (v->value.IsDouble() ?
+                        v->value.GetDouble() : (v->value.IsFloat() ?
+                            v->value.GetFloat() : 0xFFFFFFFF) ) );
+                if(val != 0xFFFFFFFF) {
+                    if(h == this->nt_brightness.GetTopic().GetHandle()) {
+                        this->_setBrightness(val);
+                    } else
+                    if(h == this->nt_exposure.GetTopic().GetHandle()) {
+                        this->_setExposure(val);
+                    } else
+                    if(h == this->nt_whitebalance.GetTopic().GetHandle()) {
+                        this->_setWhiteBalance(val);
+                    }
                 }
             }
         }
