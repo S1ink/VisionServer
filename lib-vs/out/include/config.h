@@ -9,8 +9,9 @@
 #include "calib.h"
 
 #define FRC_CONFIG	"/boot/frc.json"
+#ifndef NT_CLIENT_VERSION
 #define NT_CLIENT_VERSION 4
-
+#endif
 
 bool loadJson(wpi::json&, const char* file);
 
