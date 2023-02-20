@@ -165,7 +165,7 @@ jobs:
 
       - name: Get latest WPILibPi release tag
         id: wpideps-latest
-        run: echo "tag=$(curl -s https://api.github.com/repos/wpilibsuite/WPILibPi/releases/latest | jq '.tag_name' | sed 's/\"//g')" >> $GITHUB_OUTPUT
+        run: echo "tag=$(curl -s https://api.github.com/repos/wpilibsuite/WPILibPi/releases/latest | jq 'tag_name' | sed 's/\"//g')" >> $GITHUB_OUTPUT
         # run: echo "::set-output name=tag::$(curl -s https://api.github.com/repos/S1ink/WPILibPi-Mod-Build/releases/latest | jq '.tag_name' | sed 's/\"//g')"
 
       - uses: actions/download-artifact@main
