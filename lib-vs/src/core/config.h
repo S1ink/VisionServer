@@ -9,7 +9,9 @@
 #include "calib.h"
 
 #define FRC_CONFIG	"/boot/frc.json"
-
+#ifndef NT_CLIENT_VERSION
+#define NT_CLIENT_VERSION 4
+#endif
 
 bool loadJson(wpi::json&, const char* file);
 
@@ -17,6 +19,7 @@ bool loadJson(wpi::json&, const char* file);
 // bool searchCalibs(const wpi::json&, CalibMap_<tmpl_T...>&);
 
 bool initNT(const char* file = FRC_CONFIG);
+bool initSimNT(const char* sim_ip);
 bool createCameras(std::vector<VisionCamera>& cameras, const char* file = FRC_CONFIG);
 bool createCameras(std::vector<VisionCamera>& cameras, CalibList calibrations, const char* file = FRC_CONFIG);
 
