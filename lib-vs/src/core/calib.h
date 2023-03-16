@@ -27,22 +27,22 @@ using VecMap = std::vector<std::pair<first_T, second_T> >;
 #define CALIB_DEFAULT_SMAP_TYPE		wpi::StringMap
 #endif
 
-template<
-	typename str_T = CALIB_DEFAULT_STRING_TYPE,
-	template<typename...> typename map_T = CALIB_DEFAULT_MAP_TYPE>
-struct StringMapGen {
-	template<typename V, typename S = str_T>
-	using type = map_T<S, V>;
-};
-template<typename str_T = CALIB_DEFAULT_STRING_TYPE>
-using VecSMap_ = StringMapGen<str_T, VecMap>::type;
-typedef VecSMap_<>	VecSMap;
-template<typename str_T = CALIB_DEFAULT_STRING_TYPE>
-using StdSMap_ = StringMapGen<str_T, std::map>::type;
-typedef StdSMap_<>	StdSMap;
-template<typename str_T = CALIB_DEFAULT_STRING_TYPE>
-using StdSUmap_ = StringMapGen<str_T, std::unordered_map>::type;
-typedef StdSUmap_<>	StdSUmap;
+// template<
+// 	typename str_T = CALIB_DEFAULT_STRING_TYPE,
+// 	template<typename...> typename map_T = CALIB_DEFAULT_MAP_TYPE>
+// struct StringMapGen {
+// 	template<typename V, typename S = str_T>
+// 	using type = map_T<S, V>;
+// };
+// template<typename str_T = CALIB_DEFAULT_STRING_TYPE>
+// using VecSMap_ = StringMapGen<str_T, VecMap>::type;
+// typedef VecSMap_<>	VecSMap;
+// template<typename str_T = CALIB_DEFAULT_STRING_TYPE>
+// using StdSMap_ = StringMapGen<str_T, std::map>::type;
+// typedef StdSMap_<>	StdSMap;
+// template<typename str_T = CALIB_DEFAULT_STRING_TYPE>
+// using StdSUmap_ = StringMapGen<str_T, std::unordered_map>::type;
+// typedef StdSUmap_<>	StdSUmap;
 
 
 template<
@@ -66,32 +66,32 @@ using CalibSMap_ =
 	smap_T<CalibSet_<fp_T, cmap_T> >;		// stringmap of calibration sets
 typedef CalibSMap_<>	CalibSMap;
 
-template<
-	typename fp_T = CALIB_DEFAULT_FLOAT_TYPE,
-	typename str_T = CALIB_DEFAULT_FLOAT_TYPE,
-	template<typename...> typename cmap_T = CALIB_DEFAULT_MAP_TYPE,
-	template<typename...> typename omap_T = CALIB_DEFAULT_MAP_TYPE>
-using CalibMat_ =
-	CalibSMap_<fp_T, cmap_T, StringMapGen<str_T, omap_T>::type>;	// integrated stringmap generation
-typedef CalibMat_<>		CalibMat;
+// template<
+// 	typename fp_T = CALIB_DEFAULT_FLOAT_TYPE,
+// 	typename str_T = CALIB_DEFAULT_FLOAT_TYPE,
+// 	template<typename...> typename cmap_T = CALIB_DEFAULT_MAP_TYPE,
+// 	template<typename...> typename omap_T = CALIB_DEFAULT_MAP_TYPE>
+// using CalibMat_ =
+// 	CalibSMap_<fp_T, cmap_T, StringMapGen<str_T, omap_T>::type>;	// integrated stringmap generation
+// typedef CalibMat_<>		CalibMat;
 
-template<
-	typename fp_T = CALIB_DEFAULT_FLOAT_TYPE,
-	typename str_T = CALIB_DEFAULT_STRING_TYPE,
-	template<class...> typename map_T = CALIB_DEFAULT_MAP_TYPE>
-using CalibMap_ =
-	CalibMat_<fp_T, str_T, map_T, map_T>;		// ^ but the same map type for inner and outer
-typedef CalibMap_<>		CalibMap;
+// template<
+// 	typename fp_T = CALIB_DEFAULT_FLOAT_TYPE,
+// 	typename str_T = CALIB_DEFAULT_STRING_TYPE,
+// 	template<class...> typename map_T = CALIB_DEFAULT_MAP_TYPE>
+// using CalibMap_ =
+// 	CalibMat_<fp_T, str_T, map_T, map_T>;		// ^ but the same map type for inner and outer
+// typedef CalibMap_<>		CalibMap;
 
 template<typename fp_T = CALIB_DEFAULT_FLOAT_TYPE>
 using CalibSList_ = CalibSMap_<fp_T, str_T, VecMap>;
 typedef CalibSList_<>	CalibSList;
 
-template<
-	typename fp_T = CALIB_DEFAULT_FLOAT_TYPE,
-	typename str_T = CALIB_DEFAULT_STRING_TYPE>
-using CalibList_ = CalibMap_<fp_T, str_T, VecMap>;
-typedef CalibList_<>	CalibList;
+// template<
+// 	typename fp_T = CALIB_DEFAULT_FLOAT_TYPE,
+// 	typename str_T = CALIB_DEFAULT_STRING_TYPE>
+// using CalibList_ = CalibMap_<fp_T, str_T, VecMap>;
+// typedef CalibList_<>	CalibList;
 
 
 
@@ -166,45 +166,126 @@ struct CALIB {
 	// 	}
 	// }
 
-	static CalibSet_T* findSet(std::string_view name, const CalibMap_T& map) {
-
-	}
-
-	static int search(
-		std::string_view c, const cv::Size2i& sz, const CalibMap_T& map,
-		cv::Mat1f& matx, cv::Mat1f& coeff
+	static CalibSet_T* findSet(
+		std::string_view name, const CalibMap_T& map
 	) {
-		if constexpr(is_seq_container) {
-			return seq_search_impl(c, sz, map, matx, coeff);
-		} else if constexpr(is_assoc_container) {
-			return assoc_search_impl(c, sz, map, matx, coeff);
-		} else {
+		if constexpr(is_wpi_smap) {
+			return wpi_find_set_impl(name, map);
+		} else if constexpr(is_seq_smap) {
+
+		} else if constexpr(is_assoc_smap) {
 
 		}
+		return nullptr;
+	}
+	static Calib_T* findCalib(
+		const cv::Size2i& sz, const CalibSet_T& set
+	) {
+		if constexpr(is_seq_cmap) {
+			return seq_find_calib_impl(sz, set);
+		} else if constexpr(is_assoc_cmap) {
+			return assoc_find_calib_impl(sz, set);
+		}
+		return nullptr;
+	}
+
+	static Calib_T* findCalib(
+		std::string_view name, const cv::Size2i& sz, const CalibMap_T& map
+	) {
+		if(CalibSet_T* set = findSet(name, map)) {
+			return findCalib(*set);
+		}
+		return nullptr;
+	}
+	static Calib_T* findAnyCalib(
+		std::initializer_list<std::string_view> names, const cv::Size2i& sz, const CalibMap_T& map
+	) {
+		for(auto n : names) {
+			if(CalibSet_T* set = findSet(n, map)) {
+				if(Calib_T* ret = findCalib(sz, *set)) {
+					return ret;
+				}
+			}
+		}
+		return nullptr;
 	}
 
 private:
-	static CalibSet_T* wpi_find_set_impl(std::string_view name, const CalibMap_T& map) {
-
+	static CalibSet_T* wpi_find_set_impl(
+		std::string_view name, const CalibMap_T& map
+	) {
+		auto it = map.find(name);
+		if(it != map.end()) {
+			return &it->second;
+		}
+		return nullptr;
 	}
-	static CalibSet_T* seq_find_set_impl(std::string_view name, const CalibMap_T& map) {
-
-	}
-	static CalibSet_T* assoc_find_set_impl(std::string_view name, const CalibMap_T& map) {
-
-	}
-
-	static int seq_search_impl(
-		std::string_view c, const cv::Size2i& sz, const CalibMap_T& map,
-		cv::Mat1f& matx, cv::Mat1f& coeff
+	static CalibSet_T* seq_find_set_impl(
+		std::string_view name, const CalibMap_T& map
 	) {
 
 	}
-	static int assoc_search_impl(
-		std::string_view c, const cv::Size2i& sz, const CalibMap_T& map,
-		cv::Mat1f& matx, cv::Mat1f& coeff
+	static CalibSet_T* assoc_find_set_impl(
+		std::string_view name, const CalibMap_T& map
 	) {
-		
+
+	}
+
+	static Calib_T* seq_find_calib_impl(
+		const cv::Size2i& sz, const CalibSet_T& set
+	) {
+		for(auto& calib : set) {
+			if(calib.first == sz) {
+				return &calib.second;
+			}
+		}
+		return nullptr;
+	}
+	static Calib_T* assoc_find_calib_impl(
+		const cv::Size2i& sz, const CalibSet_T& set
+	) {
+		auto it = set.find(sz);
+		if(it != set.end()) {
+			return &it->second;
+		}
+		return nullptr;
 	}
 
 };
+
+template<
+	typename fp_T,
+	template<typename...> typename cmap_T,
+	template<typename...> typename smap_T>
+CalibSet_<fp_T, cmap_T>* findSet(
+	std::string_view name, const CalibSMap_<fp_T, cmap_T, smap_T>& map
+) {
+	return CALIB<fp_T, cmap_T, smap_T>::findSet(name, map);
+}
+template<
+	typename fp_T,
+	template<typename...> typename cmap_T,
+	template<typename...> typename smap_T>
+Calibration_<fp_T>* findCalib(
+	const cv::Size2i& sz, const CalibSet_<fp_T, cmap_T>& set
+) {
+	return CALIB<fp_T, cmap_T, smap_T>::findCalib(sz, set);
+}
+template<
+	typename fp_T,
+	template<typename...> typename cmap_T,
+	template<typename...> typename smap_T>
+Calibration_<fp_T>* findCalib(
+	std::string_view name, const cv::Size2i& sz, const CalibSMap_<fp_T, cmap_T, smap_T>& map
+) {
+	return CALIB<fp_T, cmap_T, smap_T>::findCalib(name, sz, map);
+}
+template<
+	typename fp_T,
+	template<typename...> typename cmap_T,
+	template<typename...> typename smap_T>
+Calibration_<fp_T>* findAnyCalib(
+	std::initializer_list<std::string_view> names, const cv::Size2i& sz, const CalibSMap_<fp_T, cmap_T, smap_T>& map
+) {
+	return CALIB<fp_T, cmap_T, smap_T>::findAnyCalib(names, sz, map);
+}
