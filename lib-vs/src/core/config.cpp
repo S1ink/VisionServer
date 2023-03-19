@@ -134,20 +134,24 @@ bool createCameras(std::vector<VisionCamera>& cameras, CalibList calibrations, c
                 if(camera.count("properties") && camera.at("properties").count("type")) {
                     try {
                         std::string type = camera.at("properties").at("type").get<std::string>();
-                        using SizeItem = std::pair<cv::Size2i, std::array<cv::Mat_<float>, 2> >;
-						using TypeItem = std::pair<const char*, std::vector<SizeItem> >;
-                        cv::Size2i sz = cameras.back().getResolution();
-                        for(const TypeItem& item : calibrations) {
-							if(wpi::equals_lower(type, item.first)) {
-                                for(const SizeItem& arr : item.second) {
-                                    if(sz == arr.first) {
-                                        cameras.back().setCameraMatrix(arr.second[0]);
-                                        cameras.back().setDistortionCoefs(arr.second[1]);
-                                        break;
-                                    }
-                                }
-							}
+                        // using SizeItem = std::pair<cv::Size2i, std::array<cv::Mat_<float>, 2> >;
+						// using TypeItem = std::pair<const char*, std::vector<SizeItem> >;
+						cv::Size2i sz = cameras.back().getResolution();
+						if(auto* cal = findCalib(type, sz, calibrations)) {
+							cameras.back().setCameraMatrix(cal->at(0));
+							cameras.back().setDistortionCoefs(cal->at(1));
 						}
+						// for(const TypeItem& item : calibrations) {
+						// 	if(wpi::equals_lower(type, item.first)) {
+                        //         for(const SizeItem& arr : item.second) {
+                        //             if(sz == arr.first) {
+                        //                 cameras.back().setCameraMatrix(arr.second[0]);
+                        //                 cameras.back().setDistortionCoefs(arr.second[1]);
+                        //                 break;
+                        //             }
+                        //         }
+						// 	}
+						// }
                     } catch (const wpi::json::exception& e) {
                         wpi::errs() << "Config error in " << file << ": failed to get 'type' property: " << e.what() << newline;  // print out more info if needed
                     }
