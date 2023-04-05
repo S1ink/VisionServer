@@ -35,7 +35,7 @@ void memcpy_wst_asm(
 	uint8_t beta,
 	uint8_t gamma
 );
-void memcpy_split_wst_asm(
+void memcpy_deinterlace_wst_asm(
 	uint8_t const *framebuff_3C,
 	uint8_t *dest,
 	int32_t size,
@@ -68,16 +68,61 @@ void memcpy_subtract_asm(	// don't use this it does not account for underflows (
 #include <opencv2/opencv.hpp>
 #include "extensions.h"
 
-inline void neon_threshold(cv::InputArray src, cv::OutputArray dest, uint8_t thresh)
-	{ memcpy_threshold_asm(dest.getMatRef().data, src.getMat().data, src.getSz().area(), thresh); }
-inline void neon_threshold_binary(cv::InputArray src, cv::OutputArray dest, uint8_t thresh)
-	{ memcpy_threshold_binary_asm(dest.getMatRef().data, src.getMat().data, src.getSz().area(), thresh); }
-inline void neon_compare3_add(cv::InputArray primary, cv::InputArray comp1, cv::InputArray comp2, cv::InputArray add, cv::OutputArray dest)
-	{ memcpy_compare3_add_asm(primary.getMat().data, comp1.getMat().data, comp2.getMat().data, add.getMat().data, dest.getMatRef().data, primary.getSz().area()); }
-inline void neon_wst(cv::InputArray primary, cv::InputArray ch1, uint8_t alpha, cv::InputArray ch2, uint8_t beta, cv::OutputArray dest, uint8_t gamma = 0)
-	{ memcpy_wst_asm(primary.getMat().data, ch1.getMat().data, ch2.getMat().data, dest.getMatRef().data, primary.getSz().area(), alpha, beta, gamma); }
-inline void neon_split_wst(cv::InputArray frame_3C, cv::OutputArray dest, vs2::BGR primary, uint8_t alpha, uint8_t beta, uint8_t gamma = 0)
-	{ memcpy_split_wst_asm(frame_3C.getMat().data, dest.getMatRef().data, frame_3C.getSz().area(), ~primary, alpha, beta, gamma); }
+inline void neon_threshold(
+	cv::InputArray src, cv::OutputArray dest, uint8_t thresh
+) {
+	memcpy_threshold_asm(
+		dest.getMatRef().data,
+		src.getMat().data,
+		src.getSz().area(),
+		thresh);
+}
+inline void neon_threshold_binary(
+	cv::InputArray src, cv::OutputArray dest, uint8_t thresh
+) {
+	memcpy_threshold_binary_asm(
+		dest.getMatRef().data,
+		src.getMat().data,
+		src.getSz().area(),
+		thresh);
+}
+inline void neon_compare3_add(
+	cv::InputArray primary,
+	cv::InputArray comp1, cv::InputArray comp2,
+	cv::InputArray add, cv::OutputArray dest
+) {
+	memcpy_compare3_add_asm(
+		primary.getMat().data,
+		comp1.getMat().data,
+		comp2.getMat().data,
+		add.getMat().data,
+		dest.getMatRef().data,
+		primary.getSz().area());
+}
+inline void neon_wst(
+	cv::InputArray primary,
+	cv::InputArray ch1, uint8_t alpha,
+	cv::InputArray ch2, uint8_t beta,
+	cv::OutputArray dest, uint8_t gamma = 0
+) {
+	memcpy_wst_asm(
+		primary.getMat().data,
+		ch1.getMat().data,
+		ch2.getMat().data,
+		dest.getMatRef().data,
+		primary.getSz().area(),
+		alpha, beta, gamma);
+}
+inline void neon_deinterlace_wst(
+	cv::InputArray frame_3C, cv::OutputArray dest,
+	vs2::BGR primary, uint8_t alpha = 0xFF, uint8_t beta = 0xFF, uint8_t gamma = 0
+) {
+	memcpy_deinterlace_wst_asm(
+		frame_3C.getMat().data,
+		dest.getMatRef().data,
+		frame_3C.getSz().area(),
+		~primary, alpha, beta, gamma);
+}
 
 inline void neon_bitwise_or(cv::InputArray a, cv::InputArray b, cv::OutputArray dest)
 	{ memcpy_bitwise_or_asm(a.getMat().data, b.getMat().data, dest.getMatRef().data, a.getSz().area()); }

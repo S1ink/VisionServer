@@ -295,9 +295,9 @@ struct CalProps<CalibMat_<fp_T, str_T, cmap_T, nmap_T>> {
 	static constexpr inline bool
 		is_wpi_smap = false,
 		is_seq_smap = is_same_template<nmap_T, VecMap>::value,
-		is_assoc_smap = any_same_template<nmap_T, std::map, std::unordered_map>::value,
+		is_assoc_smap = any_same_template<nmap_T, std::map, std::multimap, std::unordered_map, std::unordered_multimap>::value,
 		is_seq_cmap = is_same_template<cmap_T, VecMap>::value,
-		is_assoc_cmap = any_same_template<cmap_T, std::map, std::unordered_map>::value
+		is_assoc_cmap = any_same_template<cmap_T, std::map, std::multimap, std::unordered_map, std::unordered_multimap>::value
 	;
 };
 
@@ -365,12 +365,21 @@ const typename Map::Set_T* wpi_find_set_impl(std::string_view name, const Map& m
 template<typename Map>
 const typename Map::Set_T* seq_find_set_impl(std::string_view name, const Map& map) {
 	static_assert(CalProps<Map>::is_seq_smap, "Template param error - Map must have sequential map type.");
-	return nullptr;		// need to figure out how to deal with string types
+	for(auto& set : map) {
+		if(std::string_view(set.first) == name) {
+			return &set.second;
+		}
+	}
+	return nullptr;
 }
 template<typename Map>
 const typename Map::Set_T* assoc_find_set_impl(std::string_view name, const Map& map) {
 	static_assert(CalProps<Map>::is_assoc_smap, "Template param error - Map must have associative map type.");
-	return nullptr;		// need to figure out how to deal with string types
+	// auto it = map.find(name);
+	// if (it != map.end()) {
+	// 	return &it->second;
+	// }
+	return nullptr;
 }
 
 template<typename Set>

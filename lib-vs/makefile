@@ -76,7 +76,7 @@ LIB_STATIC := $(OUT_DIR)/lib$(NAME).a
 LIB_SHARED := $(OUT_DIR)/lib$(NAME).so
 
 # SRCS := $(call rwildcard,$(SRC_DIR)/,*.cpp *.c *.S *.s)
-SRCS := $(call rwildcard,$(SRC_DIR)/,*.cpp *.c)
+SRCS := $(call rwildcard,$(SRC_DIR)/,*.cpp *.c) $(SRC_DIR)/neon64.S
 STATIC_OBJS := $(SRCS:$(SRC_DIR)/%=$(OBJ_DIR)/%.o)
 SHARED_OBJS := $(SRCS:$(SRC_DIR)/%=$(OBJ_DIR)/%.pic.o)
 

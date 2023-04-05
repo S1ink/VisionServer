@@ -12,6 +12,9 @@
 constexpr static inline cv::aruco::PREDEFINED_DICTIONARY_NAME
 	FRC_DICT = cv::aruco::DICT_APRILTAG_16h5,
 	FRC_UNOFF_DICT = cv::aruco::DICT_APRILTAG_36h11;
+constexpr static inline char const
+	* FRC_DICT_NAME = "tag16h5",
+	* FRC_UNOFF_DICT_NAME = "tag36h11";
 
 template<class derived_t = void>
 class AprilPose_ : public vs2::VPipeline<AprilPose_<derived_t> > {
