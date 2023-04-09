@@ -1,11 +1,15 @@
 .global memcpy_threshold_asm
 .global memcpy_threshold_binary_asm
-// .global memcpy_compare3_add_asm     // a bit broken
-// .global memcpy_wst_asm
+.global memcpy_compare3_add_asm		// a bit broken?
+.global memcpy_wst_asm
 .global memcpy_deinterlace_wst_asm
-// 
-// .global memcpy_bitwise_or_asm
-// .global memcpy_subtract_asm
+.global memcpy_deinterlace_togray_asm
+.global memcpy_bitwise_or_asm
+.global memcpy_bitwise_or_3c_asm
+.global memcpy_add_asm
+.global memcpy_add_3c_asm
+.global memcpy_add_3c2_asm
+.global memcpy_subtract_asm
 
 
 /**
@@ -14,157 +18,143 @@
  * --> https://developer.arm.com/documentation/den0024/a
  */
 
-
-memcpy_threshold_asm:
+/* For the aarch64 ABI, x0-x7 are callee-saved, so no stack frame push is necessary unless more than 8 args are needed
+ * To push the sp and fp, use (change the alloc ammount based on how many extra args there are):
 	stp x29, x30, [sp, #-16]!
 	mov x29, sp
+ * And to restore, use (before ret):
+	ldp x29, x30, [sp], #16
+ * This is just a reminder in case this is ever needed, currently none of the functions have more than 8 args
+ */
+
+
+/* Arg 0 ~ x0: Source address (single channel frame)
+ * Arg 1 ~ x1: Destonation address
+ * Arg 2 ~ x2: Pixel count
+ * Arg 3 ~ x3: Threshold value */
+memcpy_threshold_asm:
 
 	lsr w2, w2, #4
 	dup v3.16b, w3
 	_thresh_loop:
-		ldr q0, [x1, #0]!
-
+		ldr q0, [x0], #16
 		cmhi v1.16b, v0.16b, v3.16b
 		and v2.16b, v1.16b, v0.16b
+		str q2, [x1], #16
 
-		str q2, [x0, #0]!
+		subs x2, x2, #1
+		bne _thresh_loop
 
-		sub x2, x2, #1
-		cmp x2, #0
-		b.gt _thresh_loop
-
-	ldp x29, x30, [sp], #16
 	ret
+// END
 
 
+/* Arg 0 ~ x0: Source address (single channel frame)
+ * Arg 1 ~ x1: Destonation address
+ * Arg 2 ~ x2: Pixel count
+ * Arg 3 ~ x3: Threshold value */
 memcpy_threshold_binary_asm:
-	stp x29, x30, [sp, #-16]!
-	mov x29, sp
 
 	lsr w2, w2, #4
 	dup v3.8b, w3
 	_thresh_bin_loop:
-		ldr q0, [x1, #0]!
+		ldr q0, [x1], #16
+		cmhi v1.16b, v0.16b, v3.16b
+		str q1, [x0], #16
 
-		cmhi v1.8b, v0.8b, v3.8b
+		subs x2, x2, #1
+		bne _thresh_bin_loop
 
-		str q1, [x0, #0]!
-
-		sub x2, x2, #1
-		cmp x2, #0
-		b.gt _thresh_bin_loop
-
-	ldp x29, x30, [sp], #16
 	ret
+// END
 
 
-// Arg 0: r0: Primary channel address
-// Arg 1: r1: Compare channel 1 address
-// Arg 2: r2: Compare channel 2 address
-// Arg 3: r3: Addition address
-// Arg 4: r4: Destination Address
-// Arg 5: r5: Count
+/* Arg 0 ~ x0: Primary channel address
+ * Arg 1 ~ x1: Compare channel 1 address
+ * Arg 2 ~ x2: Compare channel 2 address
+ * Arg 3 ~ x3: Addition address
+ * Arg 4 ~ x4: Destination Address
+ * Arg 5 ~ x5: Count */
 memcpy_compare3_add_asm:
-	stp x29, x30, [sp, #-16]!
-	mov x29, sp
 
 	lsr w5, w5, #4       // Shift count right by 4 bits (divide by 16, 16 bytes = 128 bits)
 	_cmp3_add_loop:
-		ldr q0, [x0, #0]!	// load primary compare
-		ldr q1, [x1, #0]!	// load compare 1
-		ldr q2, [x2, #0]!	// load compare 2
-		ldr q3, [x3, #0]!	// load addition
+		ldr q0, [x0], #16	// load primary compare
+		ldr q1, [x1], #16	// load compare 1
+		ldr q2, [x2], #16	// load compare 2
+		ldr q3, [x3], #16	// load addition
 
-		cmhi v1.16b, v0.16b, v1.16b	// compare primary and channel 1
-		cmhi v2.16b, v0.16b, v2.16b	// compare primary and channel 2
+		cmhi v1.16b, v0.16b, v1.16b		// compare primary and channel 1
+		cmhi v2.16b, v0.16b, v2.16b		// compare primary and channel 2
 		and v1.16b, v1.16b, v2.16b		// AND the results
 		and v2.16b, v0.16b, v1.16b		// AND the threshold to the input
-		sshr v1.16b, v2.16b, #6		// rshift result by 6 (div 32)
+		ushr v1.16b, v2.16b, #6			// rshift result by 6 (div 32)
 
-		neg v1.16b, v1.16b			// invert sign
-		sshl v2.16b, v0.16b, v1.16b		// left shift primary by negated result (right shift, mimics a division)
-		shl v2.16b, v2.16b, #4		// left shift result to fill all 8 bits
-		add v3.16b, v2.16b, v3.16b		// add the threshold to the additive
+		neg v1.16b, v1.16b				// invert sign
+		uqshl v2.16b, v0.16b, v1.16b	// left shift primary by negated result (right shift, mimics a division)
+		uqshl v2.16b, v2.16b, #4		// left shift result to fill all 8 bits
+		uqadd v3.16b, v2.16b, v3.16b	// add the threshold to the additive
 
-		str q3, [x4, #0]!	// Load out of Q3
+		str q3, [x4], #16	// Load out of Q3
 
-		sub x5, x5, #1
-		cmp x5, #0
-		b.gt _cmp3_add_loop
+		subs x5, x5, #1
+		bne _cmp3_add_loop
 
-	ldp x29, x30, [sp], #16
 	ret
+// END
 
 
-// // Arg 0: r0: Primary channel address
-// // Arg 1: r1: Compare channel 2 address
-// // Arg 2: r2: Compare channel 3 address
-// // Arg 3: r3: Destination address
-// // Arg 4: r4: Count
-// // Arg 5: r5: Alpha
-// // Arg 6: r6: Beta
-// // Arg 7: r7: Gamma
-// memcpy_wst_asm:
-// 	push {r4-r7, fp}
-// 	add fp, sp, #0  // Push new Stack Frame
-// 
-// 	ldr r4, [sp, #(0+20)]    // load 5th - 8th args from stack
-// 	ldr r5, [sp, #(4+20)]
-// 	ldr r6, [sp, #(8+20)]
-// 	ldr r7, [sp, #(12+20)]
-// 
-// 	vdup.8 q8, r5   // duplicate alpha across 16x8bit chunks
-// 	vclz.u8 q8, q8  // count the leading 0's (inverse of log2(value))
-// 	vneg.s8 q8, q8  // negate count (for right shifting)
-// 
-// 	vdup.8 q9, r6   // ''' for beta
-// 	vclz.u8 q9, q9
-// 	vneg.s8 q9, q9
-// 
-// 	vdup.8 q10, r7  // duplicate gamma across 16x8bit chunks
-// 
-// 	lsr r4, #4       // right shift the count by 4 bits (divide by 16, 16 bytes = 128 bits)
-// 	_wst_loop:
-// 		// load primary channel
-// 		vld1.64 d0, [r0]!   // Q0
-// 		vld1.64 d1, [r0]!
-// 		// load channel 2
-// 		vld1.64 d2, [r1]!   // Q1
-// 		vld1.64 d3, [r1]!
-// 		// load channel 3
-// 		vld1.64 d4, [r2]!   // Q2
-// 		vld1.64 d5, [r2]!
-// 
-// 		vshl.u8 q1, q1, q8      // weight q1 --> q1
-// 		vshl.u8 q2, q2, q9      // weight q2 --> q2
-// 		vqadd.u8 q3, q1, q2     // add weights
-// 		vqadd.u8 q3, q3, q10    // add gamma
-// 
-// 		vqsub.u8 q3, q0, q3     // subtract result from primary
-// 
-// 		// Load out of Q3
-// 		vst1.64 d6, [r3]!
-// 		vst1.64 d7, [r3]!
-// 
-// 		sub r4, r4, #1
-// 		cmp r4, #0
-// 		bgt _wst_loop
-// 
-// 	sub sp, fp, #0  // Pop our Stack Frame
-// 	pop {r4-r7, fp}
-// 	bx lr
+/* Arg 0 ~ x0: Primary channel address
+ * Arg 1 ~ x1: Compare channel 2 address
+ * Arg 2 ~ x2: Compare channel 3 address
+ * Arg 3 ~ x3: Destination address
+ * Arg 4 ~ x4: Count
+ * Arg 5 ~ x5: Alpha
+ * Arg 6 ~ x6: Beta
+ * Arg 7 ~ x7: Gamma */
+memcpy_wst_asm:
+
+	dup v4.16b, w5		// duplicate alpha across 16x8bit lanes
+	clz v4.16b, v4.16b	// count the leading 0's (inverse of log2(value))
+	neg v4.16b, v4.16b	// negate count (for right shifting)
+
+	dup v5.16b, w6		// ''' for beta
+	clz v5.16b, v5.16b
+	neg v5.16b, v5.16b
+
+	dup v6.16b, w7		// duplicate gamma across 16x8bit lanes
+
+	lsr x4, x4, #4		// right shift the count by 4 bits (divide by 16, 16 bytes = 128 bits)
+
+	_wst_loop:
+		ldr q0, [x0], #16
+		ldr q1, [x1], #16
+		ldr q2, [x2], #16
+
+		// Q0 --> primary, Q1 --> alpha, Q2 --> beta
+		ushl v1.16b, v1.16b, v4.16b		// weight alpha --> shift right by the amount of leading 0's from alpha (lshift by negative)
+		ushl v2.16b, v2.16b, v5.16b		// weight beta
+		uqadd v3.16b, v1.16b, v2.16b	// add weights
+		uqadd v3.16b, v3.16b, v6.16b	// add gamma
+		uqsub v3.16b, v0.16b, v3.16b	// subtract result from primary
+
+		str q3, [x1], #16	// Load out of Q3
+
+		subs x4, x4, #1
+		bne _wst_loop
+
+	ret
+// END
 
 
-// // Arg 0: x0: Source address (3-channel continuous buffer required)
-// // Arg 1: x1: Destination address
-// // Arg 2: x2: Count (frame size) --> NOT(size * #channels)
-// // Arg 3: x3: C1/Primary channel offset(index) --> ex. 0 for first; alpha/beta follow
-// // Arg 4: x4: Alpha
-// // Arg 5: x5: Beta
-// // Arg 6: x6: Gamma
+/* Arg 0 ~ x0: Source address (3-channel continuous buffer required)
+ * Arg 1 ~ x1: Destination address
+ * Arg 2 ~ x2: Count (frame size) --> NOT(size * #channels)
+ * Arg 3 ~ x3: C1/Primary channel offset(index) --> ex. 0 for first; alpha/beta follow
+ * Arg 4 ~ x4: Alpha
+ * Arg 5 ~ x5: Beta
+ * Arg 6 ~ x6: Gamma */
 memcpy_deinterlace_wst_asm:
-	stp x29, x30, [sp, #-16]!
-	mov x29, sp
 
 	dup v4.16b, w4		// duplicate alpha across 16x8bit lanes
 	clz v4.16b, v4.16b	// count the leading 0's (inverse of log2(value))
@@ -187,125 +177,216 @@ memcpy_deinterlace_wst_asm:
 		ld3 { v0.16b, v1.16b, v2.16b }, [x0], #48	// deinterlace 48 bytes of RGB into 3x16byte V registers
 
 		// Q0 --> primary, Q1 --> alpha, Q2 --> beta
-		sshl v1.16b, v1.16b, v4.16b		// weight alpha --> shift right by the amount of leading 0's from alpha (lshift by negative)
-		sshl v2.16b, v2.16b, v5.16b		// weight beta
-		uqadd v3.16b, v1.16b, v2.16b		// add weights
-		uqadd v3.16b, v3.16b, v6.16b		// add gamma
-
-		uqsub v3.16b, v0.16b, v3.16b		// subtract result from primary
+		ushl v1.16b, v1.16b, v4.16b		// weight alpha --> shift right by the amount of leading 0's from alpha (lshift by negative)
+		ushl v2.16b, v2.16b, v5.16b		// weight beta
+		uqadd v3.16b, v1.16b, v2.16b	// add weights
+		uqadd v3.16b, v3.16b, v6.16b	// add gamma
+		uqsub v3.16b, v0.16b, v3.16b	// subtract result from primary
 
 		str q3, [x1], #16	// Load out of Q3
 
-		sub x2, x2, #1
-		cmp x2, #0
-		b.gt _c0_split_wst_loop
-		b.le _split_wst_end
+		subs x2, x2, #1
+		bne _c0_split_wst_loop
+		beq _split_wst_end
 
 	_c1_split_wst_loop:
 		ld3 { v0.16b, v1.16b, v2.16b }, [x0], #48
 
 		// Q0 --> beta, Q1 --> primary, Q2 --> alpha
-		sshl v2.16b, v2.16b, v4.16b		// weight alpha
-		sshl v0.16b, v0.16b, v5.16b		// weight beta
-		uqadd v3.16b, v2.16b, v0.16b		// add weights
-		uqadd v3.16b, v3.16b, v6.16b		// add gamma
-
-		uqsub v3.16b, v1.16b, v3.16b		// subtract result from primary
+		ushl v2.16b, v2.16b, v4.16b		// weight alpha
+		ushl v0.16b, v0.16b, v5.16b		// weight beta
+		uqadd v3.16b, v2.16b, v0.16b	// add weights
+		uqadd v3.16b, v3.16b, v6.16b	// add gamma
+		uqsub v3.16b, v1.16b, v3.16b	// subtract result from primary
 
 		str q3, [x1], #16	// Load out of Q3
 
-		sub x2, x2, #1
-		cmp x2, #0
-		b.gt _c1_split_wst_loop
-		b.le _split_wst_end
+		subs x2, x2, #1
+		bne _c1_split_wst_loop
+		beq _split_wst_end
 
 	_c2_split_wst_loop:
 		ld3 { v0.16b, v1.16b, v2.16b }, [x0], #48
 
 		// Q0 --> alpha, Q1 --> beta, Q2 --> primary
-		sshl v0.16b, v0.16b, v4.16b		// weight alpha
-		sshl v1.16b, v1.16b, v5.16b		// weight beta
-		uqadd v3.16b, v0.16b, v1.16b		// add weights
-		uqadd v3.16b, v3.16b, v6.16b		// add gamma
-
-		uqsub v3.16b, v2.16b, v3.16b		// subtract result from primary
+		ushl v0.16b, v0.16b, v4.16b		// weight alpha
+		ushl v1.16b, v1.16b, v5.16b		// weight beta
+		uqadd v3.16b, v0.16b, v1.16b	// add weights
+		uqadd v3.16b, v3.16b, v6.16b	// add gamma
+		uqsub v3.16b, v2.16b, v3.16b	// subtract result from primary
 
 		str q3, [x1], #16	// Load out of Q3
 
-		sub x2, x2, #1
-		cmp x2, #0
-		b.gt _c2_split_wst_loop
-		b.le _split_wst_end
+		subs x2, x2, #1
+		bne _c2_split_wst_loop
+		beq _split_wst_end
 
 	_split_wst_end:
-		ldp x29, x30, [sp], #16
 		ret
+// END
+
+
+/* Arg 0 ~ x0: Source array address (3-channel interlaced buffer)
+ * Arg 1 ~ x1: Destination array address
+ * Arg 2 ~ x2: Pixel total -- size of destination, size of source / 3 */
+memcpy_deinterlace_togray_asm:
+
+	cmp x2, #16
+	b.lo _togray_single
+	_togray_loop:
+		ld3 { v0.16b - v2.16b }, [x0], #48
+
+		ushr v0.16b, v0.16b, #2		// divide red/blue by 4
+		ushr v1.16b, v1.16b, #1		// divide green by 2
+		ushr v2.16b, v2.16b, #2		// divide blue/red by 4
+
+		uqadd v3.16b, v0.16b, v1.16b
+		uqadd v3.16b, v2.16b, v3.16b	// 1/4 + 1/2 + 1/4 = 1/1
+		str q3, [x1], #16
+
+		subs x2, x2, #16
+		beq _togray_end		// exactly 0 bytes left --> end
+		cmp x2, #16
+		b.hs _togray_loop	// >= 16 --> keep going
+
+	_togray_single:
+		ld3 { v0.b - v2.b }[0], [x0], #3
+
+		ushr v0.16b, v0.16b, #2		// divide red/blue by 4
+		ushr v1.16b, v1.16b, #1		// divide green by 2
+		ushr v2.16b, v2.16b, #2		// divide blue/red by 4
+
+		uqadd v3.16b, v0.16b, v1.16b
+		uqadd v3.16b, v2.16b, v3.16b	// 1/4 + 1/2 + 1/4 = 1/1
+		st1 {v2.b}[0], [x1], #1
+
+		subs x2, x2, #1
+		bne _togray_single
+
+	_togray_end:
+		ret
+// END
 
 
 
+/* Arg 0 ~ x0: Source A
+ * Arg 1 ~ x1: Source B
+ * Arg 2 ~ x2: Destination
+ * Arg 3 ~ x3: Count */
+memcpy_bitwise_or_asm:
+
+	lsr x3, x3, #4		// Shift count right by 4 bits (divide by 16, 16 bytes = 128 bits)
+	_bitwise_or_loop:
+		ldr q0, [x0], #16
+		ldr q1, [x1], #16
+		orr v2.16b, v0.16b, v1.16b
+		str q2, [x2], #16
+
+		subs x3, x3, #1
+		bne _bitwise_or_loop
+
+	ret
+// END
+
+/* Arg 0 ~ x0: Source A -- >> 3 channels <<
+ * Arg 1 ~ x1: Source B
+ * Arg 2 ~ x2: Destination -- >> 3 channels <<
+ * Arg 3 ~ x3: Pixel count */
+memcpy_bitwise_or_3c_asm:
+
+	lsr x3, x3, #4
+	_bitwise_or_3c_loop:
+		ld3 { v0.16b - v2.16b }, [x0], #48	// deinterlace load rgb channels in q0-q2
+		ldr q3, [x1], #16					// load binary frame normally in q3
+		orr v0.16b, v0.16b, v3.16b
+		orr v1.16b, v1.16b, v3.16b
+		orr v2.16b, v2.16b, v3.16b			// or each channel with binary frame
+		st3 { v0.16b - v2.16b }, [x2], #48	// interlace store the channels back
+
+		subs x3, x3, #1
+		bne _bitwise_or_loop
+
+	ret
+// END
 
 
-// // Arg 0: r0: Source A
-// // Arg 1: r1: Source B
-// // Arg 2: r2: Dest
-// // Arg 3: r3: Count
-// memcpy_bitwise_or_asm:
-// 	push {fp}
-// 	add fp, sp, #0  // Push new Stack Frame
-// 
-// 	lsr r3, #4       // Shift count right by 4 bits (divide by 16, 16 bytes = 128 bits)
-// 	_bitwise_or_loop:
-// 		// Load into Q0
-// 		vld1.64 d0, [r0]!
-// 		vld1.64 d1, [r0]!
-// 		// Load into Q1
-// 		vld1.64 d2, [r1]!
-// 		vld1.64 d3, [r1]!
-// 
-// 		vorr.u8 q2, q0, q1
-// 
-// 		// Load out of Q2
-// 		vst1.64 d4, [r2]!
-// 		vst1.64 d5, [r2]!
-// 
-// 		sub r3, r3, #1
-// 		cmp r3, #0
-// 		bgt _bitwise_or_loop
-// 
-// 	sub sp, fp, #0  // Pop our Stack Frame
-// 	pop {fp}
-// 	bx lr
-// 
-// 
-// // Arg 0: r0: Address of base array that is being subtracted
-// // Arg 1: r1: Address of second array that is being subtracted
-// // Arg 2: r2: Address of destination array
-// // Arg 3: r3: Size of arrays (width * height)
-// memcpy_subtract_asm:
-// 	push {fp}
-// 	add fp, sp, #0
-// 
-// 	lsr r3, #4       // get iterations by dividing size by 16
-// 	_subtract_loop:
-// 		// load base
-// 		vld1.64 d0, [r0]!
-// 		vld1.64 d1, [r0]!
-// 
-// 		// load subtractor
-// 		vld1.64 d2, [r1]!
-// 		vld1.64 d3, [r1]!
-// 
-// 		// subtract
-// 		vqsub.u8 q2, q0, q1
-// 
-// 		// load Q2 to destination
-// 		vst1.64 d4, [r2]!
-// 		vst1.64 d5, [r2]!
-// 
-// 		sub r3, r3, #1
-// 		cmp r3, #0
-// 		bgt _subtract_loop
-// 
-// 	sub sp, fp, #0  // Pop our Stack Frame
-// 	pop {fp}
-// 	bx lr
+/* Arg 0 ~ x0: Source A
+ * Arg 1 ~ x1: Source B
+ * Arg 2 ~ x2: Destination
+ * Arg 3 ~ x3: Pixel count */
+memcpy_add_asm:
+
+	lsr x3, x3, #4		// get iterations by dividing size by 16
+	_add_loop:
+		ldr q0, [x0], #16
+		ldr q1, [x1], #16
+		uqadd v2.16b, v0.16b, v1.16b
+		str q2, [x2], #16
+
+		subs x3, x3, #1
+		bne _add_loop
+
+	ret
+// END
+
+/* Arg 0 ~ x0: Source A -- >> 3 channels <<
+ * Arg 1 ~ x1: Source B
+ * Arg 2 ~ x2: Destination -- >> 3 channels <<
+ * Arg 3 ~ x3: Pixel count */
+memcpy_add_3c_asm:
+
+	lsr x3, x3, #4
+	_add_3c_loop:
+		ld3 { v0.16b - v2.16b }, [x0], #48
+		ldr q3, [x1], #16
+		uqadd v0.16b, v0.16b, v3.16b
+		uqadd v1.16b, v1.16b, v3.16b
+		uqadd v2.16b, v2.16b, v3.16b
+		st3 { v0.16b - v2.16b }, [x2], #48
+
+		subs x3, x3, #1
+		bne _add_3c_loop
+
+	ret
+// END
+
+/* Arg 0 ~ x0: Source A -- >> 3 channels <<
+ * Arg 1 ~ x1: Source B -- >> 3 channels <<
+ * Arg 2 ~ x2: Destination -- >> 3 channels <<
+ * Arg 3 ~ x3: Pixel count */
+memcpy_add_3c2_asm:
+
+	lsr x3, x3, #4
+	_add_3c2_loop:
+		ld3 { v0.16b - v2.16b }, [x0], #48
+		ld3 { v3.16b - v5.16b }, [x1], #48
+		uqadd v0.16b, v0.16b, v3.16b
+		uqadd v1.16b, v1.16b, v4.16b
+		uqadd v2.16b, v2.16b, v5.16b
+		st3 { v0.16b - v2.16b }, [x2], #48
+
+		subs x3, x3, #1
+		bne _add_3c_loop
+
+	ret
+// END
+
+
+/* Arg 0 ~ x0: Address of base array that is being subtracted
+ * Arg 1 ~ x1: Address of second array that is being subtracted
+ * Arg 2 ~ x2: Address of destination array
+ * Arg 3 ~ x3: Size of arrays (width * height) */
+memcpy_subtract_asm:
+
+	lsr x3, x3, #4		// get iterations by dividing size by 16
+	_subtract_loop:
+		ldr q0, [x0], #16
+		ldr q1, [x1], #16
+		uqsub v2.16b, v0.16b, v1.16b
+		str q2, [x2], #16
+
+		subs x3, x3, #1
+		bne _subtract_loop
+
+	ret
+// END
