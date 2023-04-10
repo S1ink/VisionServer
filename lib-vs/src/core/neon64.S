@@ -2,7 +2,7 @@
 .global memcpy_threshold_binary_asm
 .global memcpy_compare3_add_asm		// a bit broken?
 .global memcpy_wst_asm
-.global memcpy_deinterlace_wst_asm
+.global memcpy_deinterlace_wstb_asm
 .global memcpy_deinterlace_togray_asm
 .global memcpy_bitwise_or_asm
 .global memcpy_bitwise_or_3c_asm
@@ -153,8 +153,9 @@ memcpy_wst_asm:
  * Arg 3 ~ x3: C1/Primary channel offset(index) --> ex. 0 for first; alpha/beta follow
  * Arg 4 ~ x4: Alpha
  * Arg 5 ~ x5: Beta
- * Arg 6 ~ x6: Gamma */
-memcpy_deinterlace_wst_asm:
+ * Arg 6 ~ x6: Gamma
+ * Arg 7 ~ x7: Threshold */
+memcpy_deinterlace_wstb_asm:
 
 	dup v4.16b, w4		// duplicate alpha across 16x8bit lanes
 	clz v4.16b, v4.16b	// count the leading 0's (inverse of log2(value))
@@ -165,15 +166,16 @@ memcpy_deinterlace_wst_asm:
 	neg v5.16b, v5.16b
 
 	dup v6.16b, w6		// duplicate gamma across 16x8bit lanes
+	dup v7.16b, w7		// duplicate threshold '''
 
 	lsr x2, x2, #4		// right shift the count by 4 bits (divide by 16, 16 bytes = 128 bits)
 
 	cmp x3, #1
-	b.lt _c0_split_wst_loop
-	b.eq _c1_split_wst_loop
-	b.gt _c2_split_wst_loop
+	b.lt _c0_split_wstb_loop
+	b.eq _c1_split_wstb_loop
+	b.gt _c2_split_wstb_loop
 
-	_c0_split_wst_loop:
+	_c0_split_wstb_loop:
 		ld3 { v0.16b, v1.16b, v2.16b }, [x0], #48	// deinterlace 48 bytes of RGB into 3x16byte V registers
 
 		// Q0 --> primary, Q1 --> alpha, Q2 --> beta
@@ -182,14 +184,15 @@ memcpy_deinterlace_wst_asm:
 		uqadd v3.16b, v1.16b, v2.16b	// add weights
 		uqadd v3.16b, v3.16b, v6.16b	// add gamma
 		uqsub v3.16b, v0.16b, v3.16b	// subtract result from primary
+		cmhi v3.16b, v3.16b, v7.16b		// threshold result
 
 		str q3, [x1], #16	// Load out of Q3
 
 		subs x2, x2, #1
-		bne _c0_split_wst_loop
-		beq _split_wst_end
+		bne _c0_split_wstb_loop
+		beq _split_wstb_end
 
-	_c1_split_wst_loop:
+	_c1_split_wstb_loop:
 		ld3 { v0.16b, v1.16b, v2.16b }, [x0], #48
 
 		// Q0 --> beta, Q1 --> primary, Q2 --> alpha
@@ -198,14 +201,15 @@ memcpy_deinterlace_wst_asm:
 		uqadd v3.16b, v2.16b, v0.16b	// add weights
 		uqadd v3.16b, v3.16b, v6.16b	// add gamma
 		uqsub v3.16b, v1.16b, v3.16b	// subtract result from primary
+		cmhi v3.16b, v3.16b, v7.16b		// threshold result
 
 		str q3, [x1], #16	// Load out of Q3
 
 		subs x2, x2, #1
-		bne _c1_split_wst_loop
-		beq _split_wst_end
+		bne _c1_split_wstb_loop
+		beq _split_wstb_end
 
-	_c2_split_wst_loop:
+	_c2_split_wstb_loop:
 		ld3 { v0.16b, v1.16b, v2.16b }, [x0], #48
 
 		// Q0 --> alpha, Q1 --> beta, Q2 --> primary
@@ -214,14 +218,15 @@ memcpy_deinterlace_wst_asm:
 		uqadd v3.16b, v0.16b, v1.16b	// add weights
 		uqadd v3.16b, v3.16b, v6.16b	// add gamma
 		uqsub v3.16b, v2.16b, v3.16b	// subtract result from primary
+		cmhi v3.16b, v3.16b, v7.16b		// threshold result
 
 		str q3, [x1], #16	// Load out of Q3
 
 		subs x2, x2, #1
-		bne _c2_split_wst_loop
-		beq _split_wst_end
+		bne _c2_split_wstb_loop
+		beq _split_wstb_end
 
-	_split_wst_end:
+	_split_wstb_end:
 		ret
 // END
 

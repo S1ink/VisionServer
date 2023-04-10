@@ -41,14 +41,15 @@ void memcpy_wst_asm(
 	uint8_t beta,
 	uint8_t gamma
 );
-void memcpy_deinterlace_wst_asm(
+void memcpy_deinterlace_wstb_asm(		// subtracts weighted channels from primary, adds gamma, and thresholds into binary frame
 	uint8_t const *framebuff_3C,
 	uint8_t *dest,
 	int32_t size,
 	uint8_t offset,
 	uint8_t alpha,
 	uint8_t beta,
-	uint8_t gamma
+	uint8_t gamma,
+	uint8_t thresh
 );
 void memcpy_deinterlace_togray_asm(
 	uint8_t const *framebuff_3C,
@@ -182,20 +183,20 @@ inline void neon_wst(
 		alpha, beta, gamma
 	);
 }
-inline void neon_deinterlace_wst(
+inline void neon_deinterlace_wstb(
 	const cv::Mat& frame_3C, cv::Mat& dest,
-	vs2::BGR primary, uint8_t alpha = 0xFF, uint8_t beta = 0xFF, uint8_t gamma = 0
+	vs2::BGR primary, uint8_t alpha = 0xFF, uint8_t beta = 0xFF, uint8_t gamma = 0, uint8_t thresh = 0x7F
 ) {
 #if ENABLE_WRAPPER_DIM_SAFETY
 	CV_Assert(frame_3C.type() == CV_8UC3);
 	CV_Assert(dest.type() == CV_8UC1);
 	CV_Assert(frame_3C.size().area() == dest.size().area());
 #endif
-	memcpy_deinterlace_wst_asm(
+	memcpy_deinterlace_wstb_asm(
 		frame_3C.data,
 		dest.data,
 		frame_3C.size().area(),
-		~primary, alpha, beta, gamma);
+		~primary, alpha, beta, gamma, thresh);
 }
 inline void neon_deinterlace_cvt2gray(
 	const cv::Mat& frame_3C, cv::Mat& dest
