@@ -153,8 +153,7 @@ memcpy_wst_asm:
  * Arg 3 ~ x3: C1/Primary channel offset(index) --> ex. 0 for first; alpha/beta follow
  * Arg 4 ~ x4: Alpha
  * Arg 5 ~ x5: Beta
- * Arg 6 ~ x6: Gamma
- * Arg 7 ~ x7: Threshold */
+ * Arg 6 ~ x6: Threshold */
 memcpy_deinterlace_wstb_asm:
 
 	dup v4.16b, w4		// duplicate alpha across 16x8bit lanes
@@ -165,8 +164,7 @@ memcpy_deinterlace_wstb_asm:
 	clz v5.16b, v5.16b
 	neg v5.16b, v5.16b
 
-	dup v6.16b, w6		// duplicate gamma across 16x8bit lanes
-	dup v7.16b, w7		// duplicate threshold '''
+	dup v6.16b, w6		// duplicate threshold '''
 
 	lsr x2, x2, #4		// right shift the count by 4 bits (divide by 16, 16 bytes = 128 bits)
 
@@ -182,9 +180,8 @@ memcpy_deinterlace_wstb_asm:
 		ushl v1.16b, v1.16b, v4.16b		// weight alpha --> shift right by the amount of leading 0's from alpha (lshift by negative)
 		ushl v2.16b, v2.16b, v5.16b		// weight beta
 		uqadd v3.16b, v1.16b, v2.16b	// add weights
-		uqadd v3.16b, v3.16b, v6.16b	// add gamma
 		uqsub v3.16b, v0.16b, v3.16b	// subtract result from primary
-		cmhi v3.16b, v3.16b, v7.16b		// threshold result
+		cmhi v3.16b, v3.16b, v6.16b		// threshold result
 
 		str q3, [x1], #16	// Load out of Q3
 
@@ -199,9 +196,8 @@ memcpy_deinterlace_wstb_asm:
 		ushl v2.16b, v2.16b, v4.16b		// weight alpha
 		ushl v0.16b, v0.16b, v5.16b		// weight beta
 		uqadd v3.16b, v2.16b, v0.16b	// add weights
-		uqadd v3.16b, v3.16b, v6.16b	// add gamma
 		uqsub v3.16b, v1.16b, v3.16b	// subtract result from primary
-		cmhi v3.16b, v3.16b, v7.16b		// threshold result
+		cmhi v3.16b, v3.16b, v6.16b		// threshold result
 
 		str q3, [x1], #16	// Load out of Q3
 
@@ -216,9 +212,8 @@ memcpy_deinterlace_wstb_asm:
 		ushl v0.16b, v0.16b, v4.16b		// weight alpha
 		ushl v1.16b, v1.16b, v5.16b		// weight beta
 		uqadd v3.16b, v0.16b, v1.16b	// add weights
-		uqadd v3.16b, v3.16b, v6.16b	// add gamma
 		uqsub v3.16b, v2.16b, v3.16b	// subtract result from primary
-		cmhi v3.16b, v3.16b, v7.16b		// threshold result
+		cmhi v3.16b, v3.16b, v6.16b		// threshold result
 
 		str q3, [x1], #16	// Load out of Q3
 
