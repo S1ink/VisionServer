@@ -1,13 +1,14 @@
-[![CI](https://github.com/FRC3407/VisionServer/actions/workflows/ci.yml/badge.svg)](https://github.com/FRC3407/VisionServer/actions/workflows/ci.yml) [![Build Docs](https://github.com/FRC3407/VisionServer/actions/workflows/doxygen-pages.yml/badge.svg?branch=main)](https://github.com/FRC3407/VisionServer/actions/workflows/doxygen-pages.yml)
+[![CI](https://github.com/S1ink/VisionServer/actions/workflows/ci.yml/badge.svg)](https://github.com/S1ink/VisionServer/actions/workflows/ci.yml) [![Build Docs](https://github.com/S1ink/VisionServer/actions/workflows/doxygen-pages.yml/badge.svg?branch=main)](https://github.com/S1ink/VisionServer/actions/workflows/doxygen-pages.yml)
 
-# [FRC 3407] VisionServer
-### | [Get Started](#get-started) | [Vision Resources](#more-on-vision-processing) | [Docs](https://frc3407.github.io/VisionServer) |
+# VisionServer
+### | [Get Started](#get-started) | [Vision Resources](#more-on-vision-processing) | [Docs](https://S1ink.github.io/VisionServer) |
 
 ## Project Overview
  - This project originally existed as a testing environment for vision processing code that would be run on an FRC robot (Raspberry Pi coprocessor).
  - C++ was chosen as the primary development language, and a more generalized program framework was created, titled 'VisionServer'.
  - VisionServer[v1.*] was released as a framework which could be reimplemented by modifying the main source file(s) and recompiling the entire project. These releases were utilized during 2021 testing and the 2022 Rapid React season; provided features for both ease of use [on a robot] and advanced vision processing techniques.
  - VisionServer[v2.*+] now comes with a redesigned program (library) structure that focuses on concurrency and multithreading. The project is also now implemented as a library that allows easier integration in external projects, and can functionally be used as a git submodule. This repo contains automations for updating the necessary dependencies (wpilib, opencv, tflite), which makes creating a vision program simpler and more accessible.
+ - **October 2023 Update: This project is no longer in active development for direct use in FRC.**
 
 __Highlighted Features:__
 - Load and run unlimited* vision processing pipelines - although obviously limited by hardware specs
@@ -50,7 +51,7 @@ int main() {
 ```
 
 ## Get Started
-__All guides and code documentation can be found on this repo's [gh-pages](https://frc3407.github.io/VisionServer).__ Additionally, all guides can be found in markdown format under [docs/](docs/).
+__All guides and code documentation can be found on this repo's [gh-pages](https://S1ink.github.io/VisionServer).__ Additionally, all guides can be found in markdown format under [docs/](docs/).
 
 ## More on Vision Processing
 __Here is a list of some [helpful resources](docs/References.md) used in the making of this project.__
