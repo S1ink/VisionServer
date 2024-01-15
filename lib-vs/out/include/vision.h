@@ -63,15 +63,22 @@ cs::VideoMode getJsonVideoMode(const wpi::json& config);
 /**
  * Divides a both parts of a cv::Size object by the specified scale
  * @param num_t The numberic type used in the cv::Size input (and function output) - does not need to be explicitly provided
+ * @param dnum_t The numberic type used for the devisor
  * @param input The input size
  * @param scale The amount to be divided by
  * @return A new cv::Size representing the division
 */
-template<typename num_t> static inline
-cv::Size_<num_t> operator/(cv::Size_<num_t> input, size_t scale) {
+template<typename num_t, typename dnum_t> static inline
+cv::Size_<num_t> operator/(cv::Size_<num_t> input, dnum_t scale) {
 	static_assert(std::is_arithmetic<num_t>::value, "Template parameter (num_t) must be arithemetic type");
+	static_assert(std::is_arithmetic<dnum_t>::value, "Template parameter (dnum_t) must be arithemetic type");
 	return cv::Size_<num_t>(input.width/scale, input.height/scale);
 }
+// template<typename num_t> static inline
+// cv::Size_<num_t> operator/(cv::Size_<num_t> input, size_t scale) {
+// 	static_assert(std::is_arithmetic<num_t>::value, "Template parameter (num_t) must be arithemetic type");
+// 	return cv::Size_<num_t>(input.width/scale, input.height/scale);
+// }
 
 template<typename num_t>
 inline bool inRange(num_t a, num_t lower, num_t upper) {
@@ -171,6 +178,8 @@ template<typename num_t>
 void rescale(std::vector<cv::Point_<num_t> >& points, double scale);	// scales up or down (multiplies by scale)
 template<typename num_t>
 void rescale(std::vector<std::vector<cv::Point_<num_t> > >& contours, double scale);
+template<typename num_t>
+void rescale(std::vector<cv::Rect_<num_t> >& rects, double scale);
 
 template<typename num_t>
 cv::Point_<num_t> findCenter(const std::vector<cv::Point_<num_t> >& contour);
@@ -265,6 +274,16 @@ void rescale(std::vector<std::vector<cv::Point_<num_t> > >& contours, double sca
 		for(cv::Point_<num_t>& point : contour) {
 			point *= scale;
 		}
+	}
+}
+template<typename num_t>
+void rescale(std::vector<cv::Rect_<num_t> >& rects, double scale) {
+	static_assert(std::is_arithmetic<num_t>::value, "Template parameter (num_t) must be arithemetic type");
+	for(cv::Rect_<num_t>& r : rects) {
+		r.x *= scale;
+		r.y *= scale;
+		r.width *= scale;
+		r.height *= scale;
 	}
 }
 
