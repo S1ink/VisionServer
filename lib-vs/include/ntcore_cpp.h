@@ -17,6 +17,8 @@
 #include <variant>
 #include <vector>
 
+#include <wpi/json_fwd.h>
+
 #include "networktables/NetworkTableValue.h"
 #include "ntcore_c.h"
 #include "ntcore_cpp_types.h"
@@ -24,7 +26,6 @@
 namespace wpi {
 template <typename T>
 class SmallVectorImpl;
-class json;
 }  // namespace wpi
 
 namespace wpi::log {
@@ -681,6 +682,24 @@ void SetTopicRetained(NT_Topic topic, bool value);
 bool GetTopicRetained(NT_Topic topic);
 
 /**
+ * Sets the cached property of a topic.  If true, the server and clients will
+ * store the latest value, allowing the value to be read (and not just accessed
+ * through event queues and listeners).
+ *
+ * @param topic topic handle
+ * @param value True for cached, false for not cached
+ */
+void SetTopicCached(NT_Topic topic, bool value);
+
+/**
+ * Gets the cached property of a topic.
+ *
+ * @param topic topic handle
+ * @return cached property value
+ */
+bool GetTopicCached(NT_Topic topic);
+
+/**
  * Determine if topic exists (e.g. has at least one publisher).
  *
  * @param handle Topic, entry, or subscriber handle.
@@ -1298,6 +1317,66 @@ NT_Listener AddLogger(NT_Inst inst, unsigned int min_level,
  */
 NT_Listener AddPolledLogger(NT_ListenerPoller poller, unsigned int min_level,
                             unsigned int max_level);
+
+/** @} */
+
+/**
+ * @defgroup ntcore_schema_func Schema Functions
+ * @{
+ */
+
+/**
+ * Returns whether there is a data schema already registered with the given
+ * name. This does NOT perform a check as to whether the schema has already
+ * been published by another node on the network.
+ *
+ * @param inst instance
+ * @param name Name (the string passed as the data type for topics using this
+ *             schema)
+ * @return True if schema already registered
+ */
+bool HasSchema(NT_Inst inst, std::string_view name);
+
+/**
+ * Registers a data schema.  Data schemas provide information for how a
+ * certain data type string can be decoded.  The type string of a data schema
+ * indicates the type of the schema itself (e.g. "protobuf" for protobuf
+ * schemas, "struct" for struct schemas, etc). In NetworkTables, schemas are
+ * published just like normal topics, with the name being generated from the
+ * provided name: "/.schema/<name>".  Duplicate calls to this function with
+ * the same name are silently ignored.
+ *
+ * @param inst instance
+ * @param name Name (the string passed as the data type for topics using this
+ *             schema)
+ * @param type Type of schema (e.g. "protobuf", "struct", etc)
+ * @param schema Schema data
+ */
+void AddSchema(NT_Inst inst, std::string_view name, std::string_view type,
+               std::span<const uint8_t> schema);
+
+/**
+ * Registers a data schema.  Data schemas provide information for how a
+ * certain data type string can be decoded.  The type string of a data schema
+ * indicates the type of the schema itself (e.g. "protobuf" for protobuf
+ * schemas, "struct" for struct schemas, etc). In NetworkTables, schemas are
+ * published just like normal topics, with the name being generated from the
+ * provided name: "/.schema/<name>".  Duplicate calls to this function with
+ * the same name are silently ignored.
+ *
+ * @param inst instance
+ * @param name Name (the string passed as the data type for topics using this
+ *             schema)
+ * @param type Type of schema (e.g. "protobuf", "struct", etc)
+ * @param schema Schema data
+ */
+inline void AddSchema(NT_Inst inst, std::string_view name,
+                      std::string_view type, std::string_view schema) {
+  AddSchema(
+      inst, name, type,
+      std::span<const uint8_t>{reinterpret_cast<const uint8_t*>(schema.data()),
+                               schema.size()});
+}
 
 /** @} */
 /** @} */

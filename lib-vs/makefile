@@ -93,17 +93,13 @@ LDEBUG := -g
 CRELEASE := -O3 -D__RELEASE__ $(foreach df,$(ADEFINES),-D$(df))
 LRELEASE :=
 
-CPPFLAGS := -pthread -Iinclude -Iadditions -Iinclude/opencv4 -MMD -MP
+CPPFLAGS := -pthread -Iinclude -Iadditions -MMD -MP
 CFLAGS := -Wall -fpermissive
 ASMFLAGS := -mcpu=cortex-a72 #-mfpu=neon-fp-armv8
 LDFLAGS := -pthread -Wall -Llib -Wl,--unresolved-symbols=ignore-in-shared-libs
 LDLIBS := \
-	-lm -lpigpio -lwpilibc -lwpiHal \
-	-lcameraserver -lntcore -lcscore -lopencv_gapi -lopencv_highgui \
-	-lopencv_ml -lopencv_objdetect -lopencv_photo -lopencv_stitching \
-	-lopencv_video -lopencv_calib3d -lopencv_features2d -lopencv_dnn \
-	-lopencv_flann -lopencv_videoio -lopencv_imgcodecs -lopencv_imgproc \
-	-lopencv_core -lwpiutil -lopencv_aruco -latomic
+	-lwpiutil -lntcore -lcscore -lcameraserver \
+	-lopencv_core -lopencv_imgproc -lopencv_objdetect
 
 ifneq ($(filter $(TFLITE),false no n exclude),)
 	CDEBUG += -DEXCLUDE_TFLITE

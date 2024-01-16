@@ -1,7 +1,7 @@
 #include "config.h"
 
 #include <wpi/raw_ostream.h>
-#include <wpi/raw_istream.h>
+#include <wpi/MemoryBuffer.h>
 #include <wpi/StringExtras.h>
 #include <networktables/NetworkTableInstance.h>
 
@@ -10,12 +10,12 @@
 
 bool loadJson(wpi::json& j, const char* file) {
 	std::error_code ec;
-    wpi::raw_fd_istream is(file, ec);
-    if (ec) {
+    std::unique_ptr<wpi::MemoryBuffer> file_buffer = wpi::MemoryBuffer::GetFile(file, ec);
+    if (file_buffer == nullptr || ec) {
         wpi::errs() << "Could not open '" << file << "': " << ec.message() << newline;
         return false;
     }
-    try { j = wpi::json::parse(is); }
+    try { j = wpi::json::parse(file_buffer->begin(), file_buffer->end()); }
     catch (const wpi::json::parse_error& e) {
         wpi::errs() << "Config error in " << file << /*": byte " << (int)e.byte <<*/ ": " << e.what() << newline;
         return false;

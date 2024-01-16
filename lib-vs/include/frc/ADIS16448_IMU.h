@@ -20,7 +20,6 @@
 #include <thread>
 
 #include <hal/SimDevice.h>
-#include <networktables/NTSendable.h>
 #include <units/acceleration.h>
 #include <units/angle.h>
 #include <units/angular_velocity.h>
@@ -29,6 +28,7 @@
 #include <units/temperature.h>
 #include <wpi/condition_variable.h>
 #include <wpi/mutex.h>
+#include <wpi/sendable/Sendable.h>
 #include <wpi/sendable/SendableHelper.h>
 
 #include "frc/DigitalInput.h"
@@ -53,26 +53,50 @@ namespace frc {
  * the RoboRIO MXP port.
  */
 
-class ADIS16448_IMU : public nt::NTSendable,
+class ADIS16448_IMU : public wpi::Sendable,
                       public wpi::SendableHelper<ADIS16448_IMU> {
  public:
-  /* ADIS16448 Calibration Time Enum Class */
+  /**
+   * ADIS16448 calibration times.
+   */
   enum class CalibrationTime {
+    /// 32 ms calibration time.
     _32ms = 0,
+    /// 64 ms calibration time.
     _64ms = 1,
+    /// 128 ms calibration time.
     _128ms = 2,
+    /// 256 ms calibration time.
     _256ms = 3,
+    /// 512 ms calibration time.
     _512ms = 4,
+    /// 1 s calibration time.
     _1s = 5,
+    /// 2 s calibration time.
     _2s = 6,
+    /// 4 s calibration time.
     _4s = 7,
+    /// 8 s calibration time.
     _8s = 8,
+    /// 16 s calibration time.
     _16s = 9,
+    /// 32 s calibration time.
     _32s = 10,
+    /// 64 s calibration time.
     _64s = 11
   };
 
-  enum IMUAxis { kX, kY, kZ };
+  /**
+   * IMU axes.
+   */
+  enum IMUAxis {
+    /// The IMU's X axis.
+    kX,
+    /// The IMU's Y axis.
+    kY,
+    /// The IMU's Z axis.
+    kZ
+  };
 
   /**
    * IMU constructor on onboard MXP CS0, Z-up orientation, and complementary
@@ -183,31 +207,71 @@ class ADIS16448_IMU : public nt::NTSendable,
    */
   units::meters_per_second_squared_t GetAccelZ() const;
 
+  /**
+   * Returns the complementary angle around the X axis computed from
+   * accelerometer and gyro rate measurements.
+   */
   units::degree_t GetXComplementaryAngle() const;
 
+  /**
+   * Returns the complementary angle around the Y axis computed from
+   * accelerometer and gyro rate measurements.
+   */
   units::degree_t GetYComplementaryAngle() const;
 
+  /**
+   * Returns the X-axis filtered acceleration angle.
+   */
   units::degree_t GetXFilteredAccelAngle() const;
 
+  /**
+   * Returns the Y-axis filtered acceleration angle.
+   */
   units::degree_t GetYFilteredAccelAngle() const;
 
+  /**
+   * Returns the magnetic field strength in the X axis.
+   */
   units::tesla_t GetMagneticFieldX() const;
 
+  /**
+   * Returns the magnetic field strength in the Y axis.
+   */
   units::tesla_t GetMagneticFieldY() const;
 
+  /**
+   * Returns the magnetic field strength in the Z axis.
+   */
   units::tesla_t GetMagneticFieldZ() const;
 
+  /**
+   * Returns the barometric pressure.
+   */
   units::pounds_per_square_inch_t GetBarometricPressure() const;
 
+  /**
+   * Returns the temperature.
+   */
   units::celsius_t GetTemperature() const;
 
   IMUAxis GetYawAxis() const;
 
   int SetYawAxis(IMUAxis yaw_axis);
 
+  /**
+   * Checks the connection status of the IMU.
+   *
+   * @return True if the IMU is connected, false otherwise.
+   */
   bool IsConnected() const;
 
-  int ConfigDecRate(uint16_t DecimationRate);
+  /**
+   * Configures the decimation rate of the IMU.
+   *
+   * @param decimationRate The new decimation value.
+   * @return 0 if success, 1 if no change, 2 if error.
+   */
+  int ConfigDecRate(uint16_t decimationRate);
 
   /**
    * Get the SPI port number.
@@ -216,7 +280,7 @@ class ADIS16448_IMU : public nt::NTSendable,
    */
   int GetPort() const;
 
-  void InitSendable(nt::NTSendableBuilder& builder) override;
+  void InitSendable(wpi::SendableBuilder& builder) override;
 
  private:
   /** @brief ADIS16448 Register Map Declaration */
